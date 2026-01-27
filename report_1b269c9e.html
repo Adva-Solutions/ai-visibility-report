@@ -1,0 +1,1420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Visibility Report - Wiser MD | Adva</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #ffffff;
+            min-height: 100vh;
+            color: #374151;
+            line-height: 1.6;
+        }
+
+        /* Header */
+        .header {
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            font-size: 1.25rem;
+            color: #1f2937;
+            text-decoration: none;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .header-date {
+            color: #9ca3af;
+            font-size: 0.875rem;
+        }
+
+        /* Share buttons */
+        .share-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .share-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: #f3f4f6;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            color: #374151;
+            font-size: 0.875rem;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .share-btn:hover {
+            background: #e5e7eb;
+        }
+
+        .share-btn svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .share-btn.primary {
+            background: #1f2937;
+            color: #ffffff;
+            border-color: #1f2937;
+        }
+
+        .share-btn.primary:hover {
+            background: #111827;
+        }
+
+        /* Toast notification */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: #1f2937;
+            color: #ffffff;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            opacity: 0;
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        /* Container */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Page title */
+        .page-title {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .page-title .label {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: #9ca3af;
+            font-size: 0.75rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+        }
+
+        .page-title .label::before,
+        .page-title .label::after {
+            content: '';
+            width: 30px;
+            height: 1px;
+            background: #d1d5db;
+        }
+
+        .page-title h1 {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 2.5rem;
+            font-weight: 400;
+            color: #1f2937;
+            margin-bottom: 0.5rem;
+        }
+
+        .page-title .brand {
+            color: #6b7280;
+            font-size: 1.125rem;
+        }
+
+        /* Sections */
+        .section {
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #f3f4f6;
+        }
+
+        .section-icon {
+            width: 40px;
+            height: 40px;
+            background: #1f2937;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .section-icon svg {
+            width: 20px;
+            height: 20px;
+            color: #ffffff;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 1.375rem;
+            color: #1f2937;
+        }
+
+        /* Score Section */
+        .score-section {
+            text-align: center;
+            padding: 3rem 2rem;
+        }
+
+        .score-circle {
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            background: #fafafa;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            border: 4px solid #ef4444;
+        }
+
+        .score-value {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 3rem;
+            font-weight: 500;
+            color: #ef4444;
+        }
+
+        .score-label {
+            font-size: 0.8rem;
+            color: #9ca3af;
+        }
+
+        .score-description {
+            color: #6b7280;
+            margin-bottom: 2rem;
+            font-size: 1rem;
+        }
+
+        .score-description strong {
+            color: #1f2937;
+        }
+
+        .llm-breakdown {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .llm-stat {
+            text-align: center;
+            padding: 1rem 1.5rem;
+            background: #fafafa;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+            min-width: 100px;
+        }
+
+        .llm-name {
+            display: block;
+            color: #9ca3af;
+            font-size: 0.8rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .llm-score {
+            font-size: 1.125rem;
+            font-weight: 600;
+        }
+
+        .llm-score.success {
+            color: #22c55e;
+        }
+
+        .llm-score.warning {
+            color: #ef4444;
+        }
+
+        /* Competitor Table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 0.875rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid #f3f4f6;
+        }
+
+        th {
+            color: #9ca3af;
+            font-weight: 500;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        td {
+            color: #374151;
+        }
+
+        .mention-count {
+            background: #fef3c7;
+            color: #92400e;
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        /* Tabs for LLM responses */
+        .example-tabs {
+            margin-top: 1.5rem;
+        }
+
+        .tabs-header {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+            padding-bottom: 0;
+        }
+
+        .tab-btn {
+            padding: 0.75rem 1.25rem;
+            background: transparent;
+            border: none;
+            color: #6b7280;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            margin-bottom: -1px;
+            transition: all 0.2s;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .tab-btn:hover {
+            color: #1f2937;
+        }
+
+        .tab-btn.active {
+            color: #1f2937;
+            border-bottom-color: #1f2937;
+        }
+
+        .tab-panel {
+            display: none;
+            background: #fafafa;
+            border-radius: 8px;
+            padding: 1.25rem;
+        }
+
+        .tab-panel.active {
+            display: block;
+        }
+
+        .example-question {
+            color: #1f2937;
+            font-weight: 500;
+            font-size: 0.95rem;
+            margin-bottom: 0.75rem;
+        }
+
+        /* Question breakdown table */
+        .question-breakdown {
+            margin-top: 1rem;
+        }
+
+        .breakdown-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        .breakdown-table th {
+            padding: 0.75rem;
+            text-align: center;
+            background: #f9fafb;
+            border-bottom: 2px solid #e5e7eb;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .breakdown-table th:first-child {
+            text-align: left;
+            width: 50%;
+        }
+
+        .breakdown-table td {
+            padding: 0.75rem;
+            border-bottom: 1px solid #f3f4f6;
+            vertical-align: middle;
+        }
+
+        .question-cell {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+        }
+
+        .question-num {
+            background: #e5e7eb;
+            color: #374151;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        .question-text {
+            color: #374151;
+            line-height: 1.4;
+        }
+
+        .llm-cell {
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-radius: 4px;
+        }
+
+        .llm-cell:hover {
+            background: #f3f4f6;
+        }
+
+        .llm-cell.mentioned {
+            color: #16a34a;
+        }
+
+        .llm-cell.mentioned .status-icon {
+            font-size: 1.25rem;
+        }
+
+        .llm-cell.not-mentioned {
+            color: #dc2626;
+        }
+
+        .llm-cell.not-mentioned .status-icon {
+            font-size: 1.25rem;
+        }
+
+        .breakdown-hint {
+            color: #9ca3af;
+            font-size: 0.8rem;
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+        /* Response modal */
+        .response-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+        }
+
+        .response-modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: #ffffff;
+            border-radius: 12px;
+            max-width: 700px;
+            width: 100%;
+            max-height: 80vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #9ca3af;
+            cursor: pointer;
+            padding: 0.25rem 0.5rem;
+        }
+
+        .modal-close:hover {
+            color: #374151;
+        }
+
+        .modal-header {
+            padding: 1.5rem 1.5rem 0;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            position: relative;
+        }
+
+        .modal-llm {
+            font-weight: 600;
+            color: #1f2937;
+            font-size: 1.1rem;
+        }
+
+        .modal-status {
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .modal-status.mentioned {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .modal-status.not-mentioned {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .modal-question {
+            padding: 1rem 1.5rem;
+            color: #6b7280;
+            font-size: 0.9rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .modal-response {
+            padding: 1.5rem;
+            overflow-y: auto;
+            flex: 1;
+            color: #374151;
+            font-size: 0.9rem;
+            line-height: 1.7;
+        }
+
+        .example-content {
+            color: #6b7280;
+            font-size: 0.875rem;
+            line-height: 1.7;
+            max-height: 400px;
+            overflow-y: auto;
+            margin-bottom: 0.75rem;
+            padding: 1rem;
+            background: #f9fafb;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .example-status {
+            padding: 0.5rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            display: inline-block;
+        }
+
+        .example-status.mentioned {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .example-status.not-mentioned {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        /* Reddit Posts */
+        .reddit-posts {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .reddit-post {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: #fafafa;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: all 0.2s;
+            border: 1px solid transparent;
+        }
+
+        .reddit-post:hover {
+            background: #f3f4f6;
+            border-color: #e5e7eb;
+        }
+
+        .post-icon {
+            width: 40px;
+            height: 40px;
+            background: #1f2937;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .post-icon.pain {
+            background: #fef3c7;
+        }
+
+        .post-icon.pain svg {
+            color: #92400e;
+        }
+
+        .post-icon svg {
+            width: 20px;
+            height: 20px;
+            color: #ffffff;
+        }
+
+        .post-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .post-title {
+            color: #1f2937;
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .post-meta {
+            color: #9ca3af;
+            font-size: 0.8rem;
+        }
+
+        .post-arrow {
+            color: #9ca3af;
+            flex-shrink: 0;
+        }
+
+        .post-arrow svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .subsection-title {
+            color: #1f2937;
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin: 1.5rem 0 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .subsection-title:first-of-type {
+            margin-top: 0;
+        }
+
+        .subsection-desc {
+            color: #9ca3af;
+            font-size: 0.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .no-data {
+            color: #9ca3af;
+            font-style: italic;
+            text-align: center;
+            padding: 1rem;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            color: #9ca3af;
+            font-size: 0.8rem;
+            padding: 2rem;
+            border-top: 1px solid #e5e7eb;
+            margin-top: 2rem;
+        }
+
+        .footer a {
+            color: #1f2937;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* CTA */
+        .cta-section {
+            text-align: center;
+            padding: 3rem 2rem;
+            background: #fafafa;
+        }
+
+        .cta-section h2 {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 1.75rem;
+            color: #1f2937;
+            margin-bottom: 0.75rem;
+        }
+
+        .cta-section p {
+            color: #6b7280;
+            margin-bottom: 1.5rem;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background: #1f2937;
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .cta-button:hover {
+            background: #111827;
+            transform: translateY(-1px);
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .page-title h1 {
+                font-size: 1.75rem;
+            }
+
+            .section {
+                padding: 1.5rem;
+            }
+
+            .score-circle {
+                width: 130px;
+                height: 130px;
+            }
+
+            .score-value {
+                font-size: 2.25rem;
+            }
+
+            .llm-breakdown {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .tabs-header {
+                flex-wrap: wrap;
+            }
+
+            .tab-btn {
+                padding: 0.5rem 1rem;
+                font-size: 0.8rem;
+            }
+
+            .breakdown-table th,
+            .breakdown-table td {
+                padding: 0.5rem;
+                font-size: 0.8rem;
+            }
+
+            .question-cell {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .modal-content {
+                max-height: 90vh;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <a href="/" class="logo">adva</a>
+        <div class="header-right">
+            <div class="share-buttons">
+                <button class="share-btn" onclick="copyLink()" title="Copy link">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                    </svg>
+                    Copy Link
+                </button>
+                <a class="share-btn" href="mailto:?subject=AI%20Visibility%20Report%20for%20Wiser MD&body=Check%20out%20this%20AI%20visibility%20report%3A%20" onclick="this.href += encodeURIComponent(window.location.href)" title="Share via email">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                    </svg>
+                    Email
+                </a>
+                <a class="share-btn primary" href="javascript:void(0)" onclick="downloadPDF()" title="Download as PDF">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                    </svg>
+                    Download PDF
+                </a>
+            </div>
+            <span class="header-date">January 26, 2026</span>
+        </div>
+    </header>
+    <div class="toast" id="toast">Link copied to clipboard!</div>
+
+    <div class="container">
+        <div class="page-title">
+            <div class="label">AI Visibility Report</div>
+            <h1>Your Brand's <em>AI Presence</em></h1>
+            <p class="brand">Analysis for Wiser MD</p>
+        </div>
+
+        <!-- Section 1: AI Visibility Score -->
+        <div class="section score-section">
+            <div class="score-circle">
+                <span class="score-value">0%</span>
+                <span class="score-label">0/15 mentions</span>
+            </div>
+            <p class="score-description">
+                Your brand appeared in <strong>0</strong> out of <strong>15</strong> AI recommendations
+            </p>
+            <div class="llm-breakdown">
+                
+            <div class="llm-stat">
+                <span class="llm-name">GPT-4</span>
+                <span class="llm-score warning">0/5</span>
+            </div>
+        
+            <div class="llm-stat">
+                <span class="llm-name">Claude</span>
+                <span class="llm-score warning">0/5</span>
+            </div>
+        
+            <div class="llm-stat">
+                <span class="llm-name">Gemini</span>
+                <span class="llm-score warning">0/5</span>
+            </div>
+        
+            </div>
+        </div>
+
+        <!-- Section 2: Competitor Analysis -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                    </svg>
+                </div>
+                <h2 class="section-title">Competitor Analysis</h2>
+            </div>
+            <p style="color: #6b7280; margin-bottom: 1rem;">Here's who AI models are recommending instead of you:</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Competitor</th>
+                        <th>Mentions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    
+            <tr>
+                <td>Dr. Stafford Broumand</td>
+                <td><span class="mention-count">2</span></td>
+            </tr>
+        
+            <tr>
+                <td>Dr. Darren Smith</td>
+                <td><span class="mention-count">2</span></td>
+            </tr>
+        
+            <tr>
+                <td>Dr. Sachin Shridharani</td>
+                <td><span class="mention-count">1</span></td>
+            </tr>
+        
+            <tr>
+                <td>Things to Consider</td>
+                <td><span class="mention-count">2</span></td>
+            </tr>
+        
+            <tr>
+                <td>Specialty</td>
+                <td><span class="mention-count">2</span></td>
+            </tr>
+        
+            <tr>
+                <td>Experience</td>
+                <td><span class="mention-count">2</span></td>
+            </tr>
+        
+            <tr>
+                <td>Consultations</td>
+                <td><span class="mention-count">2</span></td>
+            </tr>
+        
+            <tr>
+                <td>Board Certification</td>
+                <td><span class="mention-count">2</span></td>
+            </tr>
+        
+            <tr>
+                <td>Specializes in natural</td>
+                <td><span class="mention-count">1</span></td>
+            </tr>
+        
+            <tr>
+                <td>Important Next Steps</td>
+                <td><span class="mention-count">1</span></td>
+            </tr>
+        
+                </tbody>
+            </table>
+
+            <div class="subsection-title" style="margin-top: 1.5rem;">Question-by-Question Breakdown</div>
+            <p class="subsection-desc">We asked these 5 questions to each AI model. Here's where your brand was mentioned:</p>
+            
+        <div class="question-breakdown">
+            <table class="breakdown-table">
+                <thead>
+                    <tr>
+                        <th>Question Asked</th>
+                        <th>GPT-4</th>
+                        <th>Claude</th>
+                        <th>Gemini</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q1</span>
+                    <span class="question-text">NYC plastic surgeon for breast reduction</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are five highly regarded plastic surgeons in New York City specializing in breast reduction. It&#39;s essential to schedule consultations to find the best fit for your needs and ensure comfort with your chosen surgeon.<br><br>1. **Dr. R. Brannon Claytor**<br>   - **Specialization**: Dr. Claytor is known for his expertise in breast surgery, including breast reduction. He combines artistic skill with advanced surgical techniques.<br>   - **Experience**: He has a strong background in aesthetic surgery and is board-certified by the American Board of Plastic Surgery. Patients appreciate his thorough consultations and personalized care.<br><br>2. **Dr. David Shafer**<br>   - **Specialization**: Dr. Shafer is renowned for his minimally invasive techniques and a focus on achieving natural-looking results in breast surgery.<br>   - **Experience**: He is board-certified and has extensive experience in breast reduction. His practice emphasizes patient education and satisfaction, making him a popular choice.<br><br>3. **Dr. J"
+                    data-question="NYC plastic surgeon for breast reduction"
+                    data-llm="gpt4"
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top 5 recommendations for plastic surgeons in NYC for breast reduction surgery, listed in order of preference:<br><br>1. Dr. Melissa Doft - Board-certified plastic surgeon with extensive experience in breast reduction procedures. Known for her natural-looking results and focus on patient satisfaction.<br><br>2. Dr. Constance Chen - Specializes in aesthetic and reconstructive breast surgery. Highly regarded for her skill, attention to detail, and compassionate approach.<br><br>3. Dr. Stafford Broumand - Renowned plastic surgeon with a focus on breast surgery. Recognized for his innovative techniques and commitment to achieving optimal outcomes.<br><br>4. Dr. David Shafer - Specializes in complex breast procedures, including reduction. Praised for his artistic eye and ability to create proportionate, balanced results.<br><br>5. Dr. Sachin Shridharani - Board-certified plastic surgeon with expertise in breast reduction surgery. Known for his meticulous technique and commitment to patient safety and satisfa"
+                    data-question="NYC plastic surgeon for breast reduction"
+                    data-llm="claude"
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Okay, here are 3 highly-regarded plastic surgeons in NYC for breast reduction, based on reputation, patient reviews, and expertise. It&#39;s crucial to do your own research and schedule consultations to determine the best fit for your individual needs and goals.<br><br>**Important Note:** *This is not an exhaustive list, and it&#39;s essential to consult with multiple surgeons to find the best fit for your individual needs and preferences.  Factors like your specific anatomy, desired outcome, and personality compatibility with the surgeon are crucial considerations.*<br>*Also, bear in mind that surgeon availability and scheduling can vary.*<br><br>**Top Recommendations (In Order of Preference, Based on Aggregated Factors):**<br><br>1.  **Dr. Lara Devgan:**<br>    *   **Why:** Dr. Devgan is exceptionally well-regarded for her surgical skill, meticulous attention to detail, and natural-looking results. She is known for her focus on patient safety and comfort. Dr. Devgan is a highly sought-after surgeon with a reputatio"
+                    data-question="NYC plastic surgeon for breast reduction"
+                    data-llm="gemini"
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q2</span>
+                    <span class="question-text">best plastic surgeon for mommy makeover in New York</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are five highly recommended plastic surgeons in New York known for their expertise in mommy makeovers:<br><br>1. **Dr. David Shafer**<br>   - **Specialty:** Dr. Shafer is a board-certified plastic surgeon with a focus on aesthetic surgery, including mommy makeovers. He is known for his meticulous attention to detail and personalized care. His clinic offers a wide range of services, and he has a strong reputation for achieving natural-looking results.<br><br>2. **Dr. Michelle Lee**<br>   - **Specialty:** Dr. Lee is a board-certified plastic surgeon with extensive experience in body contouring and mommy makeovers. She is known for her artistic approach and commitment to patient education, ensuring that each patient understands their options and expected outcomes. Her focus on safety and patient satisfaction makes her a popular choice.<br><br>3. **Dr. Daniel Maman**<br>   - **Specialty:** Dr. Maman is a renowned plastic surgeon specializing in aesthetic procedures, including mommy makeovers. He is celebrated f"
+                    data-question="best plastic surgeon for mommy makeover in New York"
+                    data-llm="gpt4"
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top 5 recommendations for the best plastic surgeons for a mommy makeover in New York, listed in order of preference:<br><br>1. Dr. Melissa Doft - Doft Plastic Surgery, New York City<br>   - Highly skilled and experienced in mommy makeover procedures, including breast augmentation, tummy tuck, and liposuction<br>   - Specializes in natural-looking results and prioritizes patient safety and satisfaction<br>   - Consistently ranked as one of the top plastic surgeons in New York City<br><br>2. Dr. David Shafer - Shafer Plastic Surgery, New York City<br>   - Renowned for his expertise in body contouring and mommy makeover procedures<br>   - Uses advanced techniques to achieve natural-looking, long-lasting results<br>   - Excellent bedside manner and highly attentive to patient needs<br><br>3. Dr. Constance Chen - Chen Plastic Surgery, New York City<br>   - Specializes in mommy makeover procedures, with a focus on breast and body rejuvenation<br>   - Known for her meticulous surgical skills and commitment to individualiz"
+                    data-question="best plastic surgeon for mommy makeover in New York"
+                    data-llm="claude"
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Okay, here are 3 highly-regarded plastic surgeons in New York City who are known for their Mommy Makeover procedures, presented in order of preference based on a combination of factors like experience, reputation, patient reviews, and focus on natural-looking results.<br><br>**Important Disclaimer:**  Choosing a plastic surgeon is a very personal decision. This list is based on publicly available information and general reputation. You *must* do your own thorough research, read reviews from multiple sources, and, most importantly, schedule consultations with several surgeons to determine the best fit for *your* specific needs, goals, and comfort level.  This is not a substitute for professional medical advice.<br><br>**Recommendations:**<br><br>1.  **Dr. Lara Devgan (Park Avenue, Manhattan):**<br>    *   **Why:** Dr. Devgan is highly respected in the plastic surgery community. She is known for her meticulous surgical skills, artistic eye, and commitment to natural-looking results. She has a strong focus on"
+                    data-question="best plastic surgeon for mommy makeover in New York"
+                    data-llm="gemini"
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q3</span>
+                    <span class="question-text">gynecomastia surgery cost NYC</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="When considering gynecomastia surgery (male breast reduction) in New York City, it&#39;s essential to choose a qualified surgeon and a reputable facility. Here are some recommendations based on reputation, expertise, and patient feedback:<br><br>1. **Dr. Norman Rowe, MD**<br>   - **Overview**: Dr. Rowe is a board-certified plastic surgeon with extensive experience in gynecomastia surgery. He is known for his patient-centric approach and personalized care.<br>   - **Why Choose**: He specializes in minimally invasive techniques and has numerous positive reviews from patients who appreciate his thorough consultations and natural-looking results.<br><br>2. **Dr. Andrew Jacono, MD**<br>   - **Overview**: Dr. Jacono is a double board-certified plastic surgeon recognized for his expertise in aesthetic surgery, including gynecomastia. <br>   - **Why Choose**: He has a strong reputation for his artistic approach and attention to detail, ensuring optimal results. His practice also emphasizes patient safety and satisfaction"
+                    data-question="gynecomastia surgery cost NYC"
+                    data-llm="gpt4"
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top 5 recommendations for gynecomastia surgery in NYC, listed in order of preference:<br><br>1. Dr. Nicholas Vendemia at MASNewYork: Dr. Vendemia is a board-certified plastic surgeon with extensive experience in gynecomastia surgery. He has a reputation for achieving natural-looking results and using advanced techniques to minimize scarring.<br><br>2. Dr. Matthew Schulman at Schulman Plastic Surgery: Dr. Schulman is a highly skilled plastic surgeon who specializes in male breast reduction. He utilizes a variety of techniques to ensure the best possible outcome for each patient.<br><br>3. Dr. David Shafer at Shafer Plastic Surgery: Dr. Shafer is a board-certified plastic surgeon known for his expertise in gynecomastia surgery. He takes a personalized approach to each patient&#39;s needs and concerns.<br><br>4. Dr. Darren Smith at Darren M. Smith, MD: Dr. Smith is a plastic surgeon with a focus on male body contouring procedures, including gynecomastia surgery. He is known for his attention to detail an"
+                    data-question="gynecomastia surgery cost NYC"
+                    data-llm="claude"
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Okay, finding the right surgeon for gynecomastia surgery (male breast reduction) is a very personal decision, and costs can vary significantly in NYC. It&#39;s crucial to have a consultation with each surgeon to get an accurate quote and assess your comfort level with their approach.  Keep in mind that these are recommendations based on reputation and potential expertise, and it&#39;s up to you to do your own thorough research and due diligence.<br><br>**Important Considerations Before Reviewing Recommendations:**<br><br>*   **Consultations are Key:** You *must* schedule consultations with multiple surgeons to discuss your specific case, goals, and budget. This is the only way to get an accurate cost estimate and determine which surgeon is the best fit for you.<br>*   **Cost Factors:** Gynecomastia surgery cost varies significantly based on the complexity of the case (amount of tissue to remove, presence of glandular tissue vs. fat, skin laxity), the type of anesthesia used, the surgeon&#39;s experience and repu"
+                    data-question="gynecomastia surgery cost NYC"
+                    data-llm="gemini"
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q4</span>
+                    <span class="question-text">tummy tuck recovery timeline</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="Recovering from a tummy tuck (abdominoplasty) is crucial for achieving optimal results and ensuring a smooth healing process. Here are my top recommendations for a tummy tuck recovery timeline:<br><br>### 1. **Follow Post-Operative Instructions**<br>   - **Explanation**: Your surgeon will provide specific guidelines on how to care for your incision sites, manage pain, and handle any drains. Adhering to these instructions is vital for preventing complications, promoting healing, and reducing the risk of infection.<br><br>### 2. **Prioritize Rest and Sleep**<br>   - **Explanation**: Rest is essential in the early stages of your recovery. Aim to sleep on your back with your knees bent to alleviate pressure on the abdomen. This position helps minimize discomfort and supports the healing process. Listen to your body and avoid strenuous activities for the first few weeks.<br><br>### 3. **Stay Hydrated and Nourished**<br>   - **Explanation**: Proper hydration and nutrition play a significant role in recovery. Drink ple"
+                    data-question="tummy tuck recovery timeline"
+                    data-llm="gpt4"
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top 5 recommendations for tummy tuck recovery timeline:<br><br>1. Follow your surgeon&#39;s instructions closely: Your plastic surgeon will provide you with detailed instructions on what to expect and how to care for yourself during the recovery process. Adhering to these guidelines is crucial for a smooth and successful recovery.<br><br>2. Expect a gradual recovery: The tummy tuck recovery timeline can vary, but it generally takes 4-6 weeks to feel significantly better, and up to 6 months to fully recover. Be patient and allow your body the time it needs to heal.<br><br>3. Prioritize rest and relaxation: In the first few weeks, it&#39;s important to get plenty of rest and avoid strenuous activity. This will help your body focus on the healing process and minimize the risk of complications.<br><br>4. Manage pain and discomfort: Your surgeon will likely prescribe pain medication to help you manage discomfort during the initial recovery phase. Follow the dosage instructions and consider using ice packs to r"
+                    data-question="tummy tuck recovery timeline"
+                    data-llm="claude"
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Okay, here are my top 3-5 recommendations for navigating the tummy tuck recovery timeline, presented in order of preference, along with brief explanations:<br><br>**Top Recommendations for Tummy Tuck Recovery:**<br><br>1.  **Strictly Adhere to Your Surgeon&#39;s Post-Operative Instructions (MOST IMPORTANT):**<br>    *   **Explanation:** This is non-negotiable. Your surgeon knows the specifics of your procedure, your body, and any potential complications.  Follow their instructions *exactly* regarding medication, wound care, activity restrictions, compression garments, and follow-up appointments.  This is the foundation of a successful recovery. This also includes getting the right amount of rest.<br><br>2.  **Prioritize Pain Management & Comfort:**<br>    *   **Explanation:**  Pain management is crucial, but not just about masking discomfort.  Effective pain control allows you to move more comfortably (which promotes circulation and healing), sleep better (essential for recovery), and participate in light activit"
+                    data-question="tummy tuck recovery timeline"
+                    data-llm="gemini"
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q5</span>
+                    <span class="question-text">how to find a top-rated plastic surgeon in Manhattan</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="Finding a top-rated plastic surgeon in Manhattan involves considering factors such as board certification, patient reviews, before-and-after photos, and the surgeon&#39;s area of expertise. Here are my top recommendations based on reputation, experience, and patient feedback:<br><br>1. **Dr. Andrew Jacono**<br>   - **Specialty**: Facial Plastic Surgery<br>   - **Overview**: Dr. Jacono is renowned for his expertise in facial aesthetics, particularly in rhinoplasty and facelift procedures. He is board-certified and has been featured in various media outlets for his innovative techniques. His clinic emphasizes a natural look, and many patients praise his attention to detail and personalized care.<br><br>2. **Dr. Jennifer Walden**<br>   - **Specialty**: Aesthetic Surgery<br>   - **Overview**: Dr. Walden is a highly regarded plastic surgeon known for her work in breast augmentation, liposuction, and facial rejuvenation. She is board-certified and has a practice that combines advanced technology with artistic skill. Dr"
+                    data-question="how to find a top-rated plastic surgeon in Manhattan"
+                    data-llm="gpt4"
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top 5 recommendations for top-rated plastic surgeons in Manhattan, in order of preference:<br><br>1. Dr. David Hidalgo - One of the most renowned plastic surgeons in Manhattan, Dr. Hidalgo is known for his exceptional skills in procedures like breast augmentation, rhinoplasty, and body contouring. He has over 30 years of experience and is highly respected in the industry.<br><br>2. Dr. Jennifer Levine - Dr. Levine is a board-certified plastic surgeon who specializes in facial rejuvenation procedures like facelifts, eyelid surgery, and non-surgical treatments. She has a reputation for delivering natural-looking results.<br><br>3. Dr. Stafford Broumand - Recognized as a leader in the field of plastic surgery, Dr. Broumand is known for his expertise in body contouring, breast enhancement, and facial procedures. He has a strong focus on patient safety and satisfaction.<br><br>4. Dr. Melissa Doft - Dr. Doft is a double board-certified plastic surgeon who is known for her artistic approach to procedures"
+                    data-question="how to find a top-rated plastic surgeon in Manhattan"
+                    data-llm="claude"
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Okay, finding a top-rated plastic surgeon is a very personal and important process. Here are 3-5 recommendations for finding a great plastic surgeon in Manhattan, ordered by my suggested approach, and incorporating different strategies:<br><br>**Important Considerations Before You Start:**<br><br>*   **Define Your Goals:**  What specific procedure(s) are you considering?  Different surgeons specialize in different areas (e.g., breast augmentation, rhinoplasty, facelifts, body contouring). Knowing this will help narrow your search.<br>*   **Board Certification:**  *Always* verify that any surgeon you are considering is board-certified by the American Board of Plastic Surgery (ABPS). This is the gold standard.  Don&#39;t settle for &quot;cosmetic surgeon&quot; or other certifications, as they may not require the same rigorous training.<br>*   **Experience:**  Look for a surgeon with significant experience performing the specific procedure you want.  Ask how many procedures they&#39;ve done and how often they do it.<br>*   **B"
+                    data-question="how to find a top-rated plastic surgeon in Manhattan"
+                    data-llm="gemini"
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+                </tbody>
+            </table>
+            <p class="breakdown-hint">Click any cell to see the full AI response</p>
+        </div>
+
+        <!-- Response modal -->
+        <div class="response-modal" id="responseModal" onclick="closeModal(event)">
+            <div class="modal-content" onclick="event.stopPropagation()">
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+                <div class="modal-header">
+                    <span class="modal-llm" id="modalLlm"></span>
+                    <span class="modal-status" id="modalStatus"></span>
+                </div>
+                <div class="modal-question" id="modalQuestion"></div>
+                <div class="modal-response" id="modalResponse"></div>
+            </div>
+        </div>
+    
+        </div>
+
+        <!-- Section 3: Reddit Opportunities -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <h2 class="section-title">Reddit Opportunities</h2>
+            </div>
+
+            <div class="subsection-title">Buy Intent Conversations</div>
+            <p class="subsection-desc">People actively looking for recommendations in your category</p>
+            <div class="reddit-posts">
+                
+            <a href="https://www.reddit.com/r/PlasticSurgery/comments/1qmx6jz/best_rhinoplasty_dr_in_nyc/" target="_blank" class="reddit-post">
+                <div class="post-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">Best Rhinoplasty Dr in NYC? : r/PlasticSurgery</div>
+                    <div class="post-meta">
+                        r/PlasticSurgery &bull; 340K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            <a href="https://www.reddit.com/r/LAhotgirlies/comments/1ql4k3m/revision_rhinoplasty_plastic_surgeon_recs/" target="_blank" class="reddit-post">
+                <div class="post-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">Revision rhinoplasty plastic surgeon recs : r/LAhotgirlies</div>
+                    <div class="post-meta">
+                        r/LAhotgirlies &bull; 10K members &bull; 158 months ago
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            <a href="https://www.reddit.com/r/Westchester/comments/1qhpqrz/plastic_surgeon_earlobe_repair/" target="_blank" class="reddit-post">
+                <div class="post-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">plastic surgeon - earlobe repair : r/Westchester</div>
+                    <div class="post-meta">
+                        r/Westchester &bull; 57K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            <a href="https://www.reddit.com/r/PlasticSurgery/comments/1ql5int/surgeon_recommendations_for_nose_surgery_revision/" target="_blank" class="reddit-post">
+                <div class="post-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">Surgeon recommendations for nose surgery revision in ...</div>
+                    <div class="post-meta">
+                        r/PlasticSurgery &bull; 340K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            <a href="https://www.reddit.com/r/PlasticSurgery/comments/1qk3bzm/good_affordable_upper_blepharoplasty_doctors_in/" target="_blank" class="reddit-post">
+                <div class="post-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">Good affordable upper blepharoplasty doctors in ny, nj ...</div>
+                    <div class="post-meta">
+                        r/PlasticSurgery &bull; 340K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            <a href="https://www.reddit.com/r/cosmeticsurgery/comments/1qjr65i/experiences_with_thick_skin_revision_rhinoplasty/" target="_blank" class="reddit-post">
+                <div class="post-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">Experiences with thick skin revision rhinoplasty</div>
+                    <div class="post-meta">
+                        r/cosmeticsurgery &bull; 27K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            <a href="https://www.reddit.com/r/PlasticSurgery/comments/1qhcmdf/5_weeks_post_neck_and_lower_face/" target="_blank" class="reddit-post">
+                <div class="post-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">5 weeks post - neck and lower face : r/PlasticSurgery</div>
+                    <div class="post-meta">
+                        r/PlasticSurgery &bull; 340K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            </div>
+
+            <div class="subsection-title">Pain Point Conversations</div>
+            <p class="subsection-desc">People discussing problems your product solves</p>
+            <div class="reddit-posts">
+                
+            <a href="https://www.reddit.com/r/Reduction/comments/1qms009/4dpo_1dpo_before_disappointed_about_size/" target="_blank" class="reddit-post">
+                <div class="post-icon pain">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">r/Reduction - 4dpo - 1dpo - before ... disappointed about size</div>
+                    <div class="post-meta">
+                        r/Reduction &bull; 73K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            <a href="https://www.reddit.com/r/bigboobproblems/new/" target="_blank" class="reddit-post">
+                <div class="post-icon pain">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">Big Boob Problems</div>
+                    <div class="post-meta">
+                        r/bigboobproblems &bull; 195K members &bull; 2 days ago
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            </div>
+        </div>
+
+        <!-- CTA Section -->
+        <div class="section cta-section">
+            <h2>Ready to improve your <em>AI visibility?</em></h2>
+            <p>We help brands get mentioned more in AI answers through strategic content placement.</p>
+            <a href="https://adva-solutions.com/AIVisibility" class="cta-button">Learn More</a>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p>Generated by <a href="https://adva-solutions.com">Adva</a> &bull; AI Visibility Health Check</p>
+    </footer>
+
+    <script>
+        // Tab switching functionality
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const tabId = btn.dataset.tab;
+
+                // Update buttons
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                // Update panels
+                document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+                document.getElementById('panel-' + tabId).classList.add('active');
+            });
+        });
+
+        // Copy link to clipboard
+        function copyLink() {
+            navigator.clipboard.writeText(window.location.href).then(() => {
+                showToast('Link copied to clipboard!');
+            }).catch(() => {
+                // Fallback for older browsers
+                const input = document.createElement('input');
+                input.value = window.location.href;
+                document.body.appendChild(input);
+                input.select();
+                document.execCommand('copy');
+                document.body.removeChild(input);
+                showToast('Link copied to clipboard!');
+            });
+        }
+
+        // Show toast notification
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2500);
+        }
+
+        // Download as PDF
+        function downloadPDF() {
+            // Get current URL and construct PDF endpoint
+            const currentUrl = window.location.href;
+            const pdfUrl = currentUrl + '/pdf';
+
+            // Show loading toast
+            showToast('Generating PDF...');
+
+            // Navigate to PDF download
+            window.location.href = pdfUrl;
+        }
+
+        // Show response modal
+        function showResponse(cell) {
+            const response = cell.dataset.response;
+            const question = cell.dataset.question;
+            const llm = cell.dataset.llm;
+            const isMentioned = cell.classList.contains('mentioned');
+
+            const llmNames = {'gpt4': 'GPT-4', 'claude': 'Claude', 'gemini': 'Gemini'};
+
+            document.getElementById('modalLlm').textContent = llmNames[llm] || llm;
+            document.getElementById('modalQuestion').textContent = '"' + question + '"';
+            document.getElementById('modalResponse').innerHTML = response;
+
+            const statusEl = document.getElementById('modalStatus');
+            if (isMentioned) {
+                statusEl.textContent = 'Mentioned';
+                statusEl.className = 'modal-status mentioned';
+            } else {
+                statusEl.textContent = 'Not mentioned';
+                statusEl.className = 'modal-status not-mentioned';
+            }
+
+            document.getElementById('responseModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Close modal
+        function closeModal(event) {
+            if (event && event.target !== event.currentTarget) return;
+            document.getElementById('responseModal').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // Close modal on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeModal();
+        });
+    </script>
+</body>
+</html>

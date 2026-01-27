@@ -1,0 +1,1499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Visibility Report - Robinhood | Adva</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #ffffff;
+            min-height: 100vh;
+            color: #374151;
+            line-height: 1.6;
+        }
+
+        /* Header */
+        .header {
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            font-size: 1.25rem;
+            color: #1f2937;
+            text-decoration: none;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .header-date {
+            color: #9ca3af;
+            font-size: 0.875rem;
+        }
+
+        /* Share buttons */
+        .share-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .share-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: #f3f4f6;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            color: #374151;
+            font-size: 0.875rem;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .share-btn:hover {
+            background: #e5e7eb;
+        }
+
+        .share-btn svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .share-btn.primary {
+            background: #1f2937;
+            color: #ffffff;
+            border-color: #1f2937;
+        }
+
+        .share-btn.primary:hover {
+            background: #111827;
+        }
+
+        /* Toast notification */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: #1f2937;
+            color: #ffffff;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            opacity: 0;
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        /* Container */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Page title */
+        .page-title {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .page-title .label {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: #9ca3af;
+            font-size: 0.75rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+        }
+
+        .page-title .label::before,
+        .page-title .label::after {
+            content: '';
+            width: 30px;
+            height: 1px;
+            background: #d1d5db;
+        }
+
+        .page-title h1 {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 2.5rem;
+            font-weight: 400;
+            color: #1f2937;
+            margin-bottom: 0.5rem;
+        }
+
+        .page-title .brand {
+            color: #6b7280;
+            font-size: 1.125rem;
+        }
+
+        /* Sections */
+        .section {
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #f3f4f6;
+        }
+
+        .section-icon {
+            width: 40px;
+            height: 40px;
+            background: #1f2937;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .section-icon svg {
+            width: 20px;
+            height: 20px;
+            color: #ffffff;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 1.375rem;
+            color: #1f2937;
+        }
+
+        /* Score Section */
+        .score-section {
+            text-align: center;
+            padding: 3rem 2rem;
+        }
+
+        .score-circle {
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            background: #fafafa;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            border: 4px solid #22c55e;
+        }
+
+        .score-value {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 3rem;
+            font-weight: 500;
+            color: #22c55e;
+        }
+
+        .score-label {
+            font-size: 0.8rem;
+            color: #9ca3af;
+        }
+
+        .score-description {
+            color: #6b7280;
+            margin-bottom: 2rem;
+            font-size: 1rem;
+        }
+
+        .score-description strong {
+            color: #1f2937;
+        }
+
+        .llm-breakdown {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .llm-stat {
+            text-align: center;
+            padding: 1rem 1.5rem;
+            background: #fafafa;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+            min-width: 100px;
+        }
+
+        .llm-name {
+            display: block;
+            color: #9ca3af;
+            font-size: 0.8rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .llm-score {
+            font-size: 1.125rem;
+            font-weight: 600;
+        }
+
+        .llm-score.success {
+            color: #22c55e;
+        }
+
+        .llm-score.warning {
+            color: #ef4444;
+        }
+
+        /* Competitor Table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 0.875rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid #f3f4f6;
+        }
+
+        th {
+            color: #9ca3af;
+            font-weight: 500;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        td {
+            color: #374151;
+        }
+
+        .mention-count {
+            background: #fef3c7;
+            color: #92400e;
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        /* Tabs for LLM responses */
+        .example-tabs {
+            margin-top: 1.5rem;
+        }
+
+        .tabs-header {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+            padding-bottom: 0;
+        }
+
+        .tab-btn {
+            padding: 0.75rem 1.25rem;
+            background: transparent;
+            border: none;
+            color: #6b7280;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            margin-bottom: -1px;
+            transition: all 0.2s;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .tab-btn:hover {
+            color: #1f2937;
+        }
+
+        .tab-btn.active {
+            color: #1f2937;
+            border-bottom-color: #1f2937;
+        }
+
+        .tab-panel {
+            display: none;
+            background: #fafafa;
+            border-radius: 8px;
+            padding: 1.25rem;
+        }
+
+        .tab-panel.active {
+            display: block;
+        }
+
+        .example-question {
+            color: #1f2937;
+            font-weight: 500;
+            font-size: 0.95rem;
+            margin-bottom: 0.75rem;
+        }
+
+        /* Question breakdown table */
+        .question-breakdown {
+            margin-top: 1rem;
+        }
+
+        .breakdown-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        .breakdown-table th {
+            padding: 0.75rem;
+            text-align: center;
+            background: #f9fafb;
+            border-bottom: 2px solid #e5e7eb;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .breakdown-table th:first-child {
+            text-align: left;
+            width: 50%;
+        }
+
+        .breakdown-table td {
+            padding: 0.75rem;
+            border-bottom: 1px solid #f3f4f6;
+            vertical-align: middle;
+        }
+
+        .question-cell {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+        }
+
+        .question-num {
+            background: #e5e7eb;
+            color: #374151;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        .question-text {
+            color: #374151;
+            line-height: 1.4;
+        }
+
+        .llm-cell {
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-radius: 4px;
+        }
+
+        .llm-cell:hover {
+            background: #f3f4f6;
+        }
+
+        .llm-cell.mentioned {
+            color: #16a34a;
+        }
+
+        .llm-cell.mentioned .status-icon {
+            font-size: 1.25rem;
+        }
+
+        .llm-cell.not-mentioned {
+            color: #dc2626;
+        }
+
+        .llm-cell.not-mentioned .status-icon {
+            font-size: 1.25rem;
+        }
+
+        .breakdown-hint {
+            color: #9ca3af;
+            font-size: 0.8rem;
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+        /* Response modal */
+        .response-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+        }
+
+        .response-modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: #ffffff;
+            border-radius: 12px;
+            max-width: 800px;
+            width: 100%;
+            max-height: 90vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #9ca3af;
+            cursor: pointer;
+            padding: 0.25rem 0.5rem;
+        }
+
+        .modal-close:hover {
+            color: #374151;
+        }
+
+        .modal-header {
+            padding: 1.5rem 1.5rem 0;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            position: relative;
+        }
+
+        .modal-llm {
+            font-weight: 600;
+            color: #1f2937;
+            font-size: 1.1rem;
+        }
+
+        .modal-status {
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .modal-status.mentioned {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .modal-status.not-mentioned {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .modal-question {
+            padding: 1rem 1.5rem;
+            color: #6b7280;
+            font-size: 0.9rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .modal-response {
+            padding: 1.5rem;
+            overflow-y: scroll;
+            flex: 1;
+            color: #374151;
+            font-size: 0.9rem;
+            line-height: 1.8;
+            height: 500px;
+            background: #fafafa;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .modal-response::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .modal-response::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        .modal-response::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 4px;
+        }
+
+        .modal-response::-webkit-scrollbar-thumb:hover {
+            background: #a1a1a1;
+        }
+
+        /* Brand highlight */
+        .brand-highlight {
+            background: linear-gradient(120deg, #fef08a 0%, #fde047 100%);
+            padding: 0.1rem 0.3rem;
+            border-radius: 3px;
+            font-weight: 600;
+        }
+
+        .example-content {
+            color: #6b7280;
+            font-size: 0.875rem;
+            line-height: 1.7;
+            max-height: 400px;
+            overflow-y: auto;
+            margin-bottom: 0.75rem;
+            padding: 1rem;
+            background: #f9fafb;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .example-status {
+            padding: 0.5rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            display: inline-block;
+        }
+
+        .example-status.mentioned {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .example-status.not-mentioned {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        /* Reddit Posts */
+        .reddit-posts {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .reddit-post {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: #fafafa;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: all 0.2s;
+            border: 1px solid transparent;
+        }
+
+        .reddit-post:hover {
+            background: #f3f4f6;
+            border-color: #e5e7eb;
+        }
+
+        .post-icon {
+            width: 40px;
+            height: 40px;
+            background: #1f2937;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .post-icon.pain {
+            background: #fef3c7;
+        }
+
+        .post-icon.pain svg {
+            color: #92400e;
+        }
+
+        .post-icon svg {
+            width: 20px;
+            height: 20px;
+            color: #ffffff;
+        }
+
+        .post-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .post-title {
+            color: #1f2937;
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .post-meta {
+            color: #9ca3af;
+            font-size: 0.8rem;
+        }
+
+        .post-arrow {
+            color: #9ca3af;
+            flex-shrink: 0;
+        }
+
+        .post-arrow svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .subsection-title {
+            color: #1f2937;
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin: 1.5rem 0 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .subsection-title:first-of-type {
+            margin-top: 0;
+        }
+
+        .subsection-desc {
+            color: #9ca3af;
+            font-size: 0.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .no-data {
+            color: #9ca3af;
+            font-style: italic;
+            text-align: center;
+            padding: 1rem;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            color: #9ca3af;
+            font-size: 0.8rem;
+            padding: 2rem;
+            border-top: 1px solid #e5e7eb;
+            margin-top: 2rem;
+        }
+
+        .footer a {
+            color: #1f2937;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* CTA */
+        .cta-section {
+            text-align: center;
+            padding: 3rem 2rem;
+            background: #fafafa;
+        }
+
+        .cta-section h2 {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 1.75rem;
+            color: #1f2937;
+            margin-bottom: 0.75rem;
+        }
+
+        .cta-section p {
+            color: #6b7280;
+            margin-bottom: 1.5rem;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background: #1f2937;
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .cta-button:hover {
+            background: #111827;
+            transform: translateY(-1px);
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .page-title h1 {
+                font-size: 1.75rem;
+            }
+
+            .section {
+                padding: 1.5rem;
+            }
+
+            .score-circle {
+                width: 130px;
+                height: 130px;
+            }
+
+            .score-value {
+                font-size: 2.25rem;
+            }
+
+            .llm-breakdown {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .tabs-header {
+                flex-wrap: wrap;
+            }
+
+            .tab-btn {
+                padding: 0.5rem 1rem;
+                font-size: 0.8rem;
+            }
+
+            .breakdown-table th,
+            .breakdown-table td {
+                padding: 0.5rem;
+                font-size: 0.8rem;
+            }
+
+            .question-cell {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .modal-content {
+                max-height: 90vh;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <a href="/" class="logo">adva</a>
+        <div class="header-right">
+            <div class="share-buttons">
+                <button class="share-btn" onclick="copyLink()" title="Copy link">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                    </svg>
+                    Copy Link
+                </button>
+                <a class="share-btn" href="mailto:?subject=AI%20Visibility%20Report%20for%20Robinhood&body=Check%20out%20this%20AI%20visibility%20report%3A%20" onclick="this.href += encodeURIComponent(window.location.href)" title="Share via email">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                    </svg>
+                    Email
+                </a>
+                <a class="share-btn primary" href="javascript:void(0)" onclick="downloadPDF()" title="Download as PDF">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                    </svg>
+                    Download PDF
+                </a>
+            </div>
+            <span class="header-date">January 26, 2026</span>
+        </div>
+    </header>
+    <div class="toast" id="toast">Link copied to clipboard!</div>
+
+    <div class="container">
+        <div class="page-title">
+            <div class="label">AI Visibility Report</div>
+            <h1>Your Brand's <em>AI Presence</em></h1>
+            <p class="brand">Analysis for Robinhood</p>
+        </div>
+
+        <!-- Section 1: AI Visibility Score -->
+        <div class="section score-section">
+            <div class="score-circle">
+                <span class="score-value">73%</span>
+                <span class="score-label">11/15 mentions</span>
+            </div>
+            <p class="score-description">
+                Your brand appeared in <strong>11</strong> out of <strong>15</strong> AI recommendations
+            </p>
+            <div class="llm-breakdown">
+                
+            <div class="llm-stat">
+                <span class="llm-name">GPT-4</span>
+                <span class="llm-score success">3/5</span>
+            </div>
+        
+            <div class="llm-stat">
+                <span class="llm-name">Claude</span>
+                <span class="llm-score success">4/5</span>
+            </div>
+        
+            <div class="llm-stat">
+                <span class="llm-name">Gemini</span>
+                <span class="llm-score success">4/5</span>
+            </div>
+        
+            </div>
+        </div>
+
+        <!-- Section 2: Competitor Analysis -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                    </svg>
+                </div>
+                <h2 class="section-title">Competitor Analysis</h2>
+            </div>
+            <p style="color: #6b7280; margin-bottom: 1rem;">Here's who AI models are recommending instead of you:</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Competitor</th>
+                        <th>Mentions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    
+            <tr>
+                <td>Fidelity</td>
+                <td><span class="mention-count">8</span></td>
+            </tr>
+        
+            <tr>
+                <td>Charles Schwab</td>
+                <td><span class="mention-count">4</span></td>
+            </tr>
+        
+            <tr>
+                <td>Acorns</td>
+                <td><span class="mention-count">9</span></td>
+            </tr>
+        
+            <tr>
+                <td>Betterment</td>
+                <td><span class="mention-count">6</span></td>
+            </tr>
+        
+            <tr>
+                <td>Stash</td>
+                <td><span class="mention-count">5</span></td>
+            </tr>
+        
+            <tr>
+                <td>SoFi</td>
+                <td><span class="mention-count">5</span></td>
+            </tr>
+        
+            <tr>
+                <td>Fidelity Investments</td>
+                <td><span class="mention-count">4</span></td>
+            </tr>
+        
+            <tr>
+                <td>Wealthfront</td>
+                <td><span class="mention-count">4</span></td>
+            </tr>
+        
+            <tr>
+                <td>Ally Invest</td>
+                <td><span class="mention-count">3</span></td>
+            </tr>
+        
+            <tr>
+                <td>Robinhood is a popular and user</td>
+                <td><span class="mention-count">2</span></td>
+            </tr>
+        
+                </tbody>
+            </table>
+
+            <div class="subsection-title" style="margin-top: 1.5rem;">Question-by-Question Breakdown</div>
+            <p class="subsection-desc">We asked these 5 questions to each AI model. Here's where your brand was mentioned:</p>
+            
+        <div class="question-breakdown">
+            <table class="breakdown-table">
+                <thead>
+                    <tr>
+                        <th>Question Asked</th>
+                        <th>GPT-4</th>
+                        <th>Claude</th>
+                        <th>Gemini</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q1</span>
+                    <span class="question-text">best app to start investing with $100</span>
+                </td>
+                
+                <td class="llm-cell mentioned"
+                    data-response="Here are my top recommendations for apps to start investing with $100, listed in order of preference:<br><br>1. **Robinhood**<br>   - **Overview**: Robinhood is a popular commission-free trading app that allows users to buy and sell stocks, ETFs, options, and cryptocurrencies. <br>   - **Why It&#39;s Great**: It has a user-friendly interface, making it easy for beginners to understand and navigate. With no account minimum and no trading fees, you can start investing right away with $100. Plus, Robinhood offers educational resources to help you learn about investing.<br><br>2. **Acorns**<br>   - **Overview**: Acorns is a micro-investing app that rounds up your purchases to the nearest dollar and invests the spare change into a diversified portfolio of ETFs.<br>   - **Why It&#39;s Great**: This app is excellent for those who prefer a hands-off approach to investing. With just $100, you can start investing without needing to actively manage your portfolio. Acorns also offers personalized investment strategies based on y"
+                    data-question="best app to start investing with $100"
+                    data-llm="gpt4"
+                    data-brand="Robinhood"
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✓</span> (#1)
+                </td>
+            
+                <td class="llm-cell mentioned"
+                    data-response="Here are my top 5 recommendations for apps to start investing with $100:<br><br>1. Robinhood:<br>   - Robinhood is a popular and user-friendly app that allows you to invest in stocks, ETFs, and cryptocurrencies with no commission fees.<br>   - It has a simple and intuitive interface, making it easy for beginners to get started with investing.<br>   - Robinhood offers fractional shares, allowing you to invest in portions of high-priced stocks.<br><br>2. Acorns:<br>   - Acorns is a micro-investing app that automatically invests your spare change from everyday purchases into a diversified portfolio of ETFs.<br>   - It&#39;s a great option for beginners who want to start investing with small amounts and build up their portfolio over time.<br>   - Acorns offers different investment portfolios based on your risk tolerance, making it suitable for a range of investors.<br><br>3. Stash:<br>   - Stash is an investment app that offers a variety of investment options, including stocks, ETFs, and fractional shares.<br>   - It provides educatio"
+                    data-question="best app to start investing with $100"
+                    data-llm="claude"
+                    data-brand="Robinhood"
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✓</span> (#1)
+                </td>
+            
+                <td class="llm-cell mentioned"
+                    data-response="Okay, here are my top 3 recommendations for the best apps to start investing with $100, listed in order of preference, along with brief explanations:<br><br>**1.  Acorns (Top Pick)**<br><br>*   **Why it&#39;s great for $100:** Acorns is designed for beginners and small investments. Its core &quot;Round-Ups&quot; feature automatically invests your spare change from everyday purchases.  For example, if you buy a coffee for $2.50, Acorns rounds it up to $3 and invests the extra 50 cents.  You can also make recurring or one-time investments.  They also have educational articles.<br>*   **Investment Options:**  Offers a selection of diversified ETF portfolios based on your risk tolerance (conservative, moderate, aggressive).  You don&#39;t have to pick individual stocks.<br>*   **Fees:** Subscription-based.  Acorns Personal (investing, checking, retirement) is $3/month.  Acorns Family (all of Personal, plus investment accounts for kids) is $5/month. The basic Acorns Invest is $3/month.<br>*  **Considerations:** The monthly fee c"
+                    data-question="best app to start investing with $100"
+                    data-llm="gemini"
+                    data-brand="Robinhood"
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✓</span> (#3)
+                </td>
+            
+            </tr>
+        
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q2</span>
+                    <span class="question-text">investing app for complete beginners</span>
+                </td>
+                
+                <td class="llm-cell mentioned"
+                    data-response="Here are my top recommendations for investing apps suitable for complete beginners, listed in order of preference:<br><br>### 1. **Robinhood**<br>- **Overview**: Robinhood is a user-friendly platform that offers commission-free trading for stocks, ETFs, options, and cryptocurrencies.<br>- **Why It&#39;s Great for Beginners**: The app features a simple, intuitive interface that makes it easy for beginners to navigate. It also provides educational resources to help users understand the basics of investing and the stock market.<br><br>### 2. **Acorns**<br>- **Overview**: Acorns is a micro-investing app that automatically invests your spare change from everyday purchases by rounding up transactions to the nearest dollar.<br>- **Why It&#39;s Great for Beginners**: Acorns is designed for those who may be intimidated by traditional investing. It offers a hands-off approach, making it easy to start investing with minimal effort. The app also includes educational content to help users learn about investment strategies and per"
+                    data-question="investing app for complete beginners"
+                    data-llm="gpt4"
+                    data-brand="Robinhood"
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✓</span> (#3)
+                </td>
+            
+                <td class="llm-cell mentioned"
+                    data-response="Here are my top 5 recommendations for investing apps for complete beginners, listed in order of preference:<br><br>1. Robinhood:<br>   - Robinhood is a popular and user-friendly investing app that offers commission-free trading of stocks, ETFs, and cryptocurrencies.<br>   - It has a clean and intuitive interface, making it easy for beginners to navigate and start investing.<br>   - Robinhood provides educational resources and tools to help users learn about investing and make informed decisions.<br><br>2. Acorns:<br>   - Acorns is a micro-investing app that allows users to invest spare change from their everyday purchases.<br>   - It offers a simple, automated investment strategy, making it a great option for beginners who want to start investing with small amounts.<br>   - Acorns provides a diversified portfolio of ETFs, making it a low-risk investment option.<br><br>3. Betterment:<br>   - Betterment is a robo-advisor platform that provides automated, personalized investment management.<br>   - It offers a user-friendly inter"
+                    data-question="investing app for complete beginners"
+                    data-llm="claude"
+                    data-brand="Robinhood"
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✓</span> (#1)
+                </td>
+            
+                <td class="llm-cell mentioned"
+                    data-response="Okay, here are my top recommendations for investing apps for complete beginners, listed in order of preference, with explanations:<br><br>**1.  Acorns:**<br><br>*   **Why it&#39;s great for beginners:** Acorns simplifies investing by rounding up your everyday purchases to the nearest dollar and investing the spare change.  This &quot;micro-investing&quot; approach makes it incredibly easy to start small and build a portfolio without feeling intimidated.  They also offer features like recurring investments, retirement accounts (IRAs), and educational content tailored for beginners.  Their portfolio options are pre-built based on your risk tolerance. The user interface is extremely clean and intuitive.<br>*   **Key Features:** Round-ups, pre-built portfolios, recurring investments, retirement accounts, educational resources.<br>*   **Potential Downsides:** The fees can be a bit high for very small balances (a flat monthly fee can eat into returns significantly).  It&#39;s not ideal for day trading or actively managing a co"
+                    data-question="investing app for complete beginners"
+                    data-llm="gemini"
+                    data-brand="Robinhood"
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✓</span> (#3)
+                </td>
+            
+            </tr>
+        
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q3</span>
+                    <span class="question-text">easiest way to invest money 2025</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="Investing in 2025 can take many forms depending on your risk tolerance, investment goals, and time horizon. Here are my top 3-5 recommendations for relatively easy ways to invest your money:<br><br>### 1. **Index Funds and ETFs**<br>   - **Explanation**: Index funds and exchange-traded funds (ETFs) are investment vehicles that track specific market indexes, such as the S&P 500. They offer diversification, low fees, and are passively managed, making them a simple choice for beginners. By investing in these, you can gain exposure to a broad range of stocks without needing to pick individual winners.<br><br>### 2. **Robo-Advisors**<br>   - **Explanation**: Robo-advisors are automated platforms that create and manage an investment portfolio for you based on your financial goals and risk tolerance. They use algorithms to optimize your investments, making it easy for you to start investing with minimal knowledge. Examples include Betterment, Wealthfront, and Schwab Intelligent Portfolios. They often charge lo"
+                    data-question="easiest way to invest money 2025"
+                    data-llm="gpt4"
+                    data-brand="Robinhood"
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top 5 recommendations for the easiest ways to invest money by 2025:<br><br>1. Index Funds:<br>   - Index funds, such as S&P 500 or total stock market funds, provide broad exposure to the stock market.<br>   - They are passively managed, which means lower fees and often better long-term performance compared to actively managed funds.<br>   - Index funds are a simple and diversified way to invest in the overall market.<br><br>2. High-Yield Savings Accounts:<br>   - High-yield savings accounts offer a relatively low-risk way to grow your money, with interest rates typically higher than traditional savings accounts.<br>   - These accounts are easily accessible and provide liquidity, making them suitable for short-term or emergency savings.<br>   - They can serve as a safe haven for funds you may need in the next few years.<br><br>3. Robo-Advisors:<br>   - Robo-advisors are automated investment platforms that provide personalized portfolio management based on your risk tolerance and investment goals.<br>   - They typica"
+                    data-question="easiest way to invest money 2025"
+                    data-llm="claude"
+                    data-brand="Robinhood"
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Okay, here are 3 recommendations for easy ways to invest money in 2025, assuming you&#39;re looking for relatively hands-off approaches and aiming for long-term growth.  I&#39;m ordering them based on generally increasing risk/reward potential, and ease of use for beginners.  **Important Disclaimer:** I am an AI and cannot provide financial advice. These are general recommendations and you should consult with a qualified financial advisor before making any investment decisions. Your individual circumstances and risk tolerance are crucial factors.<br><br>**Recommendations (Ranked by preference/ease of use):**<br><br>1.  **Target Date Retirement Funds (TDFs):**<br><br>    *   **Explanation:** This is arguably the *easiest* way to invest for retirement.  You choose a fund with a target date closest to when you plan to retire (e.g., a &quot;2055 Fund&quot; if you plan to retire around 2055).  The fund is automatically diversified across stocks, bonds, and other asset classes.  As the target date approaches, the fund automati"
+                    data-question="easiest way to invest money 2025"
+                    data-llm="gemini"
+                    data-brand="Robinhood"
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q4</span>
+                    <span class="question-text">robinhood alternatives for beginners</span>
+                </td>
+                
+                <td class="llm-cell mentioned"
+                    data-response="Here are my top recommendations for Robinhood alternatives for beginners, listed in order of preference:<br><br>1. **Webull**<br>   - **Overview:** Webull is a commission-free trading platform that offers more advanced trading tools and features compared to Robinhood. <br>   - **Pros:** It provides detailed charting tools, real-time market data, and options trading, making it great for those who want to expand their trading knowledge. Webull also offers a paper trading feature for beginners to practice without risking real money.<br>   - **Cons:** The interface may be slightly more complex for absolute beginners, and it lacks some educational resources.<br><br>2. **Fidelity Investments**<br>   - **Overview:** Fidelity is a well-established brokerage that offers commission-free trading for stocks and ETFs, along with a wealth of research tools and educational resources.<br>   - **Pros:** Fidelity provides excellent customer service, a vast array of investment options (including mutual funds and bonds), and robust"
+                    data-question="robinhood alternatives for beginners"
+                    data-llm="gpt4"
+                    data-brand="Robinhood"
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✓</span> (#1)
+                </td>
+            
+                <td class="llm-cell mentioned"
+                    data-response="Here are my top 5 recommendations for Robinhood alternatives for beginners, in order of preference:<br><br>1. Fidelity Investments:<br>   - Fidelity is a well-established and trusted financial services firm with a user-friendly platform.<br>   - It offers a wide range of investment options, including stocks, bonds, mutual funds, and ETFs.<br>   - Fidelity has a strong educational resources section, making it a great choice for beginner investors.<br>   - The platform is easy to navigate and provides comprehensive research and analysis tools.<br><br>2. Charles Schwab:<br>   - Charles Schwab is another reputable financial institution with a robust online trading platform.<br>   - It offers a wide range of investment products, including stocks, bonds, mutual funds, and ETFs.<br>   - The platform is user-friendly and provides excellent customer support and educational resources.<br>   - Charles Schwab also offers competitive pricing and no account minimums, making it accessible for beginners.<br><br>3. TD Ameritrade:<br>   - TD Ameri"
+                    data-question="robinhood alternatives for beginners"
+                    data-llm="claude"
+                    data-brand="Robinhood"
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✓</span> (#1)
+                </td>
+            
+                <td class="llm-cell mentioned"
+                    data-response="Okay, here are my top 3 recommendations for Robinhood alternatives for beginners, presented in order of preference and followed by brief explanations:<br><br>**1. Fidelity:**<br><br>*   **Why it&#39;s great for beginners:** Fidelity is a full-service brokerage with a fantastic reputation for customer service, research, and educational resources. They offer commission-free trading on stocks, ETFs, and options.  Their mobile app is user-friendly, and their website provides a wealth of information for new investors.  They also offer fractional shares, allowing you to buy a portion of a stock if you don&#39;t want to purchase a full share.  Crucially, they have physical branches and phone support, which can be invaluable for beginners. The &quot;Learn&quot; section on their website is truly comprehensive.<br>*   **Key Features:** Commission-free trading, fractional shares, robust research tools, excellent customer service (including phone and in-person support), extensive educational resources, retirement accounts (IRAs),"
+                    data-question="robinhood alternatives for beginners"
+                    data-llm="gemini"
+                    data-brand="Robinhood"
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✓</span> (#1)
+                </td>
+            
+            </tr>
+        
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q5</span>
+                    <span class="question-text">how to start investing with little money</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="Starting to invest with little money is a great way to build your financial future. Here are my top three recommendations:<br><br>### 1. **Robo-Advisors**<br>   - **Explanation**: Robo-advisors are automated platforms that create and manage a diversified investment portfolio for you based on your risk tolerance and investment goals. Many robo-advisors have low minimum investment requirements (some offer accounts with no minimum) and low fees compared to traditional financial advisors. Examples include Betterment, Wealthfront, and Acorns. They provide a hands-off approach and are suitable for beginners.<br><br>### 2. **Exchange-Traded Funds (ETFs)**<br>   - **Explanation**: ETFs are investment funds that trade on stock exchanges, similar to stocks. They offer diversified exposure to different asset classes (like stocks, bonds, or commodities) with relatively low expense ratios. You can start investing in ETFs with a small amount of money, and many brokerages allow you to purchase fractional shares, meani"
+                    data-question="how to start investing with little money"
+                    data-llm="gpt4"
+                    data-brand="Robinhood"
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell mentioned"
+                    data-response="Here are my top 5 recommendations for starting to invest with little money, in order of preference:<br><br>1. Robo-advisors: Robo-advisors are automated investment platforms that create and manage diversified portfolios for you based on your risk tolerance and investment goals. They typically have low minimum investment requirements (as low as $0 in some cases) and charge relatively low management fees. Examples include Betterment, Wealthfront, and Acorns.<br><br>2. Index funds: Index funds are a type of mutual fund or exchange-traded fund (ETF) that tracks a specific market index, such as the S&P 500. They are a great way to get broad market exposure with low fees and minimal risk. You can start investing in index funds with as little as $100 or even less.<br><br>3. Fractional shares: Some brokerages, such as Robinhood and Fidelity, allow you to invest in fractional shares of stocks or ETFs. This means you can buy a portion of a share, which makes it more accessible for investors with limited funds. Th"
+                    data-question="how to start investing with little money"
+                    data-llm="claude"
+                    data-brand="Robinhood"
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✓</span> (#3)
+                </td>
+            
+                <td class="llm-cell mentioned"
+                    data-response="Okay, here are my top 3 recommendations for starting to invest with little money, ordered by preference, along with brief explanations:<br><br>1.  **Invest in Fractional Shares of Stocks or ETFs using a Brokerage App (like Fidelity, Schwab, or Robinhood):**<br><br>    *   **Explanation:** Many brokerages now allow you to buy fractions of a single share of a company or ETF. This means you don&#39;t need to save up hundreds (or even thousands) of dollars to own a piece of companies like Apple, Amazon, or a broad market index fund (like an S&P 500 ETF).  You can start with as little as $5.<br>    *   **Why it&#39;s the best starting point:** This provides direct exposure to the stock market, allowing you to learn how prices fluctuate and experience potential growth. It&#39;s also easily accessible and you can automate the process with recurring investments.  Research different ETFs and companies to understand what you&#39;re investing in.<br>    *   **Important note:** While Robinhood is popular, research the brokerage&#39;s "
+                    data-question="how to start investing with little money"
+                    data-llm="gemini"
+                    data-brand="Robinhood"
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✓</span> (#1)
+                </td>
+            
+            </tr>
+        
+                </tbody>
+            </table>
+            <p class="breakdown-hint">Click any cell to see the full AI response</p>
+        </div>
+
+        <!-- Response modal -->
+        <div class="response-modal" id="responseModal" onclick="closeModal(event)">
+            <div class="modal-content" onclick="event.stopPropagation()">
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+                <div class="modal-header">
+                    <span class="modal-llm" id="modalLlm"></span>
+                    <span class="modal-status" id="modalStatus"></span>
+                </div>
+                <div class="modal-question" id="modalQuestion"></div>
+                <div class="modal-response" id="modalResponse"></div>
+            </div>
+        </div>
+    
+        </div>
+
+        <!-- Section 3: Reddit Opportunities -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <h2 class="section-title">Reddit Opportunities</h2>
+            </div>
+
+            <div class="subsection-title">Buy Intent Conversations</div>
+            <p class="subsection-desc">People actively looking for recommendations in your category</p>
+            <div class="reddit-posts">
+                
+            <a href="https://www.reddit.com/r/investingforbeginners/comments/1qj61lp/whats_the_best_investing_app/" target="_blank" class="reddit-post">
+                <div class="post-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">What's the best investing app? : r/investingforbeginners</div>
+                    <div class="post-meta">
+                        r/investingforbeginners &bull; 185K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            <a href="https://www.reddit.com/r/personalfinance/comments/1qm9ax8/best_auto_investing_app/" target="_blank" class="reddit-post">
+                <div class="post-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">best auto investing app? : r/personalfinance</div>
+                    <div class="post-meta">
+                        r/personalfinance &bull; 21.5M members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            <a href="https://www.reddit.com/r/investingforbeginners/comments/1qm876a/good_app_for_beginners_iphone/" target="_blank" class="reddit-post">
+                <div class="post-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">Good app for beginners iPhone : r/investingforbeginners</div>
+                    <div class="post-meta">
+                        r/investingforbeginners &bull; 185K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            <a href="https://www.reddit.com/r/stocks/comments/1qly1va/what_is_the_best_platform_to_buy_stocks/" target="_blank" class="reddit-post">
+                <div class="post-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">What is the best platform to buy stocks?</div>
+                    <div class="post-meta">
+                        r/stocks &bull; 9.1M members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            <a href="https://www.reddit.com/r/Investors/comments/1qmr9ts/what_save_and_trustful_appsite_should_i_use_for/" target="_blank" class="reddit-post">
+                <div class="post-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">What save and trustful app/site should i use for investing ...</div>
+                    <div class="post-meta">
+                        r/Investors &bull; 19K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            <a href="https://www.reddit.com/r/investingforbeginners/comments/1qh1xu7/which_platform_should_i_use/" target="_blank" class="reddit-post">
+                <div class="post-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">Which Platform Should I use? : r/investingforbeginners</div>
+                    <div class="post-meta">
+                        r/investingforbeginners &bull; 185K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            <a href="https://www.reddit.com/r/investingforbeginners/comments/1qk2bz2/investment_portfolio_tools_spreadsheets/" target="_blank" class="reddit-post">
+                <div class="post-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">Investment Portfolio Tools / Spreadsheets?</div>
+                    <div class="post-meta">
+                        r/investingforbeginners &bull; 185K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            </div>
+
+            <div class="subsection-title">Pain Point Conversations</div>
+            <p class="subsection-desc">People discussing problems your product solves</p>
+            <div class="reddit-posts">
+                
+            <a href="https://www.reddit.com/r/investingforbeginners/comments/1qnie50/my_first_time_investing_am_i_doing_it_wrong/" target="_blank" class="reddit-post">
+                <div class="post-icon pain">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">My first time investing / am I doing it wrong?</div>
+                    <div class="post-meta">
+                        r/investingforbeginners &bull; 185K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            <a href="https://www.reddit.com/r/investingforbeginners/comments/1qk8acp/whats_one_investing_mistake_you_stopped_making/" target="_blank" class="reddit-post">
+                <div class="post-icon pain">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">What's one investing mistake you stopped making that ...</div>
+                    <div class="post-meta">
+                        r/investingforbeginners &bull; 185K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            </div>
+        </div>
+
+        <!-- CTA Section -->
+        <div class="section cta-section">
+            <h2>Ready to improve your <em>AI visibility?</em></h2>
+            <p>We help brands get mentioned more in AI answers through strategic content placement.</p>
+            <a href="https://adva-solutions.com/AIVisibility" class="cta-button">Learn More</a>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p>Generated by <a href="https://adva-solutions.com">Adva</a> &bull; AI Visibility Health Check</p>
+    </footer>
+
+    <script>
+        // Tab switching functionality
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const tabId = btn.dataset.tab;
+
+                // Update buttons
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                // Update panels
+                document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+                document.getElementById('panel-' + tabId).classList.add('active');
+            });
+        });
+
+        // Copy link to clipboard
+        function copyLink() {
+            navigator.clipboard.writeText(window.location.href).then(() => {
+                showToast('Link copied to clipboard!');
+            }).catch(() => {
+                // Fallback for older browsers
+                const input = document.createElement('input');
+                input.value = window.location.href;
+                document.body.appendChild(input);
+                input.select();
+                document.execCommand('copy');
+                document.body.removeChild(input);
+                showToast('Link copied to clipboard!');
+            });
+        }
+
+        // Show toast notification
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2500);
+        }
+
+        // Download as PDF
+        function downloadPDF() {
+            // Get current URL and construct PDF endpoint
+            const currentUrl = window.location.href;
+            const pdfUrl = currentUrl + '/pdf';
+
+            // Show loading toast
+            showToast('Generating PDF...');
+
+            // Navigate to PDF download
+            window.location.href = pdfUrl;
+        }
+
+        // Show response modal
+        function showResponse(cell) {
+            let response = cell.dataset.response;
+            const question = cell.dataset.question;
+            const llm = cell.dataset.llm;
+            const brand = cell.dataset.brand;
+            const isMentioned = cell.classList.contains('mentioned');
+
+            const llmNames = {'gpt4': 'GPT-4', 'claude': 'Claude', 'gemini': 'Gemini'};
+
+            // Highlight brand name in response (case insensitive)
+            if (brand && isMentioned) {
+                // Create variations of brand to search for
+                const brandLower = brand.toLowerCase();
+                const brandParts = brand.split(/[\s\-_]+/).filter(p => p.length > 3);
+
+                // Highlight full brand name first
+                const brandRegex = new RegExp('(' + escapeRegex(brand) + ')', 'gi');
+                response = response.replace(brandRegex, '<span class="brand-highlight">$1</span>');
+
+                // Also highlight significant brand name parts (if not already highlighted)
+                brandParts.forEach(part => {
+                    if (part.toLowerCase() !== 'invest' && part.toLowerCase() !== 'group') {
+                        const partRegex = new RegExp('(?<!<span[^>]*>)(' + escapeRegex(part) + ')(?![^<]*</span>)', 'gi');
+                        response = response.replace(partRegex, '<span class="brand-highlight">$1</span>');
+                    }
+                });
+            }
+
+            document.getElementById('modalLlm').textContent = llmNames[llm] || llm;
+            document.getElementById('modalQuestion').textContent = '"' + question + '"';
+            document.getElementById('modalResponse').innerHTML = response;
+
+            const statusEl = document.getElementById('modalStatus');
+            if (isMentioned) {
+                statusEl.textContent = 'Mentioned';
+                statusEl.className = 'modal-status mentioned';
+            } else {
+                statusEl.textContent = 'Not mentioned';
+                statusEl.className = 'modal-status not-mentioned';
+            }
+
+            document.getElementById('responseModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+
+            // Scroll to first highlight if mentioned
+            if (isMentioned) {
+                setTimeout(() => {
+                    const highlight = document.querySelector('.modal-response .brand-highlight');
+                    if (highlight) {
+                        highlight.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                }, 100);
+            }
+        }
+
+        // Helper to escape regex special characters
+        function escapeRegex(string) {
+            return string.replace(/[.*+?^${}()|[\]\]/g, '\$&');
+        }
+
+        // Close modal
+        function closeModal(event) {
+            if (event && event.target !== event.currentTarget) return;
+            document.getElementById('responseModal').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // Close modal on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeModal();
+        });
+    </script>
+</body>
+</html>

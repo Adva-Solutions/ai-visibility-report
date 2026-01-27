@@ -1,0 +1,1367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Visibility Report - Nomad Group | Adva</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #ffffff;
+            min-height: 100vh;
+            color: #374151;
+            line-height: 1.6;
+        }
+
+        /* Header */
+        .header {
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            font-size: 1.25rem;
+            color: #1f2937;
+            text-decoration: none;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .header-date {
+            color: #9ca3af;
+            font-size: 0.875rem;
+        }
+
+        /* Share buttons */
+        .share-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .share-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: #f3f4f6;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            color: #374151;
+            font-size: 0.875rem;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .share-btn:hover {
+            background: #e5e7eb;
+        }
+
+        .share-btn svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .share-btn.primary {
+            background: #1f2937;
+            color: #ffffff;
+            border-color: #1f2937;
+        }
+
+        .share-btn.primary:hover {
+            background: #111827;
+        }
+
+        /* Toast notification */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: #1f2937;
+            color: #ffffff;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            opacity: 0;
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        /* Container */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Page title */
+        .page-title {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .page-title .label {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: #9ca3af;
+            font-size: 0.75rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+        }
+
+        .page-title .label::before,
+        .page-title .label::after {
+            content: '';
+            width: 30px;
+            height: 1px;
+            background: #d1d5db;
+        }
+
+        .page-title h1 {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 2.5rem;
+            font-weight: 400;
+            color: #1f2937;
+            margin-bottom: 0.5rem;
+        }
+
+        .page-title .brand {
+            color: #6b7280;
+            font-size: 1.125rem;
+        }
+
+        /* Sections */
+        .section {
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #f3f4f6;
+        }
+
+        .section-icon {
+            width: 40px;
+            height: 40px;
+            background: #1f2937;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .section-icon svg {
+            width: 20px;
+            height: 20px;
+            color: #ffffff;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 1.375rem;
+            color: #1f2937;
+        }
+
+        /* Score Section */
+        .score-section {
+            text-align: center;
+            padding: 3rem 2rem;
+        }
+
+        .score-circle {
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            background: #fafafa;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            border: 4px solid #ef4444;
+        }
+
+        .score-value {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 3rem;
+            font-weight: 500;
+            color: #ef4444;
+        }
+
+        .score-label {
+            font-size: 0.8rem;
+            color: #9ca3af;
+        }
+
+        .score-description {
+            color: #6b7280;
+            margin-bottom: 2rem;
+            font-size: 1rem;
+        }
+
+        .score-description strong {
+            color: #1f2937;
+        }
+
+        .llm-breakdown {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .llm-stat {
+            text-align: center;
+            padding: 1rem 1.5rem;
+            background: #fafafa;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+            min-width: 100px;
+        }
+
+        .llm-name {
+            display: block;
+            color: #9ca3af;
+            font-size: 0.8rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .llm-score {
+            font-size: 1.125rem;
+            font-weight: 600;
+        }
+
+        .llm-score.success {
+            color: #22c55e;
+        }
+
+        .llm-score.warning {
+            color: #ef4444;
+        }
+
+        /* Competitor Table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 0.875rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid #f3f4f6;
+        }
+
+        th {
+            color: #9ca3af;
+            font-weight: 500;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        td {
+            color: #374151;
+        }
+
+        .mention-count {
+            background: #fef3c7;
+            color: #92400e;
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        /* Tabs for LLM responses */
+        .example-tabs {
+            margin-top: 1.5rem;
+        }
+
+        .tabs-header {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+            padding-bottom: 0;
+        }
+
+        .tab-btn {
+            padding: 0.75rem 1.25rem;
+            background: transparent;
+            border: none;
+            color: #6b7280;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            margin-bottom: -1px;
+            transition: all 0.2s;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .tab-btn:hover {
+            color: #1f2937;
+        }
+
+        .tab-btn.active {
+            color: #1f2937;
+            border-bottom-color: #1f2937;
+        }
+
+        .tab-panel {
+            display: none;
+            background: #fafafa;
+            border-radius: 8px;
+            padding: 1.25rem;
+        }
+
+        .tab-panel.active {
+            display: block;
+        }
+
+        .example-question {
+            color: #1f2937;
+            font-weight: 500;
+            font-size: 0.95rem;
+            margin-bottom: 0.75rem;
+        }
+
+        /* Question breakdown table */
+        .question-breakdown {
+            margin-top: 1rem;
+        }
+
+        .breakdown-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        .breakdown-table th {
+            padding: 0.75rem;
+            text-align: center;
+            background: #f9fafb;
+            border-bottom: 2px solid #e5e7eb;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .breakdown-table th:first-child {
+            text-align: left;
+            width: 50%;
+        }
+
+        .breakdown-table td {
+            padding: 0.75rem;
+            border-bottom: 1px solid #f3f4f6;
+            vertical-align: middle;
+        }
+
+        .question-cell {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+        }
+
+        .question-num {
+            background: #e5e7eb;
+            color: #374151;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        .question-text {
+            color: #374151;
+            line-height: 1.4;
+        }
+
+        .llm-cell {
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-radius: 4px;
+        }
+
+        .llm-cell:hover {
+            background: #f3f4f6;
+        }
+
+        .llm-cell.mentioned {
+            color: #16a34a;
+        }
+
+        .llm-cell.mentioned .status-icon {
+            font-size: 1.25rem;
+        }
+
+        .llm-cell.not-mentioned {
+            color: #dc2626;
+        }
+
+        .llm-cell.not-mentioned .status-icon {
+            font-size: 1.25rem;
+        }
+
+        .breakdown-hint {
+            color: #9ca3af;
+            font-size: 0.8rem;
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+        /* Response modal */
+        .response-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+        }
+
+        .response-modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: #ffffff;
+            border-radius: 12px;
+            max-width: 800px;
+            width: 100%;
+            max-height: 90vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #9ca3af;
+            cursor: pointer;
+            padding: 0.25rem 0.5rem;
+        }
+
+        .modal-close:hover {
+            color: #374151;
+        }
+
+        .modal-header {
+            padding: 1.5rem 1.5rem 0;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            position: relative;
+        }
+
+        .modal-llm {
+            font-weight: 600;
+            color: #1f2937;
+            font-size: 1.1rem;
+        }
+
+        .modal-status {
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .modal-status.mentioned {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .modal-status.not-mentioned {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .modal-question {
+            padding: 1rem 1.5rem;
+            color: #6b7280;
+            font-size: 0.9rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .modal-response {
+            padding: 1.5rem;
+            overflow-y: scroll;
+            flex: 1;
+            color: #374151;
+            font-size: 0.9rem;
+            line-height: 1.8;
+            height: 500px;
+            background: #fafafa;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .modal-response::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .modal-response::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        .modal-response::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 4px;
+        }
+
+        .modal-response::-webkit-scrollbar-thumb:hover {
+            background: #a1a1a1;
+        }
+
+        /* Brand highlight */
+        .brand-highlight {
+            background: linear-gradient(120deg, #fef08a 0%, #fde047 100%);
+            padding: 0.1rem 0.3rem;
+            border-radius: 3px;
+            font-weight: 600;
+        }
+
+        .example-content {
+            color: #6b7280;
+            font-size: 0.875rem;
+            line-height: 1.7;
+            max-height: 400px;
+            overflow-y: auto;
+            margin-bottom: 0.75rem;
+            padding: 1rem;
+            background: #f9fafb;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .example-status {
+            padding: 0.5rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            display: inline-block;
+        }
+
+        .example-status.mentioned {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .example-status.not-mentioned {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        /* Reddit Posts */
+        .reddit-posts {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .reddit-post {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: #fafafa;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: all 0.2s;
+            border: 1px solid transparent;
+        }
+
+        .reddit-post:hover {
+            background: #f3f4f6;
+            border-color: #e5e7eb;
+        }
+
+        .post-icon {
+            width: 40px;
+            height: 40px;
+            background: #1f2937;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .post-icon.pain {
+            background: #fef3c7;
+        }
+
+        .post-icon.pain svg {
+            color: #92400e;
+        }
+
+        .post-icon svg {
+            width: 20px;
+            height: 20px;
+            color: #ffffff;
+        }
+
+        .post-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .post-title {
+            color: #1f2937;
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .post-meta {
+            color: #9ca3af;
+            font-size: 0.8rem;
+        }
+
+        .post-arrow {
+            color: #9ca3af;
+            flex-shrink: 0;
+        }
+
+        .post-arrow svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .subsection-title {
+            color: #1f2937;
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin: 1.5rem 0 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .subsection-title:first-of-type {
+            margin-top: 0;
+        }
+
+        .subsection-desc {
+            color: #9ca3af;
+            font-size: 0.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .no-data {
+            color: #9ca3af;
+            font-style: italic;
+            text-align: center;
+            padding: 1rem;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            color: #9ca3af;
+            font-size: 0.8rem;
+            padding: 2rem;
+            border-top: 1px solid #e5e7eb;
+            margin-top: 2rem;
+        }
+
+        .footer a {
+            color: #1f2937;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* CTA */
+        .cta-section {
+            text-align: center;
+            padding: 3rem 2rem;
+            background: #fafafa;
+        }
+
+        .cta-section h2 {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 1.75rem;
+            color: #1f2937;
+            margin-bottom: 0.75rem;
+        }
+
+        .cta-section p {
+            color: #6b7280;
+            margin-bottom: 1.5rem;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background: #1f2937;
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .cta-button:hover {
+            background: #111827;
+            transform: translateY(-1px);
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .page-title h1 {
+                font-size: 1.75rem;
+            }
+
+            .section {
+                padding: 1.5rem;
+            }
+
+            .score-circle {
+                width: 130px;
+                height: 130px;
+            }
+
+            .score-value {
+                font-size: 2.25rem;
+            }
+
+            .llm-breakdown {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .tabs-header {
+                flex-wrap: wrap;
+            }
+
+            .tab-btn {
+                padding: 0.5rem 1rem;
+                font-size: 0.8rem;
+            }
+
+            .breakdown-table th,
+            .breakdown-table td {
+                padding: 0.5rem;
+                font-size: 0.8rem;
+            }
+
+            .question-cell {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .modal-content {
+                max-height: 90vh;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <a href="/" class="logo">adva</a>
+        <div class="header-right">
+            <div class="share-buttons">
+                <button class="share-btn" onclick="copyLink()" title="Copy link">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                    </svg>
+                    Copy Link
+                </button>
+                <a class="share-btn" href="mailto:?subject=AI%20Visibility%20Report%20for%20Nomad Group&body=Check%20out%20this%20AI%20visibility%20report%3A%20" onclick="this.href += encodeURIComponent(window.location.href)" title="Share via email">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                    </svg>
+                    Email
+                </a>
+                <a class="share-btn primary" href="javascript:void(0)" onclick="downloadPDF()" title="Download as PDF">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                    </svg>
+                    Download PDF
+                </a>
+            </div>
+            <span class="header-date">January 26, 2026</span>
+        </div>
+    </header>
+    <div class="toast" id="toast">Link copied to clipboard!</div>
+
+    <div class="container">
+        <div class="page-title">
+            <div class="label">AI Visibility Report</div>
+            <h1>Your Brand's <em>AI Presence</em></h1>
+            <p class="brand">Analysis for Nomad Group</p>
+        </div>
+
+        <!-- Section 1: AI Visibility Score -->
+        <div class="section score-section">
+            <div class="score-circle">
+                <span class="score-value">0%</span>
+                <span class="score-label">0/15 mentions</span>
+            </div>
+            <p class="score-description">
+                Your brand appeared in <strong>0</strong> out of <strong>15</strong> AI recommendations
+            </p>
+            <div class="llm-breakdown">
+                
+            <div class="llm-stat">
+                <span class="llm-name">GPT-4</span>
+                <span class="llm-score warning">0/5</span>
+            </div>
+        
+            <div class="llm-stat">
+                <span class="llm-name">Claude</span>
+                <span class="llm-score warning">0/5</span>
+            </div>
+        
+            <div class="llm-stat">
+                <span class="llm-name">Gemini</span>
+                <span class="llm-score warning">0/5</span>
+            </div>
+        
+            </div>
+        </div>
+
+        <!-- Section 2: AI Response Breakdown -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                    </svg>
+                </div>
+                <h2 class="section-title">Question-by-Question Breakdown</h2>
+            </div>
+            <p style="color: #6b7280; margin-bottom: 1rem;">We asked these 5 questions to each AI model. Click any cell to see the full response:</p>
+            
+        <div class="question-breakdown">
+            <table class="breakdown-table">
+                <thead>
+                    <tr>
+                        <th>Question Asked</th>
+                        <th>GPT-4</th>
+                        <th>Claude</th>
+                        <th>Gemini</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q1</span>
+                    <span class="question-text">office space for rent in Manhattan</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are five office space options for rent in Manhattan that stand out based on location, amenities, and flexibility:<br><br>1. **WeWork - 100 W 33rd St (Herald Square)**<br>   - **Overview**: Located in the heart of Midtown near Penn Station, this WeWork location offers a vibrant community atmosphere and flexible membership plans.<br>   - **Amenities**: High-speed internet, conference rooms, lounges, and weekly networking events. The building is close to major transportation hubs, making it convenient for commuting.<br>   - **Why It’s a Top Choice**: Ideal for startups and smaller businesses needing flexibility and a collaborative environment.<br><br>2. **Spaces - 45 East 34th Street (Midtown)**<br>   - **Overview**: This creative office space is situated near the Empire State Building, providing a professional yet innovative environment.<br>   - **Amenities**: Offers modern office designs, meeting rooms, event spaces, and access to a community of like-minded professionals.<br>   - **Why It’s a Top Choice**: The "
+                    data-question="office space for rent in Manhattan"
+                    data-llm="gpt4"
+                    data-brand="Nomad Group"
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top 5 recommendations for office space for rent in Manhattan, listed in order of preference:<br><br>1. WeWork - WeWork has multiple locations throughout Manhattan, offering flexible and fully-furnished office spaces with amenities like high-speed internet, conference rooms, and common areas. They are known for their modern, collaborative workspaces and convenient locations.<br><br>2. Regus - Regus is a global provider of flexible office spaces, with numerous locations in Manhattan. They offer private offices, coworking spaces, and virtual office solutions, making them a great option for businesses of all sizes.<br><br>3. Knotel - Knotel specializes in providing custom-built, turnkey office spaces for companies. Their locations are often in prime Manhattan neighborhoods, and they offer flexible lease terms and a range of amenities.<br><br>4. The Yard - The Yard is a coworking and office space provider with several locations in Manhattan. They offer private offices, dedicated desks, and shared works"
+                    data-question="office space for rent in Manhattan"
+                    data-llm="claude"
+                    data-brand="Nomad Group"
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Okay, to give you the *best* recommendations, I need a little more information about your needs. However, I can provide some general recommendations based on common factors that people consider when renting office space in Manhattan.<br><br>**Before I give the recommendations, please consider these questions to help refine the search:**<br><br>*   **Budget:** What&#39;s your monthly or annual budget for rent? (This is the *most* important factor)<br>*   **Size:** How much square footage do you need? How many employees will be using the space?<br>*   **Location Preferences:** Are there specific neighborhoods or areas of Manhattan you prefer (e.g., Midtown, Downtown, Financial District, Chelsea, etc.)?<br>*   **Lease Term:** How long of a lease are you looking for (e.g., short-term, long-term)?<br>*   **Office Type:** Are you looking for traditional office space, coworking space, a shared office, or something else?<br>*   **Amenities:** What amenities are important to you (e.g., 24/7 access, conference rooms, kitchen,"
+                    data-question="office space for rent in Manhattan"
+                    data-llm="gemini"
+                    data-brand="Nomad Group"
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q2</span>
+                    <span class="question-text">flexible office leases for startups in NYC</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top recommendations for flexible office leases for startups in New York City, ranked in order of preference:<br><br>1. **WeWork**<br>   - **Overview**: WeWork is one of the most recognized names in flexible office space, offering a range of solutions from hot desks to private offices.<br>   - **Why It’s Great for Startups**: With numerous locations across NYC, WeWork provides flexibility in terms of lease lengths and offers amenities such as high-speed internet, meeting rooms, and networking events, which can be invaluable for startups looking to connect with other entrepreneurs.<br><br>2. **Spaces**<br>   - **Overview**: A part of the IWG family (which also includes Regus), Spaces offers creative workspaces designed to foster collaboration and innovation.<br>   - **Why It’s Great for Startups**: Spaces locations are known for their stylish designs and vibrant community atmosphere. They provide flexible lease options, meeting rooms, and networking opportunities that can help startups thrive in a d"
+                    data-question="flexible office leases for startups in NYC"
+                    data-llm="gpt4"
+                    data-brand="Nomad Group"
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top 5 recommendations for flexible office leases for startups in NYC, listed in order of preference:<br><br>1. WeWork:<br>   - WeWork is a leading provider of flexible office spaces in NYC, offering a wide range of options for startups.<br>   - They have multiple locations across the city, providing startups with the flexibility to choose a space that best fits their needs.<br>   - WeWork offers a variety of lease terms, from short-term memberships to longer-term agreements, making it easy for startups to scale as they grow.<br><br>2. Knotel:<br>   - Knotel is another prominent player in the flexible office space market in NYC.<br>   - They offer customizable office suites and private spaces that can be tailored to the specific needs of startups.<br>   - Knotel&#39;s flexible lease terms and on-demand services make it an attractive option for startups looking for a hassle-free office solution.<br><br>3. Industrious:<br>   - Industrious provides high-quality, flexible office spaces in prime locations across NYC.<br>   -"
+                    data-question="flexible office leases for startups in NYC"
+                    data-llm="claude"
+                    data-brand="Nomad Group"
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Okay, here are my top 3-5 recommendations for flexible office leases for startups in NYC, ranked in order of preference and based on factors like location, amenities, community, and general reputation within the startup scene.  Keep in mind that availability and pricing can change rapidly, so it&#39;s crucial to check their current listings and tour the spaces.<br><br>**Top Recommendations:**<br><br>1.  **The Yard:**<br><br>    *   **Why it&#39;s great:** The Yard consistently receives high marks for its strong sense of community, modern and stylish design, and well-maintained spaces. They have multiple locations throughout Manhattan and Brooklyn, offering a good range of options depending on your preferred neighborhood. They actively foster networking opportunities and offer various events, making it ideal for startups looking to connect with other businesses. They lean towards a more mature, professional vibe compared to some of the &quot;tech-bro&quot; focused spaces.<br>    *   **Key Features:** Hot desks, dedicated des"
+                    data-question="flexible office leases for startups in NYC"
+                    data-llm="gemini"
+                    data-brand="Nomad Group"
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q3</span>
+                    <span class="question-text">where to find the best office space in New York City</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="Finding the best office space in New York City can depend on your specific needs, such as location, size, budget, and amenities. Here are my top recommendations for office space in NYC, listed in order of preference:<br><br>1. **WeWork (Multiple Locations)**<br>   - **Overview**: WeWork is a well-known coworking space provider with multiple locations throughout NYC. They offer flexible office solutions, including shared desks, private offices, and enterprise solutions.<br>   - **Why Choose It**: WeWork locations are designed with modern aesthetics and amenities, providing a vibrant community atmosphere. They offer networking opportunities and various services, including high-speed internet, conference rooms, and kitchen facilities.<br><br>2. **Spaces (Multiple Locations)**<br>   - **Overview**: Spaces is part of the IWG family and offers creative workspaces in trendy neighborhoods across NYC, such as the Flatiron District and Brooklyn.<br>   - **Why Choose It**: With a focus on fostering creativity and collab"
+                    data-question="where to find the best office space in New York City"
+                    data-llm="gpt4"
+                    data-brand="Nomad Group"
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top 5 recommendations for the best office space in New York City, listed in order of preference:<br><br>1. WeWork: WeWork is a leading provider of flexible office space in NYC, with numerous locations throughout the city. They offer a wide range of options, from private offices to co-working spaces, catering to businesses of all sizes. WeWork is known for its modern, well-designed workspaces, amenities, and vibrant community.<br><br>2. Regus: Regus is a global provider of flexible office solutions, with a strong presence in New York City. They offer a variety of office spaces, from private offices to virtual offices, and provide a professional and well-equipped work environment.<br><br>3. Industrious: Industrious is a premium coworking and private office provider, with several locations in New York City. They are known for their high-quality, design-forward workspaces, as well as their focus on providing exceptional service and amenities to their members.<br><br>4. Knotel: Knotel is a flexible off"
+                    data-question="where to find the best office space in New York City"
+                    data-llm="claude"
+                    data-brand="Nomad Group"
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Okay, here are my top 3 recommendations for finding the best office space in NYC, with a focus on different priorities and approaches:<br><br>**1. Best Overall & Customization:  Knotel (Now Newmark Flex)**<br><br>*   **Why:** Knotel, now under Newmark Flex, offers a sweet spot: they provide pre-built, move-in-ready spaces but with a strong focus on customization.  This is perfect if you want something professional *now* but still want to put your company&#39;s stamp on it.  They have a large portfolio across Manhattan, Brooklyn, and even into Queens, so you&#39;re likely to find something in your desired location. They handle everything from design to build-out.<br>*   **Target Audience:** Growing companies (20-200+ employees) who want a branded, flexible office experience without the headache of traditional leases and build-outs.<br>*   **Pros:**<br>    *   **Flexibility:** Customizable layouts and lease terms.<br>    *   **Branding:**  Ability to design the space to match your company&#39;s aesthetic.<br>    *   **All-inc"
+                    data-question="where to find the best office space in New York City"
+                    data-llm="gemini"
+                    data-brand="Nomad Group"
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q4</span>
+                    <span class="question-text">coworking vs traditional office space in NYC</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="When considering coworking vs. traditional office space in NYC, each option has its unique benefits depending on your business needs, team size, and work style. Here are my top recommendations for both options, considering flexibility, amenities, and location:<br><br>### Coworking Spaces<br><br>1. **WeWork**<br>   - **Why?** WeWork is one of the largest coworking providers and offers a variety of locations across NYC. They provide flexible membership options, modern amenities, and networking opportunities. Their spaces are designed for collaboration, making it ideal for startups and freelancers looking to connect with others.<br><br>2. **Spaces**<br>   - **Why?** Spaces offers a creative and inspiring environment with a focus on community and collaboration. Their locations often feature unique designs and a range of workspaces, from private offices to open desks. This is a great option for businesses that prioritize a vibrant atmosphere and want to be part of a diverse community.<br><br>3. **The Wing**<br>   - **Why?*"
+                    data-question="coworking vs traditional office space in NYC"
+                    data-llm="gpt4"
+                    data-brand="Nomad Group"
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top 5 recommendations for coworking spaces and traditional office spaces in NYC, listed in order of preference:<br><br>Coworking Spaces:<br><br>1. WeWork:<br>   - One of the largest and most well-known coworking providers in NYC, with numerous locations across the city.<br>   - Offers a wide range of amenities, including high-speed internet, meeting rooms, event spaces, and common areas.<br>   - Flexible membership options, from dedicated desks to private offices, make it suitable for freelancers, startups, and small teams.<br><br>2. Industrious:<br>   - Premium coworking space with a focus on design and productivity.<br>   - Provides private offices, team suites, and shared workspaces with high-end furnishings and amenities.<br>   - Caters to larger companies and enterprises looking for a more professional and curated coworking experience.<br><br>3. The Farm SoHo:<br>   - Coworking space with a unique, loft-like atmosphere in the heart of SoHo.<br>   - Offers a mix of private offices, dedicated desks, and communal works"
+                    data-question="coworking vs traditional office space in NYC"
+                    data-llm="claude"
+                    data-brand="Nomad Group"
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Okay, here are my top 3 recommendations for coworking vs. traditional office space in NYC, ranked in order of preference, considering various factors like cost, flexibility, amenities, community, and location:<br><br>**Important Considerations Before Diving In:**<br><br>*   **Budget:** Coworking can seem cheaper at first glance, but costs can add up depending on the number of employees and desired level of privacy (dedicated offices vs. open desks). Traditional offices have higher upfront costs but can be more cost-effective long-term for larger teams.<br>*   **Team Size:** Small teams (1-5 people) generally benefit more from coworking. Larger teams (10+) might find a traditional office more suitable.<br>*   **Company Culture:** Do you value collaboration, community, and networking? Coworking excels at this. Or do you prefer privacy, branding control, and a more formal environment? Traditional offices are better suited.<br>*   **Flexibility:** Coworking offers month-to-month leases, which are ideal for sta"
+                    data-question="coworking vs traditional office space in NYC"
+                    data-llm="gemini"
+                    data-brand="Nomad Group"
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q5</span>
+                    <span class="question-text">office space near major transportation hubs in NYC</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top recommendations for office spaces near major transportation hubs in New York City, listed in order of preference:<br><br>1. **Hudson Yards**<br>   - **Transportation Access**: Serviced by the 7 train, with easy access to the A, C, E, LIRR, and NJ Transit.<br>   - **Why It’s a Top Choice**: Hudson Yards is one of the most modern developments in NYC, featuring high-end office spaces, dining, and retail. It offers a vibrant atmosphere and is ideal for companies looking to impress clients and attract talent. The area is designed for convenience, with ample amenities and green spaces.<br><br>2. **Brooklyn Navy Yard**<br>   - **Transportation Access**: Close to the ferry service, with connections to the A, C, and Q trains at nearby stations.<br>   - **Why It’s a Top Choice**: This emerging hub is focused on innovation and sustainability. It offers a unique blend of industrial character and modern office spaces, making it attractive for startups and creative industries. The proximity to transportatio"
+                    data-question="office space near major transportation hubs in NYC"
+                    data-llm="gpt4"
+                    data-brand="Nomad Group"
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top 5 recommendations for office space near major transportation hubs in New York City, listed in order of preference:<br><br>1. 1 Penn Plaza, Midtown Manhattan:<br>   - Located directly above Penn Station, the busiest transportation hub in the United States<br>   - Offers easy access to multiple subway lines, commuter trains, and the Long Island Rail Road<br>   - Provides modern, high-quality office space with amenities and flexible leasing options<br><br>2. 55 Broad Street, Financial District:<br>   - Situated near the Fulton Street Transit Center, which connects multiple subway lines and the PATH train<br>   - Offers a mix of traditional and coworking office spaces, catering to a range of business needs<br>   - Provides a professional and well-connected environment in the heart of the financial district<br><br>3. 420 Lexington Avenue, Midtown East:<br>   - Conveniently located near Grand Central Terminal, a major transportation hub<br>   - Offers a range of office sizes and configurations to suit different busin"
+                    data-question="office space near major transportation hubs in NYC"
+                    data-llm="claude"
+                    data-brand="Nomad Group"
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Okay, here are my top 3 recommendations for office spaces near major transportation hubs in NYC, considering factors like accessibility, neighborhood quality, and potential value. I&#39;m focusing on areas that offer a good balance between convenience and cost:<br><br>**1. Grand Central Terminal Area (Midtown East) - Specifically, 415 Lexington Avenue**<br><br>*   **Transportation Hub:** Grand Central Terminal (Metro-North Railroad, 4/5/6/7/S subway lines).<br>*   **Explanation:** This location offers unparalleled access to transportation options, connecting you to the suburbs, outer boroughs, and within Manhattan. Grand Central is a major hub, making it ideal for employees commuting from various locations. 415 Lexington is a well-maintained Class A office building directly across the street from Grand Central.<br>*   **Pros:** Unbeatable transportation access, prestigious location, diverse dining and retail options, proximity to major business and cultural institutions. Class A building with modern ameniti"
+                    data-question="office space near major transportation hubs in NYC"
+                    data-llm="gemini"
+                    data-brand="Nomad Group"
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+                </tbody>
+            </table>
+            <p class="breakdown-hint">Click any cell to see the full AI response</p>
+        </div>
+
+        <!-- Response modal -->
+        <div class="response-modal" id="responseModal" onclick="closeModal(event)">
+            <div class="modal-content" onclick="event.stopPropagation()">
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+                <div class="modal-header">
+                    <span class="modal-llm" id="modalLlm"></span>
+                    <span class="modal-status" id="modalStatus"></span>
+                </div>
+                <div class="modal-question" id="modalQuestion"></div>
+                <div class="modal-response" id="modalResponse"></div>
+            </div>
+        </div>
+    
+        </div>
+
+        <!-- Section 3: Reddit Opportunities -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <h2 class="section-title">Reddit Opportunities</h2>
+            </div>
+
+            <div class="subsection-title">Buy Intent Conversations</div>
+            <p class="subsection-desc">People actively looking for recommendations in your category</p>
+            <div class="reddit-posts">
+                
+            <a href="https://www.reddit.com/r/CommercialRealEstate/comments/1qhandk/which_deal_advice_needed_on_which_office_space/" target="_blank" class="reddit-post">
+                <div class="post-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">Which deal? Advice needed on which office space. ...</div>
+                    <div class="post-meta">
+                        r/CommercialRealEstate &bull; 121K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            <a href="https://www.reddit.com/r/AskNYC/comments/1qkomig/times_square_wework_locations/" target="_blank" class="reddit-post">
+                <div class="post-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">Times Square WeWork locations : r/AskNYC</div>
+                    <div class="post-meta">
+                        r/AskNYC &bull; 471K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            <a href="https://www.reddit.com/r/cyberpunkred/comments/1qhpwep/reflavoring_rent_reduction_coworking_spaces/" target="_blank" class="reddit-post">
+                <div class="post-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">Reflavoring Rent Reduction: Co-Working Spaces</div>
+                    <div class="post-meta">
+                        r/cyberpunkred &bull; 63K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            <a href="https://www.reddit.com/r/longisland/comments/1qicubw/looking_for_an_event_spaceroom_for_super_cheap/" target="_blank" class="reddit-post">
+                <div class="post-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">Looking for an event space/room for super cheap and that ...</div>
+                    <div class="post-meta">
+                        r/longisland &bull; 205K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            </div>
+
+            <div class="subsection-title">Pain Point Conversations</div>
+            <p class="subsection-desc">People discussing problems your product solves</p>
+            <div class="reddit-posts">
+                
+            <a href="https://www.reddit.com/r/CommercialRealEstate/comments/1qhandk/which_deal_advice_needed_on_which_office_space/" target="_blank" class="reddit-post">
+                <div class="post-icon pain">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">Which deal? Advice needed on which office space. ...</div>
+                    <div class="post-meta">
+                        r/CommercialRealEstate &bull; 121K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            <a href="https://www.reddit.com/r/nyc/comments/1qj8t4v/these_are_new_york_citys_100_worst_landlords/" target="_blank" class="reddit-post">
+                <div class="post-icon pain">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">These are New York City's 100 worst landlords, public ...</div>
+                    <div class="post-meta">
+                        r/nyc &bull; 964K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            </div>
+        </div>
+
+        <!-- CTA Section -->
+        <div class="section cta-section">
+            <h2>Ready to improve your <em>AI visibility?</em></h2>
+            <p>We help brands get mentioned more in AI answers through strategic content placement.</p>
+            <a href="https://adva-solutions.com/AIVisibility" class="cta-button">Learn More</a>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p>Generated by <a href="https://adva-solutions.com">Adva</a> &bull; AI Visibility Health Check</p>
+    </footer>
+
+    <script>
+        // Tab switching functionality
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const tabId = btn.dataset.tab;
+
+                // Update buttons
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                // Update panels
+                document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+                document.getElementById('panel-' + tabId).classList.add('active');
+            });
+        });
+
+        // Copy link to clipboard
+        function copyLink() {
+            navigator.clipboard.writeText(window.location.href).then(() => {
+                showToast('Link copied to clipboard!');
+            }).catch(() => {
+                // Fallback for older browsers
+                const input = document.createElement('input');
+                input.value = window.location.href;
+                document.body.appendChild(input);
+                input.select();
+                document.execCommand('copy');
+                document.body.removeChild(input);
+                showToast('Link copied to clipboard!');
+            });
+        }
+
+        // Show toast notification
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2500);
+        }
+
+        // Download as PDF
+        function downloadPDF() {
+            // Get current URL and construct PDF endpoint
+            const currentUrl = window.location.href;
+            const pdfUrl = currentUrl + '/pdf';
+
+            // Show loading toast
+            showToast('Generating PDF...');
+
+            // Navigate to PDF download
+            window.location.href = pdfUrl;
+        }
+
+        // Show response modal
+        function showResponse(cell) {
+            try {
+                let response = cell.dataset.response || 'No response available';
+                const question = cell.dataset.question || '';
+                const llm = cell.dataset.llm || '';
+                const brand = cell.dataset.brand || '';
+                const isMentioned = cell.classList.contains('mentioned');
+
+                const llmNames = {'gpt4': 'GPT-4', 'claude': 'Claude', 'gemini': 'Gemini'};
+
+                // Highlight brand name in response (case insensitive) - simple version
+                if (brand && isMentioned) {
+                    // Escape special regex characters in brand name
+                    const escapedBrand = brand.replace(/[.*+?^${}()|[\]\]/g, '\$&');
+                    const brandRegex = new RegExp('(' + escapedBrand + ')', 'gi');
+                    response = response.replace(brandRegex, '<span class="brand-highlight">$1</span>');
+                }
+
+                document.getElementById('modalLlm').textContent = llmNames[llm] || llm;
+                document.getElementById('modalQuestion').textContent = '"' + question + '"';
+                document.getElementById('modalResponse').innerHTML = response;
+
+                const statusEl = document.getElementById('modalStatus');
+                if (isMentioned) {
+                    statusEl.textContent = 'Mentioned';
+                    statusEl.className = 'modal-status mentioned';
+                } else {
+                    statusEl.textContent = 'Not mentioned';
+                    statusEl.className = 'modal-status not-mentioned';
+                }
+
+                document.getElementById('responseModal').classList.add('active');
+                document.body.style.overflow = 'hidden';
+
+                // Scroll to first highlight if mentioned
+                if (isMentioned) {
+                    setTimeout(function() {
+                        const highlight = document.querySelector('.modal-response .brand-highlight');
+                        if (highlight) {
+                            highlight.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        }
+                    }, 100);
+                }
+            } catch (e) {
+                console.error('Error showing response:', e);
+                alert('Error loading response. Please try again.');
+            }
+        }
+
+        // Close modal
+        function closeModal(event) {
+            if (event && event.target !== event.currentTarget) return;
+            document.getElementById('responseModal').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // Close modal on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeModal();
+        });
+    </script>
+</body>
+</html>

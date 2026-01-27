@@ -1,0 +1,1367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Visibility Report - Las Ruinas Bathhouse and Gym | Adva</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #ffffff;
+            min-height: 100vh;
+            color: #374151;
+            line-height: 1.6;
+        }
+
+        /* Header */
+        .header {
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            font-size: 1.25rem;
+            color: #1f2937;
+            text-decoration: none;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .header-date {
+            color: #9ca3af;
+            font-size: 0.875rem;
+        }
+
+        /* Share buttons */
+        .share-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .share-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: #f3f4f6;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            color: #374151;
+            font-size: 0.875rem;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .share-btn:hover {
+            background: #e5e7eb;
+        }
+
+        .share-btn svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .share-btn.primary {
+            background: #1f2937;
+            color: #ffffff;
+            border-color: #1f2937;
+        }
+
+        .share-btn.primary:hover {
+            background: #111827;
+        }
+
+        /* Toast notification */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: #1f2937;
+            color: #ffffff;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            opacity: 0;
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        /* Container */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Page title */
+        .page-title {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .page-title .label {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: #9ca3af;
+            font-size: 0.75rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+        }
+
+        .page-title .label::before,
+        .page-title .label::after {
+            content: '';
+            width: 30px;
+            height: 1px;
+            background: #d1d5db;
+        }
+
+        .page-title h1 {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 2.5rem;
+            font-weight: 400;
+            color: #1f2937;
+            margin-bottom: 0.5rem;
+        }
+
+        .page-title .brand {
+            color: #6b7280;
+            font-size: 1.125rem;
+        }
+
+        /* Sections */
+        .section {
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #f3f4f6;
+        }
+
+        .section-icon {
+            width: 40px;
+            height: 40px;
+            background: #1f2937;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .section-icon svg {
+            width: 20px;
+            height: 20px;
+            color: #ffffff;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 1.375rem;
+            color: #1f2937;
+        }
+
+        /* Score Section */
+        .score-section {
+            text-align: center;
+            padding: 3rem 2rem;
+        }
+
+        .score-circle {
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            background: #fafafa;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            border: 4px solid #22c55e;
+        }
+
+        .score-value {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 3rem;
+            font-weight: 500;
+            color: #22c55e;
+        }
+
+        .score-label {
+            font-size: 0.8rem;
+            color: #9ca3af;
+        }
+
+        .score-description {
+            color: #6b7280;
+            margin-bottom: 2rem;
+            font-size: 1rem;
+        }
+
+        .score-description strong {
+            color: #1f2937;
+        }
+
+        .llm-breakdown {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .llm-stat {
+            text-align: center;
+            padding: 1rem 1.5rem;
+            background: #fafafa;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+            min-width: 100px;
+        }
+
+        .llm-name {
+            display: block;
+            color: #9ca3af;
+            font-size: 0.8rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .llm-score {
+            font-size: 1.125rem;
+            font-weight: 600;
+        }
+
+        .llm-score.success {
+            color: #22c55e;
+        }
+
+        .llm-score.warning {
+            color: #ef4444;
+        }
+
+        /* Competitor Table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 0.875rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid #f3f4f6;
+        }
+
+        th {
+            color: #9ca3af;
+            font-weight: 500;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        td {
+            color: #374151;
+        }
+
+        .mention-count {
+            background: #fef3c7;
+            color: #92400e;
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        /* Tabs for LLM responses */
+        .example-tabs {
+            margin-top: 1.5rem;
+        }
+
+        .tabs-header {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+            padding-bottom: 0;
+        }
+
+        .tab-btn {
+            padding: 0.75rem 1.25rem;
+            background: transparent;
+            border: none;
+            color: #6b7280;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            margin-bottom: -1px;
+            transition: all 0.2s;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .tab-btn:hover {
+            color: #1f2937;
+        }
+
+        .tab-btn.active {
+            color: #1f2937;
+            border-bottom-color: #1f2937;
+        }
+
+        .tab-panel {
+            display: none;
+            background: #fafafa;
+            border-radius: 8px;
+            padding: 1.25rem;
+        }
+
+        .tab-panel.active {
+            display: block;
+        }
+
+        .example-question {
+            color: #1f2937;
+            font-weight: 500;
+            font-size: 0.95rem;
+            margin-bottom: 0.75rem;
+        }
+
+        /* Question breakdown table */
+        .question-breakdown {
+            margin-top: 1rem;
+        }
+
+        .breakdown-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        .breakdown-table th {
+            padding: 0.75rem;
+            text-align: center;
+            background: #f9fafb;
+            border-bottom: 2px solid #e5e7eb;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .breakdown-table th:first-child {
+            text-align: left;
+            width: 50%;
+        }
+
+        .breakdown-table td {
+            padding: 0.75rem;
+            border-bottom: 1px solid #f3f4f6;
+            vertical-align: middle;
+        }
+
+        .question-cell {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+        }
+
+        .question-num {
+            background: #e5e7eb;
+            color: #374151;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        .question-text {
+            color: #374151;
+            line-height: 1.4;
+        }
+
+        .llm-cell {
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-radius: 4px;
+        }
+
+        .llm-cell:hover {
+            background: #f3f4f6;
+        }
+
+        .llm-cell.mentioned {
+            color: #16a34a;
+        }
+
+        .llm-cell.mentioned .status-icon {
+            font-size: 1.25rem;
+        }
+
+        .llm-cell.not-mentioned {
+            color: #dc2626;
+        }
+
+        .llm-cell.not-mentioned .status-icon {
+            font-size: 1.25rem;
+        }
+
+        .breakdown-hint {
+            color: #9ca3af;
+            font-size: 0.8rem;
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+        /* Response modal */
+        .response-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+        }
+
+        .response-modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: #ffffff;
+            border-radius: 12px;
+            max-width: 800px;
+            width: 100%;
+            max-height: 90vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #9ca3af;
+            cursor: pointer;
+            padding: 0.25rem 0.5rem;
+        }
+
+        .modal-close:hover {
+            color: #374151;
+        }
+
+        .modal-header {
+            padding: 1.5rem 1.5rem 0;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            position: relative;
+        }
+
+        .modal-llm {
+            font-weight: 600;
+            color: #1f2937;
+            font-size: 1.1rem;
+        }
+
+        .modal-status {
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .modal-status.mentioned {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .modal-status.not-mentioned {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .modal-question {
+            padding: 1rem 1.5rem;
+            color: #6b7280;
+            font-size: 0.9rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .modal-response {
+            padding: 1.5rem;
+            overflow-y: scroll;
+            flex: 1;
+            color: #374151;
+            font-size: 0.9rem;
+            line-height: 1.8;
+            height: 500px;
+            background: #fafafa;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .modal-response::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .modal-response::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        .modal-response::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 4px;
+        }
+
+        .modal-response::-webkit-scrollbar-thumb:hover {
+            background: #a1a1a1;
+        }
+
+        /* Brand highlight */
+        .brand-highlight {
+            background: linear-gradient(120deg, #fef08a 0%, #fde047 100%);
+            padding: 0.1rem 0.3rem;
+            border-radius: 3px;
+            font-weight: 600;
+        }
+
+        .example-content {
+            color: #6b7280;
+            font-size: 0.875rem;
+            line-height: 1.7;
+            max-height: 400px;
+            overflow-y: auto;
+            margin-bottom: 0.75rem;
+            padding: 1rem;
+            background: #f9fafb;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .example-status {
+            padding: 0.5rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            display: inline-block;
+        }
+
+        .example-status.mentioned {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .example-status.not-mentioned {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        /* Reddit Posts */
+        .reddit-posts {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .reddit-post {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: #fafafa;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: all 0.2s;
+            border: 1px solid transparent;
+        }
+
+        .reddit-post:hover {
+            background: #f3f4f6;
+            border-color: #e5e7eb;
+        }
+
+        .post-icon {
+            width: 40px;
+            height: 40px;
+            background: #1f2937;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .post-icon.pain {
+            background: #fef3c7;
+        }
+
+        .post-icon.pain svg {
+            color: #92400e;
+        }
+
+        .post-icon svg {
+            width: 20px;
+            height: 20px;
+            color: #ffffff;
+        }
+
+        .post-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .post-title {
+            color: #1f2937;
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .post-meta {
+            color: #9ca3af;
+            font-size: 0.8rem;
+        }
+
+        .post-arrow {
+            color: #9ca3af;
+            flex-shrink: 0;
+        }
+
+        .post-arrow svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .subsection-title {
+            color: #1f2937;
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin: 1.5rem 0 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .subsection-title:first-of-type {
+            margin-top: 0;
+        }
+
+        .subsection-desc {
+            color: #9ca3af;
+            font-size: 0.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .no-data {
+            color: #9ca3af;
+            font-style: italic;
+            text-align: center;
+            padding: 1rem;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            color: #9ca3af;
+            font-size: 0.8rem;
+            padding: 2rem;
+            border-top: 1px solid #e5e7eb;
+            margin-top: 2rem;
+        }
+
+        .footer a {
+            color: #1f2937;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* CTA */
+        .cta-section {
+            text-align: center;
+            padding: 3rem 2rem;
+            background: #fafafa;
+        }
+
+        .cta-section h2 {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 1.75rem;
+            color: #1f2937;
+            margin-bottom: 0.75rem;
+        }
+
+        .cta-section p {
+            color: #6b7280;
+            margin-bottom: 1.5rem;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background: #1f2937;
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .cta-button:hover {
+            background: #111827;
+            transform: translateY(-1px);
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .page-title h1 {
+                font-size: 1.75rem;
+            }
+
+            .section {
+                padding: 1.5rem;
+            }
+
+            .score-circle {
+                width: 130px;
+                height: 130px;
+            }
+
+            .score-value {
+                font-size: 2.25rem;
+            }
+
+            .llm-breakdown {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .tabs-header {
+                flex-wrap: wrap;
+            }
+
+            .tab-btn {
+                padding: 0.5rem 1rem;
+                font-size: 0.8rem;
+            }
+
+            .breakdown-table th,
+            .breakdown-table td {
+                padding: 0.5rem;
+                font-size: 0.8rem;
+            }
+
+            .question-cell {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .modal-content {
+                max-height: 90vh;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <a href="/" class="logo">adva</a>
+        <div class="header-right">
+            <div class="share-buttons">
+                <button class="share-btn" onclick="copyLink()" title="Copy link">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                    </svg>
+                    Copy Link
+                </button>
+                <a class="share-btn" href="mailto:?subject=AI%20Visibility%20Report%20for%20Las Ruinas Bathhouse and Gym&body=Check%20out%20this%20AI%20visibility%20report%3A%20" onclick="this.href += encodeURIComponent(window.location.href)" title="Share via email">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                    </svg>
+                    Email
+                </a>
+                <a class="share-btn primary" href="javascript:void(0)" onclick="downloadPDF()" title="Download as PDF">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                    </svg>
+                    Download PDF
+                </a>
+            </div>
+            <span class="header-date">January 26, 2026</span>
+        </div>
+    </header>
+    <div class="toast" id="toast">Link copied to clipboard!</div>
+
+    <div class="container">
+        <div class="page-title">
+            <div class="label">AI Visibility Report</div>
+            <h1>Your Brand's <em>AI Presence</em></h1>
+            <p class="brand">Analysis for Las Ruinas Bathhouse and Gym</p>
+        </div>
+
+        <!-- Section 1: AI Visibility Score -->
+        <div class="section score-section">
+            <div class="score-circle">
+                <span class="score-value">60%</span>
+                <span class="score-label">9/15 mentions</span>
+            </div>
+            <p class="score-description">
+                Your brand appeared in <strong>9</strong> out of <strong>15</strong> AI recommendations
+            </p>
+            <div class="llm-breakdown">
+                
+            <div class="llm-stat">
+                <span class="llm-name">GPT-4</span>
+                <span class="llm-score success">3/5</span>
+            </div>
+        
+            <div class="llm-stat">
+                <span class="llm-name">Claude</span>
+                <span class="llm-score success">3/5</span>
+            </div>
+        
+            <div class="llm-stat">
+                <span class="llm-name">Gemini</span>
+                <span class="llm-score success">3/5</span>
+            </div>
+        
+            </div>
+        </div>
+
+        <!-- Section 2: AI Response Breakdown -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                    </svg>
+                </div>
+                <h2 class="section-title">Question-by-Question Breakdown</h2>
+            </div>
+            <p style="color: #6b7280; margin-bottom: 1rem;">We asked these 5 questions to each AI model. Click any cell to see the full response:</p>
+            
+        <div class="question-breakdown">
+            <table class="breakdown-table">
+                <thead>
+                    <tr>
+                        <th>Question Asked</th>
+                        <th>GPT-4</th>
+                        <th>Claude</th>
+                        <th>Gemini</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q1</span>
+                    <span class="question-text">luxury bathhouse and gym in Puerto Rico</span>
+                </td>
+                
+                <td class="llm-cell mentioned"
+                    data-response="Certainly! Here are my top recommendations for luxury bathhouses and gyms in Puerto Rico:<br><br>### 1. **The Spa at Condado Vanderbilt**<br>Located in the stunning Condado Vanderbilt Hotel, this spa offers a luxurious experience with a variety of treatments, including massages, facials, and body scrubs. The spa features a serene atmosphere, stunning ocean views, and an extensive menu of services. The fitness center is also well-equipped with the latest machines, making it perfect for a comprehensive wellness experience.<br><br>### 2. **The Spa at the Ritz-Carlton San Juan**<br>The Ritz-Carlton San Juan is known for its opulence, and the spa is no exception. Offering a range of treatments inspired by local culture, the spa includes a sauna, steam room, and relaxation areas. Their fitness center is also top-notch, featuring modern equipment and personal training services. It’s an ideal spot for those looking to unwind and stay fit in a luxurious environment.<br><br>### 3. **Olas Spa & Wellness Center at the Fa"
+                    data-question="luxury bathhouse and gym in Puerto Rico"
+                    data-llm="gpt4"
+                    data-brand="Las Ruinas Bathhouse and Gym"
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✓</span> (#1)
+                </td>
+            
+                <td class="llm-cell mentioned"
+                    data-response="Here are my top 5 recommendations for luxury bathhouses and gyms in Puerto Rico, listed in order of preference:<br><br>1. The Ritz-Carlton, San Juan - This iconic resort features an expansive, world-class spa with a hydrotherapy circuit, steam rooms, saunas, and a state-of-the-art fitness center. The spa offers a wide range of luxurious treatments and services in a serene, pampering environment.<br><br>2. Dorado Beach, a Ritz-Carlton Reserve - Located on the northwest coast, this exclusive resort boasts a stunning 5-acre wellness-focused spa with a hydrothermal circuit, fitness center, and wellness programming. The spa uses locally-sourced ingredients in its treatments.<br><br>3. Condado Vanderbilt Hotel - This historic hotel in San Juan has a beautiful, modern spa with a thermal pool, sauna, steam room, and well-equipped fitness center. The spa menu features locally-inspired treatments and therapies.<br><br>4. W Retreat & Spa, Vieques Island - Set on a private beach, this chic resort offers a full-service sp"
+                    data-question="luxury bathhouse and gym in Puerto Rico"
+                    data-llm="claude"
+                    data-brand="Las Ruinas Bathhouse and Gym"
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✓</span> (#1)
+                </td>
+            
+                <td class="llm-cell mentioned"
+                    data-response="Okay, finding a true &quot;luxury bathhouse&quot; in the traditional sense (think Korean jjimjilbang or Japanese onsen) in Puerto Rico is challenging. The island&#39;s spa and wellness scene leans more towards traditional spa treatments and high-end fitness centers. However, I can offer you a list of places that combine elements of luxury, hydrotherapy, and upscale fitness, that might scratch that itch.<br><br>Here are my top 3 recommendations, ranked in order of preference, considering a blend of luxury, potential for hydrotherapy experiences, and upscale fitness facilities:<br><br>**1. The Spa at Condado Vanderbilt Hotel (San Juan):**<br><br>*   **Why it&#39;s a good fit:** This spa consistently receives high praise for its luxurious environment, exceptional service, and comprehensive treatment menu. While not a traditional bathhouse, The Spa offers hydrotherapy circuits with saunas, steam rooms, and plunge pools, which can provide a similar relaxing and cleansing experience. The hotel also has a well-equipped fitness "
+                    data-question="luxury bathhouse and gym in Puerto Rico"
+                    data-llm="gemini"
+                    data-brand="Las Ruinas Bathhouse and Gym"
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✓</span> (#1)
+                </td>
+            
+            </tr>
+        
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q2</span>
+                    <span class="question-text">wellness center with pools, saunas, and massages in Puerto Rico</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top recommendations for wellness centers in Puerto Rico that feature pools, saunas, and massage services:<br><br>1. **The Spa at Condado Vanderbilt Hotel**  <br>   Located in San Juan, this luxurious spa offers a serene environment with a variety of treatments. The spa features a hydrotherapy pool, steam rooms, and saunas, along with an extensive menu of massages and body treatments. The stunning ocean views from the spa add to the overall experience, making it an ideal spot for relaxation and rejuvenation.<br><br>2. **The Well at the San Juan Marriott Resort & Stellaris Casino**  <br>   This wellness center is known for its comprehensive health and wellness programs. It includes a full-service spa with pools, saunas, and a variety of massage therapies. The serene atmosphere combined with skilled therapists ensures a holistic experience. Guests can also enjoy the beautiful beachfront location, enhancing the relaxation experience.<br><br>3. **Olas Spa at The Royal Sonesta San Juan**  <br>   Olas Spa o"
+                    data-question="wellness center with pools, saunas, and massages in Puerto Rico"
+                    data-llm="gpt4"
+                    data-brand="Las Ruinas Bathhouse and Gym"
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top 5 recommendations for wellness centers with pools, saunas, and massages in Puerto Rico:<br><br>1. Dorado Beach, a Ritz-Carlton Reserve:<br>This luxurious resort in Dorado features an impressive 5-acre Spa Botanico with an array of wellness facilities. It has an adults-only pool, hydrotherapy circuit, steam rooms, saunas, and offers a wide range of massages and body treatments. The spa&#39;s design and treatments are inspired by the resort&#39;s natural surroundings.<br><br>2. St. Regis Bahia Beach Resort:<br>The Remède Spa at the St. Regis Bahia Beach Resort in Rio Grande is a serene oasis. It has indoor and outdoor pools, a sauna, steam room, and offers an excellent selection of massages, facials, and body treatments. The spa&#39;s design incorporates natural elements to create a peaceful, rejuvenating atmosphere.<br><br>3. Condado Vanderbilt Hotel:<br>Located in the heart of Condado, this historic hotel features the Spa Vanderbilt. Highlights include an indoor pool, sauna, steam room, and a menu of massage"
+                    data-question="wellness center with pools, saunas, and massages in Puerto Rico"
+                    data-llm="claude"
+                    data-brand="Las Ruinas Bathhouse and Gym"
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Okay, here are my top recommendations for wellness centers with pools, saunas, and massage services in Puerto Rico, based on reviews, amenities, and overall reputation. Please note that availability and pricing can change, so it&#39;s always best to check directly with the center.<br><br>**Recommendations (Order of Preference):**<br><br>1.  **The Spa at Condado Vanderbilt Hotel (San Juan):**<br>    *   **Why it&#39;s great:** This is a luxury option with a strong reputation. It&#39;s known for its elegant atmosphere, high-quality treatments, and exceptional service. The spa has a beautiful relaxation area, a sauna, steam room, and a vitality pool. They offer a wide range of massages, body treatments, and facials. Plus, you have the benefit of the Condado Vanderbilt&#39;s excellent pools and oceanfront location.<br>    *   **What to expect:** A premium experience with higher prices. Ideal for a special occasion or if you&#39;re looking for top-notch pampering.<br><br>2.  **Zen Spa Boutique Hotel (Isabela):**<br>    *   **Why it&#39;s gr"
+                    data-question="wellness center with pools, saunas, and massages in Puerto Rico"
+                    data-llm="gemini"
+                    data-brand="Las Ruinas Bathhouse and Gym"
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q3</span>
+                    <span class="question-text">high-end gym and spa membership in Puerto Rico</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top recommendations for high-end gym and spa memberships in Puerto Rico:<br><br>1. **The Spa at Condado Vanderbilt Hotel**<br>   - **Overview:** Situated within the luxurious Condado Vanderbilt Hotel, this spa offers a serene environment with stunning ocean views. The fitness center is well-equipped with state-of-the-art machines and personal training options.<br>   - **Why Choose It:** The combination of a high-end gym and a full-service spa makes it ideal for those who want to relax and rejuvenate. The spa features a variety of treatments, including massages, facials, and body therapies, all designed to provide a luxurious experience.<br><br>2. **The Wellness Center at Dorado Beach, a Ritz-Carlton Reserve**<br>   - **Overview:** This exclusive wellness center offers a comprehensive fitness experience, including personal training, yoga classes, and wellness consultations. The spa features a range of treatments using local ingredients and holistic approaches.<br>   - **Why Choose It:** Located in "
+                    data-question="high-end gym and spa membership in Puerto Rico"
+                    data-llm="gpt4"
+                    data-brand="Las Ruinas Bathhouse and Gym"
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top 5 recommendations for high-end gym and spa memberships in Puerto Rico, listed in order of preference:<br><br>1. The Sports & Fitness Club at Dorado Beach, a Ritz-Carlton Reserve:<br>This exclusive club is part of the renowned Dorado Beach resort, offering world-class fitness facilities, including a state-of-the-art gym, indoor and outdoor pools, tennis courts, and a luxurious spa. The club caters to the discerning clientele of the Ritz-Carlton resort, providing a truly exceptional experience.<br><br>2. Condado Vanderbilt Hotel Fitness Center and Spa:<br>The Condado Vanderbilt Hotel is a historic and prestigious property in San Juan, and its fitness center and spa are equally impressive. The facility boasts a modern gym, various exercise studios, and a full-service spa with treatments inspired by Puerto Rican traditions.<br><br>3. The Club at St. Regis Bahia Beach Resort:<br>Located within the stunning St. Regis Bahia Beach Resort, this club offers a comprehensive fitness and wellness experience. "
+                    data-question="high-end gym and spa membership in Puerto Rico"
+                    data-llm="claude"
+                    data-brand="Las Ruinas Bathhouse and Gym"
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Okay, here are 4 recommendations for high-end gym and spa memberships in Puerto Rico, based on reputation, amenities, and overall experience, listed in order of preference (knowing that &quot;best&quot; is subjective and depends on your specific needs and location):<br><br>**1.  Condado Vanderbilt Hotel - Vanderbilt Spa & Fitness**<br><br>*   **Why it&#39;s a top pick:** This is the premier luxury experience in Puerto Rico. The Vanderbilt Hotel is known for its elegance, and the spa and fitness center reflect that. Expect top-of-the-line equipment, personalized training, and a serene spa environment.<br>*   **Key Features:** State-of-the-art fitness center with a variety of cardio and strength training equipment, group fitness classes including yoga and Pilates, personal training services, a luxurious spa with a wide range of treatments (massages, facials, body wraps, etc.), sauna, steam room, whirlpool, and access to the hotel&#39;s stunning pools.<br>*   **Considerations:** This will likely be the most expensive option"
+                    data-question="high-end gym and spa membership in Puerto Rico"
+                    data-llm="gemini"
+                    data-brand="Las Ruinas Bathhouse and Gym"
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q4</span>
+                    <span class="question-text">when is Las Ruinas Bathhouse and Gym opening</span>
+                </td>
+                
+                <td class="llm-cell mentioned"
+                    data-response="As of my last knowledge update in October 2023, I don’t have specific information on the opening date for Las Ruinas Bathhouse and Gym. However, I can recommend some popular activities and venues that you might enjoy, whether you’re interested in fitness, relaxation, or wellness. Here are my top recommendations:<br><br>1. **Local Spa or Wellness Center**:<br>   - **Why**: If you’re looking for a relaxing experience similar to what a bathhouse offers, consider visiting a local spa. Many spas provide hot tubs, saunas, and various treatments that can enhance your relaxation and wellness.<br>  <br>2. **Yoga or Pilates Studio**:<br>   - **Why**: Engaging in yoga or Pilates can help improve your flexibility, strength, and overall wellness. Many studios offer classes for all levels, and these can be a great way to stay active while also focusing on mindfulness and relaxation.<br><br>3. **Community Pool or Recreation Center**:<br>   - **Why**: Swimming can be a refreshing workout and a great way to unwind. Look for comm"
+                    data-question="when is Las Ruinas Bathhouse and Gym opening"
+                    data-llm="gpt4"
+                    data-brand="Las Ruinas Bathhouse and Gym"
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✓</span> (#1)
+                </td>
+            
+                <td class="llm-cell mentioned"
+                    data-response="Unfortunately, I do not have any specific recommendations for the Las Ruinas Bathhouse and Gym, as I don&#39;t have any information about this particular establishment. Bathhouses and gyms can vary greatly in terms of their amenities, atmosphere, and target clientele, so without more details about this specific location, I can&#39;t provide any informed recommendations.<br><br>In general, when looking for a bathhouse or gym, I would suggest considering the following factors:<br><br>1. Cleanliness and hygiene: Ensure the facilities are well-maintained and adhere to high standards of cleanliness.<br><br>2. Range of amenities: Look for a facility that offers a variety of services and equipment to cater to your specific needs and preferences.<br><br>3. Atmosphere and vibe: Consider the overall ambiance and whether it aligns with your desired experience, whether it&#39;s a relaxing, rejuvenating spa-like setting or a more intense, fitness-focused environment.<br><br>4. Reviews and reputation: Check online reviews and ask for recomm"
+                    data-question="when is Las Ruinas Bathhouse and Gym opening"
+                    data-llm="claude"
+                    data-brand="Las Ruinas Bathhouse and Gym"
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✓</span> (#1)
+                </td>
+            
+                <td class="llm-cell mentioned"
+                    data-response="Unfortunately, there is currently no publicly available information about the opening date of &quot;Las Ruinas Bathhouse and Gym.&quot; It&#39;s possible this is a new establishment, a concept in development, or a local business that hasn&#39;t established a strong online presence yet.<br><br>Therefore, I can&#39;t provide you with an opening date or make recommendations based on its services.  <br><br>However, if you&#39;re looking for bathhouse and gym experiences in general, I need a little more information to give you relevant recommendations.  Tell me:<br><br>*   **Where are you located (or planning to travel)?** This is crucial because bathhouses and gyms are location-specific.  Knowing your city, state, or country is essential.<br>*   **What are you looking for in a bathhouse/gym?** Are you interested in specific amenities (e.g., saunas, steam rooms, massage, specific gym equipment), a particular atmosphere (e.g., luxurious, social, fitness-focused), or a certain price range?<br>*   **Are you looking for a co-ed or gender-speci"
+                    data-question="when is Las Ruinas Bathhouse and Gym opening"
+                    data-llm="gemini"
+                    data-brand="Las Ruinas Bathhouse and Gym"
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✓</span> (#1)
+                </td>
+            
+            </tr>
+        
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q5</span>
+                    <span class="question-text">what amenities are included with a Las Ruinas membership</span>
+                </td>
+                
+                <td class="llm-cell mentioned"
+                    data-response="Las Ruinas is known for offering a variety of amenities to its members, which can enhance their overall experience. Here are my top recommendations regarding the amenities typically included with a Las Ruinas membership:<br><br>1. **Exclusive Access to Facilities**  <br>   Members often enjoy exclusive access to premium facilities, such as private lounges, swimming pools, and recreational areas. This allows for a more relaxed and intimate environment away from the general public.<br><br>2. **Personalized Services**  <br>   Many memberships include personalized services, such as concierge assistance and event planning. This can enhance your experience by providing tailored recommendations and support for leisure activities, dining, and entertainment.<br><br>3. **Member Events and Networking Opportunities**  <br>   Regularly scheduled member-only events, such as social gatherings, workshops, or networking events, can be a significant benefit. These events provide opportunities to meet like-minded individuals, buil"
+                    data-question="what amenities are included with a Las Ruinas membership"
+                    data-llm="gpt4"
+                    data-brand="Las Ruinas Bathhouse and Gym"
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✓</span> (#1)
+                </td>
+            
+                <td class="llm-cell mentioned"
+                    data-response="Unfortunately, I don&#39;t have enough information about the specific amenities and membership details of Las Ruinas to provide detailed recommendations. Las Ruinas appears to be a resort or community, but without more context about the location, type of property, and membership offerings, I can&#39;t confidently suggest the top 3-5 amenities that would be most beneficial.<br><br>In general, when evaluating a resort or community membership, some common amenities to consider include:<br><br>1. Accommodation options (e.g., hotel rooms, villas, condos) and their quality/features<br>2. Access to recreational facilities (e.g., pools, fitness centers, sports courts)<br>3. Dining and entertainment options on-site<br>4. Spa or wellness services<br>5. Children&#39;s activities and family-friendly amenities<br>6. Concierge or guest services<br>7. Proximity to local attractions and transportation<br><br>Without more specifics about Las Ruinas, I&#39;d suggest reaching out to the membership or sales team directly to inquire about the full list of a"
+                    data-question="what amenities are included with a Las Ruinas membership"
+                    data-llm="claude"
+                    data-brand="Las Ruinas Bathhouse and Gym"
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✓</span> (#1)
+                </td>
+            
+                <td class="llm-cell mentioned"
+                    data-response="Unfortunately, there&#39;s no widely known or publicly documented &quot;Las Ruinas Membership&quot; that I can find.  The name &quot;Las Ruinas&quot; translates to &quot;The Ruins&quot; in Spanish, and could refer to several different places, often historical or archaeological sites.<br><br>Therefore, I need more context to provide accurate recommendations about membership amenities. To give you the best answer, please tell me:<br><br>1.  **Where is &quot;Las Ruinas&quot; located?** (City, region, country) Is it a specific resort, club, historical site, or something else? Knowing the location is crucial.<br>2.  **What kind of place is it?** Is it a:<br><br>    *   **Historical Site/Archaeological Park:** In this case, a membership might include things like free entry, guided tours, access to special events, or discounts at the gift shop.<br>    *   **Resort/Hotel:**  Here, a membership could include discounted room rates, access to exclusive areas (pools, lounges), free breakfast, spa discounts, or priority booking.<br>    *   **Private Club (Golf, Social"
+                    data-question="what amenities are included with a Las Ruinas membership"
+                    data-llm="gemini"
+                    data-brand="Las Ruinas Bathhouse and Gym"
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✓</span> (#1)
+                </td>
+            
+            </tr>
+        
+                </tbody>
+            </table>
+            <p class="breakdown-hint">Click any cell to see the full AI response</p>
+        </div>
+
+        <!-- Response modal -->
+        <div class="response-modal" id="responseModal" onclick="closeModal(event)">
+            <div class="modal-content" onclick="event.stopPropagation()">
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+                <div class="modal-header">
+                    <span class="modal-llm" id="modalLlm"></span>
+                    <span class="modal-status" id="modalStatus"></span>
+                </div>
+                <div class="modal-question" id="modalQuestion"></div>
+                <div class="modal-response" id="modalResponse"></div>
+            </div>
+        </div>
+    
+        </div>
+
+        <!-- Section 3: Reddit Opportunities -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <h2 class="section-title">Reddit Opportunities</h2>
+            </div>
+
+            <div class="subsection-title">Buy Intent Conversations</div>
+            <p class="subsection-desc">People actively looking for recommendations in your category</p>
+            <div class="reddit-posts">
+                
+            <a href="https://www.reddit.com/r/NYCbitcheswithtaste/comments/1qjek4h/a_hot_body_of_water/" target="_blank" class="reddit-post">
+                <div class="post-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">a hot body of water : r/NYCbitcheswithtaste</div>
+                    <div class="post-meta">
+                        r/NYCbitcheswithtaste &bull; 125K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            <a href="https://www.reddit.com/r/Cruise/comments/1qi4qam/what_is_the_benefit_of_travel_agent_to_me_am_i/" target="_blank" class="reddit-post">
+                <div class="post-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">What is the benefit of travel agent to me? Am I missing ...</div>
+                    <div class="post-meta">
+                        r/Cruise &bull; 1.5M members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            <a href="https://www.reddit.com/r/DebateAnAtheist/comments/1qj3yj4/math_proves_god_i_would_like_to_debate_and_discus/" target="_blank" class="reddit-post">
+                <div class="post-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">Math proves god. I would like to debate and discus the ...</div>
+                    <div class="post-meta">
+                        r/DebateAnAtheist &bull; 102K members &bull; 36500 months ago
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            <a href="https://www.reddit.com/r/changemyview/comments/1qi9f4g/cmv_trump_created_the_greenland_saga_to_fully/?tl=tr" target="_blank" class="reddit-post">
+                <div class="post-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">Trump, Ukrayna'ya askeri desteği tamamen durdurmak için ...</div>
+                    <div class="post-meta">
+                        r/changemyview &bull; 4.2M members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            </div>
+
+            <div class="subsection-title">Pain Point Conversations</div>
+            <p class="subsection-desc">People discussing problems your product solves</p>
+            <div class="reddit-posts">
+                
+            <a href="https://www.reddit.com/r/PuertoRicoTravel/comments/1qi9gq5/quiet_beach_to_recover_on_recommendations_please/" target="_blank" class="reddit-post">
+                <div class="post-icon pain">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">Quiet beach to recover on recommendations please.</div>
+                    <div class="post-meta">
+                        r/PuertoRicoTravel &bull; 758K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            <a href="https://www.reddit.com/r/PuertoRicoTravel/comments/1qnixak/where_to_find_your_zen_in_pr/" target="_blank" class="reddit-post">
+                <div class="post-icon pain">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">Where to find your ZEN in PR? : r/PuertoRicoTravel</div>
+                    <div class="post-meta">
+                        r/PuertoRicoTravel &bull; 758K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            </div>
+        </div>
+
+        <!-- CTA Section -->
+        <div class="section cta-section">
+            <h2>Ready to improve your <em>AI visibility?</em></h2>
+            <p>We help brands get mentioned more in AI answers through strategic content placement.</p>
+            <a href="https://adva-solutions.com/AIVisibility" class="cta-button">Learn More</a>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p>Generated by <a href="https://adva-solutions.com">Adva</a> &bull; AI Visibility Health Check</p>
+    </footer>
+
+    <script>
+        // Tab switching functionality
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const tabId = btn.dataset.tab;
+
+                // Update buttons
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                // Update panels
+                document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+                document.getElementById('panel-' + tabId).classList.add('active');
+            });
+        });
+
+        // Copy link to clipboard
+        function copyLink() {
+            navigator.clipboard.writeText(window.location.href).then(() => {
+                showToast('Link copied to clipboard!');
+            }).catch(() => {
+                // Fallback for older browsers
+                const input = document.createElement('input');
+                input.value = window.location.href;
+                document.body.appendChild(input);
+                input.select();
+                document.execCommand('copy');
+                document.body.removeChild(input);
+                showToast('Link copied to clipboard!');
+            });
+        }
+
+        // Show toast notification
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2500);
+        }
+
+        // Download as PDF
+        function downloadPDF() {
+            // Get current URL and construct PDF endpoint
+            const currentUrl = window.location.href;
+            const pdfUrl = currentUrl + '/pdf';
+
+            // Show loading toast
+            showToast('Generating PDF...');
+
+            // Navigate to PDF download
+            window.location.href = pdfUrl;
+        }
+
+        // Show response modal
+        function showResponse(cell) {
+            try {
+                let response = cell.dataset.response || 'No response available';
+                const question = cell.dataset.question || '';
+                const llm = cell.dataset.llm || '';
+                const brand = cell.dataset.brand || '';
+                const isMentioned = cell.classList.contains('mentioned');
+
+                const llmNames = {'gpt4': 'GPT-4', 'claude': 'Claude', 'gemini': 'Gemini'};
+
+                // Highlight brand name in response (case insensitive) - simple version
+                if (brand && isMentioned) {
+                    // Escape special regex characters in brand name
+                    const escapedBrand = brand.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+                    const brandRegex = new RegExp('(' + escapedBrand + ')', 'gi');
+                    response = response.replace(brandRegex, '<span class="brand-highlight">$1</span>');
+                }
+
+                document.getElementById('modalLlm').textContent = llmNames[llm] || llm;
+                document.getElementById('modalQuestion').textContent = '"' + question + '"';
+                document.getElementById('modalResponse').innerHTML = response;
+
+                const statusEl = document.getElementById('modalStatus');
+                if (isMentioned) {
+                    statusEl.textContent = 'Mentioned';
+                    statusEl.className = 'modal-status mentioned';
+                } else {
+                    statusEl.textContent = 'Not mentioned';
+                    statusEl.className = 'modal-status not-mentioned';
+                }
+
+                document.getElementById('responseModal').classList.add('active');
+                document.body.style.overflow = 'hidden';
+
+                // Scroll to first highlight if mentioned
+                if (isMentioned) {
+                    setTimeout(function() {
+                        const highlight = document.querySelector('.modal-response .brand-highlight');
+                        if (highlight) {
+                            highlight.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        }
+                    }, 100);
+                }
+            } catch (e) {
+                console.error('Error showing response:', e);
+                alert('Error loading response. Please try again.');
+            }
+        }
+
+        // Close modal
+        function closeModal(event) {
+            if (event && event.target !== event.currentTarget) return;
+            document.getElementById('responseModal').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // Close modal on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeModal();
+        });
+    </script>
+</body>
+</html>

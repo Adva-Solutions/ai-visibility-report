@@ -1,0 +1,1367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Visibility Report - Wyld Fire | Adva</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #ffffff;
+            min-height: 100vh;
+            color: #374151;
+            line-height: 1.6;
+        }
+
+        /* Header */
+        .header {
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            font-size: 1.25rem;
+            color: #1f2937;
+            text-decoration: none;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .header-date {
+            color: #9ca3af;
+            font-size: 0.875rem;
+        }
+
+        /* Share buttons */
+        .share-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .share-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: #f3f4f6;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            color: #374151;
+            font-size: 0.875rem;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .share-btn:hover {
+            background: #e5e7eb;
+        }
+
+        .share-btn svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .share-btn.primary {
+            background: #1f2937;
+            color: #ffffff;
+            border-color: #1f2937;
+        }
+
+        .share-btn.primary:hover {
+            background: #111827;
+        }
+
+        /* Toast notification */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: #1f2937;
+            color: #ffffff;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            opacity: 0;
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        /* Container */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Page title */
+        .page-title {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .page-title .label {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: #9ca3af;
+            font-size: 0.75rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+        }
+
+        .page-title .label::before,
+        .page-title .label::after {
+            content: '';
+            width: 30px;
+            height: 1px;
+            background: #d1d5db;
+        }
+
+        .page-title h1 {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 2.5rem;
+            font-weight: 400;
+            color: #1f2937;
+            margin-bottom: 0.5rem;
+        }
+
+        .page-title .brand {
+            color: #6b7280;
+            font-size: 1.125rem;
+        }
+
+        /* Sections */
+        .section {
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #f3f4f6;
+        }
+
+        .section-icon {
+            width: 40px;
+            height: 40px;
+            background: #1f2937;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .section-icon svg {
+            width: 20px;
+            height: 20px;
+            color: #ffffff;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 1.375rem;
+            color: #1f2937;
+        }
+
+        /* Score Section */
+        .score-section {
+            text-align: center;
+            padding: 3rem 2rem;
+        }
+
+        .score-circle {
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            background: #fafafa;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            border: 4px solid #ef4444;
+        }
+
+        .score-value {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 3rem;
+            font-weight: 500;
+            color: #ef4444;
+        }
+
+        .score-label {
+            font-size: 0.8rem;
+            color: #9ca3af;
+        }
+
+        .score-description {
+            color: #6b7280;
+            margin-bottom: 2rem;
+            font-size: 1rem;
+        }
+
+        .score-description strong {
+            color: #1f2937;
+        }
+
+        .llm-breakdown {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .llm-stat {
+            text-align: center;
+            padding: 1rem 1.5rem;
+            background: #fafafa;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+            min-width: 100px;
+        }
+
+        .llm-name {
+            display: block;
+            color: #9ca3af;
+            font-size: 0.8rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .llm-score {
+            font-size: 1.125rem;
+            font-weight: 600;
+        }
+
+        .llm-score.success {
+            color: #22c55e;
+        }
+
+        .llm-score.warning {
+            color: #ef4444;
+        }
+
+        /* Competitor Table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 0.875rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid #f3f4f6;
+        }
+
+        th {
+            color: #9ca3af;
+            font-weight: 500;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        td {
+            color: #374151;
+        }
+
+        .mention-count {
+            background: #fef3c7;
+            color: #92400e;
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        /* Tabs for LLM responses */
+        .example-tabs {
+            margin-top: 1.5rem;
+        }
+
+        .tabs-header {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+            padding-bottom: 0;
+        }
+
+        .tab-btn {
+            padding: 0.75rem 1.25rem;
+            background: transparent;
+            border: none;
+            color: #6b7280;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            margin-bottom: -1px;
+            transition: all 0.2s;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .tab-btn:hover {
+            color: #1f2937;
+        }
+
+        .tab-btn.active {
+            color: #1f2937;
+            border-bottom-color: #1f2937;
+        }
+
+        .tab-panel {
+            display: none;
+            background: #fafafa;
+            border-radius: 8px;
+            padding: 1.25rem;
+        }
+
+        .tab-panel.active {
+            display: block;
+        }
+
+        .example-question {
+            color: #1f2937;
+            font-weight: 500;
+            font-size: 0.95rem;
+            margin-bottom: 0.75rem;
+        }
+
+        /* Question breakdown table */
+        .question-breakdown {
+            margin-top: 1rem;
+        }
+
+        .breakdown-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        .breakdown-table th {
+            padding: 0.75rem;
+            text-align: center;
+            background: #f9fafb;
+            border-bottom: 2px solid #e5e7eb;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .breakdown-table th:first-child {
+            text-align: left;
+            width: 50%;
+        }
+
+        .breakdown-table td {
+            padding: 0.75rem;
+            border-bottom: 1px solid #f3f4f6;
+            vertical-align: middle;
+        }
+
+        .question-cell {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+        }
+
+        .question-num {
+            background: #e5e7eb;
+            color: #374151;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        .question-text {
+            color: #374151;
+            line-height: 1.4;
+        }
+
+        .llm-cell {
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-radius: 4px;
+        }
+
+        .llm-cell:hover {
+            background: #f3f4f6;
+        }
+
+        .llm-cell.mentioned {
+            color: #16a34a;
+        }
+
+        .llm-cell.mentioned .status-icon {
+            font-size: 1.25rem;
+        }
+
+        .llm-cell.not-mentioned {
+            color: #dc2626;
+        }
+
+        .llm-cell.not-mentioned .status-icon {
+            font-size: 1.25rem;
+        }
+
+        .breakdown-hint {
+            color: #9ca3af;
+            font-size: 0.8rem;
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+        /* Response modal */
+        .response-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+        }
+
+        .response-modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: #ffffff;
+            border-radius: 12px;
+            max-width: 800px;
+            width: 100%;
+            max-height: 90vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #9ca3af;
+            cursor: pointer;
+            padding: 0.25rem 0.5rem;
+        }
+
+        .modal-close:hover {
+            color: #374151;
+        }
+
+        .modal-header {
+            padding: 1.5rem 1.5rem 0;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            position: relative;
+        }
+
+        .modal-llm {
+            font-weight: 600;
+            color: #1f2937;
+            font-size: 1.1rem;
+        }
+
+        .modal-status {
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .modal-status.mentioned {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .modal-status.not-mentioned {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .modal-question {
+            padding: 1rem 1.5rem;
+            color: #6b7280;
+            font-size: 0.9rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .modal-response {
+            padding: 1.5rem;
+            overflow-y: scroll;
+            flex: 1;
+            color: #374151;
+            font-size: 0.9rem;
+            line-height: 1.8;
+            height: 500px;
+            background: #fafafa;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .modal-response::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .modal-response::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        .modal-response::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 4px;
+        }
+
+        .modal-response::-webkit-scrollbar-thumb:hover {
+            background: #a1a1a1;
+        }
+
+        /* Brand highlight */
+        .brand-highlight {
+            background: linear-gradient(120deg, #fef08a 0%, #fde047 100%);
+            padding: 0.1rem 0.3rem;
+            border-radius: 3px;
+            font-weight: 600;
+        }
+
+        .example-content {
+            color: #6b7280;
+            font-size: 0.875rem;
+            line-height: 1.7;
+            max-height: 400px;
+            overflow-y: auto;
+            margin-bottom: 0.75rem;
+            padding: 1rem;
+            background: #f9fafb;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .example-status {
+            padding: 0.5rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            display: inline-block;
+        }
+
+        .example-status.mentioned {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .example-status.not-mentioned {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        /* Reddit Posts */
+        .reddit-posts {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .reddit-post {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: #fafafa;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: all 0.2s;
+            border: 1px solid transparent;
+        }
+
+        .reddit-post:hover {
+            background: #f3f4f6;
+            border-color: #e5e7eb;
+        }
+
+        .post-icon {
+            width: 40px;
+            height: 40px;
+            background: #1f2937;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .post-icon.pain {
+            background: #fef3c7;
+        }
+
+        .post-icon.pain svg {
+            color: #92400e;
+        }
+
+        .post-icon svg {
+            width: 20px;
+            height: 20px;
+            color: #ffffff;
+        }
+
+        .post-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .post-title {
+            color: #1f2937;
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .post-meta {
+            color: #9ca3af;
+            font-size: 0.8rem;
+        }
+
+        .post-arrow {
+            color: #9ca3af;
+            flex-shrink: 0;
+        }
+
+        .post-arrow svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .subsection-title {
+            color: #1f2937;
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin: 1.5rem 0 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .subsection-title:first-of-type {
+            margin-top: 0;
+        }
+
+        .subsection-desc {
+            color: #9ca3af;
+            font-size: 0.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .no-data {
+            color: #9ca3af;
+            font-style: italic;
+            text-align: center;
+            padding: 1rem;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            color: #9ca3af;
+            font-size: 0.8rem;
+            padding: 2rem;
+            border-top: 1px solid #e5e7eb;
+            margin-top: 2rem;
+        }
+
+        .footer a {
+            color: #1f2937;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* CTA */
+        .cta-section {
+            text-align: center;
+            padding: 3rem 2rem;
+            background: #fafafa;
+        }
+
+        .cta-section h2 {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 1.75rem;
+            color: #1f2937;
+            margin-bottom: 0.75rem;
+        }
+
+        .cta-section p {
+            color: #6b7280;
+            margin-bottom: 1.5rem;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background: #1f2937;
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .cta-button:hover {
+            background: #111827;
+            transform: translateY(-1px);
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .page-title h1 {
+                font-size: 1.75rem;
+            }
+
+            .section {
+                padding: 1.5rem;
+            }
+
+            .score-circle {
+                width: 130px;
+                height: 130px;
+            }
+
+            .score-value {
+                font-size: 2.25rem;
+            }
+
+            .llm-breakdown {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .tabs-header {
+                flex-wrap: wrap;
+            }
+
+            .tab-btn {
+                padding: 0.5rem 1rem;
+                font-size: 0.8rem;
+            }
+
+            .breakdown-table th,
+            .breakdown-table td {
+                padding: 0.5rem;
+                font-size: 0.8rem;
+            }
+
+            .question-cell {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .modal-content {
+                max-height: 90vh;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <a href="/" class="logo">adva</a>
+        <div class="header-right">
+            <div class="share-buttons">
+                <button class="share-btn" onclick="copyLink()" title="Copy link">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                    </svg>
+                    Copy Link
+                </button>
+                <a class="share-btn" href="mailto:?subject=AI%20Visibility%20Report%20for%20Wyld Fire&body=Check%20out%20this%20AI%20visibility%20report%3A%20" onclick="this.href += encodeURIComponent(window.location.href)" title="Share via email">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                    </svg>
+                    Email
+                </a>
+                <a class="share-btn primary" href="javascript:void(0)" onclick="downloadPDF()" title="Download as PDF">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                    </svg>
+                    Download PDF
+                </a>
+            </div>
+            <span class="header-date">January 27, 2026</span>
+        </div>
+    </header>
+    <div class="toast" id="toast">Link copied to clipboard!</div>
+
+    <div class="container">
+        <div class="page-title">
+            <div class="label">AI Visibility Report</div>
+            <h1>Your Brand's <em>AI Presence</em></h1>
+            <p class="brand">Analysis for Wyld Fire</p>
+        </div>
+
+        <!-- Section 1: AI Visibility Score -->
+        <div class="section score-section">
+            <div class="score-circle">
+                <span class="score-value">0%</span>
+                <span class="score-label">0/15 mentions</span>
+            </div>
+            <p class="score-description">
+                Your brand appeared in <strong>0</strong> out of <strong>15</strong> AI recommendations
+            </p>
+            <div class="llm-breakdown">
+                
+            <div class="llm-stat">
+                <span class="llm-name">GPT-4</span>
+                <span class="llm-score warning">0/5</span>
+            </div>
+        
+            <div class="llm-stat">
+                <span class="llm-name">Claude</span>
+                <span class="llm-score warning">0/5</span>
+            </div>
+        
+            <div class="llm-stat">
+                <span class="llm-name">Gemini</span>
+                <span class="llm-score warning">0/5</span>
+            </div>
+        
+            </div>
+        </div>
+
+        <!-- Section 2: AI Response Breakdown -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                    </svg>
+                </div>
+                <h2 class="section-title">Question-by-Question Breakdown</h2>
+            </div>
+            <p style="color: #6b7280; margin-bottom: 1rem;">We asked these 5 questions to each AI model. Click any cell to see the full response:</p>
+            
+        <div class="question-breakdown">
+            <table class="breakdown-table">
+                <thead>
+                    <tr>
+                        <th>Question Asked</th>
+                        <th>GPT-4</th>
+                        <th>Claude</th>
+                        <th>Gemini</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q1</span>
+                    <span class="question-text">masculine scented candles for home</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top recommendations for masculine-scented candles that can enhance the ambiance of your home:<br><br>1. **Paddywax Candles - &quot;Library&quot; Collection - &quot;Bourbon & Vanilla&quot;**  <br>   This candle features a rich blend of warm bourbon with a hint of sweet vanilla, creating a cozy and inviting atmosphere. The scent is both comforting and sophisticated, making it perfect for a study or living room. The rustic packaging adds a touch of charm to any decor.<br><br>2. **Boy Smells - &quot;Cedar Stack&quot;**  <br>   This candle combines the earthy scent of cedarwood with the warmth of dried tobacco and the freshness of a hint of sandalwood. The result is a scent that feels both grounding and invigorating. It&#39;s ideal for creating a relaxed environment, whether you&#39;re winding down after a long day or entertaining guests.<br><br>3. **Homesick Candles - &quot;New York&quot;**  <br>   Inspired by the essence of New York City, this candle combines notes of leather, cedar, and a hint of incense. The scent is complex and layered, evoking th"
+                    data-question="masculine scented candles for home"
+                    data-llm="gpt4"
+                    data-brand="Wyld Fire"
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top 5 recommendations for masculine-scented candles for the home:<br><br>1. Sandalwood and Cedarwood Candle by Maison Louis Marie - This candle has a warm, earthy aroma with notes of sandalwood, cedarwood, and patchouli. It creates a cozy, sophisticated ambiance.<br><br>2. Feu de Bois (Firewood) Candle by Diptyque - This candle captures the scent of a crackling fireplace with its blend of smoky, woody notes. It&#39;s perfect for creating a moody, masculine atmosphere.<br><br>3. Teakwood and Tobacco Candle by Bath & Body Works - With its notes of teakwood, tobacco, and leather, this candle has a rich, leathery fragrance that evokes a classic, masculine vibe.<br><br>4. Bergamot and Black Pepper Candle by Jo Malone - The bright, citrusy bergamot is balanced by the warm, spicy notes of black pepper, creating a sophisticated, aromatic scent.<br><br>5. Vetiver and Tonka Bean Candle by West Elm - Vetiver provides an earthy, grassy base while tonka bean adds a sweet, vanilla-like note. The result is a complex, masc"
+                    data-question="masculine scented candles for home"
+                    data-llm="claude"
+                    data-brand="Wyld Fire"
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Okay, here are my top 5 recommendations for masculine-scented candles for the home, ordered by preference, with brief explanations:<br><br>1.  **Diptyque Feu de Bois (Wood Fire):** This is a classic for a reason. Feu de Bois perfectly captures the comforting and sophisticated aroma of a crackling fireplace. It&#39;s smoky, woody, and slightly sweet, creating a warm and inviting atmosphere. It&#39;s expensive, but the throw (how far the scent travels) and overall experience are exceptional.<br><br>2.  **Le Labo Santal 26:** This candle is a more refined and luxurious take on sandalwood. It&#39;s less overtly &quot;woody&quot; and more leathery, smoky, and slightly spicy. It&#39;s a very sophisticated and elegant masculine scent that&#39;s great for living rooms or bedrooms. It&#39;s also a strong scent, so it fills a room quickly.<br><br>3.  **Brooklyn Candle Studio - Brooklyn Blackout:** This candle offers a more affordable option that still delivers a masculine vibe. It&#39;s a blend of sandalwood, patchouli, and cade, resulting in a smoky"
+                    data-question="masculine scented candles for home"
+                    data-llm="gemini"
+                    data-brand="Wyld Fire"
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q2</span>
+                    <span class="question-text">premium candles for men UK</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top recommendations for premium candles for men available in the UK:<br><br>1. **Diptyque Baies Candle**  <br>   Diptyque is renowned for its high-quality candles, and the Baies scent is a perfect choice for men. It features a delightful blend of blackcurrant and Bulgarian rose, creating a fresh and sophisticated aroma. The elegant glass container adds a touch of luxury to any space, making it a stylish addition to a home or office.<br><br>2. **Jo Malone London Wood Sage & Sea Salt Candle**  <br>   This candle embodies a blend of earthy and marine notes, perfect for men who appreciate a natural, crisp scent. The combination of ambrette seed, sea salt, and sage evokes a sense of the coast, making it ideal for relaxation and contemplation. Jo Malone candles are known for their quality and longevity, providing a premium experience.<br><br>3. **Tom Ford Tobacco Vanille Candle**  <br>   For a more opulent option, the Tobacco Vanille candle from Tom Ford is a luxurious choice. It features rich notes of tob"
+                    data-question="premium candles for men UK"
+                    data-llm="gpt4"
+                    data-brand="Wyld Fire"
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top 5 recommendations for premium candles for men in the UK, listed in order of preference:<br><br>1. Baxter of California Candle - Tobacco Vanille: This candle has a rich, masculine scent with notes of tobacco, vanilla, and leather. It&#39;s perfect for creating a cozy, sophisticated ambiance in any room.<br><br>2. Tom Dixon Materialism Candle - Coal: This candle has a bold, earthy scent with notes of charcoal, vetiver, and patchouli. It&#39;s a great choice for men who prefer a more rugged, industrial-inspired fragrance.<br><br>3. Jo Malone London Candle - Incense & Embers: This candle has a warm, smoky scent with notes of incense, amber, and cedarwood. It&#39;s a great option for men who want a luxurious, high-end candle that evokes a sense of mystery and depth.<br><br>4. Diptyque Candle - Feu de Bois: This candle has a woody, smoky scent with notes of birchwood and crackling fire. It&#39;s a great choice for men who want a candle that captures the cozy, comforting feel of a crackling fireplace.<br><br>5. Acqua di P"
+                    data-question="premium candles for men UK"
+                    data-llm="claude"
+                    data-brand="Wyld Fire"
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Okay, here are my top 3 premium candle recommendations for men in the UK, based on scent profile, quality, and brand reputation, ordered from my most preferred to least:<br><br>1.  **Tom Dixon - Earth Candle:**<br>    *   **Why:** Tom Dixon is a well-respected British design brand, and their candles are known for both their striking containers and sophisticated scents. Earth is a grounding, woody fragrance with notes of moss, amber, and cedarwood. It&#39;s masculine without being overly harsh, evoking a sense of the outdoors and nature. The copper vessel is also a stylish addition to any room.<br>    *   **Scent Profile:** Woody, Earthy, Mossy<br>    *   **Where to Buy:** Selfridges, John Lewis, Tom Dixon Website<br><br>2.  **Jo Malone London - Wood Sage & Sea Salt Candle:**<br>    *   **Why:** While Jo Malone is generally unisex, Wood Sage & Sea Salt is a popular choice for men due to its fresh, clean, and slightly masculine scent. It features notes of sea salt, sage, and ambrette seeds, creating a sense of coas"
+                    data-question="premium candles for men UK"
+                    data-llm="gemini"
+                    data-brand="Wyld Fire"
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q3</span>
+                    <span class="question-text">best candles for men's spaces</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="Certainly! Here are my top recommendations for candles that are perfect for men’s spaces, each selected for their unique scents and appeal:<br><br>1. **Boy Smells — &quot;Kush&quot;**<br>   - **Description**: This candle features a unique blend of cannabis, tulip, and suede, creating a warm and inviting atmosphere. The earthy and herbal notes are complemented by a hint of sweetness, making it perfect for a relaxed setting. Its chic packaging also adds a modern touch to any space.<br><br>2. **Le Labo — &quot;Santal 26&quot;**<br>   - **Description**: Renowned for its luxurious scents, this candle offers a rich, smoky aroma with notes of sandalwood, cedar, and spice. The scent is sophisticated and grounding, ideal for creating a cozy yet refined environment. The minimalist design of the container also makes it a stylish addition to any decor.<br><br>3. **Malin + Goetz — &quot;Cannabis&quot;**<br>   - **Description**: This candle is a modern take on the classic cannabis scent, combining notes of green pepper, patchouli, and sandalwood. It’s bot"
+                    data-question="best candles for men's spaces"
+                    data-llm="gpt4"
+                    data-brand="Wyld Fire"
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top 5 recommendations for the best candles for men&#39;s spaces, listed in order of preference:<br><br>1. Malin + Goetz Vetiver Candle: This candle has a warm, earthy, and slightly smoky scent that is perfect for creating a cozy and masculine ambiance. The vetiver fragrance is balanced with notes of bergamot, oakmoss, and amber, making it an excellent choice for a man&#39;s office, living room, or den.<br><br>2. Baxter of California Tobacco Vanille Candle: With its rich, tobacco-inspired scent and hints of vanilla and spice, this candle is perfect for creating a sophisticated and refined atmosphere. It&#39;s an excellent choice for a man&#39;s study or cigar lounge.<br><br>3. Le Labo Santal 26 Candle: This candle has a deep, woody, and slightly sweet scent that is both calming and invigorating. The sandalwood-based fragrance is balanced with notes of vanilla and amber, making it a great choice for a man&#39;s bedroom or living space.<br><br>4. Diptyque Feu de Bois Candle: Inspired by the scent of a crackling fire, th"
+                    data-question="best candles for men's spaces"
+                    data-llm="claude"
+                    data-brand="Wyld Fire"
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Okay, here are my top 5 candle recommendations perfect for a masculine space, listed in order of preference, focusing on scent profiles and overall ambiance:<br><br>1.  **Diptyque Feu de Bois (Wood Fire):** This is my top pick. It&#39;s the quintessential masculine candle. The scent is a realistic, smoky, and warm fireplace aroma. It evokes feelings of comfort, sophistication, and relaxation. It&#39;s not overly sweet or floral, making it a safe bet for most men. The elegant glass jar also adds a touch of class.<br><br>2.  **Brooklyn Candle Studio - Leather Jacket:** Brooklyn Candle Studio consistently delivers great quality for the price. &quot;Leather Jacket&quot; captures the essence of worn leather, with hints of cedarwood, amber, and a touch of smoke. It&#39;s rugged, refined, and creates a sophisticated, masculine atmosphere. The minimalist design of the jar is also a plus.<br><br>3.  **Malin+Goetz Dark Rum:** This candle offers a more complex and intriguing scent. It&#39;s not your typical sweet rum scent. Instead, it&#39;s a"
+                    data-question="best candles for men's spaces"
+                    data-llm="gemini"
+                    data-brand="Wyld Fire"
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q4</span>
+                    <span class="question-text">handcrafted bold scented candles</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top recommendations for handcrafted bold scented candles, each known for their unique fragrances and quality craftsmanship:<br><br>1. **Paddywax Candles - Urban Collection**<br>   - **Description**: Paddywax is renowned for their stylish, artisan candles. The Urban Collection features bold scents like &quot;Bourbon & Oak,&quot; which combines earthy notes with a hint of sweetness. The candles are made from a soy wax blend and come in beautifully designed containers that can be reused as decor.<br><br>2. **Homesick Candles - State Series**<br>   - **Description**: Homesick Candles offers a unique approach with their State Series, where each candle captures the essence of a specific state. For instance, &quot;California&quot; blends citrus and ocean air for a vibrant scent, while &quot;New York&quot; combines leather and sandalwood for a more urban feel. Their bold, nostalgic fragrances make them a great choice for anyone missing home.<br><br>3. **Boy Smells - Kush Candle**<br>   - **Description**: The Kush Candle by Boy Smells is "
+                    data-question="handcrafted bold scented candles"
+                    data-llm="gpt4"
+                    data-brand="Wyld Fire"
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top 5 recommendations for handcrafted, bold-scented candles:<br><br>1. Harlem Candle Company - &quot;Lenox Lounge&quot; Candle: This candle captures the vibrant, jazz-infused atmosphere of the iconic Harlem speakeasy with its rich blend of tobacco, leather, and spices. The brand is known for its high-quality, hand-poured candles that evoke the history and culture of Harlem.<br><br>2. Boy Smells - &quot;Kush&quot; Candle: Boy Smells is a brand that specializes in unique, gender-inclusive scents. Their &quot;Kush&quot; candle features a bold, earthy aroma with notes of cannabis, suede, and black pepper, creating a warm and inviting ambiance.<br><br>3. Apotheke - &quot;Charcoal&quot; Candle: Apotheke is a brand that focuses on using high-quality, natural ingredients in their handcrafted candles. The &quot;Charcoal&quot; candle has a strong, smoky scent with hints of sandalwood and amber, perfect for creating a cozy and relaxing atmosphere.<br><br>4. Maison Louis Marie - &quot;No.04 Bois de Balincourt&quot; Candle: This French brand is known for its sophistica"
+                    data-question="handcrafted bold scented candles"
+                    data-llm="claude"
+                    data-brand="Wyld Fire"
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Okay, here are my top 3-5 recommendations for handcrafted, bold-scented candles, keeping in mind that &quot;bold&quot; is subjective and depends on individual preferences. I&#39;m focusing on brands known for quality ingredients and strong scent throws:<br><br>**1.  Brooklyn Candle Studio - &quot;Sunday Morning&quot; (Fig & Vetiver):**<br><br>*   **Why:** Brooklyn Candle Studio consistently delivers high-quality, well-balanced scents. &quot;Sunday Morning&quot; isn&#39;t just sweet or fruity; the fig is complex and sophisticated, blended beautifully with the earthy, grounding vetiver. The combination is both comforting and invigorating, filling a room without being overpowering. It&#39;s a bold scent because it&#39;s *unusual* and memorable, not just because it&#39;s loud. Their candles are also made with natural soy wax.<br>*   **Boldness Factor:** Balanced, sophisticated, and memorable.<br>*   **Price range:** ~$28<br><br>**2.  Otherland - &quot;Rattan&quot; (Sandalwood, Amber, Golden Musk):**<br><br>*   **Why:** Otherland is known for their strong scent throws and distin"
+                    data-question="handcrafted bold scented candles"
+                    data-llm="gemini"
+                    data-brand="Wyld Fire"
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q5</span>
+                    <span class="question-text">candles to help me slow down and reset</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top recommendations for candles that can help you slow down and reset, along with brief explanations for each:<br><br>1. **Yankee Candle – Lavender Vanilla**  <br>   Lavender is renowned for its calming properties, making this candle perfect for relaxation. The blend of soothing lavender and warm vanilla creates a tranquil atmosphere, ideal for winding down after a long day or for meditation sessions.<br><br>2. **Paddywax – Ocean Tide + Sea Salt**  <br>   This candle captures the essence of a serene coastal retreat with fresh ocean air and a hint of saltiness. The clean, refreshing scent promotes a sense of clarity and peace, making it a great choice for resetting your mind and spirit.<br><br>3. **LAFCO – Chamomile Lavender**  <br>   This luxurious candle combines the calming scents of chamomile and lavender, promoting relaxation and stress relief. Its rich, soothing aroma makes it perfect for creating a calming environment in your home, ideal for reading, journaling, or simply enjoying quiet moments"
+                    data-question="candles to help me slow down and reset"
+                    data-llm="gpt4"
+                    data-brand="Wyld Fire"
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top 5 candle recommendations to help you slow down and reset:<br><br>1. Lavender and Chamomile Candle: This classic scent combination is known for its calming and soothing properties. The lavender helps to relax the mind, while the chamomile promotes a sense of tranquility, making it an excellent choice for winding down and resetting.<br><br>2. Eucalyptus and Peppermint Candle: The refreshing and invigorating aroma of eucalyptus and peppermint can help to clear your mind and invigorate your senses. This candle can be particularly helpful when you need to re-energize and refocus.<br><br>3. Vanilla and Sandalwood Candle: The warm, comforting scent of vanilla paired with the earthy, grounding notes of sandalwood can create a sense of coziness and comfort. This candle can be ideal for creating a calming and soothing atmosphere, helping you to slow down and find inner peace.<br><br>4. Cedarwood and Sage Candle: The earthy and slightly woodsy scent of cedarwood combined with the cleansing properties of "
+                    data-question="candles to help me slow down and reset"
+                    data-llm="claude"
+                    data-brand="Wyld Fire"
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Okay, here are my top 5 candle recommendations to help you slow down and reset, listed in order of preference, with brief explanations:<br><br>1.  **Diptyque Feu de Bois (Wood Fire):** This candle evokes the comforting and grounding aroma of a crackling fireplace. The smoky, woody notes create a warm and inviting atmosphere that instantly encourages relaxation and introspection. The scent is complex enough to be interesting but not so overpowering that it distracts from your reset. It&#39;s a classic for a reason.<br><br>2.  **Jo Malone Lavender & Lovage:** While lavender is known for relaxation, this blend is more sophisticated than a straight lavender scent. The herbal freshness of lovage adds an unexpected twist, creating a calming yet invigorating aroma. It helps to clear the mind and promote a sense of balance, perfect for releasing stress and preparing for a fresh start.<br><br>3.  **NEST New York Bamboo:** A crisp, clean, and slightly green scent. Bamboo offers a refreshing and revitalizing experienc"
+                    data-question="candles to help me slow down and reset"
+                    data-llm="gemini"
+                    data-brand="Wyld Fire"
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+                </tbody>
+            </table>
+            <p class="breakdown-hint">Click any cell to see the full AI response</p>
+        </div>
+
+        <!-- Response modal -->
+        <div class="response-modal" id="responseModal" onclick="closeModal(event)">
+            <div class="modal-content" onclick="event.stopPropagation()">
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+                <div class="modal-header">
+                    <span class="modal-llm" id="modalLlm"></span>
+                    <span class="modal-status" id="modalStatus"></span>
+                </div>
+                <div class="modal-question" id="modalQuestion"></div>
+                <div class="modal-response" id="modalResponse"></div>
+            </div>
+        </div>
+    
+        </div>
+
+        <!-- Section 3: Reddit Opportunities -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <h2 class="section-title">Reddit Opportunities</h2>
+            </div>
+
+            <div class="subsection-title">Buy Intent Conversations</div>
+            <p class="subsection-desc">People actively looking for recommendations in your category</p>
+            <div class="reddit-posts">
+                
+            <a href="https://www.reddit.com/r/Incense/comments/1qm7fb7/finding_manly_smells/" target="_blank" class="reddit-post">
+                <div class="post-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">Finding “manly” smells : r/Incense</div>
+                    <div class="post-meta">
+                        r/Incense &bull; 36K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            <a href="https://www.reddit.com/r/Candles/comments/1qlsvr6/recommendations_on_similar_scent/" target="_blank" class="reddit-post">
+                <div class="post-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">Recommendations on similar scent : r/Candles</div>
+                    <div class="post-meta">
+                        r/Candles &bull; 69K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            <a href="https://www.reddit.com/r/goosecreekcandles/comments/1qn1ypu/the_best_smell_they_have/" target="_blank" class="reddit-post">
+                <div class="post-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">The best smell they have : r/goosecreekcandles</div>
+                    <div class="post-meta">
+                        r/goosecreekcandles &bull; 9K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            <a href="https://www.reddit.com/r/goosecreekcandles/comments/1qkq2uo/more_nature_inspired_scents/" target="_blank" class="reddit-post">
+                <div class="post-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">More Nature inspired scents. : r/goosecreekcandles</div>
+                    <div class="post-meta">
+                        r/goosecreekcandles &bull; 9K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            </div>
+
+            <div class="subsection-title">Pain Point Conversations</div>
+            <p class="subsection-desc">People discussing problems your product solves</p>
+            <div class="reddit-posts">
+                
+            <a href="https://www.reddit.com/r/bathandbodyworks/comments/1qidlst/smelling_fresh_what_candle_are_you_currently/" target="_blank" class="reddit-post">
+                <div class="post-icon pain">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">Smelling fresh 🫧 What candle are you currently using for ...</div>
+                    <div class="post-meta">
+                        r/bathandbodyworks &bull; 163K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            <a href="https://www.reddit.com/r/Candles/comments/1qlsvr6/recommendations_on_similar_scent/" target="_blank" class="reddit-post">
+                <div class="post-icon pain">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">Recommendations on similar scent : r/Candles</div>
+                    <div class="post-meta">
+                        r/Candles &bull; 69K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            </div>
+        </div>
+
+        <!-- CTA Section -->
+        <div class="section cta-section">
+            <h2>Ready to improve your <em>AI visibility?</em></h2>
+            <p>We help brands get mentioned more in AI answers through strategic content placement.</p>
+            <a href="https://adva-solutions.com/AIVisibility" class="cta-button">Learn More</a>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p>Generated by <a href="https://adva-solutions.com">Adva</a> &bull; AI Visibility Health Check</p>
+    </footer>
+
+    <script>
+        // Tab switching functionality
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const tabId = btn.dataset.tab;
+
+                // Update buttons
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                // Update panels
+                document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+                document.getElementById('panel-' + tabId).classList.add('active');
+            });
+        });
+
+        // Copy link to clipboard
+        function copyLink() {
+            navigator.clipboard.writeText(window.location.href).then(() => {
+                showToast('Link copied to clipboard!');
+            }).catch(() => {
+                // Fallback for older browsers
+                const input = document.createElement('input');
+                input.value = window.location.href;
+                document.body.appendChild(input);
+                input.select();
+                document.execCommand('copy');
+                document.body.removeChild(input);
+                showToast('Link copied to clipboard!');
+            });
+        }
+
+        // Show toast notification
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2500);
+        }
+
+        // Download as PDF
+        function downloadPDF() {
+            // Get current URL and construct PDF endpoint
+            const currentUrl = window.location.href;
+            const pdfUrl = currentUrl + '/pdf';
+
+            // Show loading toast
+            showToast('Generating PDF...');
+
+            // Navigate to PDF download
+            window.location.href = pdfUrl;
+        }
+
+        // Show response modal
+        function showResponse(cell) {
+            try {
+                let response = cell.dataset.response || 'No response available';
+                const question = cell.dataset.question || '';
+                const llm = cell.dataset.llm || '';
+                const brand = cell.dataset.brand || '';
+                const isMentioned = cell.classList.contains('mentioned');
+
+                const llmNames = {'gpt4': 'GPT-4', 'claude': 'Claude', 'gemini': 'Gemini'};
+
+                // Highlight brand name in response (case insensitive)
+                if (brand && isMentioned) {
+                    try {
+                        const brandRegex = new RegExp('(' + brand.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&') + ')', 'gi');
+                        response = response.replace(brandRegex, '<span class="brand-highlight">$1</span>');
+                    } catch(e) { /* ignore highlighting errors */ }
+                }
+
+                document.getElementById('modalLlm').textContent = llmNames[llm] || llm;
+                document.getElementById('modalQuestion').textContent = '"' + question + '"';
+                document.getElementById('modalResponse').innerHTML = response;
+
+                const statusEl = document.getElementById('modalStatus');
+                if (isMentioned) {
+                    statusEl.textContent = 'Mentioned';
+                    statusEl.className = 'modal-status mentioned';
+                } else {
+                    statusEl.textContent = 'Not mentioned';
+                    statusEl.className = 'modal-status not-mentioned';
+                }
+
+                document.getElementById('responseModal').classList.add('active');
+                document.body.style.overflow = 'hidden';
+
+                // Scroll to first highlight if mentioned
+                if (isMentioned) {
+                    setTimeout(function() {
+                        const highlight = document.querySelector('.modal-response .brand-highlight');
+                        if (highlight) {
+                            highlight.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        }
+                    }, 100);
+                }
+            } catch (e) {
+                console.error('Error showing response:', e);
+                alert('Error loading response. Please try again.');
+            }
+        }
+
+        // Close modal
+        function closeModal(event) {
+            if (event && event.target !== event.currentTarget) return;
+            document.getElementById('responseModal').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // Close modal on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeModal();
+        });
+    </script>
+</body>
+</html>

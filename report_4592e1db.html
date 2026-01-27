@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Visibility Report - Alinea</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            color: #e5e5e5;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            color: #fff;
+            margin-bottom: 0.5rem;
+        }
+
+        .header .subtitle {
+            color: #888;
+            font-size: 1rem;
+        }
+
+        .brand-name {
+            color: #60a5fa;
+        }
+
+        .section {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .section-title {
+            font-size: 1.25rem;
+            color: #fff;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Score Section */
+        .score-container {
+            text-align: center;
+            padding: 2rem 0;
+        }
+
+        .score-circle {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            background: linear-gradient(145deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            border: 4px solid #ef4444;
+            box-shadow: 0 0 30px #ef444440;
+        }
+
+        .score-value {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #ef4444;
+        }
+
+        .score-label {
+            font-size: 0.9rem;
+            color: #888;
+        }
+
+        .score-description {
+            color: #aaa;
+            margin-bottom: 2rem;
+        }
+
+        .llm-breakdown {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .llm-stat {
+            text-align: center;
+            padding: 1rem 1.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+        }
+
+        .llm-name {
+            display: block;
+            color: #888;
+            font-size: 0.85rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .llm-score {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .llm-score.success {
+            color: #22c55e;
+        }
+
+        .llm-score.warning {
+            color: #ef4444;
+        }
+
+        /* Competitor Table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 0.75rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        th {
+            color: #888;
+            font-weight: 500;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+        }
+
+        td {
+            color: #e5e5e5;
+        }
+
+        tr:hover td {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        /* Example Response */
+        .example-response {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+
+        .example-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .llm-badge {
+            background: #60a5fa;
+            color: #fff;
+            padding: 0.25rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+        }
+
+        .example-content {
+            color: #aaa;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .example-status {
+            margin-top: 0.75rem;
+            padding: 0.5rem;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            text-align: center;
+        }
+
+        .example-status.mentioned {
+            background: rgba(34, 197, 94, 0.2);
+            color: #22c55e;
+        }
+
+        .example-status.not-mentioned {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+        }
+
+        /* Reddit Posts */
+        .reddit-post {
+            display: flex;
+            gap: 1rem;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 8px;
+            margin-bottom: 0.75rem;
+            transition: background 0.2s;
+        }
+
+        .reddit-post:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .post-check {
+            color: #22c55e;
+            font-size: 1.25rem;
+            flex-shrink: 0;
+        }
+
+        .post-content {
+            flex: 1;
+        }
+
+        .post-title {
+            color: #60a5fa;
+            text-decoration: none;
+            font-weight: 500;
+            display: block;
+            margin-bottom: 0.25rem;
+        }
+
+        .post-title:hover {
+            text-decoration: underline;
+        }
+
+        .post-meta {
+            color: #888;
+            font-size: 0.85rem;
+        }
+
+        .subsection-title {
+            color: #aaa;
+            font-size: 0.9rem;
+            margin: 1.5rem 0 1rem;
+            font-weight: 500;
+        }
+
+        .no-results {
+            color: #888;
+            font-style: italic;
+            text-align: center;
+            padding: 1rem;
+        }
+
+        .footer {
+            text-align: center;
+            color: #666;
+            font-size: 0.85rem;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .header h1 {
+                font-size: 1.75rem;
+            }
+
+            .score-circle {
+                width: 140px;
+                height: 140px;
+            }
+
+            .score-value {
+                font-size: 2.25rem;
+            }
+
+            .llm-breakdown {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>AI Visibility Report</h1>
+            <p class="subtitle">Analysis for <span class="brand-name">Alinea</span></p>
+        </div>
+
+        <!-- Section 1: AI Visibility Score -->
+        <div class="section">
+            <h2 class="section-title">AI Visibility Score</h2>
+            <div class="score-container">
+                <div class="score-circle">
+                    <span class="score-value">0%</span>
+                    <span class="score-label">0/15 mentions</span>
+                </div>
+                <p class="score-description">
+                    Your brand appeared in <strong>0</strong> out of <strong>15</strong> LLM responses
+                </p>
+                <div class="llm-breakdown">
+                    
+            <div class="llm-stat">
+                <span class="llm-name">GPT-4</span>
+                <span class="llm-score warning">0/5 (0%)</span>
+            </div>
+        
+            <div class="llm-stat">
+                <span class="llm-name">Claude</span>
+                <span class="llm-score warning">0/5 (0%)</span>
+            </div>
+        
+            <div class="llm-stat">
+                <span class="llm-name">Gemini</span>
+                <span class="llm-score warning">0/5 (0%)</span>
+            </div>
+        
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 2: Competitor Analysis -->
+        <div class="section">
+            <h2 class="section-title">Competitor Analysis</h2>
+            <p style="color: #aaa; margin-bottom: 1rem;">Here's who LLMs are recommending instead:</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Competitor</th>
+                        <th>Mentions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    
+            <tr>
+                <td>Fidelity</td>
+                <td>14</td>
+            </tr>
+        
+            <tr>
+                <td>Robinhood</td>
+                <td>12</td>
+            </tr>
+        
+            <tr>
+                <td>Acorns</td>
+                <td>10</td>
+            </tr>
+        
+            <tr>
+                <td>Charles Schwab</td>
+                <td>10</td>
+            </tr>
+        
+            <tr>
+                <td>Betterment</td>
+                <td>8</td>
+            </tr>
+        
+            <tr>
+                <td>Webull</td>
+                <td>7</td>
+            </tr>
+        
+            <tr>
+                <td>Wealthfront</td>
+                <td>6</td>
+            </tr>
+        
+            <tr>
+                <td>E*TRADE</td>
+                <td>5</td>
+            </tr>
+        
+            <tr>
+                <td>SoFi</td>
+                <td>5</td>
+            </tr>
+        
+            <tr>
+                <td>Fidelity Investments</td>
+                <td>5</td>
+            </tr>
+        
+                </tbody>
+            </table>
+            <h3 class="subsection-title">Example LLM Response</h3>
+            
+            <div class="example-response">
+                <div class="example-header">
+                    <strong>Question:</strong> best investing apps for beginners 2025
+                    <span class="llm-badge">GPT-4</span>
+                </div>
+                <div class="example-content">
+                    As of 2025, here are some of the best investing apps for beginners, presented in order of preference:<br><br>1. **Robinhood**<br>   - **Overview**: Robinhood is known for its user-friendly interface and commission-free trading, making it an excellent choice for beginners. The app allows users to trade stocks, ETFs, options, and cryptocurrencies with no fees.<br>   - **Key Features**: Easy-to-navigate design, educational resources, and a cash management feature that offers a competitive interest rate on unin...
+                </div>
+                <div class="example-status not-mentioned">
+                    Brand NOT mentioned
+                </div>
+            </div>
+        
+        </div>
+
+        <!-- Section 3: Reddit Opportunities -->
+        <div class="section">
+            <h2 class="section-title">Reddit Opportunities</h2>
+
+            <h3 class="subsection-title">Buy Intent Conversations</h3>
+            <p style="color: #888; font-size: 0.85rem; margin-bottom: 1rem;">
+                People actively looking for recommendations in your category
+            </p>
+            <p class='no-results'>No buy intent conversations found in the past week.</p>
+
+            <h3 class="subsection-title">Pain Point Conversations</h3>
+            <p style="color: #888; font-size: 0.85rem; margin-bottom: 1rem;">
+                People discussing problems your product solves
+            </p>
+            <p class='no-results'>No pain point conversations found in the past week.</p>
+        </div>
+
+        <div class="footer">
+            <p>Generated on January 25, 2026 at 03:27 PM</p>
+            <p>AI Visibility Health Check Tool</p>
+        </div>
+    </div>
+</body>
+</html>
