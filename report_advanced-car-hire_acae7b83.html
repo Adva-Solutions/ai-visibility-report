@@ -222,14 +222,14 @@
             align-items: center;
             justify-content: center;
             margin: 0 auto 1.5rem;
-            border: 4px solid #f59e0b;
+            border: 4px solid #ef4444;
         }
 
         .score-value {
             font-family: 'Playfair Display', Georgia, serif;
             font-size: 3rem;
             font-weight: 500;
-            color: #f59e0b;
+            color: #ef4444;
         }
 
         .score-label {
@@ -853,27 +853,27 @@
         <!-- Section 1: AI Visibility Score -->
         <div class="section score-section">
             <div class="score-circle">
-                <span class="score-value">20%</span>
-                <span class="score-label">3/15 mentions</span>
+                <span class="score-value">0%</span>
+                <span class="score-label">0/15 mentions</span>
             </div>
             <p class="score-description">
-                Your brand appeared in <strong>3</strong> out of <strong>15</strong> AI recommendations
+                Your brand appeared in <strong>0</strong> out of <strong>15</strong> AI recommendations
             </p>
             <div class="llm-breakdown">
                 
             <div class="llm-stat">
                 <span class="llm-name">GPT</span>
-                <span class="llm-score success">1/5</span>
+                <span class="llm-score warning">0/5</span>
             </div>
         
             <div class="llm-stat">
                 <span class="llm-name">Claude</span>
-                <span class="llm-score success">1/5</span>
+                <span class="llm-score warning">0/5</span>
             </div>
         
             <div class="llm-stat">
                 <span class="llm-name">Gemini</span>
-                <span class="llm-score success">1/5</span>
+                <span class="llm-score warning">0/5</span>
             </div>
         
             </div>
@@ -914,6 +914,7 @@
                     data-question="Camping equipment rental for Namibia road trip"
                     data-llm="gpt4"
                     data-brand="Advanced Car Hire"
+                    data-position=""
                     onclick="showResponse(this)">
                     <span class="status-icon">✗</span>
                 </td>
@@ -923,6 +924,7 @@
                     data-question="Camping equipment rental for Namibia road trip"
                     data-llm="claude"
                     data-brand="Advanced Car Hire"
+                    data-position=""
                     onclick="showResponse(this)">
                     <span class="status-icon">✗</span>
                 </td>
@@ -932,6 +934,7 @@
                     data-question="Camping equipment rental for Namibia road trip"
                     data-llm="gemini"
                     data-brand="Advanced Car Hire"
+                    data-position=""
                     onclick="showResponse(this)">
                     <span class="status-icon">✗</span>
                 </td>
@@ -949,6 +952,7 @@
                     data-question="4x4 car rental options in Namibia"
                     data-llm="gpt4"
                     data-brand="Advanced Car Hire"
+                    data-position=""
                     onclick="showResponse(this)">
                     <span class="status-icon">✗</span>
                 </td>
@@ -958,6 +962,7 @@
                     data-question="4x4 car rental options in Namibia"
                     data-llm="claude"
                     data-brand="Advanced Car Hire"
+                    data-position=""
                     onclick="showResponse(this)">
                     <span class="status-icon">✗</span>
                 </td>
@@ -967,6 +972,7 @@
                     data-question="4x4 car rental options in Namibia"
                     data-llm="gemini"
                     data-brand="Advanced Car Hire"
+                    data-position=""
                     onclick="showResponse(this)">
                     <span class="status-icon">✗</span>
                 </td>
@@ -984,6 +990,7 @@
                     data-question="Cost to rent a 4x4 with camping gear in Namibia"
                     data-llm="gpt4"
                     data-brand="Advanced Car Hire"
+                    data-position=""
                     onclick="showResponse(this)">
                     <span class="status-icon">✗</span>
                 </td>
@@ -993,6 +1000,7 @@
                     data-question="Cost to rent a 4x4 with camping gear in Namibia"
                     data-llm="claude"
                     data-brand="Advanced Car Hire"
+                    data-position=""
                     onclick="showResponse(this)">
                     <span class="status-icon">✗</span>
                 </td>
@@ -1002,6 +1010,7 @@
                     data-question="Cost to rent a 4x4 with camping gear in Namibia"
                     data-llm="gemini"
                     data-brand="Advanced Car Hire"
+                    data-position=""
                     onclick="showResponse(this)">
                     <span class="status-icon">✗</span>
                 </td>
@@ -1014,31 +1023,34 @@
                     <span class="question-text">Best 4x4 vehicles for Namibia safaris and off-road</span>
                 </td>
                 
-                <td class="llm-cell mentioned"
+                <td class="llm-cell not-mentioned"
                     data-response="When it comes to exploring Namibia’s rugged landscapes and remote areas, a reliable 4x4 vehicle is essential. Here are my top recommendations for the best 4x4 vehicles suited for safaris and off-road adventures in Namibia:<br><br>### 1. **Toyota Land Cruiser 70 Series**<br>   - **Overview**: Renowned for its durability and off-road capabilities, the Toyota Land Cruiser 70 Series is a favorite among safari operators and adventurers.<br>   - **Key Features**: Robust chassis, excellent ground clearance, and powerful four-wheel-drive system. The vehicle is spacious, allowing for comfortable rides over long distances and can handle Namibia&#39;s challenging terrain with ease.<br><br>### 2. **Ford Ranger Wildtrak**<br>   - **Overview**: The Ford Ranger Wildtrak offers a combination of ruggedness and modern amenities, making it suitable for both off-road adventures and everyday use.<br>   - **Key Features**: It features a powerful turbo-diesel engine, excellent towing capacity, and advanced safety features. The Wildtrak also has a spacious cabin, making it comfortable for long drives across Namibia’s diverse landscapes.<br><br>### 3. **Isuzu D-Max**<br>   - **Overview**: The Isuzu D-Max is a reliable pick-up truck that excels in off-road environments, making it perfect for Namibian safaris.<br>   - **Key Features**: Known for its strong build quality, the D-Max has high ground clearance and a robust four-wheel-drive system. Its practicality and fuel efficiency are added benefits for long journeys in remote areas.<br><br>### 4. **Land Rover Defender**<br>   - **Overview**: The Land Rover Defender is an iconic off-road vehicle that combines luxury with exceptional off-road performance.<br>   - **Key Features**: With advanced terrain response systems, a comfortable interior, and legendary off-road capabilities, the Defender can tackle Namibia’s harsh conditions while providing a comfortable ride for passengers.<br><br>### 5. **Nissan Navara**<br>   - **Overview**: The Nissan Navara is another great pick-up truck that balances off-road capability with comfort and utility.<br>   - **Key Features**: It features a strong turbo-diesel engine, a well-designed interior, and a robust four-wheel-drive system, making it ideal for off-road adventures while still being practical for daily use.<br><br>These vehicles are well-suited to handle the diverse terrains of Namibia, whether you’re traversing sandy dunes, rocky paths, or long stretches of gravel roads. Each offers a blend of off-road capability, comfort, and reliability, making them ideal choices for your safari adventure."
                     data-question="Best 4x4 vehicles for Namibia safaris and off-road"
                     data-llm="gpt4"
                     data-brand="Advanced Car Hire"
+                    data-position=""
                     onclick="showResponse(this)">
-                    <span class="status-icon">✓</span> (#9)
+                    <span class="status-icon">✗</span>
                 </td>
             
-                <td class="llm-cell mentioned"
+                <td class="llm-cell not-mentioned"
                     data-response="When it comes to the best 4x4 vehicles for Namibia safaris and off-road adventures, the following are my top recommendations:<br><br>1. Toyota Land Cruiser:<br>   - Widely regarded as one of the most reliable and capable off-road vehicles on the market.<br>   - Excellent performance in challenging terrain, with robust suspension and four-wheel-drive capabilities.<br>   - Spacious and comfortable interior, making it well-suited for long safari drives.<br>   - Proven track record of durability and reliability in harsh African environments.<br><br>2. Land Rover Defender:<br>   - Iconic off-road vehicle known for its exceptional off-road capabilities and rugged design.<br>   - Highly maneuverable and well-suited for navigating narrow and rocky trails.<br>   - Offers a range of customization options to suit specific safari and off-road requirements.<br>   - Combines modern technology with a classic, timeless aesthetic.<br><br>3. Jeep Wrangler:<br>   - Renowned for its impressive off-road performance and go-anywhere attitude.<br>   - Offers excellent maneuverability and a high ground clearance, making it adept at tackling challenging terrain.<br>   - Customizable options allow for the addition of accessories and equipment to enhance the safari experience.<br>   - Provides an open-air driving experience, allowing for better wildlife viewing and immersion in the natural environment.<br><br>4. Mercedes-Benz G-Class:<br>   - Combines luxury and off-road capability in a unique package.<br>   - Robust construction and advanced four-wheel-drive systems make it a capable performer in rugged terrain.<br>   - Spacious and comfortable interior, suitable for longer safari drives.<br>   - Offers a balance of on-road refinement and off-road prowess.<br><br>5. Ford Ranger:<br>   - A popular and versatile pickup truck with impressive off-road capabilities.<br>   - Offers a good balance of payload capacity, four-wheel-drive performance, and maneuverability.<br>   - Available in various configurations to suit different safari and off-road needs.<br>   - Relatively affordable compared to some luxury off-road vehicles, making it a practical choice.<br><br>When selecting the best 4x4 vehicle for your Namibia safari and off-road adventures, it&#39;s important to consider factors such as the terrain you&#39;ll be traversing, the number of passengers, the amount of cargo you&#39;ll need to transport, and your overall budget. It&#39;s also advisable to consult with local tour operators or rental companies to get their recommendations based on their experience in the region."
                     data-question="Best 4x4 vehicles for Namibia safaris and off-road"
                     data-llm="claude"
                     data-brand="Advanced Car Hire"
+                    data-position=""
                     onclick="showResponse(this)">
-                    <span class="status-icon">✓</span> (#23)
+                    <span class="status-icon">✗</span>
                 </td>
             
-                <td class="llm-cell mentioned"
+                <td class="llm-cell not-mentioned"
                     data-response="Okay, here are my top 4 recommendations for 4x4 vehicles ideal for Namibian safaris and off-road adventures, ranked in order of preference, with explanations:<br><br>**1. Toyota Land Cruiser 70 Series (e.g., Land Cruiser 79 Double Cab)**<br><br>*   **Why it&#39;s great:** This is the undisputed king of off-road in Africa, and for good reason. It&#39;s built like a tank, incredibly reliable, and easily repaired in even the most remote areas. The 70 series boasts a robust chassis, powerful diesel engine (often a 4.5L V8), and simple mechanicals. It can handle the roughest terrain Namibia throws at it, including deep sand, rocky tracks, and river crossings. The double cab offers more space for passengers and gear, making it ideal for longer trips.<br>*   **Downsides:** Comfort is not its forte. It&#39;s a utilitarian vehicle, so expect a bumpy ride and basic interior. Fuel economy isn&#39;t great, and it can be expensive to purchase outright.<br>*   **Namibian Suitability:** Unmatched reliability and off-road capability make it the top choice, especially if you are planning on driving alone in very remote areas.<br><br>**2. Toyota Hilux (preferably a newer generation)**<br><br>*   **Why it&#39;s great:** The Hilux is a legendary workhorse and a close second to the Land Cruiser in terms of reliability and off-road prowess. While not as indestructible as the 70 series, it&#39;s still exceptionally capable. Newer generations (post-2016) offer improved comfort, technology, and fuel efficiency compared to older models. The Hilux is readily available for rent and purchase in Namibia.<br>*   **Downsides:** It&#39;s not quite as robust as the Land Cruiser 70 series for extreme conditions, and its payload capacity might be a limitation if you are carrying a lot of gear.<br>*   **Namibian Suitability:** A great all-around choice that balances off-road capability, reliability, and practicality, especially if you want something more comfortable than a Land Cruiser 70 series.<br><br>**3. Land Rover Defender (New or old)**<br><br>*   **Why it&#39;s great:** Both the classic Defender (pre-2016) and the newer Defender (2020+) are highly capable off-road vehicles. The classic Defender is known for its ruggedness and simple mechanicals (though reliability can be more variable than a Toyota). The new Defender offers excellent off-road technology, a comfortable interior, and powerful engines.<br>*   **Downsides:** Classic Defenders can be prone to breakdowns if not properly maintained. New Defenders are more complex and might be harder to repair in remote locations.<br>*   **Namibian Suitability:** The classic Defender has a certain &quot;romantic&quot; appeal for African adventures, but be prepared for potential maintenance. The new Defender offers a luxurious and technologically advanced experience, but keep in mind its complexity.<br><br>**4. Nissan Patrol (Y61 or newer)**<br><br>*   **Why it&#39;s great:** The Nissan Patrol is a robust and powerful 4x4 that can handle challenging terrain. It offers good comfort and space, making it suitable for longer journeys. The Y61 generation is known for its solid build and reliable engine. Newer generations are more luxurious and technologically advanced.<br>*   **Downsides:** Fuel consumption can be high, especially with older models. Parts availability might not be as widespread as Toyota in some remote areas.<br>*   **Namibian Suitability:** A strong contender that provides a good balance of off-road capability, comfort, and space.<br><br>**Important Considerations for ALL Vehicles in Namibia:**<br><br>*   **Ground Clearance:** Essential for navigating rocky terrain and avoiding damage to the undercarriage.<br>*   **Tire Choice:** All-terrain or mud-terrain tires are crucial for grip in sand and on loose surfaces.<br>*   **Suspension:** A robust suspension system is necessary to handle the rough roads and heavy loads.<br>*   **Snorkel (Highly Recommended):** Protects the engine from dust and water ingestion during river crossings.<br>*   **Recovery Gear:** A winch, recovery straps, shackles, and a shovel are essential for getting unstuck.<br>*   **Maintenance:** Ensure the vehicle is well-maintained and serviced before embarking on a long trip.<br>*   **Rental vs. Purchase:** Consider your budget and travel plans. Renting is often more practical for shorter trips, while purchasing might be more economical for extended expeditions.<br><br>Ultimately, the best vehicle for you will depend on your budget, travel style, and personal preferences. However, the Land Cruiser 70 series is generally considered the gold standard for serious off-road exploration in Namibia.  "
                     data-question="Best 4x4 vehicles for Namibia safaris and off-road"
                     data-llm="gemini"
                     data-brand="Advanced Car Hire"
+                    data-position=""
                     onclick="showResponse(this)">
-                    <span class="status-icon">✓</span> (#19)
+                    <span class="status-icon">✗</span>
                 </td>
             
             </tr>
@@ -1054,6 +1066,7 @@
                     data-question="Namibia 4x4 rental with 24/7 roadside assistance"
                     data-llm="gpt4"
                     data-brand="Advanced Car Hire"
+                    data-position=""
                     onclick="showResponse(this)">
                     <span class="status-icon">✗</span>
                 </td>
@@ -1063,6 +1076,7 @@
                     data-question="Namibia 4x4 rental with 24/7 roadside assistance"
                     data-llm="claude"
                     data-brand="Advanced Car Hire"
+                    data-position=""
                     onclick="showResponse(this)">
                     <span class="status-icon">✗</span>
                 </td>
@@ -1072,6 +1086,7 @@
                     data-question="Namibia 4x4 rental with 24/7 roadside assistance"
                     data-llm="gemini"
                     data-brand="Advanced Car Hire"
+                    data-position=""
                     onclick="showResponse(this)">
                     <span class="status-icon">✗</span>
                 </td>
@@ -1244,8 +1259,17 @@
                 const llm = cell.dataset.llm || '';
                 const brand = cell.dataset.brand || '';
                 const isMentioned = cell.classList.contains('mentioned');
+                const brandPosition = cell.dataset.position ? parseInt(cell.dataset.position) : null;
 
                 const llmNames = {'gpt4': 'GPT', 'claude': 'Claude', 'gemini': 'Gemini'};
+
+                // If brand is mentioned beyond position 5, add a banner at the top
+                let positionBanner = '';
+                if (isMentioned && brandPosition && brandPosition > 5) {
+                    positionBanner = '<div style="background: #fef3c7; padding: 0.75rem 1rem; border-radius: 6px; margin-bottom: 1rem; border-left: 4px solid #f59e0b;">' +
+                        '<strong>📍 Your brand appeared at position #' + brandPosition + '</strong> - scroll down to see the highlighted mention' +
+                        '</div>';
+                }
 
                 // Highlight brand name in response (case insensitive)
                 if (brand && isMentioned) {
@@ -1257,7 +1281,7 @@
 
                 document.getElementById('modalLlm').textContent = llmNames[llm] || llm;
                 document.getElementById('modalQuestion').textContent = '"' + question + '"';
-                document.getElementById('modalResponse').innerHTML = response;
+                document.getElementById('modalResponse').innerHTML = positionBanner + response;
 
                 const statusEl = document.getElementById('modalStatus');
                 if (isMentioned) {
