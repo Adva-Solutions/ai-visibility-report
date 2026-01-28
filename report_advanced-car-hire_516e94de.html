@@ -1,0 +1,1409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Visibility Report - Advanced Car Hire | Adva</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #ffffff;
+            min-height: 100vh;
+            color: #374151;
+            line-height: 1.6;
+        }
+
+        /* Header */
+        .header {
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            font-size: 1.25rem;
+            color: #1f2937;
+            text-decoration: none;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .header-date {
+            color: #9ca3af;
+            font-size: 0.875rem;
+        }
+
+        /* Copy link button */
+        .copy-link-button {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: #f3f4f6;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            color: #374151;
+            font-size: 0.75rem;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .copy-link-button:hover {
+            background: #e5e7eb;
+        }
+
+        .copy-link-button svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        .pdf-button {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: #1f2937;
+            border: none;
+            border-radius: 6px;
+            color: #ffffff;
+            font-size: 0.75rem;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .pdf-button:hover {
+            background: #374151;
+        }
+
+        .pdf-button svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        /* Toast notification */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: #1f2937;
+            color: #ffffff;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            opacity: 0;
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        /* Container */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Page title */
+        .page-title {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .page-title .label {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: #9ca3af;
+            font-size: 0.75rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+        }
+
+        .page-title .label::before,
+        .page-title .label::after {
+            content: '';
+            width: 30px;
+            height: 1px;
+            background: #d1d5db;
+        }
+
+        .page-title h1 {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 2.5rem;
+            font-weight: 400;
+            color: #1f2937;
+            margin-bottom: 0.5rem;
+        }
+
+        .page-title .brand {
+            color: #6b7280;
+            font-size: 1.125rem;
+        }
+
+        /* Sections */
+        .section {
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #f3f4f6;
+        }
+
+        .section-icon {
+            width: 40px;
+            height: 40px;
+            background: #1f2937;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .section-icon svg {
+            width: 20px;
+            height: 20px;
+            color: #ffffff;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 1.375rem;
+            color: #1f2937;
+        }
+
+        /* Score Section */
+        .score-section {
+            text-align: center;
+            padding: 3rem 2rem;
+        }
+
+        .score-circle {
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            background: #fafafa;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            border: 4px solid #ef4444;
+        }
+
+        .score-value {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 3rem;
+            font-weight: 500;
+            color: #ef4444;
+        }
+
+        .score-label {
+            font-size: 0.8rem;
+            color: #9ca3af;
+        }
+
+        .score-description {
+            color: #6b7280;
+            margin-bottom: 2rem;
+            font-size: 1rem;
+        }
+
+        .score-description strong {
+            color: #1f2937;
+        }
+
+        .llm-breakdown {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .llm-stat {
+            text-align: center;
+            padding: 1rem 1.5rem;
+            background: #fafafa;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+            min-width: 100px;
+        }
+
+        .llm-name {
+            display: block;
+            color: #9ca3af;
+            font-size: 0.8rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .llm-score {
+            font-size: 1.125rem;
+            font-weight: 600;
+        }
+
+        .llm-score.success {
+            color: #22c55e;
+        }
+
+        .llm-score.warning {
+            color: #ef4444;
+        }
+
+        /* Competitor Table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 0.875rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid #f3f4f6;
+        }
+
+        th {
+            color: #9ca3af;
+            font-weight: 500;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        td {
+            color: #374151;
+        }
+
+        .mention-count {
+            background: #fef3c7;
+            color: #92400e;
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        /* Tabs for LLM responses */
+        .example-tabs {
+            margin-top: 1.5rem;
+        }
+
+        .tabs-header {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+            padding-bottom: 0;
+        }
+
+        .tab-btn {
+            padding: 0.75rem 1.25rem;
+            background: transparent;
+            border: none;
+            color: #6b7280;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            margin-bottom: -1px;
+            transition: all 0.2s;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .tab-btn:hover {
+            color: #1f2937;
+        }
+
+        .tab-btn.active {
+            color: #1f2937;
+            border-bottom-color: #1f2937;
+        }
+
+        .tab-panel {
+            display: none;
+            background: #fafafa;
+            border-radius: 8px;
+            padding: 1.25rem;
+        }
+
+        .tab-panel.active {
+            display: block;
+        }
+
+        .example-question {
+            color: #1f2937;
+            font-weight: 500;
+            font-size: 0.95rem;
+            margin-bottom: 0.75rem;
+        }
+
+        /* Question breakdown table */
+        .question-breakdown {
+            margin-top: 1rem;
+        }
+
+        .breakdown-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        .breakdown-table th {
+            padding: 0.75rem;
+            text-align: center;
+            background: #f9fafb;
+            border-bottom: 2px solid #e5e7eb;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .breakdown-table th:first-child {
+            text-align: left;
+            width: 50%;
+        }
+
+        .breakdown-table td {
+            padding: 0.75rem;
+            border-bottom: 1px solid #f3f4f6;
+            vertical-align: middle;
+        }
+
+        .question-cell {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+        }
+
+        .question-num {
+            background: #e5e7eb;
+            color: #374151;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        .question-text {
+            color: #374151;
+            line-height: 1.4;
+        }
+
+        .llm-cell {
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-radius: 4px;
+        }
+
+        .llm-cell:hover {
+            background: #f3f4f6;
+        }
+
+        .llm-cell.mentioned {
+            color: #16a34a;
+        }
+
+        .llm-cell.mentioned .status-icon {
+            font-size: 1.25rem;
+        }
+
+        .llm-cell.not-mentioned {
+            color: #dc2626;
+        }
+
+        .llm-cell.not-mentioned .status-icon {
+            font-size: 1.25rem;
+        }
+
+        .breakdown-hint {
+            color: #9ca3af;
+            font-size: 0.8rem;
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+        /* Response modal */
+        .response-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+        }
+
+        .response-modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: #ffffff;
+            border-radius: 12px;
+            max-width: 800px;
+            width: 100%;
+            max-height: 90vh;
+            overflow: auto;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #9ca3af;
+            cursor: pointer;
+            padding: 0.25rem 0.5rem;
+        }
+
+        .modal-close:hover {
+            color: #374151;
+        }
+
+        .modal-header {
+            padding: 1.5rem 1.5rem 0;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            position: relative;
+        }
+
+        .modal-llm {
+            font-weight: 600;
+            color: #1f2937;
+            font-size: 1.1rem;
+        }
+
+        .modal-status {
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .modal-status.mentioned {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .modal-status.not-mentioned {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .modal-question {
+            padding: 1rem 1.5rem;
+            color: #6b7280;
+            font-size: 0.9rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .modal-response {
+            padding: 1.5rem;
+            overflow-y: auto;
+            flex: 1;
+            color: #374151;
+            font-size: 0.9rem;
+            line-height: 1.8;
+            min-height: 300px;
+            max-height: 60vh;
+            background: #fafafa;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .modal-response::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .modal-response::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        .modal-response::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 4px;
+        }
+
+        .modal-response::-webkit-scrollbar-thumb:hover {
+            background: #a1a1a1;
+        }
+
+        /* Brand highlight */
+        .brand-highlight {
+            background: linear-gradient(120deg, #fef08a 0%, #fde047 100%);
+            padding: 0.1rem 0.3rem;
+            border-radius: 3px;
+            font-weight: 600;
+        }
+
+        .example-content {
+            color: #6b7280;
+            font-size: 0.875rem;
+            line-height: 1.7;
+            max-height: 400px;
+            overflow-y: auto;
+            margin-bottom: 0.75rem;
+            padding: 1rem;
+            background: #f9fafb;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .example-status {
+            padding: 0.5rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            display: inline-block;
+        }
+
+        .example-status.mentioned {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .example-status.not-mentioned {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        /* Reddit Posts */
+        .reddit-posts {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .reddit-post {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: #fafafa;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: all 0.2s;
+            border: 1px solid transparent;
+        }
+
+        .reddit-post:hover {
+            background: #f3f4f6;
+            border-color: #e5e7eb;
+        }
+
+        .post-icon {
+            width: 40px;
+            height: 40px;
+            background: #1f2937;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .post-icon.pain {
+            background: #fef3c7;
+        }
+
+        .post-icon.pain svg {
+            color: #92400e;
+        }
+
+        .post-icon svg {
+            width: 20px;
+            height: 20px;
+            color: #ffffff;
+        }
+
+        .post-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .post-title {
+            color: #1f2937;
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .post-meta {
+            color: #9ca3af;
+            font-size: 0.8rem;
+        }
+
+        .post-arrow {
+            color: #9ca3af;
+            flex-shrink: 0;
+        }
+
+        .post-arrow svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .subsection-title {
+            color: #1f2937;
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin: 1.5rem 0 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .subsection-title:first-of-type {
+            margin-top: 0;
+        }
+
+        .subsection-desc {
+            color: #9ca3af;
+            font-size: 0.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .no-data {
+            color: #9ca3af;
+            font-style: italic;
+            text-align: center;
+            padding: 1rem;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            color: #9ca3af;
+            font-size: 0.8rem;
+            padding: 2rem;
+            border-top: 1px solid #e5e7eb;
+            margin-top: 2rem;
+        }
+
+        .footer a {
+            color: #1f2937;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* CTA */
+        .cta-section {
+            text-align: center;
+            padding: 3rem 2rem;
+            background: #fafafa;
+        }
+
+        .cta-section h2 {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 1.75rem;
+            color: #1f2937;
+            margin-bottom: 0.75rem;
+        }
+
+        .cta-section p {
+            color: #6b7280;
+            margin-bottom: 1.5rem;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background: #1f2937;
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .cta-button:hover {
+            background: #111827;
+            transform: translateY(-1px);
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .page-title h1 {
+                font-size: 1.75rem;
+            }
+
+            .section {
+                padding: 1.5rem;
+            }
+
+            .score-circle {
+                width: 130px;
+                height: 130px;
+            }
+
+            .score-value {
+                font-size: 2.25rem;
+            }
+
+            .llm-breakdown {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .tabs-header {
+                flex-wrap: wrap;
+            }
+
+            .tab-btn {
+                padding: 0.5rem 1rem;
+                font-size: 0.8rem;
+            }
+
+            .breakdown-table th,
+            .breakdown-table td {
+                padding: 0.5rem;
+                font-size: 0.8rem;
+            }
+
+            .question-cell {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .modal-content {
+                max-height: 90vh;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <a href="https://adva-solutions.com/AIVisibility" class="logo">adva</a>
+        <div class="header-right">
+            <a href="/report/516e94de/pdf" class="pdf-button" title="Download as PDF">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                Download PDF
+            </a>
+            <button class="copy-link-button" onclick="navigator.clipboard.writeText('https://adva-solutions.github.io/ai-visibility-report/report_advanced-car-hire_516e94de.html'); showToast('Link copied!');" title="Copy shareable link">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                </svg>
+                Copy Link
+            </button>
+            <span class="header-date">January 28, 2026</span>
+        </div>
+    </header>
+    <div class="toast" id="toast">Link copied to clipboard!</div>
+
+    <div class="container">
+        <div class="page-title">
+            <div class="label">AI Visibility Report</div>
+            <h1>Your Brand's <em>AI Presence</em></h1>
+            <p class="brand">Analysis for Advanced Car Hire</p>
+        </div>
+
+        <!-- Section 1: AI Visibility Score -->
+        <div class="section score-section">
+            <div class="score-circle">
+                <span class="score-value">13%</span>
+                <span class="score-label">2/15 mentions</span>
+            </div>
+            <p class="score-description">
+                Your brand appeared in <strong>2</strong> out of <strong>15</strong> AI recommendations
+            </p>
+            <div class="llm-breakdown">
+                
+            <div class="llm-stat">
+                <span class="llm-name">GPT</span>
+                <span class="llm-score success">1/5</span>
+            </div>
+        
+            <div class="llm-stat">
+                <span class="llm-name">Claude</span>
+                <span class="llm-score success">1/5</span>
+            </div>
+        
+            <div class="llm-stat">
+                <span class="llm-name">Gemini</span>
+                <span class="llm-score warning">0/5</span>
+            </div>
+        
+            </div>
+        </div>
+
+        <!-- Section 2: AI Response Breakdown -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                    </svg>
+                </div>
+                <h2 class="section-title">Question-by-Question Breakdown</h2>
+            </div>
+            <p style="color: #6b7280; margin-bottom: 1rem;">We asked these 5 questions to each AI model. Click any cell to see the full response:</p>
+            
+        <div class="question-breakdown">
+            <table class="breakdown-table">
+                <thead>
+                    <tr>
+                        <th>Question Asked</th>
+                        <th>GPT</th>
+                        <th>Claude</th>
+                        <th>Gemini</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q1</span>
+                    <span class="question-text">what's included in a 4x4 camping rental in Namibia</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="Renting a 4x4 camping vehicle in Namibia is a fantastic way to explore the stunning landscapes and diverse wildlife of the country. Here are my top recommendations for 4x4 camping rentals, listed in order of preference:<br><br>### 1. **Bushlore Namibia**<br>   - **Overview**: Bushlore is well-known for its reliable and fully equipped 4x4 vehicles, including options for camping.<br>   - **Features**: Their vehicles come with a rooftop tent, camping gear (cooking equipment, chairs, and table), and a fridge/freezer. They also provide comprehensive insurance and 24/7 roadside assistance, which is essential for peace of mind while exploring remote areas.<br>   - **Why Choose Them**: They have a solid reputation for customer service and well-maintained vehicles, making them a top choice for first-time and experienced travelers alike.<br><br>### 2. **Namibia 4x4 Rentals**<br>   - **Overview**: This company offers a range of 4x4 vehicles tailored for camping adventures in Namibia.<br>   - **Features**: Their rentals include a fully equipped camping kit, a pop-up roof tent for easy access and ventilation, and additional amenities like GPS and off-road maps. <br>   - **Why Choose Them**: They focus on customer satisfaction and often provide personalized itineraries, ensuring you have all the information needed for a successful trip.<br><br>### 3. **Camper Africa**<br>   - **Overview**: Camper Africa specializes in 4x4 camper rentals with a strong emphasis on comfort and quality.<br>   - **Features**: Their vehicles come equipped with a kitchen unit, sleeping gear, and a spacious interior layout. Many models also include solar power systems for added convenience.<br>   - **Why Choose Them**: Their commitment to sustainability and environmentally friendly practices, along with well-maintained vehicles, makes them an appealing choice for eco-conscious travelers.<br><br>### 4. **Rent-a-4x4**<br>   - **Overview**: This rental company offers a variety of 4x4 vehicles, including options for both camping and standard travel.<br>   - **Features**: Their camping setups are comprehensive, including tents, kitchen gear, and essential camping equipment. They also provide flexible rental periods and competitive pricing.<br>   - **Why Choose Them**: Their flexibility and affordability make them a great option for budget-conscious travelers looking to explore Namibia.<br><br>### 5. **Kalahari 4x4 Rentals**<br>   - **Overview**: Kalahari 4x4 Rentals is known for their rugged 4x4 vehicles suited for off-road adventures.<br>   - **Features**: Their vehicles come with high-quality camping gear, including tents, cooking equipment, and sleeping bags. They also provide detailed maps and travel advice.<br>   - **Why Choose Them**: Their focus on off-road capability ensures that you can confidently explore Namibia&#39;s more challenging terrains.<br><br>When choosing a rental company, consider factors such as vehicle availability, insurance options, and customer reviews. Each of these recommendations provides a unique experience tailored to the diverse landscapes and attractions of Namibia. Enjoy your adventure!"
+                    data-question="what's included in a 4x4 camping rental in Namibia"
+                    data-llm="gpt4"
+                    data-brand="Advanced Car Hire"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="When it comes to 4x4 camping rentals in Namibia, here are my top 5 recommendations:<br><br>1. Wilderness Safaris 4x4 Camper:<br>   - This rental includes a fully-equipped 4x4 vehicle with a rooftop tent, allowing you to explore Namibia&#39;s remote and rugged landscapes.<br>   - The camper comes with a complete set of camping gear, including cooking utensils, a cooler, and basic survival equipment.<br>   - Wilderness Safaris is a reputable company with a strong focus on sustainable tourism and responsible travel.<br><br>2. Namibia 4x4 Rental:<br>   - This rental company offers a range of 4x4 vehicles, from compact models to larger, more spacious options.<br>   - The rental package includes a rooftop tent, camping chairs, a gas stove, and other essential camping gear.<br>   - The vehicles are well-maintained and come with a comprehensive insurance package, providing peace of mind during your adventure.<br><br>3. Avis 4x4 Camper:<br>   - Avis, a global car rental company, has a dedicated 4x4 rental service in Namibia.<br>   - The campers are equipped with a rooftop tent, a basic kitchen setup, and other necessary camping equipment.<br>   - Avis is a trusted brand, and their rental services are known for their reliability and customer service.<br><br>4. Britz 4x4 Camper:<br>   - Britz is a specialized 4x4 rental company with a focus on Namibia and Southern Africa.<br>   - Their campers come with a rooftop tent, a fridge, and a comprehensive set of camping gear, including chairs, tables, and cooking utensils.<br>   - Britz is known for its well-maintained vehicles and their expertise in self-drive adventures in the region.<br><br>5. Namibia Campers 4x4 Rental:<br>   - This local rental company offers a range of 4x4 vehicles, each equipped with a rooftop tent and basic camping equipment.<br>   - The vehicles are designed for off-road driving, making them suitable for exploring Namibia&#39;s diverse landscapes.<br>   - Namibia Campers is a smaller, locally-owned company that provides personalized service and local knowledge.<br><br>When choosing a 4x4 camping rental in Namibia, consider factors such as the vehicle&#39;s size, the quality and completeness of the camping gear, the company&#39;s reputation, and the overall value for money. It&#39;s also essential to ensure that the rental package includes the necessary insurance coverage and support during your trip."
+                    data-question="what's included in a 4x4 camping rental in Namibia"
+                    data-llm="claude"
+                    data-brand="Advanced Car Hire"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Okay, here are my top 3 recommendations for 4x4 camping rentals in Namibia, along with explanations of what&#39;s generally included.<br><br>**What&#39;s typically included in a 4x4 camping rental in Namibia:**<br><br>Before I get to the recommendations, it&#39;s important to understand what a typical 4x4 camping rental in Namibia usually *includes*.  This can vary from company to company, so *always* confirm the specifics with the rental provider.  However, expect something along these lines:<br><br>*   **The 4x4 Vehicle:** This is the core of the rental! Usually a Toyota Hilux, Land Cruiser, or similar robust vehicle designed for both on-road and off-road travel.  It will be equipped with:<br>    *   **High Clearance and 4x4 Capabilities:** Essential for navigating gravel roads, river crossings (seasonal), and sandy terrain.<br>    *   **Maintenance and Support:**  The rental company should provide 24/7 roadside assistance (though response times can vary greatly depending on your location) and instructions on basic vehicle maintenance (checking fluids, tire pressure, etc.).  Some (but not all) include spare parts.<br>*   **Camping Equipment:** This is where the greatest variation occurs.  Expect at least:<br>    *   **Roof Tent:**  Usually a durable, easy-to-use tent mounted on the roof of the vehicle.<br>    *   **Mattress & Bedding:**  A mattress (often foam) is standard.  Bedding (sleeping bags, pillows, sheets) might be included, or offered as an optional extra.<br>    *   **Cooking Equipment:** A gas stove (usually two-burner), pots, pans, plates, cutlery, cooking utensils, and often a washing-up basin.  Gas canisters are usually included, but check if refills are covered.<br>    *   **Camping Table & Chairs:** Essential for comfortable meals and relaxing at campsites.<br>    *   **Cool Box/Fridge:**  A very important item for keeping food and drinks cold.  Some rentals have electric fridges that run off the vehicle&#39;s battery, while others have standard cool boxes that require ice (widely available in towns). Electric fridges are preferred.<br>    *   **Water Tank/Containers:**  A water tank (integrated into the vehicle) or jerry cans for storing potable water.<br>    *   **Lighting:** A lantern or headlamps for use at night.<br>*   **Recovery Gear:**  Essential for getting unstuck. This *should* include:<br>    *   **Spare Tire(s):** Usually two.<br>    *   **Jack and Wheel Spanner:** For changing tires.<br>    *   **Shovel:** For digging out of sand.<br>    *   **Recovery Straps:** For being towed out of trouble.<br>    *   **Tire Pressure Gauge:** Crucial for adjusting tire pressure for different terrains.<br>    *   **Air Compressor:** For reinflating tires after deflation.<br>*   **Navigation:**<br>    *   **Maps:** Physical maps of Namibia.<br>    *   **GPS Navigation:** Some companies offer GPS units with pre-loaded maps and points of interest.  A smartphone with offline maps (like Maps.me) is also highly recommended.<br>*   **Insurance:**  Comprehensive insurance is usually included, but *carefully* review the terms and conditions, excess amounts (deductibles), and what is *not* covered (e.g., damage to tires, undercarriage, water damage from river crossings).<br><br>**Important Considerations Before Booking:**<br><br>*   **Read Reviews:**  Check independent reviews on sites like TripAdvisor, Google Reviews, and travel forums. Look for consistent patterns in positive and negative feedback.<br>*   **Compare Prices:**  Get quotes from multiple rental companies, and carefully compare what&#39;s included in each quote.  The cheapest option isn&#39;t always the best value.<br>*   **Check the Vehicle&#39;s Age and Condition:**  Ask about the age of the vehicle and its maintenance history.  A well-maintained older vehicle is often preferable to a newer vehicle that hasn&#39;t been properly cared for.  Ask for photos of the specific vehicle you will be renting.<br>*   **Understand the Insurance Coverage:**  Pay close attention to the excess amount (deductible) and what is *not* covered by the insurance. Consider purchasing supplemental insurance to reduce your excess.<br>*   **Ask About Roadside Assistance:**  Clarify the response time for roadside assistance, especially if you plan to travel to remote areas.<br>*   **Confirm the Included Equipment:**  Get a detailed list of all the included camping equipment, and confirm that it is in good working order before you leave.<br>*   **Consider Optional Extras:**  Evaluate whether you need any optional"
+                    data-question="what's included in a 4x4 camping rental in Namibia"
+                    data-llm="gemini"
+                    data-brand="Advanced Car Hire"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q2</span>
+                    <span class="question-text">4x4 car rental options in Namibia</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top recommendations for 4x4 car rental options in Namibia, listed in order of preference:<br><br>1. **Bushlore Namibia**<br>   - **Overview**: Bushlore is known for its extensive fleet of well-maintained 4x4 vehicles, including fully-equipped camping options. They offer a variety of vehicles suitable for different needs, from basic models to those with luxury features.<br>   - **Why Choose Them**: Their vehicles are designed for the rugged Namibian terrain and come with comprehensive insurance options. Bushlore also provides excellent customer service, ensuring a smooth rental experience.<br><br>2. **Namibia 4x4 Rentals**<br>   - **Overview**: Specializing in 4x4 vehicle rentals, Namibia 4x4 Rentals offers a range of vehicles from compact 4x4s to larger models equipped for off-road adventures. They also provide optional camping gear for those looking to explore the wild.<br>   - **Why Choose Them**: They are known for their competitive pricing and flexible rental terms. Additionally, they offer extensive travel advice and support, making them a great choice for both first-time and experienced travelers.<br><br>3. **Avis Namibia**<br>   - **Overview**: Avis is a well-established global car rental company with a strong presence in Namibia. They offer a selection of 4x4 vehicles that are suitable for both city driving and off-road adventures.<br>   - **Why Choose Them**: With their reputation for reliability, Avis provides excellent roadside assistance and a straightforward booking process. Their well-maintained vehicles come with a range of features, ensuring comfort during your travels.<br><br>4. **Keetmanshoop Car Hire**<br>   - **Overview**: Located in Keetmanshoop, this local rental company offers a variety of 4x4 vehicles tailored to the needs of travelers exploring southern Namibia. They focus on providing personalized service and affordable rates.<br>   - **Why Choose Them**: As a local company, they have valuable insights into the best travel routes and hidden gems in the region. Their commitment to customer service and flexibility in rental options make them a solid choice.<br><br>5. **4x4 Namibia**<br>   - **Overview**: This company specializes in off-road vehicles and offers a range of 4x4 options, including fully equipped camping vehicles. They also provide travel equipment and accessories for added convenience.<br>   - **Why Choose Them**: 4x4 Namibia is known for its focus on off-road capability, making them a great option for adventurous travelers. Their vehicles are well-maintained and come with extensive travel information.<br><br>When planning your trip, make sure to check for availability, rental terms, and any additional fees. Each of these companies has its own strengths, so consider your specific needs and preferences when making a choice."
+                    data-question="4x4 car rental options in Namibia"
+                    data-llm="gpt4"
+                    data-brand="Advanced Car Hire"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top 5 recommendations for 4x4 car rental options in Namibia, listed in order of preference:<br><br>1. Avis Namibia:<br>   - Avis is a well-known and reputable car rental company with a strong presence in Namibia.<br>   - They offer a wide selection of 4x4 vehicles, including Toyota Land Cruisers, Hilux, and Isuzu D-Max.<br>   - Avis is known for its well-maintained vehicles, excellent customer service, and convenient pick-up/drop-off locations across Namibia.<br><br>2. Namibia4x4:<br>   - Namibia4x4 is a specialized 4x4 rental company that focuses on providing high-quality, well-equipped vehicles for self-drive adventures.<br>   - They offer a variety of 4x4 models, including Toyota Land Cruiser, Nissan Patrol, and Mitsubishi Pajero.<br>   - Namibia4x4 is known for its extensive experience in the Namibian terrain and its ability to provide comprehensive support and advice to its customers.<br><br>3. Europcar Namibia:<br>   - Europcar is another reputable international car rental company with a strong presence in Namibia.<br>   - They offer a range of 4x4 vehicles, including Toyota Hilux, Isuzu D-Max, and Mitsubishi Pajero.<br>   - Europcar is known for its competitive prices, flexible rental options, and reliable customer service.<br><br>4. Hertz Namibia:<br>   - Hertz is a well-known global car rental brand with a presence in Namibia.<br>   - They offer a selection of 4x4 vehicles, including Toyota Land Cruiser, Nissan Patrol, and Mitsubishi Pajero.<br>   - Hertz is known for its attention to detail, comprehensive insurance coverage, and convenient rental locations.<br><br>5. Namibia Car Rental:<br>   - Namibia Car Rental is a local Namibian company that specializes in 4x4 rentals.<br>   - They offer a range of 4x4 models, including Toyota Hilux, Isuzu D-Max, and Volkswagen Amarok.<br>   - Namibia Car Rental is known for its competitive prices, personalized service, and deep knowledge of the Namibian terrain and driving conditions.<br><br>When choosing a 4x4 rental option in Namibia, it&#39;s important to consider factors such as vehicle selection, customer reviews, rental rates, and the company&#39;s reputation for reliability and customer service. All of the options listed above are well-regarded and can provide a great self-drive experience in Namibia&#39;s vast and diverse landscapes."
+                    data-question="4x4 car rental options in Namibia"
+                    data-llm="claude"
+                    data-brand="Advanced Car Hire"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Okay, here are my top 4x4 rental recommendations in Namibia, considering reliability, service, vehicle quality, and availability (which can be a real factor, especially during peak season):<br><br>**Important Considerations Before You Book:**<br><br>*   **Insurance:**  Ensure you have comprehensive insurance with zero or very low excess.  Namibia is tough on vehicles.  Check what&#39;s covered (underbody, tires, windshields are vital).<br>*   **Equipment:**  Verify the included equipment.  You WILL need at least two spare tires, a jack, shovel, tow rope, and ideally a working air compressor.  A GPS or offline maps is highly recommended.<br>*   **Roof Tent (if desired):**  If you want a rooftop tent, book well in advance.  They are very popular.<br>*   **Driver Experience:**  Consider your off-road driving experience.  If you&#39;re a novice, consider taking a short 4x4 driving course before you go.<br>*   **Season:**  Book well in advance, especially if traveling during peak season (June-October).<br>*   **Pick-Up/Drop-Off Location:**  Windhoek is the most common place, but consider your itinerary.<br><br>**Top 4x4 Rental Recommendations (Ordered by Preference):**<br><br>1.  **Savanna Car Hire:** I recommend this brand for several reasons. They are a reputable company that often focuses on Toyota Hilux vehicles, which are known for their reliability in the Namibian landscape. They offer well-maintained vehicles with good equipment packages and have a reputation for good customer service. They also have a good understanding of the local conditions.<br>    *   **Why preferred:** Reliable vehicles, good reputation, decent service, well-equipped.<br>    *   **Things to consider:** Can be slightly pricier than some others.<br><br>2.  **Asco Car Hire:** Asco is another well-regarded Namibian company.  They typically offer a range of 4x4 vehicles, including Toyota Hilux and Fortuner models. They are known for providing good quality vehicles and solid support.<br>    *   **Why preferred:** Good quality vehicles, reliable service, locally based.<br>    *   **Things to consider:** Can be very busy, so book well in advance.<br><br>3.  **Caprivi Car Hire:** Caprivi is a long-standing, family-run Namibian business. They have a solid reputation for well-maintained vehicles and personalized service.  They often offer Toyota Hilux and Land Cruiser options.<br>    *   **Why preferred:** Locally owned, good service, reliable vehicles.<br>    *   **Things to consider:** Might not have the newest fleet compared to larger companies.<br><br>4.  **Britz/Maui/Hippie Camper:** While these are technically campervan companies, they often have 4x4 options available, particularly Toyota Hilux models with rooftop tents. They are a larger international company, which can be both a pro and a con.<br>    *   **Why considered:** Widely available, often offer good deals (especially off-season). Good for the campervan experience.<br>    *   **Things to consider:** Can be slightly less personalized service compared to local companies. Check the vehicle thoroughly upon pickup.<br><br>**Why I didn&#39;t include others:**<br><br>*   **Smaller/Less Established Companies:** While you might find cheaper options, the risk of poorly maintained vehicles or unreliable service is higher. In Namibia, reliability is paramount.<br>*   **International Rental Chains (e.g., Avis, Europcar, Hertz):** While these companies operate in Namibia, their 4x4 offerings are often limited, and their vehicles may not be as well-suited to the harsh conditions as those provided by the specialist 4x4 rental companies. Also, support outside of Windhoek can be limited.<br><br>**Before you finalize your booking:**<br><br>*   **Read Reviews:** Check recent reviews on independent platforms (Google Reviews, TripAdvisor forums) for the specific company you&#39;re considering.<br>*   **Compare Quotes:** Get quotes from multiple companies and carefully compare what&#39;s included (insurance, equipment, mileage limits, etc.).<br>*   **Ask Questions:** Don&#39;t hesitate to ask the rental company specific questions about their vehicles, equipment, and support services.<br><br>Enjoy your Namibian adventure! Let me know if you have any other questions.<br>"
+                    data-question="4x4 car rental options in Namibia"
+                    data-llm="gemini"
+                    data-brand="Advanced Car Hire"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q3</span>
+                    <span class="question-text">cost to rent a 4x4 in Namibia</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="Renting a 4x4 in Namibia is a great choice for exploring its stunning landscapes and remote areas. Here are my top recommendations for rental companies, along with brief explanations for each:<br><br>### 1. **Bushlore Namibia**<br>   - **Overview**: Bushlore is known for its well-maintained fleet and excellent customer service. They offer a variety of 4x4 vehicles, including fully equipped campers.<br>   - **Pros**: Comprehensive insurance options, flexible pick-up and drop-off locations, and a strong reputation for reliability. They also provide useful travel tips and itineraries.<br>   - **Website**: [bushlore.com](https://www.bushlore.com)<br><br>### 2. **Namibia 4x4 Rentals**<br>   - **Overview**: Specializing solely in 4x4 rentals, Namibia 4x4 Rentals offers a range of vehicles suited for both on-road and off-road adventures.<br>   - **Pros**: Competitive pricing and a selection of vehicles equipped for camping and self-drive tours. Their personalized service and local knowledge are highly rated.<br>   - **Website**: [namibia4x4rentals.com](https://www.namibia4x4rentals.com)<br><br>### 3. **Rental Cars Namibia**<br>   - **Overview**: This company provides a variety of vehicles, including 4x4s, at competitive rates. They offer both short-term and long-term rentals.<br>   - **Pros**: Transparent pricing with no hidden fees and a straightforward booking process. They also offer additional services such as GPS rentals and camping gear.<br>   - **Website**: [rentalcarsnamibia.com](https://www.rentalcarsnamibia.com)<br><br>### 4. **Avis Namibia**<br>   - **Overview**: A well-known international car rental company, Avis operates in Namibia and offers a selection of 4x4 vehicles.<br>   - **Pros**: Established reputation, high-quality vehicles, and excellent customer service. They have multiple locations, making it easier for travelers to pick up and drop off vehicles.<br>   - **Website**: [avis.co.za](https://www.avis.co.za)<br><br>### 5. **Jumbo Car Rental**<br>   - **Overview**: Jumbo Car Rental offers a good range of 4x4 vehicles and is known for its competitive pricing and customer support.<br>   - **Pros**: Offers both self-drive and guided tours, providing flexibility for any travel style. They also have a good selection of additional equipment such as roof tents and camping gear.<br>   - **Website**: [jumbo-car-rental.com](https://www.jumbo-car-rental.com)<br><br>When renting a 4x4 in Namibia, consider factors such as vehicle type, insurance coverage, and additional equipment needed for your trip. It&#39;s advisable to book in advance, especially during peak travel seasons."
+                    data-question="cost to rent a 4x4 in Namibia"
+                    data-llm="gpt4"
+                    data-brand="Advanced Car Hire"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top 5 recommendations for renting a 4x4 vehicle in Namibia, listed in order of preference:<br><br>1. Britz Namibia:<br>   - Britz is a well-established and reputable 4x4 rental company in Namibia.<br>   - They offer a wide range of 4x4 vehicles, including Toyota Land Cruisers and Hilux models, suitable for self-drive safaris and off-road adventures.<br>   - Prices typically range from $100 to $200 per day, depending on the vehicle model and rental duration.<br><br>2. Namibia 4x4 Rental:<br>   - Namibia 4x4 Rental is a local company that specializes in 4x4 rentals for self-drive tours.<br>   - They have a fleet of well-maintained and reliable vehicles, including Toyota Land Cruisers and Nissan Patrols.<br>   - Rental rates are generally competitive, ranging from $80 to $150 per day, making them a good option for budget-conscious travelers.<br><br>3. Avis Namibia:<br>   - Avis is a globally recognized car rental company with a strong presence in Namibia.<br>   - They offer a range of 4x4 vehicles, including Toyota Land Cruisers and Isuzu D-Max models.<br>   - Rental rates are slightly higher than some local providers, but the company&#39;s reputation for quality and customer service may be worth the premium.<br>   - Expect to pay between $120 to $200 per day for a 4x4 rental from Avis.<br><br>4. Thrifty Namibia:<br>   - Thrifty is another major international car rental company with branches in Namibia.<br>   - They have a selection of 4x4 vehicles, including Toyota Hilux and Isuzu D-Max models.<br>   - Rental rates are generally competitive, ranging from $90 to $170 per day, depending on the vehicle and rental duration.<br><br>5. Europcar Namibia:<br>   - Europcar is a well-known global car rental brand with a presence in Namibia.<br>   - They offer a range of 4x4 vehicles, including Toyota Land Cruisers and Nissan Patrols.<br>   - Rental rates are typically in the $110 to $190 per day range, making them a slightly more expensive option compared to some local providers.<br><br>It&#39;s important to note that rental rates can vary depending on factors such as rental duration, vehicle model, and any additional insurance or equipment required. It&#39;s recommended to research and compare prices from multiple providers to find the best deal for your specific needs."
+                    data-question="cost to rent a 4x4 in Namibia"
+                    data-llm="claude"
+                    data-brand="Advanced Car Hire"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Okay, let&#39;s break down 4x4 rental recommendations for Namibia. Cost is a huge factor, but so is reliability, customer service, and the specific vehicle you need. Keep in mind that prices fluctuate based on season, availability, and rental duration, so these are ballpark figures and you should always get direct quotes. I&#39;m also assuming you&#39;re looking for a reputable company offering well-maintained vehicles.<br><br>**Factors Affecting Rental Cost:**<br><br>*   **Season:** High season (June-October) will be significantly more expensive.<br>*   **Rental Duration:** Longer rentals usually have lower daily rates.<br>*   **Insurance:** Comprehensive insurance is highly recommended and will add to the cost.<br>*   **Vehicle Type:**  A basic Toyota Hilux or similar will be cheaper than a fully equipped Land Cruiser.<br>*   **Equipment:** Extras like camping gear, GPS, satellite phones, etc. will increase the price.<br>*   **One-Way Rentals:** Picking up in one location and dropping off in another usually incurs a surcharge.<br><br>**Price ranges (per day, approximate and *very* dependent on the factors above, especially season):**<br><br>*   **Budget:** $80 - $120 USD (Basic Hilux or similar, limited insurance)<br>*   **Mid-Range:** $120 - $180 USD (Well-maintained Hilux, good insurance, some equipment)<br>*   **Premium:** $180+ USD (Land Cruiser, fully equipped, top-tier insurance and support)<br><br>**Top Recommendations (in order of preference, considering reliability, customer service, and a balance of cost):**<br><br>1.  **Asco Car Hire:**<br>    *   **Why:** Asco is widely regarded as one of the most reliable and reputable 4x4 rental companies in Namibia. They have a good reputation for well-maintained vehicles, excellent customer service, and transparent pricing. They offer a range of vehicles from basic Hiluxes to more heavily equipped Land Cruisers and often have good insurance options. They also have a strong support network in case of breakdowns.<br>    *   **Price Range:** Probably in the Mid-Range to Premium category, but the peace of mind is worth it for many.<br>    *   **Consider:** Book well in advance, especially for high season.<br><br>2.  **Savanna Car Hire:**<br>    *   **Why:** Another solid choice with a good track record. They offer a good selection of vehicles and tend to be competitive on price.  They are known for helpful staff and good support. They offer different levels of insurance and equipment packages.<br>    *   **Price Range:** Mid-Range, potentially dipping into the budget range depending on the vehicle and time of year.<br>    *   **Consider:** Check their insurance terms carefully and ensure they cover all your needs.<br><br>3.  **Caprivi Car Hire:**<br>    *   **Why:**  They specialize in 4x4 rentals and are often praised for their knowledge and experience in the Namibian environment. They offer well-equipped vehicles, including options with rooftop tents.  They can provide detailed advice on routes and equipment.<br>    *   **Price Range:** Mid-Range to Premium.<br>    *   **Consider:** Good for those wanting a more tailored and supported experience.<br><br>4.  **Britz/Maui/Apollo Namibia:**<br>    *   **Why:** These are larger, international rental companies that also operate in Namibia. They can be a good option if you prefer dealing with a well-known brand. They often have a wider range of vehicles and locations.<br>    *   **Price Range:** Can vary widely. Sometimes competitive, sometimes more expensive.<br>    *   **Consider:**  Read reviews carefully, as experiences can be mixed.  Ensure the vehicle is specifically equipped for off-road driving in Namibia.<br><br>**Important Considerations Before Booking:**<br><br>*   **Read Reviews:** Check independent review sites (Google Reviews, TripAdvisor, etc.) for recent customer experiences.<br>*   **Insurance:** Understand the insurance coverage *thoroughly*.  Pay attention to excesses, what&#39;s covered (tyres, windscreens, undercarriage), and any exclusions. Consider supplementary insurance if necessary.<br>*   **Vehicle Condition:** Inspect the vehicle carefully before accepting it. Take photos of any existing damage.<br>*   **24/7 Support:** Confirm the availability of 24/7 roadside assistance and the company&#39;s response time in case of a breakdown.  Ask about spare parts availability.<br>*   **Contract Terms:** Read the rental agreement meticulously, paying attention to mileage limits, fuel policies, and any other fees.<br>*   **Driving Experience:** Be realistic about your off-road driving experience. Consider taking a 4x4 driving course if you&#39;"
+                    data-question="cost to rent a 4x4 in Namibia"
+                    data-llm="gemini"
+                    data-brand="Advanced Car Hire"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q4</span>
+                    <span class="question-text">is there 24/7 support for 4x4 rentals in Namibia</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="When looking for 24/7 support for 4x4 rentals in Namibia, it&#39;s important to choose companies that are reputable, offer reliable vehicles, and provide excellent customer service. Here are my top recommendations:<br><br>1. **Namibia 4x4 Rentals**<br>   - **Overview**: Namibia 4x4 Rentals specializes in off-road vehicle rentals and offers a wide range of 4x4 vehicles suitable for Namibia&#39;s rugged terrain.<br>   - **24/7 Support**: They provide 24/7 roadside assistance and support, ensuring that you’re never left stranded.<br>   - **Extras**: They offer additional equipment like camping gear, which is ideal for those looking to explore Namibia&#39;s stunning landscapes.<br><br>2. **Bushlore Namibia**<br>   - **Overview**: Bushlore is well-known for its fleet of well-maintained 4x4 vehicles and has a strong reputation for excellent customer service.<br>   - **24/7 Support**: They provide round-the-clock support and assistance, making it easy for travelers to reach them in case of emergencies.<br>   - **Experience**: With years of experience in the field, they also offer useful travel advice and tips for navigating Namibia.<br><br>3. **Kalahari 4x4 Rentals**<br>   - **Overview**: Kalahari 4x4 Rentals offers a diverse range of vehicles, including fully equipped 4x4s, perfect for adventure seekers.<br>   - **24/7 Support**: Their 24/7 roadside assistance ensures that you can travel with peace of mind knowing help is just a call away.<br>   - **Personalized Service**: They are known for their personalized service, catering to specific travel needs and preferences.<br><br>4. **Rent-A-4x4 Namibia**<br>   - **Overview**: This company offers a variety of 4x4 vehicles for rent, including options for self-drive and guided tours.<br>   - **24/7 Support**: They provide 24/7 customer support to assist with any issues that may arise during your rental period.<br>   - **Flexible Rentals**: Rent-A-4x4 Namibia offers flexible rental terms, which can be advantageous for travelers with varying needs.<br><br>5. **4x4 Namibia**<br>   - **Overview**: 4x4 Namibia specializes in 4x4 rentals and has a solid reputation for well-maintained vehicles and comprehensive service.<br>   - **24/7 Support**: They offer 24/7 support to ensure that customers can receive help any time of day or night.<br>   - **Additional Features**: They provide various packages that include additional gear for camping and outdoor adventures.<br><br>These companies are reliable and provide the support necessary for a safe and enjoyable adventure in Namibia&#39;s vast landscapes. Always check recent reviews and confirm availability before making your booking."
+                    data-question="is there 24/7 support for 4x4 rentals in Namibia"
+                    data-llm="gpt4"
+                    data-brand="Advanced Car Hire"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top 5 recommendations for 24/7 support for 4x4 rentals in Namibia, listed in order of preference:<br><br>1. Avis Rent a Car Namibia: Avis is a well-established global car rental company with a strong presence in Namibia. They offer a wide range of 4x4 vehicles, including Toyota Land Cruisers and Hilux models, and provide 24/7 roadside assistance and support for their customers.<br><br>2. Thrifty Car Rental Namibia: Thrifty is another reputable car rental company with a focus on 4x4 vehicles for Namibia&#39;s rugged terrain. They have a dedicated support team available 24/7 to assist with any issues that may arise during your rental period.<br><br>3. Europcar Namibia: Europcar is a trusted international car rental brand with a strong presence in Namibia. They offer a selection of 4x4 models, such as the Toyota Hilux and Nissan Patrol, and have a 24/7 customer support hotline to address any concerns.<br><br>4. Hertz Namibia: Hertz is a well-known car rental company with a solid reputation for customer service. They have a range of 4x4 vehicles, including Toyota Land Cruisers and Nissan Pathfinders, and provide 24/7 support for their customers.<br><br>5. Namibia Car Rental: While not as widely recognized as the international brands, Namibia Car Rental is a local company that specializes in 4x4 rentals. They have a dedicated support team available 24/7 to assist with any issues that may arise during your rental experience.<br><br>It&#39;s important to note that all of these companies have a strong focus on customer satisfaction and provide 24/7 support for their 4x4 rentals in Namibia. It&#39;s always a good idea to research and compare options to find the best fit for your specific needs and budget."
+                    data-question="is there 24/7 support for 4x4 rentals in Namibia"
+                    data-llm="claude"
+                    data-brand="Advanced Car Hire"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Finding guaranteed 24/7 support for 4x4 rentals in Namibia can be tricky, as it often depends on location and the specific circumstances. However, some companies are known for their robust support networks and emergency assistance. Here are 3 solid options, prioritized by factors like reputation, service offerings, and likelihood of providing comprehensive support:<br><br>**1. Asco Car Hire:**<br><br>*   **Why they&#39;re a strong choice:** Asco Car Hire is a well-established and reputable company in Namibia. They have a strong presence throughout the country, making them better equipped to provide support in various locations. They are known for well-maintained vehicles and good customer service.<br>*   **Support Considerations:** While they don&#39;t explicitly advertise 24/7 support on their website, their reputation and established infrastructure imply a high likelihood of readily available assistance during emergencies. It&#39;s crucial to *confirm their after-hours emergency contact procedures directly when booking*. They have branches in major cities like Windhoek, Swakopmund, and Walvis Bay, which facilitates easier access to assistance.<br>*   **Focus:** Reliability, established infrastructure, and good customer service.<br><br>**2. Britz Namibia:**<br><br>*   **Why they&#39;re a strong choice:** Britz is part of the larger Tourism Holdings Limited (THL) group, a major player in the vehicle rental and tourism sector. They are known for their well-equipped 4x4 vehicles specifically designed for overlanding.<br>*   **Support Considerations:** Britz often includes roadside assistance as part of their rental packages. While not explicitly advertised as 24/7, their size and resources make it probable that they have a system for after-hours emergencies. *Confirm the specifics of their roadside assistance coverage during booking.* They often have vehicles equipped with satellite phones for remote communication.<br>*   **Focus:** Overlanding expertise, well-equipped vehicles, and likely roadside assistance coverage.<br><br>**3. Caprivi Car Hire:**<br><br>*   **Why they&#39;re a strong choice:** Caprivi Car Hire specializes in 4x4 rentals for self-drive safaris. They are known for providing detailed pre-departure briefings and advice on routes and conditions.<br>*   **Support Considerations:** While they may not advertise 24/7 support, their focus on self-drive safaris suggests they have a system in place for assisting clients in remote areas. *Inquire directly about their emergency protocols and after-hours contact information.* Their personalized service and expertise can be valuable in preventing issues.<br>*   **Focus:** Personalized service, self-drive safari expertise, and preventative support.<br><br>**Important Considerations and Recommendations for ALL Choices:**<br><br>*   **Direct Confirmation is Key:** *Always, without exception, directly confirm the availability, scope, and procedures for after-hours emergency support with the rental company before finalizing your booking.* Ask specific questions about their response times, geographical limitations, and communication methods.<br>*   **Satellite Phone:** Consider renting a satellite phone from the rental company or a separate provider. Cell phone reception in many parts of Namibia is unreliable.<br>*   **Travel Insurance:** Ensure your travel insurance covers vehicle breakdowns and medical emergencies in remote areas.<br>*   **Pre-Departure Briefing:** Pay close attention to the pre-departure briefing and ask any questions you may have about the vehicle, road conditions, and emergency procedures.<br>*   **Emergency Supplies:** Carry a comprehensive first-aid kit, spare parts for your vehicle (if advised by the rental company), extra fuel, water, and food.<br>*   **Communication Plan:** Inform someone of your itinerary and check in regularly, especially if you are traveling in remote areas.<br><br>By combining a reputable rental company with thorough preparation and a robust communication plan, you can significantly increase your safety and peace of mind while exploring Namibia&#39;s stunning landscapes.<br>"
+                    data-question="is there 24/7 support for 4x4 rentals in Namibia"
+                    data-llm="gemini"
+                    data-brand="Advanced Car Hire"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q5</span>
+                    <span class="question-text">best 4x4 vehicles for Namibia safaris</span>
+                </td>
+                
+                <td class="llm-cell mentioned"
+                    data-response="When considering the best 4x4 vehicles for safaris in Namibia, it&#39;s essential to look for reliability, off-road capability, comfort, and ample space for passengers and gear. Here are my top recommendations:<br><br>### 1. **Toyota Land Cruiser 79 Series**<br>   - **Overview**: Renowned for its durability and off-road prowess, the Land Cruiser 79 Series is a favorite among safari enthusiasts.<br>   - **Pros**: Exceptional ground clearance and approach angles make it perfect for navigating Namibia&#39;s rugged terrain. It has a powerful diesel engine, good fuel efficiency, and ample cargo space for luggage and equipment.<br>   - **Cons**: The ride can be a bit bumpy on paved roads, and it lacks some of the modern comforts found in newer vehicles.<br><br>### 2. **Toyota Hilux**<br>   - **Overview**: The Hilux is a versatile pickup truck that excels in both urban and off-road settings.<br>   - **Pros**: It offers a robust build, excellent reliability, and a comfortable interior. The 4x4 version has great off-road capabilities, making it suitable for sandy and rocky terrains found in Namibia.<br>   - **Cons**: While spacious, the rear seating can be a bit cramped for long journeys compared to larger SUVs.<br><br>### 3. **Land Rover Defender**<br>   - **Overview**: The new Land Rover Defender combines modern technology with legendary off-road capability.<br>   - **Pros**: It has advanced off-road features, a comfortable and high-tech interior, and plenty of space for passengers and gear. The Defender is known for its ability to handle challenging terrains with ease.<br>   - **Cons**: It can be more expensive to maintain and repair, and fuel economy may not be as good as some other options.<br><br>### 4. **Ford Ranger**<br>   - **Overview**: The Ford Ranger is a robust midsize pickup truck that&#39;s gaining popularity in safari tours.<br>   - **Pros**: Known for its strong performance and off-road capability, it offers a comfortable cabin and good fuel efficiency. The Ranger also has a good amount of cargo space and is relatively easy to handle.<br>   - **Cons**: While it performs well off-road, it may not be as rugged as the Land Cruiser or Defender in extreme conditions.<br><br>### 5. **Nissan Patrol**<br>   - **Overview**: The Nissan Patrol is a large SUV that boasts excellent off-road capabilities.<br>   - **Pros**: It features a powerful engine, spacious interior, and a rugged suspension system, making it ideal for long-distance travel in rough terrains. It also offers good comfort for passengers on extended journeys.<br>   - **Cons**: It can be less fuel-efficient compared to smaller vehicles and may be bulkier to maneuver in tight spots.<br><br>### Final Thoughts:<br>When choosing a vehicle for your Namibia safari, consider factors such as the type of terrain you&#39;ll encounter, passenger comfort, and how much gear you&#39;ll need to transport. The Toyota Land Cruiser and Hilux are often the top choices for their reliability and proven performance in off-road conditions."
+                    data-question="best 4x4 vehicles for Namibia safaris"
+                    data-llm="gpt4"
+                    data-brand="Advanced Car Hire"
+                    data-position="15"
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✓</span> (#15)
+                </td>
+            
+                <td class="llm-cell mentioned"
+                    data-response="When it comes to the best 4x4 vehicles for Namibia safaris, the following are my top recommendations:<br><br>1. Toyota Land Cruiser:<br>   - The Toyota Land Cruiser is a tried and tested workhorse that is widely used in Namibia&#39;s rugged terrain.<br>   - It offers excellent off-road capabilities, reliability, and a comfortable ride for long journeys.<br>   - The Land Cruiser&#39;s reputation for durability and its ability to handle challenging conditions make it a popular choice for Namibia safaris.<br><br>2. Land Rover Defender:<br>   - The Land Rover Defender is another iconic 4x4 vehicle that is well-suited for Namibia&#39;s diverse landscapes.<br>   - It combines off-road prowess with a robust and versatile design, making it a great option for safaris.<br>   - The Defender&#39;s high ground clearance and four-wheel-drive system allow it to navigate through sandy, rocky, and uneven terrain with ease.<br><br>3. Jeep Wrangler:<br>   - The Jeep Wrangler is a popular choice for Namibia safaris due to its exceptional off-road capabilities and iconic design.<br>   - Its compact size and maneuverability make it a great option for navigating narrow roads and tight spaces in the Namibian wilderness.<br>   - The Wrangler&#39;s removable doors and roof panels provide an open-air experience, allowing you to fully immerse yourself in the surrounding environment.<br><br>4. Mercedes-Benz G-Class:<br>   - The Mercedes-Benz G-Class, also known as the &quot;G-Wagon,&quot; is a luxury 4x4 vehicle that offers a blend of off-road performance and comfort.<br>   - Its robust construction and advanced four-wheel-drive system make it a capable choice for Namibia safaris.<br>   - The G-Class&#39;s spacious interior and premium amenities provide a comfortable experience for longer journeys.<br><br>5. Ford Ranger:<br>   - The Ford Ranger is a midsize pickup truck that is well-suited for Namibia safaris.<br>   - It offers a good balance of off-road capability, payload capacity, and reliability.<br>   - The Ranger&#39;s versatility and ability to handle rough terrain make it a popular choice for self-drive safaris or for use as a support vehicle.<br><br>These are my top recommendations for 4x4 vehicles for Namibia safaris. Each of these options has its own strengths and is well-suited to navigate the diverse landscapes and challenging conditions found in Namibia."
+                    data-question="best 4x4 vehicles for Namibia safaris"
+                    data-llm="claude"
+                    data-brand="Advanced Car Hire"
+                    data-position="20"
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✓</span> (#20)
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Okay, here are my top 4x4 vehicle recommendations for Namibian safaris, ranked in order of preference, with explanations:<br><br>**1. Toyota Land Cruiser (70/76/78/79 Series)**<br><br>*   **Why:** This is the king of the Namibian bush.  It&#39;s the most common vehicle you&#39;ll see used by tour operators, lodges, and experienced self-drivers.  The Land Cruiser is renowned for its unparalleled reliability, ruggedness, and ability to handle extremely rough terrain.  Parts and mechanics are readily available throughout Namibia (and Africa in general), a huge advantage if you encounter any issues in remote areas. The 70 series is especially popular due to its simple, durable design and strong off-road capabilities.  The 76 is the wagon version, the 78 is the Troopy, and the 79 is the pickup.<br>*   **Considerations:**  Can be more expensive to rent or buy than other options.  The older models can be a bit less comfortable than modern SUVs (but comfort has been improved in more recent versions).  Fuel consumption can be higher.<br>*   **Ideal For:**  Serious off-road adventures, extended trips into very remote areas, carrying heavy loads, and tackling challenging terrain.<br><br>**2. Toyota Hilux/Fortuner (with 4x4)**<br><br>*   **Why:**  The Hilux is another Toyota workhorse, known for its reliability and durability.  It&#39;s slightly smaller and more fuel-efficient than a Land Cruiser, making it a good option for those who want a capable 4x4 without the full Land Cruiser price tag. The Fortuner is the SUV version of the Hilux, offering more passenger comfort. Many rental companies in Namibia offer Hiluxes equipped for camping and safari use.<br>*   **Considerations:**  While very capable, it&#39;s not *quite* as indestructible as a Land Cruiser.  Suspension might need upgrading for very heavy loads or extremely rough conditions.<br>*   **Ideal For:**  A good balance of off-road capability, fuel efficiency, and comfort. Suitable for most Namibian roads and tracks, including gravel and sandy conditions. Perfect for self-drive camping trips.<br><br>**3. Land Rover Defender (Older Models - Pre 2016)**<br><br>*   **Why:** A true icon, the older Defenders (pre-2016) are incredibly capable off-road. They are known for their excellent articulation and simple mechanics (relatively speaking). They have a huge following and are often modified for extreme off-roading.<br>*   **Considerations:** Reliability can be a concern with older models.  They require more maintenance than Toyotas. Parts can sometimes be harder to find than Toyota parts in very remote locations. Comfort levels are lower than modern SUVs. The newer Defenders (post-2020) are very capable but are more complex and have more electronics, which could be a concern in very remote areas.<br>*   **Ideal For:**  Enthusiasts who enjoy the unique character of a Defender and are prepared to do some maintenance. Excellent for challenging terrain, but requires careful planning and a good understanding of the vehicle.<br><br>**4. Nissan Patrol (Y61/GU Series)**<br><br>*   **Why:**  The Nissan Patrol is another very capable and reliable 4x4.  The older Y61/GU series (pre-2010) are particularly popular for their robust design and strong off-road performance.  They offer a good balance of capability and comfort.<br>*   **Considerations:**  Parts availability might not be as widespread as Toyota in some areas, though still generally good. Fuel consumption can be similar to a Land Cruiser.<br>*   **Ideal For:**  Similar to the Land Cruiser, but potentially a slightly more affordable option. Excellent for long-distance travel and challenging terrain.<br><br>**Important Considerations for ANY 4x4 in Namibia:**<br><br>*   **Tires:**  Good quality all-terrain or mud-terrain tires are essential.  Ensure they are properly inflated for the conditions.<br>*   **Suspension:** Consider upgraded suspension, especially if you plan on carrying heavy loads or traveling on very rough roads.<br>*   **Ground Clearance:**  Sufficient ground clearance is crucial for navigating rocky and sandy terrain.<br>*   **Recovery Gear:**  A good recovery kit is a must-have, including a jack, shovel, tow rope, and possibly sand ladders.<br>*   **Experience:**  Driving a 4x4 in challenging conditions requires skill and experience.  Consider taking a 4x4 driving course before your trip.<br>*   **Rental Company Reputation:**  If renting, choose a reputable company that specializes in 4x4 rentals for safari use"
+                    data-question="best 4x4 vehicles for Namibia safaris"
+                    data-llm="gemini"
+                    data-brand="Advanced Car Hire"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+                </tbody>
+            </table>
+            <p class="breakdown-hint">Click any cell to see the full AI response</p>
+        </div>
+
+        <!-- Response modal -->
+        <div class="response-modal" id="responseModal">
+            <div class="modal-content" onclick="event.stopPropagation()">
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+                <div class="modal-header">
+                    <span class="modal-llm" id="modalLlm"></span>
+                    <span class="modal-status" id="modalStatus"></span>
+                </div>
+                <div class="modal-question" id="modalQuestion"></div>
+                <div class="modal-response" id="modalResponse"></div>
+            </div>
+        </div>
+    
+        </div>
+
+        <!-- Section 3: Reddit Opportunities -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <h2 class="section-title">Reddit Opportunities</h2>
+            </div>
+
+            <div class="subsection-title">Buy Intent Conversations</div>
+            <p class="subsection-desc">People actively looking for recommendations in your category</p>
+            <div class="reddit-posts">
+                
+            <a href="https://www.reddit.com/r/Namibia/comments/1qj3kh1/self_drive_alone_x_group_tour_costs/" target="_blank" class="reddit-post">
+                <div class="post-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">Self drive alone x Group Tour: costs : r/Namibia</div>
+                    <div class="post-meta">
+                        r/Namibia &bull; 20K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            <a href="https://www.reddit.com/r/travelphotos/comments/1qlskus/a_few_months_ago_i_hopped_in_my_renault_clio_and/" target="_blank" class="reddit-post">
+                <div class="post-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">A few months ago, I hopped in my Renault Clio and took ...</div>
+                    <div class="post-meta">
+                        r/travelphotos &bull; 39K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            <a href="https://www.reddit.com/r/roadtrip/comments/1qm76yg/travel_to_mongolia_for_an_epic_road_trip_mongolia/" target="_blank" class="reddit-post">
+                <div class="post-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">Travel to Mongolia for an epic road trip. Mongolia blew my ...</div>
+                    <div class="post-meta">
+                        r/roadtrip &bull; 4.1M members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            <a href="https://www.reddit.com/r/Botswana/hot/" target="_blank" class="reddit-post">
+                <div class="post-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">r/Botswana</div>
+                    <div class="post-meta">
+                        r/Botswana &bull; 7K members &bull; 3 days ago
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            </div>
+
+            <div class="subsection-title">Pain Point Conversations</div>
+            <p class="subsection-desc">People discussing problems your product solves</p>
+            <div class="reddit-posts">
+                
+            <a href="https://www.reddit.com/r/Namibia/comments/1qj3kh1/self_drive_alone_x_group_tour_costs/" target="_blank" class="reddit-post">
+                <div class="post-icon pain">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">Self drive alone x Group Tour: costs : r/Namibia</div>
+                    <div class="post-meta">
+                        r/Namibia &bull; 20K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            <a href="https://www.reddit.com/r/Namibia/comments/1qn5wwf/planning_a_trip/" target="_blank" class="reddit-post">
+                <div class="post-icon pain">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">Planning a trip : r/Namibia</div>
+                    <div class="post-meta">
+                        r/Namibia &bull; 20K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            </div>
+        </div>
+
+        <!-- CTA Section -->
+        <div class="section cta-section">
+            <h2>Ready to improve your <em>AI visibility?</em></h2>
+            <p>We help brands get mentioned more in AI answers through strategic content placement.</p>
+            <a href="https://adva-solutions.com/AIVisibility" class="cta-button">Learn More</a>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p>Generated by <a href="https://adva-solutions.com">Adva</a> &bull; AI Visibility Health Check</p>
+    </footer>
+
+    <script>
+        // Tab switching functionality
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const tabId = btn.dataset.tab;
+
+                // Update buttons
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                // Update panels
+                document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+                document.getElementById('panel-' + tabId).classList.add('active');
+            });
+        });
+
+        // Show toast notification
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2500);
+        }
+
+        // Format response to show top 5 + brand if mentioned beyond top 5
+        function formatResponseWithTop5(response, brand, brandPosition, isMentioned) {
+            // Try to parse numbered list items
+            const lines = response.split('<br>');
+            const numberedItems = [];
+
+            // Extract numbered items (like "1. Something" or "1) Something" or "**1. Something**")
+            for (let line of lines) {
+                const match = line.match(/^\s*\**\s*(\d+)[.\)]\s*(.+)/);
+                if (match) {
+                    const num = parseInt(match[1]);
+                    const content = match[2];
+                    numberedItems.push({ num, content, originalLine: line });
+                }
+            }
+
+            // If we found at least 5 numbered items, reconstruct with top 5 + brand
+            if (numberedItems.length >= 5) {
+                let result = '';
+
+                // Take top 5
+                const top5 = numberedItems.slice(0, 5);
+                for (let item of top5) {
+                    result += item.originalLine + '<br>';
+                }
+
+                // If brand was mentioned beyond position 5, add it as #6
+                if (isMentioned && brandPosition && brandPosition > 5) {
+                    // Find the brand's original line
+                    const brandItem = numberedItems.find(item => item.num === brandPosition);
+                    if (brandItem) {
+                        result += '<br><hr style="border: none; border-top: 1px dashed #d1d5db; margin: 1rem 0;">';
+                        result += '<div style="background: #fef3c7; padding: 0.75rem; border-radius: 6px; margin-top: 0.5rem;">';
+                        result += '<strong>📍 Your brand appeared at position #' + brandPosition + ':</strong><br>';
+                        result += brandItem.originalLine.replace(/^\s*\**\s*\d+[.\)]\s*/, '');
+                        result += '</div>';
+                    }
+                }
+
+                return result;
+            }
+
+            // Otherwise return original response
+            return response;
+        }
+
+        // Show response modal
+        function showResponse(cell) {
+            try {
+                let response = cell.dataset.response || 'No response available';
+                const question = cell.dataset.question || '';
+                const llm = cell.dataset.llm || '';
+                const brand = cell.dataset.brand || '';
+                const isMentioned = cell.classList.contains('mentioned');
+                const brandPosition = cell.dataset.position ? parseInt(cell.dataset.position) : null;
+
+                const llmNames = {'gpt4': 'GPT', 'claude': 'Claude', 'gemini': 'Gemini'};
+
+                // Format response to show top 5 + brand if beyond top 5
+                response = formatResponseWithTop5(response, brand, brandPosition, isMentioned);
+
+                // Highlight brand name in response (case insensitive)
+                if (brand && isMentioned) {
+                    try {
+                        const brandRegex = new RegExp('(' + brand.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&') + ')', 'gi');
+                        response = response.replace(brandRegex, '<span class="brand-highlight">$1</span>');
+                    } catch(e) { /* ignore highlighting errors */ }
+                }
+
+                document.getElementById('modalLlm').textContent = llmNames[llm] || llm;
+                document.getElementById('modalQuestion').textContent = '"' + question + '"';
+                document.getElementById('modalResponse').innerHTML = response;
+
+                const statusEl = document.getElementById('modalStatus');
+                if (isMentioned) {
+                    statusEl.textContent = 'Mentioned';
+                    statusEl.className = 'modal-status mentioned';
+                } else {
+                    statusEl.textContent = 'Not mentioned';
+                    statusEl.className = 'modal-status not-mentioned';
+                }
+
+                document.getElementById('responseModal').classList.add('active');
+                document.body.style.overflow = 'hidden';
+
+                // Scroll to first highlight if mentioned
+                if (isMentioned) {
+                    setTimeout(function() {
+                        const highlight = document.querySelector('.modal-response .brand-highlight');
+                        if (highlight) {
+                            highlight.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        }
+                    }, 100);
+                }
+            } catch (e) {
+                console.error('Error showing response:', e);
+                alert('Error loading response. Please try again.');
+            }
+        }
+
+        // Close modal
+        function closeModal() {
+            document.getElementById('responseModal').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // Close when clicking backdrop (outside modal content)
+        document.getElementById('responseModal').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+
+        // Close modal on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeModal();
+        });
+    </script>
+</body>
+</html>
