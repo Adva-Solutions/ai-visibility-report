@@ -50,13 +50,8 @@
             font-size: 0.875rem;
         }
 
-        /* Share link */
-        .share-link {
-            display: flex;
-            align-items: center;
-        }
-
-        .github-link {
+        /* Copy link button */
+        .copy-link-button {
             display: flex;
             align-items: center;
             gap: 0.5rem;
@@ -68,22 +63,16 @@
             font-size: 0.75rem;
             font-family: 'Inter', sans-serif;
             cursor: pointer;
-            text-decoration: none;
             transition: all 0.2s;
-            max-width: 400px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
         }
 
-        .github-link:hover {
+        .copy-link-button:hover {
             background: #e5e7eb;
         }
 
-        .github-link svg {
+        .copy-link-button svg {
             width: 14px;
             height: 14px;
-            flex-shrink: 0;
         }
 
         .pdf-button {
@@ -233,14 +222,14 @@
             align-items: center;
             justify-content: center;
             margin: 0 auto 1.5rem;
-            border: 4px solid #ef4444;
+            border: 4px solid #f59e0b;
         }
 
         .score-value {
             font-family: 'Playfair Display', Georgia, serif;
             font-size: 3rem;
             font-weight: 500;
-            color: #ef4444;
+            color: #f59e0b;
         }
 
         .score-label {
@@ -492,7 +481,7 @@
             max-width: 800px;
             width: 100%;
             max-height: 90vh;
-            overflow: hidden;
+            overflow: auto;
             display: flex;
             flex-direction: column;
             position: relative;
@@ -554,12 +543,13 @@
 
         .modal-response {
             padding: 1.5rem;
-            overflow-y: scroll;
+            overflow-y: auto;
             flex: 1;
             color: #374151;
             font-size: 0.9rem;
             line-height: 1.8;
-            height: 500px;
+            min-height: 300px;
+            max-height: 60vh;
             background: #fafafa;
             border-top: 1px solid #e5e7eb;
         }
@@ -842,14 +832,12 @@
                 </svg>
                 Download PDF
             </a>
-            <div class="share-link">
-                <a href="https://adva-solutions.github.io/ai-visibility-report/report_torel-boutiques_f5355193.html" class="github-link" onclick="navigator.clipboard.writeText(this.href); showToast('Link copied!'); return false;" title="Click to copy link">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
-                    </svg>
-                    https://adva-solutions.github.io/ai-visibility-report/report_torel-boutiques_f5355193.html
-                </a>
-            </div>
+            <button class="copy-link-button" onclick="navigator.clipboard.writeText('https://adva-solutions.github.io/ai-visibility-report/report_torel-boutiques_f5355193.html'); showToast('Link copied!');" title="Copy shareable link">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                </svg>
+                Copy Link
+            </button>
             <span class="header-date">January 28, 2026</span>
         </div>
     </header>
@@ -865,27 +853,27 @@
         <!-- Section 1: AI Visibility Score -->
         <div class="section score-section">
             <div class="score-circle">
-                <span class="score-value">0%</span>
-                <span class="score-label">0/15 mentions</span>
+                <span class="score-value">27%</span>
+                <span class="score-label">4/15 mentions</span>
             </div>
             <p class="score-description">
-                Your brand appeared in <strong>0</strong> out of <strong>15</strong> AI recommendations
+                Your brand appeared in <strong>4</strong> out of <strong>15</strong> AI recommendations
             </p>
             <div class="llm-breakdown">
                 
             <div class="llm-stat">
                 <span class="llm-name">GPT</span>
-                <span class="llm-score warning">0/5</span>
+                <span class="llm-score success">1/5</span>
             </div>
         
             <div class="llm-stat">
                 <span class="llm-name">Claude</span>
-                <span class="llm-score warning">0/5</span>
+                <span class="llm-score success">1/5</span>
             </div>
         
             <div class="llm-stat">
                 <span class="llm-name">Gemini</span>
-                <span class="llm-score warning">0/5</span>
+                <span class="llm-score success">2/5</span>
             </div>
         
             </div>
@@ -922,7 +910,7 @@
                 </td>
                 
                 <td class="llm-cell not-mentioned"
-                    data-response="Certainly! Here are my top recommendations for luxury boutique hotels in Portugal, each offering a unique experience and exceptional service:<br><br>1. **Bairro Alto Hotel, Lisbon**<br>   - Nestled in the vibrant Bairro Alto district, this five-star hotel blends traditional Portuguese charm with contemporary elegance. The rooftop terrace offers stunning views of the Tagus River and the city skyline. Guests can enjoy a refined dining experience at the restaurant, which emphasizes local and seasonal ingredients. The hotel’s design reflects the artistic heritage of Lisbon, making it a perfect choice for those who appreciate culture and style.<br><br>2. **Pousada de Cascais - Cidadela Historic Hotel & Art District, Cascais**<br>   - Set within a restored 16th-century fortress overlooking the Atlantic Ocean, this boutique hotel combines history with modern luxury. The spacious, artistically designed rooms offer beautiful views, while the hotel itself features a charming art district with galleries and shops."
+                    data-response="Certainly! Here are my top recommendations for luxury boutique hotels in Portugal, each offering a unique experience and exceptional service:<br><br>1. **Bairro Alto Hotel, Lisbon**<br>   - Nestled in the vibrant Bairro Alto district, this five-star hotel blends traditional Portuguese charm with contemporary elegance. The rooftop terrace offers stunning views of the Tagus River and the city skyline. Guests can enjoy a refined dining experience at the restaurant, which emphasizes local and seasonal ingredients. The hotel&#39;s design reflects the artistic heritage of Lisbon, making it a perfect choice for those who appreciate culture and style.<br><br>2. **Pousada de Cascais - Cidadela Historic Hotel & Art District, Cascais**<br>   - Set within a restored 16th-century fortress overlooking the Atlantic Ocean, this boutique hotel combines history with modern luxury. The spacious, artistically designed rooms offer beautiful views, while the hotel itself features a charming art district with galleries and shops."
                     data-question="Luxury boutique hotels in Portugal"
                     data-llm="gpt4"
                     data-brand="Torel Boutiques"
@@ -957,7 +945,7 @@
                 </td>
                 
                 <td class="llm-cell not-mentioned"
-                    data-response="Certainly! Here are my top recommendations for boutique hotels in Lisbon, listed in order of preference:<br><br>1. **Memmo Alfama Hotel**<br>   - **Location**: Alfama district<br>   - **Why**: This stylish hotel offers stunning views of the Tagus River and the iconic Alfama neighborhood. The design beautifully blends modern aesthetics with traditional Portuguese elements. The rooftop terrace is a highlight, perfect for enjoying a sunset cocktail, and the hotel is conveniently located near major attractions like the Lisbon Cathedral and São Jorge Castle.<br><br>2. **The Lumiares Hotel & Spa**<br>   - **Location**: Bairro Alto<br>   - **Why**: Housed in a restored 18th-century palace, The Lumiares combines luxury with a cozy atmosphere. It features beautifully designed rooms, a stunning rooftop bar, and a full-service spa. The hotel is located in the vibrant Bairro Alto area, known for its nightlife and cultural scene, making it an ideal choice for those looking to explore the city’s lively atmosphere.<br><br>3. **Ho"
+                    data-response="Certainly! Here are my top recommendations for boutique hotels in Lisbon, listed in order of preference:<br><br>1. **Memmo Alfama Hotel**<br>   - **Location**: Alfama district<br>   - **Why**: This stylish hotel offers stunning views of the Tagus River and the iconic Alfama neighborhood. The design beautifully blends modern aesthetics with traditional Portuguese elements. The rooftop terrace is a highlight, perfect for enjoying a sunset cocktail, and the hotel is conveniently located near major attractions like the Lisbon Cathedral and São Jorge Castle.<br><br>2. **The Lumiares Hotel & Spa**<br>   - **Location**: Bairro Alto<br>   - **Why**: Housed in a restored 18th-century palace, The Lumiares combines luxury with a cozy atmosphere. It features beautifully designed rooms, a stunning rooftop bar, and a full-service spa. The hotel is located in the vibrant Bairro Alto area, known for its nightlife and cultural scene, making it an ideal choice for those looking to explore the city&#39;s lively atmosphere.<br><br>3. **Ho"
                     data-question="Best boutique hotels in Lisbon"
                     data-llm="gpt4"
                     data-brand="Torel Boutiques"
@@ -974,13 +962,13 @@
                     <span class="status-icon">✗</span>
                 </td>
             
-                <td class="llm-cell not-mentioned"
-                    data-response="Okay, here are my top 5 recommendations for boutique hotels in Lisbon, based on a combination of style, location, service, and overall guest experience, listed in order of preference:<br><br>1.  **The Vintage Hotel Lisboa:** This is my top pick for its perfect blend of modern design, comfort, and a fantastic location. The design is chic and contemporary with a retro twist, hence the name. The rooms are spacious and well-appointed, and the rooftop bar and restaurant offer stunning views of the city. The service is excellent, attentive without being intrusive. Its location, near Avenida da Liberdade, offers easy access to shopping, dining, and transportation. It strikes a great balance between luxury and personality.<br><br>2.  **Memmo Alfama:** If you&#39;re looking for charm and a unique location, Memmo Alfama is hard to beat. It&#39;s situated in the heart of the Alfama district, Lisbon&#39;s oldest neighborhood, which is known for its Fado music and narrow, winding streets. The hotel itself is sleek and mod"
+                <td class="llm-cell mentioned"
+                    data-response="Okay, here are my top 5 recommendations for boutique hotels in Lisbon, based on a combination of style, location, service, and overall guest experience, listed in order of preference:<br><br>1.  **The Vintage Hotel Lisboa:** This is my top pick for its perfect blend of modern design, comfort, and a fantastic location. The design is chic and contemporary with a retro twist, hence the name. The rooms are spacious and well-appointed, and the rooftop bar and restaurant offer stunning views of the city. The service is excellent, attentive without being intrusive. Its location, near Avenida da Liberdade, offers easy access to shopping, dining, and transportation. It strikes a great balance between luxury and personality.<br><br>2.  **Memmo Alfama:** If you&#39;re looking for charm and a unique location, Memmo Alfama is hard to beat. It&#39;s situated in the heart of the Alfama district, Lisbon&#39;s oldest neighborhood, which is known for its Fado music and narrow, winding streets. The hotel itself is sleek and modern, a contrast to its historic surroundings. Its rooftop pool and terrace offer incredible views of the Tagus River. The smaller size of the hotel contributes to a more intimate and personalized experience. This hotel is perfect for those who want to immerse themselves in the authentic Lisbon experience.<br><br>3.  **Torel Palace Lisboa:** This is a stunning hotel housed in two beautifully restored historic mansions. Each room is individually decorated and dedicated to a famous Portuguese personality. The gardens are lush and inviting, and the pool offers a relaxing escape from the city bustle. The location is central but slightly off the beaten path, providing a sense of tranquility. The atmosphere is elegant and romantic, ideal for a special occasion.<br><br>4.  **Valverde Hotel:** This hotel exudes understated elegance and luxury. Located on Avenida da Liberdade, it offers a sophisticated and refined experience. The rooms are beautifully decorated with antique furniture and rich fabrics. The courtyard garden is a peaceful oasis, and the restaurant serves delicious Portuguese cuisine. The service is impeccable, and the overall atmosphere is one of quiet sophistication.<br><br>5.  **Hotel Britania - A Lisbon Heritage Collection:** For those who appreciate art deco style and a sense of history, the Hotel Britania is an excellent choice. Designed by the renowned architect Cassiano Branco in the 1940s, it retains its original charm and elegance. The location on a quiet street near Avenida da Liberdade is convenient yet peaceful. The rooms are spacious and comfortable, and the service is attentive. It offers a unique and authentic Lisbon experience.<br><br>These recommendations are based on general knowledge and reviews. It&#39;s always a good idea to check recent guest reviews and availability before making a booking. Enjoy your trip to Lisbon!<br>"
                     data-question="Best boutique hotels in Lisbon"
                     data-llm="gemini"
                     data-brand="Torel Boutiques"
                     onclick="showResponse(this)">
-                    <span class="status-icon">✗</span>
+                    <span class="status-icon">✓</span> (#3)
                 </td>
             
             </tr>
@@ -991,31 +979,31 @@
                     <span class="question-text">Unique hotels in Porto, Portugal</span>
                 </td>
                 
-                <td class="llm-cell not-mentioned"
-                    data-response="Absolutely! Here are my top recommendations for unique hotels in Porto, Portugal, listed in order of preference:<br><br>1. **The Yeatman**<br>   - **Description**: This luxurious wine hotel is located in the heart of Porto&#39;s wine region, offering stunning views of the Douro River and the city skyline. The Yeatman features elegantly designed rooms, an extensive wine cellar, and a Michelin-starred restaurant. The hotel also boasts a fantastic spa and outdoor infinity pool, making it a perfect retreat for wine lovers and those seeking relaxation.<br><br>2. **Pestana Vintage Porto**<br>   - **Description**: Situated in the historic Ribeira district, this hotel is housed in a beautifully restored 16th-century building. The Pestana Vintage Porto combines modern amenities with traditional charm, featuring rooms with breathtaking views of the river and the iconic Dom Luís I Bridge. The location is ideal for exploring the city&#39;s vibrant atmosphere, with easy access to local restaurants and attractions.<br><br>3. **Tor"
+                <td class="llm-cell mentioned"
+                    data-response="Absolutely! Here are my top recommendations for unique hotels in Porto, Portugal, listed in order of preference:<br><br>1. **The Yeatman**<br>   - **Description**: This luxurious wine hotel is located in the heart of Porto&#39;s wine region, offering stunning views of the Douro River and the city skyline. The Yeatman features elegantly designed rooms, an extensive wine cellar, and a Michelin-starred restaurant. The hotel also boasts a fantastic spa and outdoor infinity pool, making it a perfect retreat for wine lovers and those seeking relaxation.<br><br>2. **Pestana Vintage Porto**<br>   - **Description**: Situated in the historic Ribeira district, this hotel is housed in a beautifully restored 16th-century building. The Pestana Vintage Porto combines modern amenities with traditional charm, featuring rooms with breathtaking views of the river and the iconic Dom Luís I Bridge. The location is ideal for exploring the city&#39;s vibrant atmosphere, with easy access to local restaurants and attractions.<br><br>3. **Torel Avantgarde**<br>   - **Description**: This boutique hotel is an artistic haven, featuring rooms designed by different Portuguese artists. Each space is unique, with contemporary art pieces and eclectic decor that reflect the creative spirit of Portugal. The hotel also offers a lovely garden, a rooftop terrace with panoramic views, and an excellent restaurant, making it a great choice for art enthusiasts and those looking for a distinctive stay.<br><br>4. **Hotel Infante Sagres**<br>   - **Description**: A classic landmark in Porto, this hotel combines elegance with history. Located in the city center, Hotel Infante Sagres features beautifully decorated rooms with rich fabrics and antique furnishings. The hotel&#39;s bar and lounge are perfect for relaxing after a day of exploration, and its central location makes it easy to access major attractions.<br><br>5. **1872 River House**<br>   - **Description**: This charming boutique hotel is set in a converted 19th-century warehouse on the banks of the Douro River. With its stylish, modern design and stunning river views, the 1872 River House offers a unique blend of heritage and contemporary comfort. It&#39;s an excellent choice for those looking to enjoy the riverside atmosphere of Porto."
                     data-question="Unique hotels in Porto, Portugal"
                     data-llm="gpt4"
                     data-brand="Torel Boutiques"
                     onclick="showResponse(this)">
-                    <span class="status-icon">✗</span>
+                    <span class="status-icon">✓</span> (#3)
                 </td>
             
-                <td class="llm-cell not-mentioned"
+                <td class="llm-cell mentioned"
                     data-response="Here are my top 5 recommendations for unique hotels in Porto, Portugal, listed in order of preference:<br><br>1. The Yeatman Hotel:<br>This 5-star luxury hotel is located in the heart of Porto, offering stunning views of the Douro River and the historic city center. The Yeatman is known for its award-winning wine cellar, Michelin-starred restaurant, and contemporary design that blends traditional Portuguese elements with modern elegance.<br><br>2. Torel Avantgarde:<br>Torel Avantgarde is a boutique hotel located in a historic building in the Cedofeita district of Porto. This hotel offers a unique and artistic experience, with each room designed by a different Portuguese artist, showcasing the country&#39;s vibrant cultural heritage.<br><br>3. Infante Sagres:<br>Infante Sagres is a grand, historic hotel that dates back to the 1950s. It has been meticulously restored, preserving its classic Portuguese architecture and design, while offering modern amenities and impeccable service. The hotel is situated in the heart of"
                     data-question="Unique hotels in Porto, Portugal"
                     data-llm="claude"
                     data-brand="Torel Boutiques"
                     onclick="showResponse(this)">
-                    <span class="status-icon">✗</span>
+                    <span class="status-icon">✓</span> (#2)
                 </td>
             
-                <td class="llm-cell not-mentioned"
+                <td class="llm-cell mentioned"
                     data-response="Okay, here are my top 4 recommendations for unique hotels in Porto, Portugal, listed in order of preference, based on reviews, location, design, and overall experience:<br><br>**1.  Torel Avantgarde:**<br><br>*   **Why I recommend it:** This hotel is a true work of art, dedicated to celebrating the avant-garde. Each room is individually designed, inspired by a different artist or artistic movement. The public spaces are equally stunning, with sculptures, paintings, and curated furniture. It truly creates an immersive and inspiring experience. Plus, it has a fantastic rooftop bar with panoramic views and a lovely garden.<br>*   **Unique Features:** Art-focused design, individual room themes, rooftop bar with views, beautiful garden, excellent restaurant.<br>*   **Good for:** Art lovers, design enthusiasts, couples seeking a romantic getaway, or anyone looking for a truly unique and memorable stay.<br><br>**2.  Maison Albar Hotels - Le Monumental Palace:**<br><br>*   **Why I recommend it:** This hotel is the epitome "
                     data-question="Unique hotels in Porto, Portugal"
                     data-llm="gemini"
                     data-brand="Torel Boutiques"
                     onclick="showResponse(this)">
-                    <span class="status-icon">✗</span>
+                    <span class="status-icon">✓</span> (#1)
                 </td>
             
             </tr>
@@ -1027,7 +1015,7 @@
                 </td>
                 
                 <td class="llm-cell not-mentioned"
-                    data-response="The Douro Valley, known for its stunning landscapes and rich wine culture, also offers some excellent boutique hotels with wellness offerings. Here are my top recommendations:<br><br>1. **Six Senses Douro Valley**<br>   - **Overview**: This luxury boutique hotel is set in a beautifully restored 19th-century manor house surrounded by vineyards. <br>   - **Wellness Offerings**: The Six Senses Spa provides a wide range of treatments, including holistic therapies, wellness programs, and yoga sessions. They also emphasize organic and locally sourced ingredients in their treatments, enhancing the connection to the surrounding nature.<br>   - **Why It’s a Top Choice**: The combination of stunning views, luxurious accommodations, and comprehensive wellness options makes this a premier destination for relaxation and rejuvenation.<br><br>2. **Quinta Nova de Nossa Senhora do Carmo**<br>   - **Overview**: This charming wine estate and boutique hotel is nestled among the vineyards, offering a unique experience of wine tou"
+                    data-response="The Douro Valley, known for its stunning landscapes and rich wine culture, also offers some excellent boutique hotels with wellness offerings. Here are my top recommendations:<br><br>1. **Six Senses Douro Valley**<br>   - **Overview**: This luxury boutique hotel is set in a beautifully restored 19th-century manor house surrounded by vineyards. <br>   - **Wellness Offerings**: The Six Senses Spa provides a wide range of treatments, including holistic therapies, wellness programs, and yoga sessions. They also emphasize organic and locally sourced ingredients in their treatments, enhancing the connection to the surrounding nature.<br>   - **Why It&#39;s a Top Choice**: The combination of stunning views, luxurious accommodations, and comprehensive wellness options makes this a premier destination for relaxation and rejuvenation.<br><br>2. **Quinta Nova de Nossa Senhora do Carmo**<br>   - **Overview**: This charming wine estate and boutique hotel is nestled among the vineyards, offering a unique experience of wine tou"
                     data-question="Boutique hotels with wellness offerings in the Douro Valley"
                     data-llm="gpt4"
                     data-brand="Torel Boutiques"
