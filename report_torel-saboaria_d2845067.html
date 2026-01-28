@@ -1,0 +1,1356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Visibility Report - Torel Saboaria | Adva</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #ffffff;
+            min-height: 100vh;
+            color: #374151;
+            line-height: 1.6;
+        }
+
+        /* Header */
+        .header {
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            font-size: 1.25rem;
+            color: #1f2937;
+            text-decoration: none;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .header-date {
+            color: #9ca3af;
+            font-size: 0.875rem;
+        }
+
+        /* Share link */
+        .share-link {
+            display: flex;
+            align-items: center;
+        }
+
+        .github-link {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: #f3f4f6;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            color: #374151;
+            font-size: 0.75rem;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s;
+            max-width: 400px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .github-link:hover {
+            background: #e5e7eb;
+        }
+
+        .github-link svg {
+            width: 14px;
+            height: 14px;
+            flex-shrink: 0;
+        }
+
+        .pdf-button {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: #1f2937;
+            border: none;
+            border-radius: 6px;
+            color: #ffffff;
+            font-size: 0.75rem;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .pdf-button:hover {
+            background: #374151;
+        }
+
+        .pdf-button svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        /* Toast notification */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: #1f2937;
+            color: #ffffff;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            opacity: 0;
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        /* Container */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Page title */
+        .page-title {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .page-title .label {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: #9ca3af;
+            font-size: 0.75rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+        }
+
+        .page-title .label::before,
+        .page-title .label::after {
+            content: '';
+            width: 30px;
+            height: 1px;
+            background: #d1d5db;
+        }
+
+        .page-title h1 {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 2.5rem;
+            font-weight: 400;
+            color: #1f2937;
+            margin-bottom: 0.5rem;
+        }
+
+        .page-title .brand {
+            color: #6b7280;
+            font-size: 1.125rem;
+        }
+
+        /* Sections */
+        .section {
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #f3f4f6;
+        }
+
+        .section-icon {
+            width: 40px;
+            height: 40px;
+            background: #1f2937;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .section-icon svg {
+            width: 20px;
+            height: 20px;
+            color: #ffffff;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 1.375rem;
+            color: #1f2937;
+        }
+
+        /* Score Section */
+        .score-section {
+            text-align: center;
+            padding: 3rem 2rem;
+        }
+
+        .score-circle {
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            background: #fafafa;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            border: 4px solid #ef4444;
+        }
+
+        .score-value {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 3rem;
+            font-weight: 500;
+            color: #ef4444;
+        }
+
+        .score-label {
+            font-size: 0.8rem;
+            color: #9ca3af;
+        }
+
+        .score-description {
+            color: #6b7280;
+            margin-bottom: 2rem;
+            font-size: 1rem;
+        }
+
+        .score-description strong {
+            color: #1f2937;
+        }
+
+        .llm-breakdown {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .llm-stat {
+            text-align: center;
+            padding: 1rem 1.5rem;
+            background: #fafafa;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+            min-width: 100px;
+        }
+
+        .llm-name {
+            display: block;
+            color: #9ca3af;
+            font-size: 0.8rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .llm-score {
+            font-size: 1.125rem;
+            font-weight: 600;
+        }
+
+        .llm-score.success {
+            color: #22c55e;
+        }
+
+        .llm-score.warning {
+            color: #ef4444;
+        }
+
+        /* Competitor Table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 0.875rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid #f3f4f6;
+        }
+
+        th {
+            color: #9ca3af;
+            font-weight: 500;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        td {
+            color: #374151;
+        }
+
+        .mention-count {
+            background: #fef3c7;
+            color: #92400e;
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        /* Tabs for LLM responses */
+        .example-tabs {
+            margin-top: 1.5rem;
+        }
+
+        .tabs-header {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+            padding-bottom: 0;
+        }
+
+        .tab-btn {
+            padding: 0.75rem 1.25rem;
+            background: transparent;
+            border: none;
+            color: #6b7280;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            margin-bottom: -1px;
+            transition: all 0.2s;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .tab-btn:hover {
+            color: #1f2937;
+        }
+
+        .tab-btn.active {
+            color: #1f2937;
+            border-bottom-color: #1f2937;
+        }
+
+        .tab-panel {
+            display: none;
+            background: #fafafa;
+            border-radius: 8px;
+            padding: 1.25rem;
+        }
+
+        .tab-panel.active {
+            display: block;
+        }
+
+        .example-question {
+            color: #1f2937;
+            font-weight: 500;
+            font-size: 0.95rem;
+            margin-bottom: 0.75rem;
+        }
+
+        /* Question breakdown table */
+        .question-breakdown {
+            margin-top: 1rem;
+        }
+
+        .breakdown-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        .breakdown-table th {
+            padding: 0.75rem;
+            text-align: center;
+            background: #f9fafb;
+            border-bottom: 2px solid #e5e7eb;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .breakdown-table th:first-child {
+            text-align: left;
+            width: 50%;
+        }
+
+        .breakdown-table td {
+            padding: 0.75rem;
+            border-bottom: 1px solid #f3f4f6;
+            vertical-align: middle;
+        }
+
+        .question-cell {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+        }
+
+        .question-num {
+            background: #e5e7eb;
+            color: #374151;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        .question-text {
+            color: #374151;
+            line-height: 1.4;
+        }
+
+        .llm-cell {
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-radius: 4px;
+        }
+
+        .llm-cell:hover {
+            background: #f3f4f6;
+        }
+
+        .llm-cell.mentioned {
+            color: #16a34a;
+        }
+
+        .llm-cell.mentioned .status-icon {
+            font-size: 1.25rem;
+        }
+
+        .llm-cell.not-mentioned {
+            color: #dc2626;
+        }
+
+        .llm-cell.not-mentioned .status-icon {
+            font-size: 1.25rem;
+        }
+
+        .breakdown-hint {
+            color: #9ca3af;
+            font-size: 0.8rem;
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+        /* Response modal */
+        .response-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+        }
+
+        .response-modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: #ffffff;
+            border-radius: 12px;
+            max-width: 800px;
+            width: 100%;
+            max-height: 90vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #9ca3af;
+            cursor: pointer;
+            padding: 0.25rem 0.5rem;
+        }
+
+        .modal-close:hover {
+            color: #374151;
+        }
+
+        .modal-header {
+            padding: 1.5rem 1.5rem 0;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            position: relative;
+        }
+
+        .modal-llm {
+            font-weight: 600;
+            color: #1f2937;
+            font-size: 1.1rem;
+        }
+
+        .modal-status {
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .modal-status.mentioned {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .modal-status.not-mentioned {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .modal-question {
+            padding: 1rem 1.5rem;
+            color: #6b7280;
+            font-size: 0.9rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .modal-response {
+            padding: 1.5rem;
+            overflow-y: scroll;
+            flex: 1;
+            color: #374151;
+            font-size: 0.9rem;
+            line-height: 1.8;
+            height: 500px;
+            background: #fafafa;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .modal-response::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .modal-response::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        .modal-response::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 4px;
+        }
+
+        .modal-response::-webkit-scrollbar-thumb:hover {
+            background: #a1a1a1;
+        }
+
+        /* Brand highlight */
+        .brand-highlight {
+            background: linear-gradient(120deg, #fef08a 0%, #fde047 100%);
+            padding: 0.1rem 0.3rem;
+            border-radius: 3px;
+            font-weight: 600;
+        }
+
+        .example-content {
+            color: #6b7280;
+            font-size: 0.875rem;
+            line-height: 1.7;
+            max-height: 400px;
+            overflow-y: auto;
+            margin-bottom: 0.75rem;
+            padding: 1rem;
+            background: #f9fafb;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .example-status {
+            padding: 0.5rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            display: inline-block;
+        }
+
+        .example-status.mentioned {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .example-status.not-mentioned {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        /* Reddit Posts */
+        .reddit-posts {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .reddit-post {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: #fafafa;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: all 0.2s;
+            border: 1px solid transparent;
+        }
+
+        .reddit-post:hover {
+            background: #f3f4f6;
+            border-color: #e5e7eb;
+        }
+
+        .post-icon {
+            width: 40px;
+            height: 40px;
+            background: #1f2937;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .post-icon.pain {
+            background: #fef3c7;
+        }
+
+        .post-icon.pain svg {
+            color: #92400e;
+        }
+
+        .post-icon svg {
+            width: 20px;
+            height: 20px;
+            color: #ffffff;
+        }
+
+        .post-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .post-title {
+            color: #1f2937;
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .post-meta {
+            color: #9ca3af;
+            font-size: 0.8rem;
+        }
+
+        .post-arrow {
+            color: #9ca3af;
+            flex-shrink: 0;
+        }
+
+        .post-arrow svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .subsection-title {
+            color: #1f2937;
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin: 1.5rem 0 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .subsection-title:first-of-type {
+            margin-top: 0;
+        }
+
+        .subsection-desc {
+            color: #9ca3af;
+            font-size: 0.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .no-data {
+            color: #9ca3af;
+            font-style: italic;
+            text-align: center;
+            padding: 1rem;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            color: #9ca3af;
+            font-size: 0.8rem;
+            padding: 2rem;
+            border-top: 1px solid #e5e7eb;
+            margin-top: 2rem;
+        }
+
+        .footer a {
+            color: #1f2937;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* CTA */
+        .cta-section {
+            text-align: center;
+            padding: 3rem 2rem;
+            background: #fafafa;
+        }
+
+        .cta-section h2 {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 1.75rem;
+            color: #1f2937;
+            margin-bottom: 0.75rem;
+        }
+
+        .cta-section p {
+            color: #6b7280;
+            margin-bottom: 1.5rem;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background: #1f2937;
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .cta-button:hover {
+            background: #111827;
+            transform: translateY(-1px);
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .page-title h1 {
+                font-size: 1.75rem;
+            }
+
+            .section {
+                padding: 1.5rem;
+            }
+
+            .score-circle {
+                width: 130px;
+                height: 130px;
+            }
+
+            .score-value {
+                font-size: 2.25rem;
+            }
+
+            .llm-breakdown {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .tabs-header {
+                flex-wrap: wrap;
+            }
+
+            .tab-btn {
+                padding: 0.5rem 1rem;
+                font-size: 0.8rem;
+            }
+
+            .breakdown-table th,
+            .breakdown-table td {
+                padding: 0.5rem;
+                font-size: 0.8rem;
+            }
+
+            .question-cell {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .modal-content {
+                max-height: 90vh;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <a href="https://adva-solutions.com/AIVisibility" class="logo">adva</a>
+        <div class="header-right">
+            <a href="/report/d2845067/pdf" class="pdf-button" title="Download as PDF">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                Download PDF
+            </a>
+            <div class="share-link">
+                <a href="https://adva-solutions.github.io/ai-visibility-report/report_torel-saboaria_d2845067.html" class="github-link" onclick="navigator.clipboard.writeText(this.href); showToast('Link copied!'); return false;" title="Click to copy link">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                    </svg>
+                    https://adva-solutions.github.io/ai-visibility-report/report_torel-saboaria_d2845067.html
+                </a>
+            </div>
+            <span class="header-date">January 28, 2026</span>
+        </div>
+    </header>
+    <div class="toast" id="toast">Link copied to clipboard!</div>
+
+    <div class="container">
+        <div class="page-title">
+            <div class="label">AI Visibility Report</div>
+            <h1>Your Brand's <em>AI Presence</em></h1>
+            <p class="brand">Analysis for Torel Saboaria</p>
+        </div>
+
+        <!-- Section 1: AI Visibility Score -->
+        <div class="section score-section">
+            <div class="score-circle">
+                <span class="score-value">0%</span>
+                <span class="score-label">0/15 mentions</span>
+            </div>
+            <p class="score-description">
+                Your brand appeared in <strong>0</strong> out of <strong>15</strong> AI recommendations
+            </p>
+            <div class="llm-breakdown">
+                
+            <div class="llm-stat">
+                <span class="llm-name">GPT</span>
+                <span class="llm-score warning">0/5</span>
+            </div>
+        
+            <div class="llm-stat">
+                <span class="llm-name">Claude</span>
+                <span class="llm-score warning">0/5</span>
+            </div>
+        
+            <div class="llm-stat">
+                <span class="llm-name">Gemini</span>
+                <span class="llm-score warning">0/5</span>
+            </div>
+        
+            </div>
+        </div>
+
+        <!-- Section 2: AI Response Breakdown -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                    </svg>
+                </div>
+                <h2 class="section-title">Question-by-Question Breakdown</h2>
+            </div>
+            <p style="color: #6b7280; margin-bottom: 1rem;">We asked these 5 questions to each AI model. Click any cell to see the full response:</p>
+            
+        <div class="question-breakdown">
+            <table class="breakdown-table">
+                <thead>
+                    <tr>
+                        <th>Question Asked</th>
+                        <th>GPT</th>
+                        <th>Claude</th>
+                        <th>Gemini</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q1</span>
+                    <span class="question-text">boutique hotels in porto portugal</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="Certainly! Here are my top recommendations for boutique hotels in Porto, Portugal, each offering a unique charm and experience:<br><br>1. **Torel Avantgarde**<br>   - **Description**: This contemporary boutique hotel is perched on a hillside, providing stunning views of the Douro River. The design is inspired by art and culture, with each room uniquely decorated. The hotel features a beautiful garden, a rooftop terrace, and a lovely pool area. The on-site restaurant serves local cuisine with a modern twist, making it a perfect retreat for art and design lovers.<br><br>2. **Casa do Rio**<br>   - **Description**: Located near the iconic Dom Luís I Bridge, Casa do Rio is a charming boutique hotel with a distinct character. It offers cozy, well-appointed rooms that blend traditional Portuguese architecture with modern comforts. The hotel is ideal for exploring the Ribeira district and has a lovely terrace where guests can enjoy meals with picturesque views of the river and city.<br><br>3. **Hotel Infante Sagres**"
+                    data-question="boutique hotels in porto portugal"
+                    data-llm="gpt4"
+                    data-brand="Torel Saboaria"
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top 5 boutique hotel recommendations in Porto, Portugal, listed in order of preference:<br><br>1. The Yeatman Hotel: This luxurious 5-star boutique hotel offers stunning views of the Douro River and the historic city of Porto. It features a renowned Michelin-starred restaurant, an impressive wine cellar, and a world-class spa. The Yeatman&#39;s elegant design, exceptional service, and prime location make it a standout choice for a memorable stay in Porto.<br><br>2. Torel Palace: Housed in a beautifully restored 19th-century palace, Torel Palace is a charming boutique hotel that combines historic charm with modern amenities. Each room is uniquely designed, and the hotel boasts a lovely garden, an outdoor pool, and a cozy lounge area. The hotel&#39;s central location makes it an ideal base for exploring the city.<br><br>3. The Passenger Hostel: While not a traditional hotel, The Passenger Hostel offers a unique boutique-style experience. This design-focused hostel features stylish private rooms and sh"
+                    data-question="boutique hotels in porto portugal"
+                    data-llm="claude"
+                    data-brand="Torel Saboaria"
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Okay, here are 5 boutique hotel recommendations in Porto, Portugal, ordered by my (subjective) preference, with brief explanations:<br><br>**1.  Torel Avantgarde:**<br><br>*   **Why it&#39;s great:** This hotel truly feels like a gallery. It&#39;s design-focused, celebrating the world of art and artists. Each room is inspired by a different artist, giving it a unique and luxurious touch. It has a fantastic location near the Douro River, offering stunning views. The rooftop pool and bar are a major plus, and the overall vibe is sophisticated yet relaxed. The service is also consistently praised. It strikes a perfect balance between art, design, and comfort.<br><br>**2.  Rosa Et Al Townhouse:**<br><br>*   **Why it&#39;s great:** This is a beautifully restored townhouse with a stylish, contemporary design. It feels more like staying in a very chic friend&#39;s home than a traditional hotel. They prioritize a personal and welcoming atmosphere. The rooms are elegantly decorated, and the garden is a tranquil oasis. They also have "
+                    data-question="boutique hotels in porto portugal"
+                    data-llm="gemini"
+                    data-brand="Torel Saboaria"
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q2</span>
+                    <span class="question-text">luxury hotels in porto with unique experiences</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="Certainly! Here are my top recommendations for luxury hotels in Porto that offer unique experiences:<br><br>### 1. **The Yeatman**<br>Located in the heart of Vila Nova de Gaia, The Yeatman is a luxurious wine hotel that offers stunning views of Porto across the Douro River. Its unique experience includes a world-class wine cellar with an extensive selection of Portuguese wines. Guests can enjoy wine tastings, vineyard tours, and even wine-pairing dinners at the hotel’s Michelin-starred restaurant. The exquisite spa, featuring wine therapies, enhances the overall indulgence.<br><br>### 2. **Pestana Palácio do Freixo**<br>This stunning hotel is housed in an 18th-century baroque palace and is set along the Douro River. The Pestana Palácio do Freixo combines history with luxury, offering beautifully designed rooms that reflect the palace&#39;s grandeur. Unique experiences include guided tours of the palace grounds, relaxing by the infinity pool overlooking the river, and enjoying the exquisite cuisine at the on"
+                    data-question="luxury hotels in porto with unique experiences"
+                    data-llm="gpt4"
+                    data-brand="Torel Saboaria"
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top 5 recommendations for luxury hotels in Porto, Portugal with unique experiences:<br><br>1. The Yeatman Hotel:<br>This 5-star hotel is situated on the south bank of the Douro River, offering stunning views of Porto&#39;s historic city center. The Yeatman is known for its award-winning wine cellar, which houses over 25,000 bottles of Portuguese wine. Guests can enjoy wine tastings, wine-pairing dinners, and even private wine blending experiences.<br><br>2. Six Senses Douro Valley:<br>Located in the heart of the Douro Valley, this luxury resort offers a serene and rejuvenating experience. Guests can indulge in the hotel&#39;s world-class spa, which features treatments inspired by the region&#39;s natural resources. The hotel also offers unique experiences such as private boat tours along the Douro River and guided hikes through the vineyards.<br><br>3. Pestana Palácio do Freixo:<br>This 18th-century palace has been transformed into a luxurious hotel, offering guests a glimpse into Porto&#39;s rich history. The hotel"
+                    data-question="luxury hotels in porto with unique experiences"
+                    data-llm="claude"
+                    data-brand="Torel Saboaria"
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Okay, here are my top 3 recommendations for luxury hotels in Porto offering unique experiences, ranked in order of preference, along with brief explanations:<br><br>**1. The Yeatman Hotel:**<br><br>*   **Why it&#39;s Unique:** This is *the* wine hotel in Porto.  It boasts stunning panoramic views of the Douro River and the historic Ribeira district. Its entire design and ethos revolve around Portuguese wine. Each room is sponsored by a different Portuguese wine producer, so the decor and amenities are tied to that wine region.<br>*   **Unique Experiences:**  Wine cellar tours and tastings are a must.  The hotel offers a vast selection of wine experiences, from introductory courses to masterclasses. Their Vinothérapie spa by Caudalie uses grape-based products for treatments. The Michelin-starred restaurant offers exquisite wine pairings. You can even relax in an outdoor infinity pool shaped like a decanter.<br>*   **Overall:**  If you&#39;re a wine enthusiast looking for the ultimate immersive experience, The Ye"
+                    data-question="luxury hotels in porto with unique experiences"
+                    data-llm="gemini"
+                    data-brand="Torel Saboaria"
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q3</span>
+                    <span class="question-text">hotels in porto that celebrate local craftsmanship</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="Certainly! Here are my top recommendations for hotels in Porto that celebrate local craftsmanship:<br><br>### 1. **Torel Avantgarde**<br>Torel Avantgarde is a boutique hotel that beautifully blends contemporary design with traditional Portuguese craftsmanship. Each room is uniquely decorated with local artwork and handcrafted furnishings, showcasing the talents of local artisans. The hotel also features a rooftop terrace with stunning views of the Douro River, and its commitment to local culture is evident throughout the property.<br><br>### 2. **Pestana Vintage Porto**<br>Situated in the historic Ribeira district, Pestana Vintage Porto is housed in a restored 16th-century building. The hotel combines modern luxury with elements of traditional Portuguese architecture and design. The interiors feature handcrafted details and local art, creating a warm and inviting atmosphere. Guests can enjoy views of the river and the city&#39;s iconic architecture, immersing themselves in Porto&#39;s rich cultural heritage.<br><br>#"
+                    data-question="hotels in porto that celebrate local craftsmanship"
+                    data-llm="gpt4"
+                    data-brand="Torel Saboaria"
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top 5 recommendations for hotels in Porto that celebrate local craftsmanship, listed in order of preference:<br><br>1. The Yeatman Hotel:<br>This luxurious hotel is known for its stunning design that showcases the rich heritage of Porto. The interiors feature an impressive collection of Portuguese art and antiques, as well as custom-made furniture and textiles that highlight the skill of local artisans. The hotel&#39;s wine cellar and restaurant also celebrate the region&#39;s renowned wine and culinary traditions.<br><br>2. The Infante Sagres:<br>This historic hotel has been beautifully restored to preserve its original early 20th-century charm. The interiors are adorned with intricate tilework, hand-carved wood furnishings, and other traditional Portuguese crafts. Guests can also enjoy the hotel&#39;s art gallery, which features rotating exhibitions of work by local artists and artisans.<br><br>3. Torel Palace:<br>Torel Palace is a boutique hotel housed in a stunning 19th-century palace. The interiors showcase"
+                    data-question="hotels in porto that celebrate local craftsmanship"
+                    data-llm="claude"
+                    data-brand="Torel Saboaria"
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Okay, here are my top recommendations for hotels in Porto that celebrate local craftsmanship, ordered by preference, keeping in mind that &quot;celebrating local craftsmanship&quot; can manifest in different ways (e.g., incorporating local materials, showcasing local artists, supporting local businesses, etc.):<br><br>**1.  Rosa et Al Townhouse (Highly Recommended)**<br><br>*   **Why:** This guesthouse is a haven for design lovers.  Rosa et Al Townhouse truly embodies the spirit of local craftsmanship. They feature handcrafted furniture and decor made by Portuguese artisans, with many pieces created specifically for the hotel. The hotel showcases local artists and designers through rotating exhibitions and collaborates with local craftspeople to offer workshops and experiences for guests. They also prioritize using locally sourced materials and products throughout the property. It&#39;s a beautifully curated space that feels both stylish and authentic.  Plus, the location is excellent for exploring the city.<br><br>*"
+                    data-question="hotels in porto that celebrate local craftsmanship"
+                    data-llm="gemini"
+                    data-brand="Torel Saboaria"
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q4</span>
+                    <span class="question-text">where to stay in porto to experience portuguese culture</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="Certainly! Porto is a vibrant city rich in culture, history, and stunning architecture. Here are my top recommendations for places to stay, each offering a unique experience that immerses you in Portuguese culture:<br><br>### 1. **Ribeira District (Cais da Ribeira)**<br>   - **Why Stay Here:** The Ribeira District is the historic heart of Porto, characterized by its colorful houses, riverside cafes, and bustling atmosphere. Staying here offers immediate access to traditional Portuguese culture, including local markets, street performances, and fado music venues.<br>   - **Cultural Highlights:** Enjoy views of the Douro River, visit the iconic Dom Luís I Bridge, and explore the nearby São Francisco Church, known for its stunning baroque interior.<br><br>### 2. **Cedofeita**<br>   - **Why Stay Here:** Cedofeita is a neighborhood that blends traditional and contemporary culture. It’s less touristy, allowing for a more authentic experience. You&#39;ll find local boutiques, art galleries, and quaint cafés that refl"
+                    data-question="where to stay in porto to experience portuguese culture"
+                    data-llm="gpt4"
+                    data-brand="Torel Saboaria"
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top 5 recommendations for where to stay in Porto to experience Portuguese culture:<br><br>1. Ribeira District: This historic riverside neighborhood is considered the heart of Porto&#39;s old town. Stay in one of the charming guesthouses or small hotels in this UNESCO World Heritage site to immerse yourself in the traditional architecture, lively plazas, and vibrant local culture.<br><br>2. Cedofeita District: This trendy, artsy district is known for its independent shops, cafes, and galleries. It&#39;s a great base to explore Porto&#39;s thriving creative scene and experience the city&#39;s contemporary cultural vibe.<br><br>3. Miragaia District: This quiet, residential area along the Douro River offers a more authentic, local experience. Wander the narrow streets, visit small family-owned businesses, and get a feel for everyday Portuguese life.<br><br>4. Foz do Douro: Located at the mouth of the Douro River, this affluent coastal neighborhood has a more relaxed, seaside atmosphere. Stay here to enjoy Porto&#39;s nat"
+                    data-question="where to stay in porto to experience portuguese culture"
+                    data-llm="claude"
+                    data-brand="Torel Saboaria"
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Okay, here are my top 5 recommendations for places to stay in Porto that will immerse you in Portuguese culture, ordered from my top pick down:<br><br>**1.  Ribeira (specifically near Praça da Ribeira):**<br><br>*   **Why:** This is the heart of the historical city center, a UNESCO World Heritage site. Staying here means you&#39;re surrounded by traditional architecture, cobblestone streets, and the vibrant energy of Porto. You&#39;ll be steps away from iconic landmarks like the Dom Luís I Bridge, wine cellars across the Douro River in Vila Nova de Gaia, and countless restaurants serving authentic Portuguese cuisine. The atmosphere is lively and you&#39;ll constantly be interacting with locals and other travelers.<br>*   **Cultural Experience:**  Live music, street performers, the smell of grilling sardines, the sounds of Portuguese being spoken all around you - it&#39;s a full sensory immersion. You can easily take a Rabelo boat trip on the Douro, which were traditionally used to transport Port wine.<br>*   **Consider"
+                    data-question="where to stay in porto to experience portuguese culture"
+                    data-llm="gemini"
+                    data-brand="Torel Saboaria"
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q5</span>
+                    <span class="question-text">best hotels in porto for a sensory-focused vacation</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="Certainly! Here are my top recommendations for hotels in Porto that focus on providing a sensory-rich experience, enhancing your stay with unique atmospheres, delicious dining, and beautiful surroundings. <br><br>### 1. **The Yeatman**<br>   - **Overview**: This luxury wine hotel boasts stunning views of the Douro River and the Porto skyline, making it a feast for the eyes. The Yeatman is also renowned for its extensive wine cellar and gourmet dining options.<br>   - **Sensory Focus**: Indulge in wine tastings and pairings that highlight the rich terroir of the Douro Valley. The spa offers treatments using local products, and the rooftop infinity pool provides both visual and tactile relaxation as you soak in the view.<br><br>### 2. **Pestana Palácio do Freixo**<br>   - **Overview**: Set in a restored 18th-century baroque palace, this hotel combines historical charm with modern luxury. It’s located on the banks of the Douro River, surrounded by beautiful gardens and scenic views.<br>   - **Sensory Focus**: Th"
+                    data-question="best hotels in porto for a sensory-focused vacation"
+                    data-llm="gpt4"
+                    data-brand="Torel Saboaria"
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top 5 recommendations for the best hotels in Porto, Portugal for a sensory-focused vacation, listed in order of preference:<br><br>1. The Yeatman Hotel:<br>   - This luxurious hotel offers stunning views of the Douro River and the historic city of Porto.<br>   - The Yeatman has a world-class spa that focuses on treatments using local ingredients and techniques, providing a truly immersive sensory experience.<br>   - The hotel&#39;s Michelin-starred restaurant, also named The Yeatman, offers an exceptional dining experience with a focus on the flavors of the Douro Valley.<br><br>2. Pestana Vintage Porto:<br>   - Located in the heart of Porto&#39;s UNESCO World Heritage-listed historic center, this hotel is housed in a beautifully restored 16th-century building.<br>   - The hotel&#39;s design and decor pay homage to Porto&#39;s rich history and culture, creating a captivating sensory atmosphere.<br>   - Guests can enjoy the hotel&#39;s rooftop terrace, which offers panoramic views of the city and the Douro River.<br><br>3. Torel A"
+                    data-question="best hotels in porto for a sensory-focused vacation"
+                    data-llm="claude"
+                    data-brand="Torel Saboaria"
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Okay, here are my top 3 recommendations for hotels in Porto focusing on sensory experiences, followed by brief explanations. I&#39;ve prioritized hotels with thoughtful design, exceptional service, and unique offerings that stimulate the senses in a positive and memorable way.<br><br>**Top Recommendations for a Sensory-Focused Vacation in Porto:**<br><br>1.  **Torel Avantgarde:** (My Top Pick)<br><br>    *   **Why:** This hotel is a celebration of art and design, making it a feast for the eyes. Each room is individually decorated, inspired by an avant-garde artist, with unique color palettes, textures, and furniture. The hotel boasts stunning views of the Douro River and Vila Nova de Gaia, offering a visual treat. The outdoor pool and garden provide a tranquil space for relaxation, and the restaurant offers sophisticated Portuguese cuisine with an emphasis on fresh, seasonal ingredients. The hotel&#39;s dedication to art extends to curated exhibitions and events, further enhancing the sensory experience. The se"
+                    data-question="best hotels in porto for a sensory-focused vacation"
+                    data-llm="gemini"
+                    data-brand="Torel Saboaria"
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+                </tbody>
+            </table>
+            <p class="breakdown-hint">Click any cell to see the full AI response</p>
+        </div>
+
+        <!-- Response modal -->
+        <div class="response-modal" id="responseModal">
+            <div class="modal-content" onclick="event.stopPropagation()">
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+                <div class="modal-header">
+                    <span class="modal-llm" id="modalLlm"></span>
+                    <span class="modal-status" id="modalStatus"></span>
+                </div>
+                <div class="modal-question" id="modalQuestion"></div>
+                <div class="modal-response" id="modalResponse"></div>
+            </div>
+        </div>
+    
+        </div>
+
+        <!-- Section 3: Reddit Opportunities -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <h2 class="section-title">Reddit Opportunities</h2>
+            </div>
+
+            <div class="subsection-title">Buy Intent Conversations</div>
+            <p class="subsection-desc">People actively looking for recommendations in your category</p>
+            <div class="reddit-posts">
+                
+            <a href="https://www.reddit.com/r/FATTravel/comments/1qjgt1j/hotel_porto_portugal/" target="_blank" class="reddit-post">
+                <div class="post-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">Hotel Porto Portugal : r/FATTravel</div>
+                    <div class="post-meta">
+                        r/FATTravel &bull; 71K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            <a href="https://www.reddit.com/r/chubbytravel/comments/1qkwa1g/lisbon_and_porto_recs/" target="_blank" class="reddit-post">
+                <div class="post-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">Lisbon and Porto recs : r/chubbytravel</div>
+                    <div class="post-meta">
+                        r/chubbytravel &bull; 68K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            <a href="https://www.reddit.com/r/DestinationWeddings/comments/1qn1fst/looking_for_portugal_and_spain_wedding_venue/" target="_blank" class="reddit-post">
+                <div class="post-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">Looking for Portugal and Spain Wedding Venue ...</div>
+                    <div class="post-meta">
+                        r/DestinationWeddings &bull; 5K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            <a href="https://www.reddit.com/r/PuertoRicoTravel/" target="_blank" class="reddit-post">
+                <div class="post-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">Puerto Rico Travel Advice</div>
+                    <div class="post-meta">
+                        r/PuertoRicoTravel &bull; 758K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            </div>
+
+            <div class="subsection-title">Pain Point Conversations</div>
+            <p class="subsection-desc">People discussing problems your product solves</p>
+            <div class="reddit-posts">
+                
+            <a href="https://www.reddit.com/r/Europetravel/comments/1qnib39/portugal_spain_1week_itinerary_review_for_a_solo/" target="_blank" class="reddit-post">
+                <div class="post-icon pain">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">Portugal & Spain 1-week itinerary review for a solo traveller</div>
+                    <div class="post-meta">
+                        r/Europetravel &bull; 1.9M members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            <a href="https://www.reddit.com/r/honeymoonplanning/comments/1qja0sk/honeymoon_destination_advice/" target="_blank" class="reddit-post">
+                <div class="post-icon pain">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">Honeymoon destination advice? : r/honeymoonplanning</div>
+                    <div class="post-meta">
+                        r/honeymoonplanning &bull; 19K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            </div>
+        </div>
+
+        <!-- CTA Section -->
+        <div class="section cta-section">
+            <h2>Ready to improve your <em>AI visibility?</em></h2>
+            <p>We help brands get mentioned more in AI answers through strategic content placement.</p>
+            <a href="https://adva-solutions.com/AIVisibility" class="cta-button">Learn More</a>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p>Generated by <a href="https://adva-solutions.com">Adva</a> &bull; AI Visibility Health Check</p>
+    </footer>
+
+    <script>
+        // Tab switching functionality
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const tabId = btn.dataset.tab;
+
+                // Update buttons
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                // Update panels
+                document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+                document.getElementById('panel-' + tabId).classList.add('active');
+            });
+        });
+
+        // Show toast notification
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2500);
+        }
+
+        // Show response modal
+        function showResponse(cell) {
+            try {
+                let response = cell.dataset.response || 'No response available';
+                const question = cell.dataset.question || '';
+                const llm = cell.dataset.llm || '';
+                const brand = cell.dataset.brand || '';
+                const isMentioned = cell.classList.contains('mentioned');
+
+                const llmNames = {'gpt4': 'GPT', 'claude': 'Claude', 'gemini': 'Gemini'};
+
+                // Highlight brand name in response (case insensitive)
+                if (brand && isMentioned) {
+                    try {
+                        const brandRegex = new RegExp('(' + brand.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&') + ')', 'gi');
+                        response = response.replace(brandRegex, '<span class="brand-highlight">$1</span>');
+                    } catch(e) { /* ignore highlighting errors */ }
+                }
+
+                document.getElementById('modalLlm').textContent = llmNames[llm] || llm;
+                document.getElementById('modalQuestion').textContent = '"' + question + '"';
+                document.getElementById('modalResponse').innerHTML = response;
+
+                const statusEl = document.getElementById('modalStatus');
+                if (isMentioned) {
+                    statusEl.textContent = 'Mentioned';
+                    statusEl.className = 'modal-status mentioned';
+                } else {
+                    statusEl.textContent = 'Not mentioned';
+                    statusEl.className = 'modal-status not-mentioned';
+                }
+
+                document.getElementById('responseModal').classList.add('active');
+                document.body.style.overflow = 'hidden';
+
+                // Scroll to first highlight if mentioned
+                if (isMentioned) {
+                    setTimeout(function() {
+                        const highlight = document.querySelector('.modal-response .brand-highlight');
+                        if (highlight) {
+                            highlight.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        }
+                    }, 100);
+                }
+            } catch (e) {
+                console.error('Error showing response:', e);
+                alert('Error loading response. Please try again.');
+            }
+        }
+
+        // Close modal
+        function closeModal() {
+            document.getElementById('responseModal').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // Close when clicking backdrop (outside modal content)
+        document.getElementById('responseModal').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+
+        // Close modal on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeModal();
+        });
+    </script>
+</body>
+</html>
