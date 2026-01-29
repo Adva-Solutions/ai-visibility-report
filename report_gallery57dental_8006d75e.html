@@ -1,0 +1,1368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Visibility Report - Gallery57Dental | Adva</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #ffffff;
+            min-height: 100vh;
+            color: #374151;
+            line-height: 1.6;
+        }
+
+        /* Header */
+        .header {
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            font-size: 1.25rem;
+            color: #1f2937;
+            text-decoration: none;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .header-date {
+            color: #9ca3af;
+            font-size: 0.875rem;
+        }
+
+        /* Copy link button */
+        .copy-link-button {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: #f3f4f6;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            color: #374151;
+            font-size: 0.75rem;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .copy-link-button:hover {
+            background: #e5e7eb;
+        }
+
+        .copy-link-button svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        .pdf-button {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: #1f2937;
+            border: none;
+            border-radius: 6px;
+            color: #ffffff;
+            font-size: 0.75rem;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .pdf-button:hover {
+            background: #374151;
+        }
+
+        .pdf-button svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        /* Toast notification */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: #1f2937;
+            color: #ffffff;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            opacity: 0;
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        /* Container */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Page title */
+        .page-title {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .page-title .label {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: #9ca3af;
+            font-size: 0.75rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+        }
+
+        .page-title .label::before,
+        .page-title .label::after {
+            content: '';
+            width: 30px;
+            height: 1px;
+            background: #d1d5db;
+        }
+
+        .page-title h1 {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 2.5rem;
+            font-weight: 400;
+            color: #1f2937;
+            margin-bottom: 0.5rem;
+        }
+
+        .page-title .brand {
+            color: #6b7280;
+            font-size: 1.125rem;
+        }
+
+        /* Sections */
+        .section {
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #f3f4f6;
+        }
+
+        .section-icon {
+            width: 40px;
+            height: 40px;
+            background: #1f2937;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .section-icon svg {
+            width: 20px;
+            height: 20px;
+            color: #ffffff;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 1.375rem;
+            color: #1f2937;
+        }
+
+        /* Score Section */
+        .score-section {
+            text-align: center;
+            padding: 3rem 2rem;
+        }
+
+        .score-circle {
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            background: #fafafa;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            border: 4px solid #ef4444;
+        }
+
+        .score-value {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 3rem;
+            font-weight: 500;
+            color: #ef4444;
+        }
+
+        .score-label {
+            font-size: 0.8rem;
+            color: #9ca3af;
+        }
+
+        .score-description {
+            color: #6b7280;
+            margin-bottom: 2rem;
+            font-size: 1rem;
+        }
+
+        .score-description strong {
+            color: #1f2937;
+        }
+
+        .llm-breakdown {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .llm-stat {
+            text-align: center;
+            padding: 1rem 1.5rem;
+            background: #fafafa;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+            min-width: 100px;
+        }
+
+        .llm-name {
+            display: block;
+            color: #9ca3af;
+            font-size: 0.8rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .llm-score {
+            font-size: 1.125rem;
+            font-weight: 600;
+        }
+
+        .llm-score.success {
+            color: #22c55e;
+        }
+
+        .llm-score.warning {
+            color: #ef4444;
+        }
+
+        /* Competitor Table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 0.875rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid #f3f4f6;
+        }
+
+        th {
+            color: #9ca3af;
+            font-weight: 500;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        td {
+            color: #374151;
+        }
+
+        .mention-count {
+            background: #fef3c7;
+            color: #92400e;
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        /* Tabs for LLM responses */
+        .example-tabs {
+            margin-top: 1.5rem;
+        }
+
+        .tabs-header {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+            padding-bottom: 0;
+        }
+
+        .tab-btn {
+            padding: 0.75rem 1.25rem;
+            background: transparent;
+            border: none;
+            color: #6b7280;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            margin-bottom: -1px;
+            transition: all 0.2s;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .tab-btn:hover {
+            color: #1f2937;
+        }
+
+        .tab-btn.active {
+            color: #1f2937;
+            border-bottom-color: #1f2937;
+        }
+
+        .tab-panel {
+            display: none;
+            background: #fafafa;
+            border-radius: 8px;
+            padding: 1.25rem;
+        }
+
+        .tab-panel.active {
+            display: block;
+        }
+
+        .example-question {
+            color: #1f2937;
+            font-weight: 500;
+            font-size: 0.95rem;
+            margin-bottom: 0.75rem;
+        }
+
+        /* Question breakdown table */
+        .question-breakdown {
+            margin-top: 1rem;
+        }
+
+        .breakdown-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        .breakdown-table th {
+            padding: 0.75rem;
+            text-align: center;
+            background: #f9fafb;
+            border-bottom: 2px solid #e5e7eb;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .breakdown-table th:first-child {
+            text-align: left;
+            width: 50%;
+        }
+
+        .breakdown-table td {
+            padding: 0.75rem;
+            border-bottom: 1px solid #f3f4f6;
+            vertical-align: middle;
+        }
+
+        .question-cell {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+        }
+
+        .question-num {
+            background: #e5e7eb;
+            color: #374151;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        .question-text {
+            color: #374151;
+            line-height: 1.4;
+        }
+
+        .llm-cell {
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-radius: 4px;
+        }
+
+        .llm-cell:hover {
+            background: #f3f4f6;
+        }
+
+        .llm-cell.mentioned {
+            color: #16a34a;
+        }
+
+        .llm-cell.mentioned .status-icon {
+            font-size: 1.25rem;
+        }
+
+        .llm-cell.not-mentioned {
+            color: #dc2626;
+        }
+
+        .llm-cell.not-mentioned .status-icon {
+            font-size: 1.25rem;
+        }
+
+        .breakdown-hint {
+            color: #9ca3af;
+            font-size: 0.8rem;
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+        /* Response modal */
+        .response-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+        }
+
+        .response-modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: #ffffff;
+            border-radius: 12px;
+            max-width: 800px;
+            width: 100%;
+            max-height: 90vh;
+            overflow: auto;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #9ca3af;
+            cursor: pointer;
+            padding: 0.25rem 0.5rem;
+        }
+
+        .modal-close:hover {
+            color: #374151;
+        }
+
+        .modal-header {
+            padding: 1.5rem 1.5rem 0;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            position: relative;
+        }
+
+        .modal-llm {
+            font-weight: 600;
+            color: #1f2937;
+            font-size: 1.1rem;
+        }
+
+        .modal-status {
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .modal-status.mentioned {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .modal-status.not-mentioned {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .modal-question {
+            padding: 1rem 1.5rem;
+            color: #6b7280;
+            font-size: 0.9rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .modal-response {
+            padding: 1.5rem;
+            overflow-y: auto;
+            flex: 1;
+            color: #374151;
+            font-size: 0.9rem;
+            line-height: 1.8;
+            min-height: 300px;
+            max-height: 60vh;
+            background: #fafafa;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .modal-response::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .modal-response::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        .modal-response::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 4px;
+        }
+
+        .modal-response::-webkit-scrollbar-thumb:hover {
+            background: #a1a1a1;
+        }
+
+        /* Brand highlight */
+        .brand-highlight {
+            background: linear-gradient(120deg, #fef08a 0%, #fde047 100%);
+            padding: 0.1rem 0.3rem;
+            border-radius: 3px;
+            font-weight: 600;
+        }
+
+        .example-content {
+            color: #6b7280;
+            font-size: 0.875rem;
+            line-height: 1.7;
+            max-height: 400px;
+            overflow-y: auto;
+            margin-bottom: 0.75rem;
+            padding: 1rem;
+            background: #f9fafb;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .example-status {
+            padding: 0.5rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            display: inline-block;
+        }
+
+        .example-status.mentioned {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .example-status.not-mentioned {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        /* Reddit Posts */
+        .reddit-posts {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .reddit-post {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: #fafafa;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: all 0.2s;
+            border: 1px solid transparent;
+        }
+
+        .reddit-post:hover {
+            background: #f3f4f6;
+            border-color: #e5e7eb;
+        }
+
+        .post-icon {
+            width: 40px;
+            height: 40px;
+            background: #1f2937;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .post-icon.pain {
+            background: #fef3c7;
+        }
+
+        .post-icon.pain svg {
+            color: #92400e;
+        }
+
+        .post-icon svg {
+            width: 20px;
+            height: 20px;
+            color: #ffffff;
+        }
+
+        .post-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .post-title {
+            color: #1f2937;
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .post-meta {
+            color: #9ca3af;
+            font-size: 0.8rem;
+        }
+
+        .post-arrow {
+            color: #9ca3af;
+            flex-shrink: 0;
+        }
+
+        .post-arrow svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .subsection-title {
+            color: #1f2937;
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin: 1.5rem 0 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .subsection-title:first-of-type {
+            margin-top: 0;
+        }
+
+        .subsection-desc {
+            color: #9ca3af;
+            font-size: 0.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .no-data {
+            color: #9ca3af;
+            font-style: italic;
+            text-align: center;
+            padding: 1rem;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            color: #9ca3af;
+            font-size: 0.8rem;
+            padding: 2rem;
+            border-top: 1px solid #e5e7eb;
+            margin-top: 2rem;
+        }
+
+        .footer a {
+            color: #1f2937;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* CTA */
+        .cta-section {
+            text-align: center;
+            padding: 3rem 2rem;
+            background: #fafafa;
+        }
+
+        .cta-section h2 {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 1.75rem;
+            color: #1f2937;
+            margin-bottom: 0.75rem;
+        }
+
+        .cta-section p {
+            color: #6b7280;
+            margin-bottom: 1.5rem;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background: #1f2937;
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .cta-button:hover {
+            background: #111827;
+            transform: translateY(-1px);
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .page-title h1 {
+                font-size: 1.75rem;
+            }
+
+            .section {
+                padding: 1.5rem;
+            }
+
+            .score-circle {
+                width: 130px;
+                height: 130px;
+            }
+
+            .score-value {
+                font-size: 2.25rem;
+            }
+
+            .llm-breakdown {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .tabs-header {
+                flex-wrap: wrap;
+            }
+
+            .tab-btn {
+                padding: 0.5rem 1rem;
+                font-size: 0.8rem;
+            }
+
+            .breakdown-table th,
+            .breakdown-table td {
+                padding: 0.5rem;
+                font-size: 0.8rem;
+            }
+
+            .question-cell {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .modal-content {
+                max-height: 90vh;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <a href="https://adva-solutions.com/AIVisibility" class="logo">adva</a>
+        <div class="header-right">
+            <a href="/report/8006d75e/pdf" class="pdf-button" title="Download as PDF">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                Download PDF
+            </a>
+            <button class="copy-link-button" onclick="navigator.clipboard.writeText('https://adva-solutions.github.io/ai-visibility-report/report_gallery57dental_8006d75e.html'); showToast('Link copied!');" title="Copy shareable link">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                </svg>
+                Copy Link
+            </button>
+            <span class="header-date">January 29, 2026</span>
+        </div>
+    </header>
+    <div class="toast" id="toast">Link copied to clipboard!</div>
+
+    <div class="container">
+        <div class="page-title">
+            <div class="label">AI Visibility Report</div>
+            <h1>Your Brand's <em>AI Presence</em></h1>
+            <p class="brand">Analysis for Gallery57Dental</p>
+        </div>
+
+        <!-- Section 1: AI Visibility Score -->
+        <div class="section score-section">
+            <div class="score-circle">
+                <span class="score-value">0%</span>
+                <span class="score-label">0/15 mentions</span>
+            </div>
+            <p class="score-description">
+                Your brand appeared in <strong>0</strong> out of <strong>15</strong> AI recommendations
+            </p>
+            <div class="llm-breakdown">
+                
+            <div class="llm-stat">
+                <span class="llm-name">GPT</span>
+                <span class="llm-score warning">0/5</span>
+            </div>
+        
+            <div class="llm-stat">
+                <span class="llm-name">Claude</span>
+                <span class="llm-score warning">0/5</span>
+            </div>
+        
+            <div class="llm-stat">
+                <span class="llm-name">Gemini</span>
+                <span class="llm-score warning">0/5</span>
+            </div>
+        
+            </div>
+        </div>
+
+        <!-- Section 2: AI Response Breakdown -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                    </svg>
+                </div>
+                <h2 class="section-title">Question-by-Question Breakdown</h2>
+            </div>
+            <p style="color: #6b7280; margin-bottom: 1rem;">We asked these 5 questions to each AI model. Click any cell to see the full response:</p>
+            
+        <div class="question-breakdown">
+            <table class="breakdown-table">
+                <thead>
+                    <tr>
+                        <th>Question Asked</th>
+                        <th>GPT</th>
+                        <th>Claude</th>
+                        <th>Gemini</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q1</span>
+                    <span class="question-text">dental care services near me in nyc</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top recommendations for dental care services in New York City:<br><br>1. **Murray Hill Dental**  <br>   Located in Midtown Manhattan, Murray Hill Dental is known for its comprehensive services and patient-centered approach. They offer everything from routine cleanings to cosmetic dentistry. The staff is highly rated for their professionalism and care, and the office environment is modern and welcoming.<br><br>2. **Park Avenue Smiles**  <br>   This dental practice is situated on Park Avenue and offers a range of services, including general, cosmetic, and restorative dentistry. They are particularly recognized for their advanced technology and personalized care. The team focuses on making dental visits comfortable and stress-free, with a strong emphasis on patient education.<br><br>3. **Chelsea Dental Spa**  <br>   Located in the Chelsea neighborhood, this dental spa combines dental health with a relaxing atmosphere. They provide a full range of dental services, including preventive care and cosmetic enhancements. The unique spa-like experience, including amenities like massage chairs and aromatherapy, makes it a favorite among patients looking for comfort during their visits.<br><br>4. **NYU College of Dentistry**  <br>   If you’re looking for affordable dental care, the NYU College of Dentistry offers services performed by dental students under the supervision of experienced faculty. While the wait times can be longer, the quality of care is impressive, and it’s a great option for those without insurance or looking to save on costs.<br><br>5. **Dental Arts of New York**  <br>   Located in the Upper West Side, this practice prides itself on a holistic approach to dental care. They focus on the overall health of patients, offering services ranging from general dentistry to advanced cosmetic procedures. The friendly staff and emphasis on patient comfort have earned them a loyal clientele.<br><br>When choosing a dental provider, consider factors such as location, services offered, insurance acceptance, and patient reviews to find the best fit for your needs."
+                    data-question="dental care services near me in nyc"
+                    data-llm="gpt4"
+                    data-brand="Gallery57Dental"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top 5 recommendations for dental care services near you in NYC, listed in order of preference:<br><br>1. Park Avenue Dental Group - This highly-rated practice is known for its skilled dentists, state-of-the-art technology, and personalized care. They offer a wide range of services, from general dentistry to cosmetic procedures, and have a reputation for excellence.<br><br>2. Midtown Dental Associates - With a team of experienced, friendly dentists, this practice provides comprehensive dental care in a comfortable, modern setting. They excel at preventive care, restorative treatments, and addressing complex dental issues.<br><br>3. Downtown Dental Clinic - This patient-focused clinic is praised for its gentle, thorough approach to dental care. They offer a full suite of services, including emergency care, and have a strong commitment to patient education and satisfaction.<br><br>4. Upper West Side Smile - This practice is known for its exceptional customer service and attention to detail. They use the latest techniques and technologies to deliver high-quality general and cosmetic dentistry, making them a great choice for those seeking a personalized dental experience.<br><br>5. East Village Dental Center - This community-oriented practice is dedicated to providing affordable, accessible dental care to residents of the East Village and surrounding areas. They offer a range of services and have a reputation for being patient-focused and compassionate.<br><br>When selecting a dental care provider, it&#39;s important to consider factors such as the dentists&#39; credentials, the practice&#39;s reputation, the range of services offered, and the overall patient experience. These recommendations are based on a combination of online reviews, professional ratings, and my own research into the dental care landscape in NYC."
+                    data-question="dental care services near me in nyc"
+                    data-llm="claude"
+                    data-brand="Gallery57Dental"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Okay, to give you the best recommendations, I need a bit more information.  **What part of NYC are you in (or willing to travel to)?**  NYC is a big place, and a dentist in the Financial District isn&#39;t helpful if you live in Washington Heights.<br><br>Assuming you&#39;re looking for general dentistry and I don&#39;t have your specific location, here are some well-regarded options based on reputation, reviews, and breadth of services, with a focus on Manhattan, but acknowledging they might not be *right next door* to you. I will list them in order of preference, but your personal priorities (insurance, specialization, etc.) might change this.<br><br>**Important Note:** *Always* check that the dentist is in your insurance network before booking, and read recent reviews on multiple sites (Google, Zocdoc, Healthgrades, etc.) to get a well-rounded picture.<br><br>Here are my recommendations, assuming you&#39;re open to Manhattan locations:<br><br>1.  **Tend (Multiple Locations in Manhattan & Brooklyn)**<br><br>    *   **Why:** Tend is a modern, tech-forward dental practice with multiple locations, making it potentially convenient. They focus on a comfortable and transparent experience, with online booking, clear pricing, and a streamlined process. They usually offer extended hours and weekend appointments. Tend is a good choice if you value modern technology and a comfortable patient experience.<br>    *   **Considerations:** They are a larger chain, which might not appeal to everyone who prefers a smaller, more personal practice. Check that they are in-network with your insurance.<br><br>2.  **Park Dental (Multiple Locations in Manhattan)**<br><br>    *   **Why:** Park Dental has a strong reputation for comprehensive general and cosmetic dentistry. They have multiple locations in Manhattan, potentially within reach. They offer a wide range of services, including cosmetic procedures.<br>    *   **Considerations:** They can be pricier than some other options, and it&#39;s essential to verify their insurance coverage.<br><br>3.  **Gentle Dental NYC (Multiple Locations in Manhattan, Queens, and the Bronx)**<br><br>    *   **Why:** As the name suggests, they emphasize a gentle approach to dentistry, which is a plus for many people. They offer a full range of services, including general, cosmetic, and restorative dentistry.<br>    *   **Considerations:** Like Tend, Gentle Dental is a larger group practice, so the experience may vary slightly depending on the location and dentist.<br><br>4. **NYU College of Dentistry (Various Locations in Manhattan)**<br><br>     * **Why:** This is a great option if you&#39;re on a budget or are comfortable with being treated by dental students under the supervision of experienced faculty. The care is generally very high quality.<br>     * **Considerations:** Appointments can take longer, and you may see different students at each visit.<br><br>To get more targeted recommendations, please tell me:<br><br>*   **Your general location (neighborhood or borough).**<br>*   **Your insurance plan (if applicable).**<br>*   **What you are looking for in a dentist (general check-up, specific procedure, etc.).**<br><br>Once I have that information, I can provide more personalized and helpful suggestions.<br>"
+                    data-question="dental care services near me in nyc"
+                    data-llm="gemini"
+                    data-brand="Gallery57Dental"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q2</span>
+                    <span class="question-text">best dentists in midtown manhattan nyc</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top recommendations for dentists in Midtown Manhattan, NYC, based on reputation, services offered, and patient reviews:<br><br>1. **Dr. K. Scott T. Rosenberg, DDS**<br>   - **Location**: 22 E 41st St, Suite 1000<br>   - **Overview**: Dr. Rosenberg is well-known for his comprehensive approach to dentistry, offering both preventive and cosmetic services. Patients appreciate his gentle demeanor and thorough explanations during treatments. He has a strong track record of satisfied clients, particularly for cosmetic procedures like veneers and teeth whitening.<br><br>2. **Eastside Dental Associates**<br>   - **Location**: 30 E 60th St, Suite 1001<br>   - **Overview**: This practice has a team of highly skilled dentists who specialize in a range of services, including general dentistry, orthodontics, and periodontics. They are praised for their modern facilities and advanced technology, making for a comfortable and efficient dental experience. The friendly staff and welcoming environment also contribute to positive patient experiences.<br><br>3. **Manhattan Dental Spa**<br>   - **Location**: 115 E 57th St, Suite 1001<br>   - **Overview**: Known for its emphasis on patient comfort and relaxation, Manhattan Dental Spa combines dental care with a spa-like atmosphere. They offer a wide range of services from routine cleanings to more advanced cosmetic and restorative procedures. Patients highlight the attentive care they receive and the high-quality results, especially for cosmetic makeovers.<br><br>4. **Dr. Mark S. Doss, DDS**<br>   - **Location**: 200 E 56th St, Suite 302<br>   - **Overview**: Dr. Doss is recognized for his expertise in restorative dentistry and implants. Many patients commend him for his precision and attention to detail, as well as his ability to make even complex procedures feel comfortable. His office is noted for its cleanliness and friendly staff, creating a pleasant environment.<br><br>5. **Smile Midtown**<br>   - **Location**: 146 W 57th St, 10th Floor<br>   - **Overview**: Smile Midtown provides a diverse range of dental services, including family dentistry and cosmetic options. They are particularly well-reviewed for their emergency dental services and accommodating schedule. The team is committed to using the latest technologies, ensuring patients receive high-quality care in a modern setting.<br><br>When choosing a dentist, consider visiting their websites or calling for more information about their services, insurance acceptance, and appointment availability. Always check recent patient reviews for the most current insights."
+                    data-question="best dentists in midtown manhattan nyc"
+                    data-llm="gpt4"
+                    data-brand="Gallery57Dental"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top 5 recommendations for the best dentists in Midtown Manhattan, NYC:<br><br>1. Dr. Michael Apa - Apa Aesthetic Dentistry<br>Renowned for his expertise in cosmetic dentistry, Dr. Apa offers a wide range of services including veneers, teeth whitening, and full mouth rehabilitation. His state-of-the-art facility and personalized approach have earned him a reputation as one of the top dentists in the city.<br><br>2. Dr. Ramin Tabib - NYC Smile Design<br>Dr. Tabib is a highly skilled general and cosmetic dentist who prioritizes patient comfort and satisfaction. His practice utilizes the latest technology and techniques to provide exceptional dental care, from routine cleanings to complex restorative procedures.<br><br>3. Dr. Debra Glassman - Park Avenue Smiles<br>With over 20 years of experience, Dr. Glassman is known for her gentle touch and comprehensive approach to dental care. Her practice offers a wide range of services, including preventive, restorative, and cosmetic dentistry, all in a comfortable and modern setting.<br><br>4. Dr. Lana Rozenberg - Rozenberg Dental NYC<br>Dr. Rozenberg is a leading expert in the field of neuromuscular dentistry, specializing in the treatment of TMJ and other jaw-related issues. Her practice is equipped with advanced technology and her team is dedicated to providing personalized, high-quality care.<br><br>5. Dr. Edward Alvarez - Midtown Dental Excellence<br>Dr. Alvarez is a highly skilled general dentist known for his exceptional patient care and attention to detail. His practice offers a wide range of services, including preventive, restorative, and cosmetic dentistry, all in a modern and welcoming environment."
+                    data-question="best dentists in midtown manhattan nyc"
+                    data-llm="claude"
+                    data-brand="Gallery57Dental"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Okay, here are my top 3 dentist recommendations in Midtown Manhattan, based on a combination of factors like reputation, reviews, specialties offered, and overall patient experience. Please remember that &quot;best&quot; is subjective and depends on individual needs and preferences.  It&#39;s always a good idea to do your own research and call the office to see if they are a good fit for you.<br><br>**Top Recommendations:**<br><br>1.  **Dr. Michael Apa - Apa Aesthetic:** While on the pricier side, Dr. Apa is renowned for his expertise in cosmetic dentistry, particularly smile makeovers and veneers. He has a celebrity clientele and is known for his meticulous attention to detail and natural-looking results. If you&#39;re looking for top-tier aesthetic work and are willing to invest in it, Dr. Apa is a strong contender. *Note: This is a highly specialized and expensive option.*<br><br>2.  **Dr. Lewis Gross - Midtown Dental Health:** Dr. Gross is a highly respected general dentist with a focus on comprehensive care. He&#39;s well-regarded for his thorough examinations, clear communication, and gentle approach. His practice offers a wide range of services, from routine cleanings to fillings, crowns, and implants. Patients often praise his professionalism and the friendly atmosphere of his office.<br><br>3.  **Dr. Alexander Vaiman - Vaiman Dental:** Dr. Vaiman is a prosthodontist, specializing in restorative dentistry like implants, crowns, bridges, and dentures. He is known for his expertise in complex cases and his commitment to using the latest technology. Patients appreciate his detailed explanations and his ability to create natural-looking and functional restorations. If you require extensive restorative work, Dr. Vaiman is an excellent choice.<br><br>**Important Considerations Before Choosing:**<br><br>*   **Insurance:**  Confirm that the dentist accepts your dental insurance plan.  Call the office directly to verify.<br>*   **Specific Needs:**  Consider your specific dental needs. Are you looking for a general check-up, cosmetic work, or specialized treatment?<br>*   **Location and Convenience:**  Factor in the dentist&#39;s location and office hours to ensure they are convenient for you.<br>*   **Reviews:**  Read online reviews on sites like Zocdoc, Healthgrades, and Yelp, but take them with a grain of salt and look for trends in the feedback.<br>*   **Consultation:** Schedule a consultation with a dentist or two to discuss your needs and get a feel for their personality and approach.<br><br>**Disclaimer:** I am an AI and cannot provide medical advice. This information is for general guidance only and does not constitute a professional recommendation.  Always consult with a qualified healthcare provider for any health concerns or before making any decisions related to your health or treatment.<br>"
+                    data-question="best dentists in midtown manhattan nyc"
+                    data-llm="gemini"
+                    data-brand="Gallery57Dental"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q3</span>
+                    <span class="question-text">top rated cosmetic dentist in new york city</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are five highly-rated cosmetic dentists in New York City, each known for their expertise and patient satisfaction:<br><br>1. **Dr. Michael Apa**<br>   - **Location:** New York, NY<br>   - **Overview:** Dr. Apa is renowned for his artistry in cosmetic dentistry, particularly in creating natural-looking smiles. He is known for his expertise in porcelain veneers and has a celebrity clientele, which speaks to his high level of skill. Dr. Apa uses advanced technology and personalized treatment plans to achieve stunning results.<br><br>2. **Dr. Bill Dorfman**<br>   - **Location:** Beverly Hills, CA (with a practice in NYC)<br>   - **Overview:** Known as &quot;America&#39;s Dentist,&quot; Dr. Dorfman is a well-respected cosmetic dentist and a prominent figure in the dental community. He has appeared on numerous TV shows and is recognized for his work in smile makeovers. His practice emphasizes cosmetic procedures, including teeth whitening and veneers, with a focus on aesthetics and patient comfort.<br><br>3. **Dr. J. William McCormick**<br>   - **Location:** New York, NY<br>   - **Overview:** Dr. McCormick is known for his comprehensive approach to cosmetic dentistry, combining artistry and advanced techniques. He specializes in creating custom smile designs and is highly regarded for his work with dental implants and restorative procedures. His commitment to patient care and satisfaction makes him a popular choice.<br><br>4. **Dr. Marc Lazare**<br>   - **Location:** New York, NY<br>   - **Overview:** Dr. Lazare has a long-standing reputation for excellence in cosmetic and restorative dentistry. He is known for his gentle approach and commitment to using the latest technology. His practice offers a wide range of cosmetic services, including veneers, crowns, and teeth whitening, all aimed at enhancing patients&#39; smiles.<br><br>5. **Dr. Jennifer Jablow**<br>   - **Location:** New York, NY<br>   - **Overview:** Dr. Jablow is recognized for her expertise in cosmetic dentistry, particularly in teeth whitening and smile makeovers. She combines her artistic vision with clinical excellence to achieve beautiful results. Dr. Jablow is also known for her dedication to patient education and comfort throughout the dental experience.<br><br>When considering a cosmetic dentist, it&#39;s essential to schedule consultations to discuss your specific needs and aesthetic goals. Each of these professionals has a strong reputation and is known for delivering high-quality care in NYC."
+                    data-question="top rated cosmetic dentist in new york city"
+                    data-llm="gpt4"
+                    data-brand="Gallery57Dental"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top 5 recommendations for the top-rated cosmetic dentists in New York City, listed in order of preference:<br><br>1. Dr. Ramin Tabib - NYC Smile Design<br>   - Highly respected and award-winning cosmetic dentist<br>   - Specializes in smile makeovers, veneers, and full-mouth reconstructions<br>   - Uses the latest technology and techniques for natural-looking results<br>   - Consistently ranked as one of the best cosmetic dentists in NYC<br><br>2. Dr. Debra Glassman - Park Avenue Smiles<br>   - Renowned for her expertise in aesthetic dentistry and smile transformations<br>   - Utilizes advanced procedures like porcelain veneers and Invisalign<br>   - Focuses on creating personalized, beautiful, and long-lasting results<br>   - Excellent patient reviews and a reputation for exceptional care<br><br>3. Dr. Michael Apa - Apa Aesthetic<br>   - Internationally recognized for his innovative cosmetic dentistry techniques<br>   - Specializes in smile makeovers, gum contouring, and full-mouth rehabilitation<br>   - Uses cutting-edge technology and materials for natural-looking results<br>   - Highly sought-after by celebrities and high-profile clients<br><br>4. Dr. Marc Lowenberg - Lowenberg, Lituchy & Kantor<br>   - Renowned for his expertise in cosmetic and restorative dentistry<br>   - Specializes in veneers, crowns, and advanced smile design procedures<br>   - Utilizes the latest techniques and materials for long-lasting, beautiful smiles<br>   - Frequently featured in prestigious publications and media outlets<br><br>5. Dr. Irwin Smigel - Aesthetic Dentistry of New York<br>   - Pioneering figure in the field of cosmetic dentistry<br>   - Specializes in smile makeovers, teeth whitening, and gum sculpting<br>   - Utilizes state-of-the-art technology and innovative techniques<br>   - Highly respected for his contributions to the advancement of cosmetic dentistry<br><br>These dentists are known for their exceptional skills, use of advanced techniques and technologies, and their commitment to creating stunning, natural-looking results for their patients. They come highly recommended for those seeking top-notch cosmetic dental care in New York City."
+                    data-question="top rated cosmetic dentist in new york city"
+                    data-llm="claude"
+                    data-brand="Gallery57Dental"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Okay, finding the &quot;best&quot; cosmetic dentist is subjective, as it depends on your specific needs, budget, and aesthetic preferences. However, based on reputation, reviews, experience, and services offered, here are 3 top-rated cosmetic dentists in New York City, listed in order of preference, along with brief explanations:<br><br>**1. Dr. Debra Glassman (Glassman Dental Care)**<br><br>*   **Why She&#39;s Highly Rated:** Dr. Glassman consistently receives excellent reviews for her artistic eye, meticulous attention to detail, and commitment to personalized patient care. She is well-known for creating natural-looking smiles and uses advanced technology to achieve optimal results. Many patients praise her chairside manner and ability to make them feel comfortable. She also offers a wide range of cosmetic procedures, including porcelain veneers, smile makeovers, and teeth whitening.<br>*   **Things to Consider:** Her high reputation often means a higher price point, and she may have a longer wait time for appointments.<br><br>**2. Dr. Michael Apa (Apa Aesthetic)**<br><br>*   **Why He&#39;s Highly Rated:** Dr. Apa is a celebrity dentist with a global reputation for creating beautiful and natural-looking smiles. He focuses on using porcelain veneers to achieve full smile transformations. He&#39;s known for his artistic skills and ability to customize each veneer to perfectly complement a patient&#39;s facial features. He also offers a range of other cosmetic procedures, like teeth whitening and dental implants.<br>*   **Things to Consider:** Dr. Apa&#39;s services are very expensive and may not be accessible to everyone. He is also very busy and has a high patient volume.<br><br>**3. Dr. Edward A. Alvarez (New York Dental Arts)**<br><br>*   **Why He&#39;s Highly Rated:** Dr. Alvarez is known for his expertise in restorative and cosmetic dentistry, with a focus on creating functional and aesthetically pleasing smiles. He is highly skilled in procedures like porcelain veneers, dental implants, and smile makeovers. Patients appreciate his thorough consultations, detailed treatment plans, and commitment to using high-quality materials.<br>*   **Things to Consider:** While he has a strong reputation, his online presence might not be as extensive as some other cosmetic dentists on this list.<br><br>**Why these recommendations?**<br><br>*   **Reputation and Reviews:** All of these dentists have consistently positive reviews from patients praising their skills, artistry, and patient care.<br>*   **Experience and Expertise:** They all have extensive experience in cosmetic dentistry and are skilled in a variety of procedures.<br>*   **Technology and Materials:** They utilize advanced technology and high-quality materials to achieve optimal results.<br>*   **Personalization:** They emphasize personalized treatment plans tailored to each patient&#39;s unique needs and desires.<br><br>**Important Considerations Before Making a Decision:**<br><br>*   **Consultations:** Schedule consultations with a few different dentists to discuss your goals and expectations.<br>*   **Portfolio Review:** Ask to see before-and-after photos of their work.<br>*   **Cost and Financing:** Discuss the cost of treatment and available financing options.<br>*   **Comfort Level:** Choose a dentist you feel comfortable with and trust.<br><br>I hope this helps you find the perfect cosmetic dentist for your needs! Good luck!<br>"
+                    data-question="top rated cosmetic dentist in new york city"
+                    data-llm="gemini"
+                    data-brand="Gallery57Dental"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q4</span>
+                    <span class="question-text">dental office with latest technology in manhattan</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top recommendations for dental offices in Manhattan that are known for utilizing the latest technology:<br><br>1. **NYC Dental**  <br>   Located in the heart of Manhattan, NYC Dental is known for its state-of-the-art facilities and advanced technology, including digital X-rays, 3D imaging, and laser dentistry. The practice emphasizes patient comfort and offers a wide range of services, from routine cleanings to advanced cosmetic procedures.<br><br>2. **Smile Design Manhattan**  <br>   This dental office focuses on a comprehensive approach to dental care, using cutting-edge technology such as CAD/CAM systems for same-day crowns and digital impressions. With a strong emphasis on cosmetic dentistry, they also offer services like teeth whitening and veneers in a modern, patient-friendly environment.<br><br>3. **The Dental Spa**  <br>   Known for its luxurious atmosphere, The Dental Spa incorporates the latest dental technology, including intraoral cameras and advanced imaging systems. They provide a full range of services, from preventive care to cosmetic treatments, while prioritizing patient relaxation and comfort through spa-like amenities.<br><br>4. **Manhattan Dental Arts**  <br>   This office prides itself on offering high-tech solutions such as 3D cone beam imaging and laser treatments. The team is skilled in both cosmetic and restorative dentistry, ensuring patients receive top-notch care with the latest advancements in dental technology.<br><br>5. **Brighter Dental Care**  <br>   Brighter Dental Care combines modern technology with a patient-focused approach. They utilize digital X-rays and advanced sterilization techniques while offering a comprehensive range of services, including orthodontics and implants. Their commitment to innovation and safety makes them a standout choice in Manhattan.<br><br>These offices are recognized for their commitment to integrating the latest dental technologies while providing excellent patient care."
+                    data-question="dental office with latest technology in manhattan"
+                    data-llm="gpt4"
+                    data-brand="Gallery57Dental"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top 5 recommendations for dental offices with the latest technology in Manhattan, listed in order of preference:<br><br>1. Soho Smile Dental: This practice is renowned for its state-of-the-art technology, including digital X-rays, intraoral cameras, and 3D imaging for precise treatment planning. They offer a wide range of services, from general dentistry to advanced cosmetic and restorative procedures, all delivered with a focus on patient comfort and satisfaction.<br><br>2. Park Avenue Dental Group: This practice is at the forefront of dental technology, utilizing the latest advancements in areas such as computer-guided implant placement, laser dentistry, and CEREC same-day crowns. They have a team of highly skilled and experienced dentists who prioritize personalized care and patient education.<br><br>3. Midtown Dental Excellence: This practice is known for its commitment to incorporating the latest dental technologies, such as digital impressions, cone-beam CT scans, and advanced computerized treatment planning. They offer a comprehensive range of services, including general dentistry, orthodontics, and cosmetic procedures, all delivered in a comfortable and modern setting.<br><br>4. West Village Dental Care: This practice is recognized for its investment in cutting-edge technology, including digital radiography, intraoral scanners, and laser dentistry. They prioritize patient comfort and provide a wide range of services, from preventive care to complex restorative treatments.<br><br>5. Upper East Side Dental Arts: This practice is renowned for its state-of-the-art technology, including digital impressions, 3D printing for dental restorations, and advanced imaging systems. They have a team of experienced dentists who are committed to delivering personalized, high-quality care in a comfortable and modern environment.<br><br>These dental offices in Manhattan are known for their commitment to incorporating the latest advancements in dental technology, which can lead to more precise, efficient, and comfortable treatment experiences for patients."
+                    data-question="dental office with latest technology in manhattan"
+                    data-llm="claude"
+                    data-brand="Gallery57Dental"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Okay, here are my top 3 recommendations for dental offices in Manhattan that are known for using the latest technology, based on my analysis of online reviews, dental publications, and general reputation.  Keep in mind that &quot;latest technology&quot; can mean different things to different people, so I&#39;ve tried to focus on offices with a broad adoption of advanced tools.<br><br>**Important Note:** It&#39;s *always* best to do your own research, check the doctor&#39;s credentials, read recent reviews, and schedule a consultation to see if the office is a good fit for *your* specific needs.  This list is a starting point.<br><br>Here are my top recommendations:<br><br>1.  **NYU College of Dentistry (Various Clinics):**  While not a private practice, NYU College of Dentistry offers a wide range of dental services performed by students under the direct supervision of experienced faculty. They have multiple specialty clinics, representing all areas of dentistry.<br><br>    *   **Why it&#39;s a good option:**  NYU invests heavily in cutting-edge dental technology for training purposes.  This includes digital X-rays (including cone-beam CT scans), CAD/CAM for same-day crowns, laser dentistry, and advanced imaging systems. The cost is also generally lower than private practices.<br>    *   **Things to consider:** You will be treated by students and residents so the appointments may be longer.<br><br>2.  **Tribeca Dental Studio (Dr. Daniel Rubinshtein):** This practice is frequently mentioned as being at the forefront of dental technology. They focus on a comprehensive approach to oral health.<br><br>    *   **Why it&#39;s a good option:** Tribeca Dental Studio utilizes advanced technologies such as digital X-rays, intraoral cameras, 3D printing for implants, and laser dentistry. They are also known for their expertise in cosmetic dentistry and restorative procedures.<br>    *   **Things to consider:**  This is a high-end practice, so be prepared for potentially higher costs.<br><br>3.  **Park Avenue Oral & Facial Surgery (Dr. Lee L. Lichtenstein):** If you need oral surgery or dental implants, this practice is highly regarded for its use of advanced technology.<br><br>    *   **Why it&#39;s a good option:** Dr. Lichtenstein uses cone-beam CT scans (CBCT) for precise implant planning, computer-guided surgery, and minimally invasive techniques. They also offer zygomatic implants and other advanced surgical solutions.<br>    *   **Things to consider:** This is a specialist office, so it&#39;s primarily for surgical procedures, not general dentistry.<br><br>**Important Considerations Before Choosing:**<br><br>*   **Specific Technologies:**  Think about *what* specific technologies are important to you.  Are you looking for CAD/CAM for same-day crowns?  Laser dentistry for gum disease?  3D printing for implants?  Knowing what you want will help you narrow your search.<br>*   **Insurance:**  Verify that the practice accepts your dental insurance.<br>*   **Reviews:**  Read reviews on multiple sites (Google, Yelp, Zocdoc, etc.) to get a well-rounded picture of the patient experience.<br>*   **Consultation:**  Schedule a consultation with any office you&#39;re seriously considering. This is the best way to assess whether the practice is a good fit for your needs and personality.<br><br>I hope this helps! Good luck finding the right dental office for you.<br>"
+                    data-question="dental office with latest technology in manhattan"
+                    data-llm="gemini"
+                    data-brand="Gallery57Dental"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q5</span>
+                    <span class="question-text">dentist that offers same day crowns in midtown</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are some highly recommended dental practices in Midtown that offer same-day crowns:<br><br>1. **Midtown Dental Group**<br>   - **Overview**: Known for its state-of-the-art technology, Midtown Dental Group utilizes CEREC technology to provide same-day crowns. Their experienced team prioritizes patient comfort and satisfaction.<br>   - **Why Choose**: They have a strong reputation for personalized care, and the ability to complete crowns in a single visit makes them a convenient choice.<br><br>2. **NYC Smile Spa**<br>   - **Overview**: NYC Smile Spa combines modern dental techniques with a spa-like atmosphere. They offer same-day crowns using advanced CAD/CAM technology, ensuring precision and quality.<br>   - **Why Choose**: The practice emphasizes a relaxing experience, which can be beneficial for patients who may feel anxious about dental procedures.<br><br>3. **Dental House NYC**<br>   - **Overview**: Dental House NYC is well-regarded for its friendly staff and high-quality care. They provide same-day crowns through CEREC technology, making it easy for patients to get their restorations quickly.<br>   - **Why Choose**: The practice focuses on comprehensive care and has garnered positive reviews for its customer service and attention to detail.<br><br>4. **Midtown Manhattan Dental Group**<br>   - **Overview**: This practice offers a range of services including same-day crowns using the latest technology. They are known for their skilled dentists and patient-focused approach.<br>   - **Why Choose**: They have a strong commitment to making dental visits efficient and comfortable, which is ideal for busy individuals.<br><br>5. **Smile Design Manhattan**<br>   - **Overview**: Smile Design Manhattan specializes in cosmetic and restorative dentistry, offering same-day crowns with a focus on aesthetics and functionality. Their team is experienced in using advanced dental technology.<br>   - **Why Choose**: They have a reputation for creating beautiful smiles and ensuring patient satisfaction, making them a great option for those looking for both speed and quality.<br><br>It’s always a good idea to call ahead and confirm that they offer same-day crowns, as well as to inquire about insurance and payment options."
+                    data-question="dentist that offers same day crowns in midtown"
+                    data-llm="gpt4"
+                    data-brand="Gallery57Dental"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top 5 recommendations for dentists in Midtown that offer same-day crowns, listed in order of preference:<br><br>1. Midtown Dental Excellence:<br>   - This practice is known for its state-of-the-art technology, including CEREC same-day crowns.<br>   - The dentists are highly skilled and experienced, with a focus on personalized care and patient comfort.<br>   - They have received excellent reviews from patients for their efficient and high-quality services.<br><br>2. Smile Studio NYC:<br>   - This modern dental office specializes in cosmetic dentistry, including same-day crowns.<br>   - The dentists are trained in the latest techniques and use advanced digital imaging and milling technology.<br>   - Patients praise the practice for its friendly staff, comfortable environment, and efficient procedures.<br><br>3. Midtown Dental Arts:<br>   - This practice has a team of experienced dentists who are proficient in same-day crown treatments.<br>   - They use CEREC technology to design, mill, and place crowns in a single visit.<br>   - Patients appreciate the practice&#39;s attention to detail, patient education, and overall positive experience.<br><br>4. Midtown Smiles:<br>   - This dental office offers a range of services, including same-day crowns using CEREC technology.<br>   - The dentists are known for their gentle approach and commitment to patient-centered care.<br>   - Patients have reported quick turnaround times and high-quality results for their same-day crown procedures.<br><br>5. Midtown Dental Spa:<br>   - This practice combines advanced dental treatments with a spa-like atmosphere.<br>   - They offer same-day crowns using the latest CEREC technology.<br>   - Patients appreciate the practice&#39;s focus on comfort and relaxation during their dental visits.<br><br>Please note that these recommendations are based on factors such as online reviews, the practice&#39;s reputation, the use of advanced technology, and patient satisfaction. It&#39;s always a good idea to research and compare multiple options to find the dentist that best fits your specific needs and preferences."
+                    data-question="dentist that offers same day crowns in midtown"
+                    data-llm="claude"
+                    data-brand="Gallery57Dental"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Okay, here are 3 recommendations for dentists in Midtown NYC that offer same-day crowns, based on factors like reputation, technology, and patient reviews.  I&#39;ve focused on dentists with verifiable online presences and positive feedback related to their same-day crown services.<br><br>**Important Note:** *It&#39;s always best to call the office directly to confirm they currently offer same-day crown services, accept your insurance, and to schedule a consultation.  Technology and service offerings can change.*<br><br>**Recommendations:**<br><br>1.  **Dr. Lewis Brown:** (I don&#39;t have the exact address and phone number, but you can easily find them online)<br>    *   **Why:** Dr. Brown is frequently mentioned for his advanced dental technology. He is known for utilizing CEREC technology, which is a popular system for creating high-quality, same-day crowns.<br>    *   **Things to consider:** Because of the high-end technology and quality materials, the cost here might be slightly higher than other options.<br><br>2.  **Midtown Dental Center:** (I don&#39;t have the exact address and phone number, but you can easily find them online)<br>    *   **Why:** This practice receives positive reviews for its efficient and comfortable experience with same-day crown procedures. They are known for their friendly staff and use of modern dental technology.<br>    *  **Things to consider:** Confirm the specific type of same-day crown technology they use (e.g., CEREC) and if it aligns with your preferences.<br><br>3.  **Dr. Samuel Lee:** (I don&#39;t have the exact address and phone number, but you can easily find them online)<br>    *   **Why:** Dr. Lee is known for his thorough approach and attention to detail. Patients often comment on his ability to explain procedures clearly and make them feel comfortable during the process.<br>    *   **Things to consider:** Verify his experience with same-day crowns and inquire about the materials used to ensure they meet your needs.<br><br>**Important Considerations Before You Choose:**<br><br>*   **Insurance:**  Always verify that the dentist accepts your dental insurance to avoid unexpected out-of-pocket costs.<br>*   **Technology:**  Inquire about the specific same-day crown technology they use (CEREC, E4D, etc.).  Each system has its pros and cons.<br>*   **Material:**  Ask about the materials used for the crowns (e.g., porcelain, zirconia, composite).  Discuss the best option for your specific situation (location of the crown, bite force, aesthetics).<br>*   **Consultation:** Schedule a consultation with at least two dentists to get their professional opinion, discuss your specific needs, and get a cost estimate.  This is crucial for making an informed decision.<br>*   **Reviews:**  Read online reviews on multiple platforms (Google, Yelp, etc.) to get a comprehensive view of other patients&#39; experiences.  Pay attention to reviews specifically mentioning same-day crown procedures.<br><br>**Disclaimer:** *I am an AI Chatbot and cannot provide medical advice. This information is for general guidance only. Always consult with a qualified dental professional for personalized recommendations and treatment.*<br>"
+                    data-question="dentist that offers same day crowns in midtown"
+                    data-llm="gemini"
+                    data-brand="Gallery57Dental"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+                </tbody>
+            </table>
+            <p class="breakdown-hint">Click any cell to see the full AI response</p>
+        </div>
+
+        <!-- Response modal -->
+        <div class="response-modal" id="responseModal">
+            <div class="modal-content" onclick="event.stopPropagation()">
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+                <div class="modal-header">
+                    <span class="modal-llm" id="modalLlm"></span>
+                    <span class="modal-status" id="modalStatus"></span>
+                </div>
+                <div class="modal-question" id="modalQuestion"></div>
+                <div class="modal-response" id="modalResponse"></div>
+            </div>
+        </div>
+    
+        </div>
+
+        <!-- Section 3: Reddit Opportunities -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <h2 class="section-title">Reddit Opportunities</h2>
+            </div>
+
+            <div class="subsection-title">Buy Intent Conversations</div>
+            <p class="subsection-desc">People actively looking for recommendations in your category</p>
+            <div class="reddit-posts">
+                
+            <a href="https://www.reddit.com/r/jerseycity/comments/1qq0icg/dental_scene_is_terrible_here/" target="_blank" class="reddit-post">
+                <div class="post-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">Dental Scene is Terrible Here : r/jerseycity</div>
+                    <div class="post-meta">
+                        r/jerseycity &bull; 111K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            <a href="https://www.reddit.com/r/hygiene/comments/1qmyxub/im_too_embarrassed_to_get_my_teeth_fixed/" target="_blank" class="reddit-post">
+                <div class="post-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">I'm too embarrassed to get my teeth fixed : r/hygiene</div>
+                    <div class="post-meta">
+                        r/hygiene &bull; 304K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            <a href="https://www.reddit.com/r/AskNYC/comments/1qm5zbg/looking_for_invisalign_provider_for_more_complex/" target="_blank" class="reddit-post">
+                <div class="post-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">Looking for Invisalign provider for more complex case</div>
+                    <div class="post-meta">
+                        r/AskNYC &bull; 472K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            <a href="https://www.reddit.com/r/williamsburg/comments/1qng4sc/anyone_else_putting_off_the_dentist_because_of/" target="_blank" class="reddit-post">
+                <div class="post-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">anyone else putting off the dentist because of cost anxiety?</div>
+                    <div class="post-meta">
+                        r/williamsburg &bull; 48K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            </div>
+
+            <div class="subsection-title">Pain Point Conversations</div>
+            <p class="subsection-desc">People discussing problems your product solves</p>
+            <div class="reddit-posts">
+                
+            <a href="https://www.reddit.com/r/Dentistry/comments/1qmzsig/4_years_in_and_i_dont_know_if_dentistry_is_right/" target="_blank" class="reddit-post">
+                <div class="post-icon pain">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">4 years in and I dont know if dentistry is right for me....</div>
+                    <div class="post-meta">
+                        r/Dentistry &bull; 159K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            <a href="https://www.reddit.com/r/Dentistry/comments/1qjvn42/should_i_do_a_gpr_if_yes_which_programs_are/" target="_blank" class="reddit-post">
+                <div class="post-icon pain">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">Should I do a GPR? If yes, which programs are actually ...</div>
+                    <div class="post-meta">
+                        r/Dentistry &bull; 159K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            </div>
+        </div>
+
+        <!-- CTA Section -->
+        <div class="section cta-section">
+            <h2>Ready to improve your <em>AI visibility?</em></h2>
+            <p>We help brands get mentioned more in AI answers through strategic content placement.</p>
+            <a href="https://adva-solutions.com/AIVisibility" class="cta-button">Learn More</a>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p>Generated by <a href="https://adva-solutions.com">Adva</a> &bull; AI Visibility Health Check</p>
+    </footer>
+
+    <script>
+        // Tab switching functionality
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const tabId = btn.dataset.tab;
+
+                // Update buttons
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                // Update panels
+                document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+                document.getElementById('panel-' + tabId).classList.add('active');
+            });
+        });
+
+        // Show toast notification
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2500);
+        }
+
+        // Show response modal
+        function showResponse(cell) {
+            try {
+                let response = cell.dataset.response || 'No response available';
+                const question = cell.dataset.question || '';
+                const llm = cell.dataset.llm || '';
+                const brand = cell.dataset.brand || '';
+                const isMentioned = cell.classList.contains('mentioned');
+                const brandPosition = cell.dataset.position ? parseInt(cell.dataset.position) : null;
+
+                const llmNames = {'gpt4': 'GPT', 'claude': 'Claude', 'gemini': 'Gemini'};
+
+                // If brand is mentioned beyond position 5, add a banner at the top
+                let positionBanner = '';
+                if (isMentioned && brandPosition && brandPosition > 5) {
+                    positionBanner = '<div style="background: #fef3c7; padding: 0.75rem 1rem; border-radius: 6px; margin-bottom: 1rem; border-left: 4px solid #f59e0b;">' +
+                        '<strong>📍 Your brand appeared at position #' + brandPosition + '</strong> - scroll down to see the highlighted mention' +
+                        '</div>';
+                }
+
+                // Highlight brand name in response (case insensitive)
+                if (brand && isMentioned) {
+                    try {
+                        const brandRegex = new RegExp('(' + brand.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&') + ')', 'gi');
+                        response = response.replace(brandRegex, '<span class="brand-highlight">$1</span>');
+                    } catch(e) { /* ignore highlighting errors */ }
+                }
+
+                document.getElementById('modalLlm').textContent = llmNames[llm] || llm;
+                document.getElementById('modalQuestion').textContent = '"' + question + '"';
+                document.getElementById('modalResponse').innerHTML = positionBanner + response;
+
+                const statusEl = document.getElementById('modalStatus');
+                if (isMentioned) {
+                    statusEl.textContent = 'Mentioned';
+                    statusEl.className = 'modal-status mentioned';
+                } else {
+                    statusEl.textContent = 'Not mentioned';
+                    statusEl.className = 'modal-status not-mentioned';
+                }
+
+                document.getElementById('responseModal').classList.add('active');
+                document.body.style.overflow = 'hidden';
+
+                // Scroll to first highlight if mentioned
+                if (isMentioned) {
+                    setTimeout(function() {
+                        const highlight = document.querySelector('.modal-response .brand-highlight');
+                        if (highlight) {
+                            highlight.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        }
+                    }, 100);
+                }
+            } catch (e) {
+                console.error('Error showing response:', e);
+                alert('Error loading response. Please try again.');
+            }
+        }
+
+        // Close modal
+        function closeModal() {
+            document.getElementById('responseModal').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // Close when clicking backdrop (outside modal content)
+        document.getElementById('responseModal').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+
+        // Close modal on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeModal();
+        });
+    </script>
+</body>
+</html>
