@@ -1,0 +1,1370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Visibility Report - Yonda Tax | Adva</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #ffffff;
+            min-height: 100vh;
+            color: #374151;
+            line-height: 1.6;
+        }
+
+        /* Header */
+        .header {
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            font-size: 1.25rem;
+            color: #1f2937;
+            text-decoration: none;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .header-date {
+            color: #9ca3af;
+            font-size: 0.875rem;
+        }
+
+        /* Copy link button */
+        .copy-link-button {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: #f3f4f6;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            color: #374151;
+            font-size: 0.75rem;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .copy-link-button:hover {
+            background: #e5e7eb;
+        }
+
+        .copy-link-button svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        .pdf-button {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: #1f2937;
+            border: none;
+            border-radius: 6px;
+            color: #ffffff;
+            font-size: 0.75rem;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .pdf-button:hover {
+            background: #374151;
+        }
+
+        .pdf-button svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        /* Toast notification */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: #1f2937;
+            color: #ffffff;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            opacity: 0;
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        /* Container */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Page title */
+        .page-title {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .page-title .label {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: #9ca3af;
+            font-size: 0.75rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+        }
+
+        .page-title .label::before,
+        .page-title .label::after {
+            content: '';
+            width: 30px;
+            height: 1px;
+            background: #d1d5db;
+        }
+
+        .page-title h1 {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 2.5rem;
+            font-weight: 400;
+            color: #1f2937;
+            margin-bottom: 0.5rem;
+        }
+
+        .page-title .brand {
+            color: #6b7280;
+            font-size: 1.125rem;
+        }
+
+        /* Sections */
+        .section {
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #f3f4f6;
+        }
+
+        .section-icon {
+            width: 40px;
+            height: 40px;
+            background: #1f2937;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .section-icon svg {
+            width: 20px;
+            height: 20px;
+            color: #ffffff;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 1.375rem;
+            color: #1f2937;
+        }
+
+        /* Score Section */
+        .score-section {
+            text-align: center;
+            padding: 3rem 2rem;
+        }
+
+        .score-circle {
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            background: #fafafa;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            border: 4px solid #ef4444;
+        }
+
+        .score-value {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 3rem;
+            font-weight: 500;
+            color: #ef4444;
+        }
+
+        .score-label {
+            font-size: 0.8rem;
+            color: #9ca3af;
+        }
+
+        .score-description {
+            color: #6b7280;
+            margin-bottom: 2rem;
+            font-size: 1rem;
+        }
+
+        .score-description strong {
+            color: #1f2937;
+        }
+
+        .llm-breakdown {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .llm-stat {
+            text-align: center;
+            padding: 1rem 1.5rem;
+            background: #fafafa;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+            min-width: 100px;
+        }
+
+        .llm-name {
+            display: block;
+            color: #9ca3af;
+            font-size: 0.8rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .llm-score {
+            font-size: 1.125rem;
+            font-weight: 600;
+        }
+
+        .llm-score.success {
+            color: #22c55e;
+        }
+
+        .llm-score.warning {
+            color: #ef4444;
+        }
+
+        /* Competitor Table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 0.875rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid #f3f4f6;
+        }
+
+        th {
+            color: #9ca3af;
+            font-weight: 500;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        td {
+            color: #374151;
+        }
+
+        .mention-count {
+            background: #fef3c7;
+            color: #92400e;
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        /* Tabs for LLM responses */
+        .example-tabs {
+            margin-top: 1.5rem;
+        }
+
+        .tabs-header {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+            padding-bottom: 0;
+        }
+
+        .tab-btn {
+            padding: 0.75rem 1.25rem;
+            background: transparent;
+            border: none;
+            color: #6b7280;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            margin-bottom: -1px;
+            transition: all 0.2s;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .tab-btn:hover {
+            color: #1f2937;
+        }
+
+        .tab-btn.active {
+            color: #1f2937;
+            border-bottom-color: #1f2937;
+        }
+
+        .tab-panel {
+            display: none;
+            background: #fafafa;
+            border-radius: 8px;
+            padding: 1.25rem;
+        }
+
+        .tab-panel.active {
+            display: block;
+        }
+
+        .example-question {
+            color: #1f2937;
+            font-weight: 500;
+            font-size: 0.95rem;
+            margin-bottom: 0.75rem;
+        }
+
+        /* Question breakdown table */
+        .question-breakdown {
+            margin-top: 1rem;
+        }
+
+        .breakdown-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        .breakdown-table th {
+            padding: 0.75rem;
+            text-align: center;
+            background: #f9fafb;
+            border-bottom: 2px solid #e5e7eb;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .breakdown-table th:first-child {
+            text-align: left;
+            width: 50%;
+        }
+
+        .breakdown-table td {
+            padding: 0.75rem;
+            border-bottom: 1px solid #f3f4f6;
+            vertical-align: middle;
+        }
+
+        .question-cell {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+        }
+
+        .question-num {
+            background: #e5e7eb;
+            color: #374151;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        .question-text {
+            color: #374151;
+            line-height: 1.4;
+        }
+
+        .llm-cell {
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-radius: 4px;
+        }
+
+        .llm-cell:hover {
+            background: #f3f4f6;
+        }
+
+        .llm-cell.mentioned {
+            color: #16a34a;
+        }
+
+        .llm-cell.mentioned .status-icon {
+            font-size: 1.25rem;
+        }
+
+        .llm-cell.not-mentioned {
+            color: #dc2626;
+        }
+
+        .llm-cell.not-mentioned .status-icon {
+            font-size: 1.25rem;
+        }
+
+        .breakdown-hint {
+            color: #9ca3af;
+            font-size: 0.8rem;
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+        /* Response modal */
+        .response-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+        }
+
+        .response-modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: #ffffff;
+            border-radius: 12px;
+            max-width: 800px;
+            width: 100%;
+            max-height: 90vh;
+            overflow: auto;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #9ca3af;
+            cursor: pointer;
+            padding: 0.25rem 0.5rem;
+        }
+
+        .modal-close:hover {
+            color: #374151;
+        }
+
+        .modal-header {
+            padding: 1.5rem 1.5rem 0;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            position: relative;
+        }
+
+        .modal-llm {
+            font-weight: 600;
+            color: #1f2937;
+            font-size: 1.1rem;
+        }
+
+        .modal-status {
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .modal-status.mentioned {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .modal-status.not-mentioned {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .modal-question {
+            padding: 1rem 1.5rem;
+            color: #6b7280;
+            font-size: 0.9rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .modal-response {
+            padding: 1.5rem;
+            overflow-y: auto;
+            flex: 1;
+            color: #374151;
+            font-size: 0.9rem;
+            line-height: 1.8;
+            min-height: 300px;
+            max-height: 60vh;
+            background: #fafafa;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .modal-response::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .modal-response::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        .modal-response::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 4px;
+        }
+
+        .modal-response::-webkit-scrollbar-thumb:hover {
+            background: #a1a1a1;
+        }
+
+        /* Brand highlight */
+        .brand-highlight {
+            background: linear-gradient(120deg, #fef08a 0%, #fde047 100%);
+            padding: 0.1rem 0.3rem;
+            border-radius: 3px;
+            font-weight: 600;
+        }
+
+        .example-content {
+            color: #6b7280;
+            font-size: 0.875rem;
+            line-height: 1.7;
+            max-height: 400px;
+            overflow-y: auto;
+            margin-bottom: 0.75rem;
+            padding: 1rem;
+            background: #f9fafb;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .example-status {
+            padding: 0.5rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            display: inline-block;
+        }
+
+        .example-status.mentioned {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .example-status.not-mentioned {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        /* Reddit Posts */
+        .reddit-posts {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .reddit-post {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: #fafafa;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: all 0.2s;
+            border: 1px solid transparent;
+        }
+
+        .reddit-post:hover {
+            background: #f3f4f6;
+            border-color: #e5e7eb;
+        }
+
+        .post-icon {
+            width: 40px;
+            height: 40px;
+            background: #1f2937;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .post-icon.pain {
+            background: #fef3c7;
+        }
+
+        .post-icon.pain svg {
+            color: #92400e;
+        }
+
+        .post-icon svg {
+            width: 20px;
+            height: 20px;
+            color: #ffffff;
+        }
+
+        .post-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .post-title {
+            color: #1f2937;
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .post-meta {
+            color: #9ca3af;
+            font-size: 0.8rem;
+        }
+
+        .post-arrow {
+            color: #9ca3af;
+            flex-shrink: 0;
+        }
+
+        .post-arrow svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .subsection-title {
+            color: #1f2937;
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin: 1.5rem 0 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .subsection-title:first-of-type {
+            margin-top: 0;
+        }
+
+        .subsection-desc {
+            color: #9ca3af;
+            font-size: 0.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .no-data {
+            color: #9ca3af;
+            font-style: italic;
+            text-align: center;
+            padding: 1rem;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            color: #9ca3af;
+            font-size: 0.8rem;
+            padding: 2rem;
+            border-top: 1px solid #e5e7eb;
+            margin-top: 2rem;
+        }
+
+        .footer a {
+            color: #1f2937;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* CTA */
+        .cta-section {
+            text-align: center;
+            padding: 3rem 2rem;
+            background: #fafafa;
+        }
+
+        .cta-section h2 {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 1.75rem;
+            color: #1f2937;
+            margin-bottom: 0.75rem;
+        }
+
+        .cta-section p {
+            color: #6b7280;
+            margin-bottom: 1.5rem;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background: #1f2937;
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .cta-button:hover {
+            background: #111827;
+            transform: translateY(-1px);
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .page-title h1 {
+                font-size: 1.75rem;
+            }
+
+            .section {
+                padding: 1.5rem;
+            }
+
+            .score-circle {
+                width: 130px;
+                height: 130px;
+            }
+
+            .score-value {
+                font-size: 2.25rem;
+            }
+
+            .llm-breakdown {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .tabs-header {
+                flex-wrap: wrap;
+            }
+
+            .tab-btn {
+                padding: 0.5rem 1rem;
+                font-size: 0.8rem;
+            }
+
+            .breakdown-table th,
+            .breakdown-table td {
+                padding: 0.5rem;
+                font-size: 0.8rem;
+            }
+
+            .question-cell {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .modal-content {
+                max-height: 90vh;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <a href="https://adva-solutions.com/AIVisibility" class="logo">adva</a>
+        <div class="header-right">
+            <!-- PDF button hidden for now - backend still available at /report/a206350a/pdf
+            <a href="/report/a206350a/pdf" class="pdf-button" title="Download as PDF">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                Download PDF
+            </a>
+            -->
+            <button class="copy-link-button" onclick="navigator.clipboard.writeText('https://adva-solutions.github.io/ai-visibility-report/report_yonda-tax_a206350a.html'); showToast('Link copied!');" title="Copy shareable link">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                </svg>
+                Copy Link
+            </button>
+            <span class="header-date">January 29, 2026</span>
+        </div>
+    </header>
+    <div class="toast" id="toast">Link copied to clipboard!</div>
+
+    <div class="container">
+        <div class="page-title">
+            <div class="label">AI Visibility Report</div>
+            <h1>Your Brand's <em>AI Presence</em></h1>
+            <p class="brand">Analysis for Yonda Tax</p>
+        </div>
+
+        <!-- Section 1: AI Visibility Score -->
+        <div class="section score-section">
+            <div class="score-circle">
+                <span class="score-value">0%</span>
+                <span class="score-label">0/15 mentions</span>
+            </div>
+            <p class="score-description">
+                Your brand appeared in <strong>0</strong> out of <strong>15</strong> AI recommendations
+            </p>
+            <div class="llm-breakdown">
+                
+            <div class="llm-stat">
+                <span class="llm-name">GPT</span>
+                <span class="llm-score warning">0/5</span>
+            </div>
+        
+            <div class="llm-stat">
+                <span class="llm-name">Claude</span>
+                <span class="llm-score warning">0/5</span>
+            </div>
+        
+            <div class="llm-stat">
+                <span class="llm-name">Gemini</span>
+                <span class="llm-score warning">0/5</span>
+            </div>
+        
+            </div>
+        </div>
+
+        <!-- Section 2: AI Response Breakdown -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                    </svg>
+                </div>
+                <h2 class="section-title">Question-by-Question Breakdown</h2>
+            </div>
+            <p style="color: #6b7280; margin-bottom: 1rem;">We asked these 5 questions to each AI model. Click any cell to see the full response:</p>
+            
+        <div class="question-breakdown">
+            <table class="breakdown-table">
+                <thead>
+                    <tr>
+                        <th>Question Asked</th>
+                        <th>GPT</th>
+                        <th>Claude</th>
+                        <th>Gemini</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q1</span>
+                    <span class="question-text">best software for managing global vat and gst requirements</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="Managing global VAT (Value Added Tax) and GST (Goods and Services Tax) requirements can be complex, but several software solutions can help streamline the process. Here are my top recommendations:<br><br>1. **Avalara**  <br>   - **Overview**: Avalara is a leading tax compliance solution that automates the calculation, filing, and reporting of VAT and GST across multiple jurisdictions. It integrates seamlessly with various ERP, eCommerce, and accounting platforms.<br>   - **Key Features**: Real-time tax calculation, automatic updates for changing tax rates, comprehensive reporting capabilities, and dedicated support for international VAT/GST compliance.<br>   - **Why It’s Recommended**: Avalara&#39;s extensive database of tax codes and rates, along with its user-friendly interface, makes it a popular choice for companies operating in multiple countries.<br><br>2. **TaxJar**  <br>   - **Overview**: TaxJar is particularly well-suited for eCommerce businesses and automates sales tax calculations and reporting. It offers features that cater specifically to VAT and GST requirements in various countries.<br>   - **Key Features**: Automated sales tax reporting, multi-channel sales integration, and real-time calculations for different tax jurisdictions.<br>   - **Why It’s Recommended**: TaxJar&#39;s ease of use and focus on eCommerce make it ideal for businesses looking for a straightforward solution to manage their tax obligations efficiently.<br><br>3. **Sovos Compliance**  <br>   - **Overview**: Sovos provides a comprehensive suite for tax compliance, including VAT and GST management. It is designed for businesses of all sizes and supports various industries.<br>   - **Key Features**: Automated compliance processes, real-time tax calculation, and a robust reporting framework that keeps businesses informed of their tax obligations.<br>   - **Why It’s Recommended**: Sovos’ global reach and deep functionality for compliance help businesses navigate the complexities of international tax requirements effectively.<br><br>4. **Thomson Reuters ONESOURCE**  <br>   - **Overview**: ONESOURCE offers a wide range of tax software solutions, including VAT and GST compliance. It is designed for larger enterprises and provides extensive tax data management capabilities.<br>   - **Key Features**: Centralized data management, comprehensive compliance reporting, and integration with multiple ERP systems.<br>   - **Why It’s Recommended**: Its robust features and integration capabilities make it suitable for multinational corporations needing in-depth tax management.<br><br>5. **Xero**  <br>   - **Overview**: Xero is primarily an accounting software but includes features for managing VAT and GST compliance. It is particularly popular among small to medium-sized businesses.<br>   - **Key Features**: Automated VAT calculations, easy invoicing, and financial reporting that includes tax summaries.<br>   - **Why It’s Recommended**: Xero’s simplicity and affordability make it a great option for smaller businesses looking for a straightforward way to handle their VAT/GST obligations.<br><br>These options cater to different business sizes and needs, ensuring that there’s a suitable solution for various VAT and GST management requirements."
+                    data-question="best software for managing global vat and gst requirements"
+                    data-llm="gpt4"
+                    data-brand="Yonda Tax"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="When it comes to managing global VAT and GST requirements, here are my top 5 recommendations in order of preference:<br><br>1. Avalara:<br>   - Avalara is a leading provider of cloud-based tax compliance solutions, including VAT and GST management.<br>   - It offers automated tax calculations, filing, and reporting, ensuring compliance with global tax regulations.<br>   - Avalara&#39;s comprehensive solution integrates seamlessly with various ERP, e-commerce, and accounting systems, making it a versatile choice.<br><br>2. Vertex:<br>   - Vertex is a well-established provider of tax software and services, including VAT and GST management.<br>   - It offers robust tax calculation, reporting, and compliance features, tailored to the specific needs of businesses operating globally.<br>   - Vertex&#39;s solutions are known for their accuracy, reliability, and integration capabilities with major business software platforms.<br><br>3. Sovos:<br>   - Sovos is a global tax compliance and reporting software provider, offering solutions for VAT and GST management.<br>   - Its platform automates tax calculations, filings, and reporting, helping businesses stay compliant across multiple jurisdictions.<br>   - Sovos is particularly known for its expertise in complex tax regulations and its ability to adapt to changing requirements.<br><br>4. Taxjar:<br>   - Taxjar is a cloud-based sales tax and VAT/GST management solution designed for e-commerce businesses.<br>   - It provides automated tax calculations, filing, and reporting, making it a suitable option for companies with a significant online presence.<br>   - Taxjar&#39;s user-friendly interface and integration with popular e-commerce platforms make it a convenient choice for smaller to medium-sized businesses.<br><br>5. Thomson Reuters ONESOURCE:<br>   - Thomson Reuters ONESOURCE is a comprehensive tax and accounting software suite, including VAT and GST management capabilities.<br>   - It offers advanced features such as tax planning, compliance, and reporting, catering to the needs of large, multinational organizations.<br>   - ONESOURCE&#39;s robust integration with enterprise-level business systems and its global tax expertise make it a reliable choice for complex tax management requirements.<br><br>These recommendations cover a range of software solutions, from specialized VAT and GST management platforms to more comprehensive tax compliance suites. The choice will depend on the size, complexity, and specific needs of your business, as well as your integration requirements and budget."
+                    data-question="best software for managing global vat and gst requirements"
+                    data-llm="claude"
+                    data-brand="Yonda Tax"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Okay, here are my top 3 recommendations for software to manage global VAT and GST requirements, listed in order of preference, along with brief explanations:<br><br>**1. Avalara AvaTax:**<br><br>*   **Why it&#39;s the top pick:** Avalara AvaTax is a comprehensive, cloud-based solution specifically built for tax compliance. It offers automated tax calculations, filing, and reporting across multiple jurisdictions. It integrates with a wide range of ERPs, accounting software, and e-commerce platforms.  It&#39;s highly scalable and handles complex scenarios well.  AvaTax also includes features for managing exemption certificates and streamlining audits. The level of automation and customization makes it a strong choice for companies with significant global operations.<br>*   **Key Strengths:**<br>    *   Robust tax calculation engine covering a vast number of jurisdictions.<br>    *   Pre-built integrations with major ERPs and e-commerce platforms.<br>    *   Exemption certificate management.<br>    *   Automated filing and remittance.<br>    *   Scalability for growing businesses.<br>*   **Considerations:**  Can be more expensive than other options, especially for very small businesses. Requires some initial setup and configuration.<br><br>**2. Vertex Indirect Tax O Series:**<br><br>*   **Why it&#39;s a strong contender:** Vertex is another leading provider of indirect tax solutions. The O Series is their cloud-based offering, providing tax calculation, compliance, and reporting capabilities. It&#39;s known for its accuracy and comprehensive coverage of tax rules. Vertex is often favored by larger enterprises with complex tax requirements. Like Avalara, it integrates with many major ERP systems.<br>*   **Key Strengths:**<br>    *   Highly accurate tax calculations.<br>    *   Strong focus on compliance and audit support.<br>    *   ERP integration.<br>    *   Detailed reporting.<br>*   **Considerations:** Similar to Avalara, it can be a significant investment. May be overkill for smaller businesses with simpler tax needs.<br><br>**3. Thomson Reuters ONESOURCE Indirect Tax:**<br><br>*   **Why it&#39;s a good option:** Thomson Reuters ONESOURCE Indirect Tax offers a suite of solutions for managing VAT, GST, and sales tax. It provides tax determination, compliance automation, and global reporting features. It&#39;s a solid choice for businesses that need a comprehensive solution with strong regulatory knowledge and support.  Thomson Reuters has a well-established reputation in the tax and legal space.<br>*   **Key Strengths:**<br>    *   Comprehensive tax determination engine.<br>    *   Compliance automation features.<br>    *   Global reporting capabilities.<br>    *   Strong regulatory expertise.<br>*   **Considerations:** Can be complex to implement and manage. Pricing can be a factor, especially for smaller companies.<br><br>**Important Considerations Before Choosing:**<br><br>*   **Business Size and Complexity:**  Smaller businesses with simpler tax needs might find a more affordable or less complex solution sufficient. Larger, multinational corporations require robust, scalable platforms like Avalara or Vertex.<br>*   **Integration Needs:**  Ensure the software integrates seamlessly with your existing ERP, accounting software, and e-commerce platforms.  Lack of integration can lead to manual data entry and errors.<br>*   **Jurisdictional Coverage:**  Verify that the software supports all the countries where you conduct business and are subject to VAT/GST.<br>*   **Reporting Requirements:**  Confirm that the software can generate the necessary reports for tax filing in each jurisdiction.<br>*   **Budget:**  Indirect tax compliance software can range in price significantly. Get quotes from multiple vendors and factor in implementation costs, training, and ongoing maintenance.<br>*   **Scalability:** Choose a solution that can grow with your business as you expand into new markets.<br><br>**Disclaimer:**  I am an AI chatbot and cannot provide financial or legal advice. It is recommended to consult with a tax professional or accountant to determine the best solution for your specific business needs and circumstances. Always request demos and trials of any software before making a purchase decision.<br><br>Before committing to any solution, I strongly advise requesting demos, speaking with existing customers, and performing a thorough cost-benefit analysis. Good luck!<br>"
+                    data-question="best software for managing global vat and gst requirements"
+                    data-llm="gemini"
+                    data-brand="Yonda Tax"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q2</span>
+                    <span class="question-text">how to automate sales tax compliance for my ecommerce business</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="Automating sales tax compliance for your eCommerce business can save you time and reduce the risk of errors. Here are my top recommendations:<br><br>1. **Sales Tax Software (e.g., Avalara, TaxJar)**<br>   - These platforms integrate seamlessly with most eCommerce platforms (like Shopify or WooCommerce) and automatically calculate sales tax based on the latest regulations for different jurisdictions. They also provide accurate reporting and filing capabilities, ensuring compliance without manual intervention.<br><br>2. **Accounting Software Integration (e.g., QuickBooks, Xero)**<br>   - Many accounting software solutions offer built-in sales tax compliance features or integrations with dedicated sales tax software. This can streamline your financial reporting and tax filing processes, reducing the need for manual data entry and ensuring consistency across your financial records.<br><br>3. **Tax Nexus Monitoring Tools**<br>   - Utilize tools that help you monitor your sales tax nexus status in various states. These tools track your sales activities and alert you when you reach a threshold that requires you to collect sales tax in a new jurisdiction, helping you stay proactive about compliance.<br><br>4. **eCommerce Platform Features**<br>   - Take advantage of built-in sales tax features offered by your eCommerce platform. Many platforms have native capabilities for handling sales tax calculations and can help simplify the process. Be sure to configure these settings correctly to align with your business needs.<br><br>5. **Consult with a Tax Professional**<br>   - While automation is key, consulting with a tax professional who specializes in eCommerce can provide valuable insights and ensure you are compliant with specific regulations, especially if you operate in multiple states. They can help you set up your automated systems correctly and guide you through complex tax scenarios.<br><br>By implementing these recommendations, you can create a robust automated sales tax compliance system that minimizes risk and streamlines your eCommerce operations."
+                    data-question="how to automate sales tax compliance for my ecommerce business"
+                    data-llm="gpt4"
+                    data-brand="Yonda Tax"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top 5 recommendations for automating sales tax compliance for your ecommerce business, listed in order of preference:<br><br>1. TaxJar:<br>   - TaxJar is a leading sales tax automation platform designed specifically for ecommerce businesses.<br>   - It automatically calculates, files, and remits sales tax for you across multiple states and marketplaces.<br>   - TaxJar integrates with popular ecommerce platforms like Shopify, WooCommerce, and Magento, making it easy to set up and manage.<br>   - It provides detailed reporting and analytics to help you stay compliant and understand your sales tax obligations.<br><br>2. Avalara:<br>   - Avalara is a comprehensive sales tax compliance solution that covers a wide range of ecommerce and business needs.<br>   - It offers automated tax calculations, returns filing, and remittance, as well as tax research and advisory services.<br>   - Avalara integrates with numerous ecommerce platforms, accounting software, and other business systems.<br>   - It provides robust reporting and analytics to help you manage your sales tax obligations.<br><br>3. Vertex:<br>   - Vertex is a trusted provider of enterprise-level sales tax automation solutions.<br>   - It offers advanced features such as tax determination, returns preparation, and audit support.<br>   - Vertex integrates with leading ERP and ecommerce platforms, ensuring seamless data flow and compliance.<br>   - The platform provides detailed reporting, analytics, and tax research to help you stay on top of your sales tax obligations.<br><br>4. Taxify (by Sovos):<br>   - Taxify is a cloud-based sales tax automation solution designed for small to medium-sized ecommerce businesses.<br>   - It automatically calculates, files, and remits sales tax across multiple states and jurisdictions.<br>   - Taxify integrates with popular ecommerce platforms and provides user-friendly dashboards for managing your sales tax compliance.<br>   - The platform offers features like tax rate updates, reporting, and audit support to ensure you remain compliant.<br><br>5. Zipify:<br>   - Zipify is a sales tax automation tool that specializes in integration with Shopify ecommerce stores.<br>   - It automatically calculates and files sales tax returns for you, ensuring compliance across multiple states and jurisdictions.<br>   - Zipify provides real-time tax rate updates, detailed reporting, and integration with your Shopify store.<br>   - The platform is designed to be user-friendly and easy to set up, making it a suitable option for smaller ecommerce businesses.<br><br>These recommendations cover a range of sales tax automation solutions, from industry-leading platforms like TaxJar and Avalara to more specialized tools like Zipify. Consider your specific business needs, integration requirements, and budget when selecting the best solution for your ecommerce operations."
+                    data-question="how to automate sales tax compliance for my ecommerce business"
+                    data-llm="claude"
+                    data-brand="Yonda Tax"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Okay, here are my top 3 recommendations for automating sales tax compliance for your e-commerce business, ordered by preference, along with brief explanations:<br><br>**1. Avalara AvaTax:**<br><br>*   **Why it&#39;s #1:**  Avalara is the gold standard for a reason.  It provides comprehensive, end-to-end automation. It calculates sales tax rates in real-time based on precise location, handles product taxability rules, manages filing and remittance, and offers robust reporting.  It integrates with most major e-commerce platforms and accounting software.  While it&#39;s a more premium option, the time savings, accuracy, and peace of mind often justify the investment, especially as your business grows.  **Key Benefit:**  Scaleable, reliable, and handles the complexities of sales tax with minimal manual intervention.<br><br>**2. TaxJar:**<br><br>*   **Why it&#39;s #2:** TaxJar is a great option, especially for smaller to medium-sized e-commerce businesses.  It offers automated sales tax calculations, reporting, and filing. Its user interface is generally considered very intuitive and easy to use. It also integrates well with popular e-commerce platforms.  TaxJar is often more affordable than Avalara, making it a good starting point.  **Key Benefit:**  User-friendly, cost-effective, and automates the core sales tax processes.<br><br>**3.  Quaderno:**<br><br>*   **Why it&#39;s #3:** Quaderno is ideally suited for businesses that sell digital products or services, especially to international customers.  It is designed to handle VAT and GST. It automates tax calculations, reporting, and invoicing, ensuring compliance with global tax regulations.  It also provides features for managing subscriptions and recurring payments. **Key Benefit:** A great option for digital product sellers, with good VAT and GST compliance features.<br><br>**Important Considerations BEFORE Choosing:**<br><br>*   **Sales Volume & Complexity:** How many transactions do you process monthly? How many states/countries do you sell to?  The more complex your business, the more likely you&#39;ll need a robust solution like Avalara.<br>*   **Integration Needs:**  Ensure the solution integrates seamlessly with your e-commerce platform (Shopify, WooCommerce, etc.), accounting software (QuickBooks, Xero, etc.), and payment gateway.<br>*   **Budget:**  Sales tax compliance solutions vary significantly in price.  Factor in both the monthly subscription fee and any potential setup or implementation costs.<br>*   **Nexus:** Figure out where you have physical or economic nexus. Each state has different laws and thresholds. This will help determine which states you need to collect sales tax in.<br><br>**Disclaimer:** Sales tax laws are complex and constantly evolving. I highly recommend consulting with a tax professional to determine the best solution for your specific business needs and to ensure compliance with all applicable regulations. I am not a tax advisor.<br>"
+                    data-question="how to automate sales tax compliance for my ecommerce business"
+                    data-llm="gemini"
+                    data-brand="Yonda Tax"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q3</span>
+                    <span class="question-text">what is the easiest way to stay compliant with international tax laws</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="Staying compliant with international tax laws can be complex due to the varying regulations across countries. Here are my top recommendations to help you navigate this landscape effectively:<br><br>1. **Engage a Qualified Tax Professional**  <br>   **Explanation**: Hiring a tax advisor or consultant with expertise in international tax law is crucial. They can provide tailored advice based on your specific situation, ensuring that you understand your obligations in different jurisdictions. A professional can also help you optimize your tax strategy, taking advantage of treaties and deductions.<br><br>2. **Utilize Tax Compliance Software**  <br>   **Explanation**: Invest in reputable tax compliance software that specializes in international tax regulations. These platforms can help automate the process of tracking income, expenses, and tax obligations across different countries, reducing the risk of human error and ensuring that you meet filing deadlines.<br><br>3. **Stay Informed About Tax Treaties and Changes**  <br>   **Explanation**: Regularly review the tax treaties and regulations that apply to the countries you operate in or have financial interests in. Being informed about changes in tax laws, such as updates to withholding tax rates or reporting requirements, will help you remain compliant and avoid penalties.<br><br>4. **Implement Robust Record-Keeping Practices**  <br>   **Explanation**: Maintain thorough and organized records of all financial transactions, including income, expenses, and tax filings. Good record-keeping is essential for supporting your tax positions and is often a requirement for compliance in various jurisdictions. It also simplifies the auditing process if your finances are scrutinized.<br><br>5. **Consider Tax Residency and Permanent Establishment Rules**  <br>   **Explanation**: Understand the rules surrounding tax residency and permanent establishment (PE) in the countries where you operate. These concepts can significantly impact your tax obligations and exposure. Ensure that you are compliant with local laws regarding residency status to avoid unintended tax liabilities.<br><br>By following these recommendations, you&#39;ll be better equipped to navigate the complexities of international tax compliance and minimize potential risks."
+                    data-question="what is the easiest way to stay compliant with international tax laws"
+                    data-llm="gpt4"
+                    data-brand="Yonda Tax"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top 5 recommendations for staying compliant with international tax laws, in order of preference:<br><br>1. Consult with a qualified international tax professional: Engaging an experienced tax accountant or lawyer who specializes in international tax matters is the best way to ensure you are fully compliant. They can provide guidance on applicable laws, filing requirements, and tax planning strategies specific to your situation.<br><br>2. Familiarize yourself with relevant tax treaties and regulations: Understand the tax treaties and regulations that apply to your country of residence and any countries where you have income, assets, or business activities. This will help you identify your tax obligations and reporting requirements.<br><br>3. Maintain accurate and detailed records: Keeping meticulous records of your income, expenses, and assets, both domestic and international, is crucial for tax compliance. This will make it easier to file accurate returns and provide documentation if needed.<br><br>4. Consider tax planning strategies: Work with your tax professional to explore legal tax planning strategies, such as tax-efficient structures for your investments or businesses, that can help minimize your tax liability while maintaining compliance.<br><br>5. Stay up-to-date with changes in tax laws: Regularly review updates and changes to international tax laws and regulations, as they can have a significant impact on your compliance obligations. Subscribing to relevant tax newsletters or industry publications can help you stay informed.<br><br>Remember, the complexity of international tax laws can vary greatly depending on your specific circumstances, so it&#39;s essential to seek professional guidance to ensure you are fully compliant and avoiding any potential penalties or legal issues."
+                    data-question="what is the easiest way to stay compliant with international tax laws"
+                    data-llm="claude"
+                    data-brand="Yonda Tax"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Okay, here are my top 5 recommendations for staying compliant with international tax laws, listed in order of preference, along with brief explanations.  Keep in mind that **this is general advice and you should always consult with a qualified tax professional or accountant specializing in international tax for advice specific to your situation.**<br><br>**1.  Hire a Qualified International Tax Advisor/Accountant (Highest Priority):**<br><br>*   **Explanation:**  This is by far the most effective and safest route. International tax laws are incredibly complex and constantly changing.  A specialist can assess your specific situation (business structure, income sources, residency, etc.), identify applicable tax treaties, and develop a compliance strategy tailored to your needs. They can also help you file the correct forms and avoid costly penalties.  The cost is an investment in avoiding bigger problems down the road.  Look for someone with experience in the specific countries you&#39;re dealing with.<br><br>**2.  Utilize International Tax Software (Especially if you have a smaller business with simpler needs):**<br><br>*   **Explanation:**  While not a replacement for a human advisor, specialized tax software designed for international businesses can be a huge help. These programs can assist with tracking income and expenses across different countries, calculating VAT/GST, generating reports for tax filing, and providing alerts for compliance deadlines. Look for software that integrates with your accounting system and offers support for the countries you operate in. Popular options include Avalara, Vertex, and TaxJar (though their scope varies). This is best used alongside a tax advisor.<br><br>**3.  Thorough Record Keeping and Documentation:**<br><br>*   **Explanation:**  Regardless of the other steps you take, meticulous record-keeping is crucial.  Keep detailed records of all income, expenses, transactions, and business activities in each country where you operate.  Document everything related to your residency status, business setup, and any payments made to or received from foreign entities.  Good documentation is essential for supporting your tax filings and defending against potential audits.  Use a consistent system and back up your data regularly.<br><br>**4. Understand Tax Treaties and Agreements:**<br><br>*   **Explanation:** Many countries have tax treaties with each other designed to prevent double taxation and clarify tax obligations. Familiarize yourself with the treaties that apply to your situation. These treaties often specify which country has the right to tax certain types of income and may provide reduced tax rates or exemptions. The IRS and other tax authorities usually publish information about these treaties.<br><br>**5.  Stay Up-to-Date with Tax Law Changes:**<br><br>*   **Explanation:** International tax laws are not static. They are constantly evolving due to changes in domestic legislation, international agreements, and court rulings. Subscribe to newsletters from reputable tax organizations, follow industry publications, and attend relevant webinars or conferences to stay informed about the latest developments that could impact your tax obligations. Your tax advisor can also help you stay informed.<br><br>**Important Considerations:**<br><br>*   **Residency:** Determining your tax residency is a fundamental step. It dictates which countries you are obligated to pay taxes in.<br>*   **Permanent Establishment (PE):** If you have a physical presence or significant business activities in a foreign country, you may be deemed to have a PE, which can trigger tax obligations in that country.<br>*   **Transfer Pricing:** If you conduct transactions between related entities in different countries, you need to ensure that these transactions are conducted at arm&#39;s length (i.e., as if they were between unrelated parties) to avoid transfer pricing adjustments.<br>*   **VAT/GST:** Value-Added Tax (VAT) or Goods and Services Tax (GST) are consumption taxes that apply in many countries. Understand the VAT/GST rules in the countries where you sell goods or services.<br><br>**Disclaimer:** I am an AI chatbot and cannot provide financial or legal advice. This information is for general guidance only. Always consult with a qualified professional for personalized advice.<br>"
+                    data-question="what is the easiest way to stay compliant with international tax laws"
+                    data-llm="gemini"
+                    data-brand="Yonda Tax"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q4</span>
+                    <span class="question-text">sales tax software for saas companies expanding globally</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top recommendations for sales tax software suitable for SaaS companies expanding globally:<br><br>1. **Avalara**<br>   - **Overview**: Avalara is a leading sales tax automation solution that offers comprehensive tools for managing tax compliance across various jurisdictions. It integrates seamlessly with many accounting and e-commerce platforms, making it ideal for SaaS companies with complex billing models.<br>   - **Key Features**: Automated tax calculations, real-time reporting, jurisdictional updates, and support for international VAT/GST compliance. Avalara also provides a robust API for custom integrations.<br><br>2. **TaxJar**<br>   - **Overview**: TaxJar is well-known for its user-friendly interface and strong automation capabilities. It is particularly beneficial for businesses that operate in the U.S. and are looking to expand globally, offering features that cater to both markets.<br>   - **Key Features**: Automated sales tax calculation, filing, and reporting, as well as a dedicated API for integrations. TaxJar also offers a feature called &quot;SmartCalcs,&quot; which helps determine the appropriate tax rate based on the location of sales.<br><br>3. **Vertex**<br>   - **Overview**: Vertex is a comprehensive tax solution that caters to larger enterprises and businesses with complex tax needs. It’s particularly strong in international tax compliance, making it suitable for SaaS companies with a global presence.<br>   - **Key Features**: Advanced tax calculation engine, extensive global tax compliance features, and robust reporting capabilities. Vertex also offers managed services for businesses that prefer outsourcing their tax compliance functions.<br><br>4. **Sovos**<br>   - **Overview**: Sovos provides a suite of tax compliance solutions, with a focus on global VAT and sales tax management. It&#39;s particularly useful for SaaS companies that need to navigate various international tax regulations.<br>   - **Key Features**: Automated tax determination and compliance for multiple regions, real-time reporting capabilities, and integrations with popular ERP and e-commerce platforms.<br><br>5. **Quaderno**<br>   - **Overview**: Quaderno is tailored for businesses operating internationally, providing tools for VAT, GST, and sales tax compliance. It is particularly user-friendly and suitable for small to medium-sized SaaS companies.<br>   - **Key Features**: Automatic tax calculation, invoicing, and reporting for different countries, as well as features that handle currency conversion and international payments.<br><br>These software solutions can help SaaS companies streamline their sales tax processes as they expand into new markets, ensuring compliance and reducing the risk of tax-related issues."
+                    data-question="sales tax software for saas companies expanding globally"
+                    data-llm="gpt4"
+                    data-brand="Yonda Tax"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="When it comes to sales tax software for SaaS companies expanding globally, here are my top 5 recommendations, listed in order of preference:<br><br>1. Avalara:<br>   - Avalara is a leading provider of cloud-based sales tax automation solutions.<br>   - It offers comprehensive coverage for global tax compliance, including sales tax, VAT, GST, and other indirect taxes.<br>   - Avalara&#39;s software seamlessly integrates with various e-commerce platforms, accounting systems, and ERP solutions, making it a versatile choice.<br>   - The platform provides real-time tax calculations, automated filing and remittance, and robust reporting capabilities.<br><br>2. Vertex:<br>   - Vertex is a well-established provider of enterprise-level tax management solutions.<br>   - It offers a comprehensive suite of products, including sales tax, use tax, and VAT compliance tools.<br>   - Vertex&#39;s software is known for its advanced features, such as tax content management, tax determination, and tax reporting.<br>   - The platform is highly scalable and can handle complex global tax requirements.<br><br>3. Taxjar:<br>   - Taxjar is a cloud-based sales tax automation platform designed specifically for small to medium-sized businesses.<br>   - It provides accurate real-time tax calculations, automated sales tax filing and remittance, and comprehensive reporting.<br>   - Taxjar&#39;s intuitive interface and easy integration with popular e-commerce platforms make it a user-friendly option.<br>   - The platform covers sales tax compliance in the United States and supports VAT and GST in several international markets.<br><br>4. Sovos:<br>   - Sovos is a global leader in tax compliance and regulatory reporting solutions.<br>   - It offers a range of products, including sales tax, VAT, and global tax compliance tools.<br>   - Sovos&#39; software is known for its robust tax content management, data integration, and reporting capabilities.<br>   - The platform is designed to handle complex tax requirements and can scale to support the needs of large enterprises.<br><br>5. Avalara AvaTax:<br>   - Avalara AvaTax is a standalone sales tax calculation and compliance solution within the Avalara suite.<br>   - It provides accurate real-time sales tax calculations, automated tax filing and remittance, and comprehensive reporting.<br>   - AvaTax integrates seamlessly with various e-commerce platforms, accounting systems, and ERP solutions.<br>   - The solution is a good fit for businesses that primarily need sales tax compliance within the United States.<br><br>These recommendations are based on the companies&#39; market presence, product capabilities, global coverage, and overall customer satisfaction. However, it&#39;s essential to evaluate each solution&#39;s specific features, pricing, and integration requirements to determine the best fit for your SaaS company&#39;s global expansion needs."
+                    data-question="sales tax software for saas companies expanding globally"
+                    data-llm="claude"
+                    data-brand="Yonda Tax"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Okay, here are my top 3 recommendations for sales tax software suitable for SaaS companies expanding globally, along with brief explanations, listed in order of preference.  I&#39;ve prioritized solutions that offer robust automation, global coverage, and scalability.<br><br>**Top Recommendations for Global SaaS Sales Tax Software:**<br><br>1.  **Avalara:**<br><br>    *   **Why it&#39;s #1:** Avalara is the most comprehensive and widely recognized solution for sales tax automation.  It offers extensive global coverage (over 100 countries), handling not just sales tax, but VAT, GST, and other transaction taxes. It integrates well with popular SaaS accounting and e-commerce platforms (e.g., NetSuite, Salesforce, Stripe, etc.).  Avalara&#39;s strength lies in its robust engine that accurately determines tax rates and rules based on location, product/service, and customer status.  Their AvaTax product line is specifically designed for sales tax, but they also have services for excise tax, communications tax, and more.<br>    *   **Key Strengths:**<br>        *   Global Coverage: Handles a vast array of international tax jurisdictions.<br>        *   Automation: Automates tax calculation, filing, and remittance.<br>        *   Integration: Integrates seamlessly with various accounting and CRM systems.<br>        *   Compliance: Keeps up-to-date with changing tax laws and regulations.<br>    *   **Considerations:** Can be one of the more expensive options, especially for smaller SaaS businesses. The complexity might be overkill if your initial global expansion is limited to only a few countries.<br><br>2.  **Vertex:**<br><br>    *   **Why it&#39;s #2:** Vertex is a strong contender, especially for companies with complex tax requirements and a need for enterprise-grade scalability. It offers robust tax calculation engines for both direct and indirect taxes, covering a wide range of global jurisdictions. Vertex is known for its accuracy and ability to handle complex tax scenarios, which is crucial for SaaS companies dealing with subscriptions, usage-based billing, and varying service offerings.<br>    *   **Key Strengths:**<br>        *   Accuracy: Highly accurate tax calculations, minimizing compliance risks.<br>        *   Scalability: Designed for large enterprises and can handle high volumes of transactions.<br>        *   Complex Scenarios: Adept at handling complex tax rules and situations.<br>        *   Reporting: Provides comprehensive reporting capabilities for tax compliance and analysis.<br>    *   **Considerations:** Similar to Avalara, Vertex can be a significant investment, and its complexity might be more suited for larger SaaS companies. The implementation process can be more involved than other solutions.<br><br>3.  **TaxJar:**<br><br>    *   **Why it&#39;s #3:** TaxJar is an excellent option for SaaS companies that need a user-friendly and more affordable solution, particularly if their global expansion is initially focused on a smaller number of countries or regions. While not as globally comprehensive as Avalara or Vertex, TaxJar offers good support for key markets like the US, Canada, and parts of Europe (VAT).  It excels at automating sales tax reporting and filing.  It is also known for its ease of use and straightforward integration with popular e-commerce and payment platforms.<br>    *   **Key Strengths:**<br>        *   Ease of Use: Simple and intuitive interface, making it easy to manage sales tax.<br>        *   Affordability: More cost-effective than Avalara or Vertex, especially for smaller businesses.<br>        *   Automation: Automates sales tax reporting and filing.<br>        *   Integration: Integrates with popular e-commerce and payment platforms.<br>    *   **Considerations:**  Limited global coverage compared to Avalara and Vertex. You&#39;ll need to carefully assess whether its supported countries align with your international expansion plans.<br><br>**Important Considerations When Choosing:**<br><br>*   **Jurisdictional Coverage:**  Prioritize solutions that cover the specific countries and regions where you operate or plan to expand.<br>*   **Integration:** Ensure seamless integration with your existing accounting, CRM, and e-commerce platforms.  This is crucial for automation and data accuracy.<br>*   **Scalability:** Choose a solution that can grow with your business as you expand into new markets and increase transaction volumes.<br>*   **Complexity:** Consider the complexity of your products/services and the tax rules that apply to them.  Some solutions are better suited for handling complex scenarios.<br>*   **Budget:** Evaluate the pricing structure and ensure it aligns with your budget.  Consider both the initial implementation costs and ongoing subscription fees.<br>*   **Support:**  Assess the quality of customer support and training provided by the vendor.  Reliable support is essential for navigating complex tax issues.<br><br>**Disclaimer:** Tax laws and regulations are constantly changing. It is always recommended to consult with a qualified tax professional for advice specific"
+                    data-question="sales tax software for saas companies expanding globally"
+                    data-llm="gemini"
+                    data-brand="Yonda Tax"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q5</span>
+                    <span class="question-text">top platforms for handling indirect tax for marketplace sellers</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="Certainly! Here are the top platforms for handling indirect tax for marketplace sellers, listed in order of preference:<br><br>1. **Avalara**<br>   - **Overview**: Avalara is a leading provider of cloud-based tax compliance solutions and offers a robust suite of services specifically designed for marketplace sellers. <br>   - **Key Features**: It automates sales tax calculations, manages exemptions, and handles filing and remittance. Avalara integrates seamlessly with various eCommerce platforms, ERPs, and accounting software, which makes it a great choice for businesses of all sizes.<br>   - **Strengths**: Avalara’s extensive database of tax rates and regulations helps ensure compliance across multiple jurisdictions, and their user-friendly interface simplifies the tax process.<br><br>2. **TaxJar**<br>   - **Overview**: TaxJar is designed specifically for eCommerce sellers and is known for its ease of use and effective automation features.<br>   - **Key Features**: It automates sales tax calculations and reporting, provides detailed sales tax reports, and simplifies filing processes. TaxJar also offers a “SmartCalcs” API for developers to integrate tax calculations into their applications easily.<br>   - **Strengths**: TaxJar’s real-time sales tax reporting and ability to manage nexus thresholds make it particularly beneficial for marketplace sellers who operate in multiple states.<br><br>3. **Vertex**<br>   - **Overview**: Vertex is a comprehensive tax compliance software that caters to larger enterprises but also offers solutions suitable for marketplace sellers.<br>   - **Key Features**: It provides advanced tax calculation capabilities, reporting, and compliance management. Vertex supports a wide array of industries and integrates with major ERP systems.<br>   - **Strengths**: Vertex’s robust analytics and ability to handle complex tax scenarios make it a strong choice for businesses with more intricate tax needs.<br><br>4. **Sovos**<br>   - **Overview**: Sovos is a global tax compliance platform that offers solutions for sales tax, VAT, and other indirect taxes, making it a suitable option for international marketplace sellers.<br>   - **Key Features**: It automates tax calculations, manages compliance requirements, and provides reporting tools. Sovos is particularly strong in global compliance, making it an excellent choice for sellers operating in multiple countries.<br>   - **Strengths**: Their extensive knowledge base and customer support help businesses navigate complex tax regulations efficiently.<br><br>5. **Rethink Tax**<br>   - **Overview**: Rethink Tax is a newer player in the tax compliance space with a focus on providing cost-effective solutions for small to mid-sized businesses and marketplace sellers.<br>   - **Key Features**: It offers automated sales tax calculations, filing, and remittance, with an emphasis on ease of use and affordability.<br>   - **Strengths**: Rethink Tax is designed to be user-friendly and offers straightforward pricing, making it an appealing option for smaller sellers or those just starting.<br><br>These platforms can help streamline the tax compliance process for marketplace sellers, ensuring they stay compliant with indirect tax regulations while saving time and resources."
+                    data-question="top platforms for handling indirect tax for marketplace sellers"
+                    data-llm="gpt4"
+                    data-brand="Yonda Tax"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="When it comes to handling indirect tax for marketplace sellers, here are my top 5 recommendations in order of preference:<br><br>1. Avalara:<br>   - Avalara is a leading provider of cloud-based tax compliance solutions, including indirect tax management for marketplace sellers.<br>   - It offers comprehensive features such as automated sales tax calculation, filing, and remittance, as well as support for a wide range of marketplace platforms.<br>   - Avalara&#39;s solutions are known for their accuracy, scalability, and seamless integration with various e-commerce platforms.<br><br>2. Taxify (formerly Vertex SMB):<br>   - Taxify is a cloud-based tax automation platform that specializes in indirect tax management for marketplace sellers.<br>   - It provides features like real-time tax calculations, filing, and reporting, as well as support for a broad range of marketplace integrations.<br>   - Taxify is known for its user-friendly interface, robust tax content, and the ability to handle complex tax scenarios.<br><br>3. Sovos:<br>   - Sovos is a comprehensive tax compliance and reporting solution that caters to marketplace sellers.<br>   - It offers features such as automated sales tax calculation, filing, and remittance, as well as support for various marketplace platforms.<br>   - Sovos is known for its deep expertise in indirect tax compliance and its ability to handle complex tax regulations across multiple jurisdictions.<br><br>4. TaxJar:<br>   - TaxJar is a popular cloud-based sales tax automation platform designed specifically for marketplace sellers.<br>   - It provides features like automated sales tax calculation, reporting, and filing, as well as integration with a wide range of e-commerce platforms.<br>   - TaxJar is known for its user-friendly interface, comprehensive sales tax guides, and affordable pricing options.<br><br>5. Taxify (formerly Vertex Small Business):<br>   - Taxify (formerly Vertex Small Business) is a tax compliance solution that offers indirect tax management capabilities for marketplace sellers.<br>   - It provides features such as automated sales tax calculation, filing, and reporting, as well as integration with various marketplace platforms.<br>   - Taxify is known for its robust tax content, compliance expertise, and the ability to handle complex tax scenarios.<br><br>These are my top 5 recommendations for handling indirect tax for marketplace sellers. Each platform offers unique features, strengths, and levels of integration, so it&#39;s essential to evaluate your specific needs and requirements to determine the best fit for your business."
+                    data-question="top platforms for handling indirect tax for marketplace sellers"
+                    data-llm="claude"
+                    data-brand="Yonda Tax"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Okay, here are my top 3 recommendations for platforms best suited for handling indirect tax (sales tax/VAT) for marketplace sellers, along with explanations, in order of preference.  Keep in mind that the &quot;best&quot; platform depends greatly on the specific needs of your business (volume of transactions, number of marketplaces you sell on, complexity of your product catalog, budget, etc.).  I&#39;m assuming a US-centric perspective initially, but I&#39;ll also touch on global options.<br><br>**Top Recommendations:**<br><br>1.  **TaxJar:**<br><br>    *   **Why it&#39;s #1:** TaxJar consistently receives high marks for its ease of use, robust automation, and focus specifically on sales tax. It integrates seamlessly with most major marketplaces (Amazon, eBay, Etsy, Shopify, etc.) and accounting software (like QuickBooks).  The user interface is clean and intuitive, making it relatively easy to set up and manage, even for those without extensive tax knowledge.  It offers automated sales tax calculations, nexus tracking, reporting, and auto-filing services.<br>    *   **Key Features:**<br>        *   **Automated Sales Tax Calculations:**  Accurate calculations based on product taxability rules and destination-based sourcing.<br>        *   **Nexus Tracking:**  Helps determine when you have a sales tax obligation in a state.<br>        *   **Comprehensive Reporting:**  Generates detailed reports for filing sales tax returns.<br>        *   **AutoFile:**  Automatically files your sales tax returns in applicable states (for an additional fee).<br>        *   **Economic Nexus Insights:** Helps you track your sales thresholds to determine when you need to collect sales tax in a particular state based on economic nexus laws.<br>    *   **Pros:**  User-friendly, comprehensive features, excellent integrations, strong focus on sales tax.<br>    *   **Cons:**  Can be expensive for very high-volume sellers.  While they offer excellent support, it&#39;s primarily online (email/chat).<br>    *   **Best For:**  Marketplace sellers of all sizes, especially those who want a straightforward and automated solution with excellent integration capabilities.<br><br>2.  **Avalara AvaTax:**<br><br>    *   **Why it&#39;s #2:**  Avalara AvaTax is a powerful and scalable solution, often favored by larger marketplace sellers and enterprises. It handles a wide range of tax types (sales tax, VAT, excise tax, etc.) and jurisdictions globally.  It provides very accurate tax calculations and offers advanced features like certificate management and exemption handling.  While more complex than TaxJar, it&#39;s a good choice for businesses with more intricate tax needs.<br>    *   **Key Features:**<br>        *   **Advanced Tax Calculation Engine:**  Highly accurate and up-to-date tax rates and rules.<br>        *   **Global Tax Coverage:**  Supports sales tax, VAT, and other taxes in numerous countries.<br>        *   **Certificate Management:**  Helps manage exemption certificates from customers.<br>        *   **Exemption Handling:**  Automates the process of applying exemptions to sales.<br>        *   **Returns Filing & Remittance:** Automates the filing and remittance of sales tax returns.<br>    *   **Pros:**  Scalable, handles complex tax scenarios, global coverage, robust features.<br>    *   **Cons:**  More complex to set up and use than TaxJar, more expensive, may be overkill for smaller sellers.<br>    *   **Best For:**  Larger marketplace sellers, businesses with complex tax requirements, and those selling internationally.<br><br>3.  **Sovos:**<br><br>    *   **Why it&#39;s #3:** Sovos is similar to Avalara in its capabilities and is another enterprise-level solution.  It provides comprehensive tax compliance solutions, including sales tax, VAT, and other indirect taxes.  Sovos emphasizes automation and integration to streamline the tax compliance process.  It&#39;s a strong contender for businesses that require a global tax solution with advanced features.<br>    *   **Key Features:**<br>        *   **Global Tax Determination:** Accurate and up-to-date tax rates and rules for various jurisdictions.<br>        *   **VAT Compliance:** Comprehensive VAT compliance solutions, including VAT returns and reporting.<br>        *   **Sales Tax Automation:** Automates sales tax calculations, returns, and remittances.<br>        *   **Reporting and Analytics:** Provides detailed reports and analytics to monitor tax compliance.<br>        *   **Integration Capabilities:** Integrates with various ERP systems, e-commerce platforms, and accounting software.<br>    *   **Pros:** Scalable, handles complex tax scenarios, global coverage, robust features, strong reporting.<br>    *   **Cons:** More complex to set up and use than TaxJar, more expensive, may be overkill for smaller sellers.<br>    *   **Best"
+                    data-question="top platforms for handling indirect tax for marketplace sellers"
+                    data-llm="gemini"
+                    data-brand="Yonda Tax"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+                </tbody>
+            </table>
+            <p class="breakdown-hint">Click any cell to see the full AI response</p>
+        </div>
+
+        <!-- Response modal -->
+        <div class="response-modal" id="responseModal">
+            <div class="modal-content" onclick="event.stopPropagation()">
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+                <div class="modal-header">
+                    <span class="modal-llm" id="modalLlm"></span>
+                    <span class="modal-status" id="modalStatus"></span>
+                </div>
+                <div class="modal-question" id="modalQuestion"></div>
+                <div class="modal-response" id="modalResponse"></div>
+            </div>
+        </div>
+    
+        </div>
+
+        <!-- Section 3: Reddit Opportunities -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <h2 class="section-title">Reddit Opportunities</h2>
+            </div>
+
+            <div class="subsection-title">Buy Intent Conversations</div>
+            <p class="subsection-desc">People actively looking for recommendations in your category</p>
+            <div class="reddit-posts">
+                
+            <a href="https://www.reddit.com/r/SaaS/comments/1qp828o/anyone_else_finding_enterprise_sales_tax_tools/" target="_blank" class="reddit-post">
+                <div class="post-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">Anyone else finding enterprise sales tax tools more painful ...</div>
+                    <div class="post-meta">
+                        r/SaaS &bull; 548K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            <a href="https://www.reddit.com/r/SaaS/comments/1qpnpwa/question_about_sales_tax_vat_use_tax_for_saas_day/" target="_blank" class="reddit-post">
+                <div class="post-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">Question about sales tax / VAT / use tax for SaaS (day 1 ...</div>
+                    <div class="post-meta">
+                        r/SaaS &bull; 548K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            <a href="https://www.reddit.com/r/Entrepreneur/comments/1qmpe30/spent_way_too_long_comparing_payroll_platforms/" target="_blank" class="reddit-post">
+                <div class="post-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">Spent way too long comparing payroll platforms, here's the ...</div>
+                    <div class="post-meta">
+                        r/Entrepreneur &bull; 5.1M members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            <a href="https://www.reddit.com/r/SaaS/comments/1qjuqbp/we_built_a_tool_to_help_small_business_owners/" target="_blank" class="reddit-post">
+                <div class="post-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">We built a tool to help small business owners stay ...</div>
+                    <div class="post-meta">
+                        r/SaaS &bull; 548K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            </div>
+
+            <div class="subsection-title">Pain Point Conversations</div>
+            <p class="subsection-desc">People discussing problems your product solves</p>
+            <div class="reddit-posts">
+                
+            <a href="https://www.reddit.com/r/AmerExit/comments/1qnvh4r/those_who_are_in_the_process_of_leaving_the_us_or/" target="_blank" class="reddit-post">
+                <div class="post-icon pain">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">Those who are in the process of leaving the U.S. or have ...</div>
+                    <div class="post-meta">
+                        r/AmerExit &bull; 190K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            <a href="https://www.reddit.com/r/urbanplanning/comments/1qn614o/if_cities_put_big_entry_fees_congestion_pricing/" target="_blank" class="reddit-post">
+                <div class="post-icon pain">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">If cities put big entry fees / congestion pricing for suburban ...</div>
+                    <div class="post-meta">
+                        r/urbanplanning &bull; 228K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            </div>
+        </div>
+
+        <!-- CTA Section -->
+        <div class="section cta-section">
+            <h2>Ready to improve your <em>AI visibility?</em></h2>
+            <p>We help brands get mentioned more in AI answers through strategic content placement.</p>
+            <a href="https://adva-solutions.com/AIVisibility" class="cta-button">Learn More</a>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p>Generated by <a href="https://adva-solutions.com">Adva</a> &bull; AI Visibility Health Check</p>
+    </footer>
+
+    <script>
+        // Tab switching functionality
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const tabId = btn.dataset.tab;
+
+                // Update buttons
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                // Update panels
+                document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+                document.getElementById('panel-' + tabId).classList.add('active');
+            });
+        });
+
+        // Show toast notification
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2500);
+        }
+
+        // Show response modal
+        function showResponse(cell) {
+            try {
+                let response = cell.dataset.response || 'No response available';
+                const question = cell.dataset.question || '';
+                const llm = cell.dataset.llm || '';
+                const brand = cell.dataset.brand || '';
+                const isMentioned = cell.classList.contains('mentioned');
+                const brandPosition = cell.dataset.position ? parseInt(cell.dataset.position) : null;
+
+                const llmNames = {'gpt4': 'GPT', 'claude': 'Claude', 'gemini': 'Gemini'};
+
+                // If brand is mentioned beyond position 5, add a banner at the top
+                let positionBanner = '';
+                if (isMentioned && brandPosition && brandPosition > 5) {
+                    positionBanner = '<div style="background: #fef3c7; padding: 0.75rem 1rem; border-radius: 6px; margin-bottom: 1rem; border-left: 4px solid #f59e0b;">' +
+                        '<strong>📍 Your brand appeared at position #' + brandPosition + '</strong> - scroll down to see the highlighted mention' +
+                        '</div>';
+                }
+
+                // Highlight brand name in response (case insensitive)
+                if (brand && isMentioned) {
+                    try {
+                        const brandRegex = new RegExp('(' + brand.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&') + ')', 'gi');
+                        response = response.replace(brandRegex, '<span class="brand-highlight">$1</span>');
+                    } catch(e) { /* ignore highlighting errors */ }
+                }
+
+                document.getElementById('modalLlm').textContent = llmNames[llm] || llm;
+                document.getElementById('modalQuestion').textContent = '"' + question + '"';
+                document.getElementById('modalResponse').innerHTML = positionBanner + response;
+
+                const statusEl = document.getElementById('modalStatus');
+                if (isMentioned) {
+                    statusEl.textContent = 'Mentioned';
+                    statusEl.className = 'modal-status mentioned';
+                } else {
+                    statusEl.textContent = 'Not mentioned';
+                    statusEl.className = 'modal-status not-mentioned';
+                }
+
+                document.getElementById('responseModal').classList.add('active');
+                document.body.style.overflow = 'hidden';
+
+                // Scroll to first highlight if mentioned
+                if (isMentioned) {
+                    setTimeout(function() {
+                        const highlight = document.querySelector('.modal-response .brand-highlight');
+                        if (highlight) {
+                            highlight.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        }
+                    }, 100);
+                }
+            } catch (e) {
+                console.error('Error showing response:', e);
+                alert('Error loading response. Please try again.');
+            }
+        }
+
+        // Close modal
+        function closeModal() {
+            document.getElementById('responseModal').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // Close when clicking backdrop (outside modal content)
+        document.getElementById('responseModal').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+
+        // Close modal on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeModal();
+        });
+    </script>
+</body>
+</html>
