@@ -1,0 +1,1370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Visibility Report - Walmer Group | Adva</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #ffffff;
+            min-height: 100vh;
+            color: #374151;
+            line-height: 1.6;
+        }
+
+        /* Header */
+        .header {
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            font-size: 1.25rem;
+            color: #1f2937;
+            text-decoration: none;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .header-date {
+            color: #9ca3af;
+            font-size: 0.875rem;
+        }
+
+        /* Copy link button */
+        .copy-link-button {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: #f3f4f6;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            color: #374151;
+            font-size: 0.75rem;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .copy-link-button:hover {
+            background: #e5e7eb;
+        }
+
+        .copy-link-button svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        .pdf-button {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: #1f2937;
+            border: none;
+            border-radius: 6px;
+            color: #ffffff;
+            font-size: 0.75rem;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .pdf-button:hover {
+            background: #374151;
+        }
+
+        .pdf-button svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        /* Toast notification */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: #1f2937;
+            color: #ffffff;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            opacity: 0;
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        /* Container */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Page title */
+        .page-title {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .page-title .label {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: #9ca3af;
+            font-size: 0.75rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+        }
+
+        .page-title .label::before,
+        .page-title .label::after {
+            content: '';
+            width: 30px;
+            height: 1px;
+            background: #d1d5db;
+        }
+
+        .page-title h1 {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 2.5rem;
+            font-weight: 400;
+            color: #1f2937;
+            margin-bottom: 0.5rem;
+        }
+
+        .page-title .brand {
+            color: #6b7280;
+            font-size: 1.125rem;
+        }
+
+        /* Sections */
+        .section {
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #f3f4f6;
+        }
+
+        .section-icon {
+            width: 40px;
+            height: 40px;
+            background: #1f2937;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .section-icon svg {
+            width: 20px;
+            height: 20px;
+            color: #ffffff;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 1.375rem;
+            color: #1f2937;
+        }
+
+        /* Score Section */
+        .score-section {
+            text-align: center;
+            padding: 3rem 2rem;
+        }
+
+        .score-circle {
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            background: #fafafa;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            border: 4px solid #ef4444;
+        }
+
+        .score-value {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 3rem;
+            font-weight: 500;
+            color: #ef4444;
+        }
+
+        .score-label {
+            font-size: 0.8rem;
+            color: #9ca3af;
+        }
+
+        .score-description {
+            color: #6b7280;
+            margin-bottom: 2rem;
+            font-size: 1rem;
+        }
+
+        .score-description strong {
+            color: #1f2937;
+        }
+
+        .llm-breakdown {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .llm-stat {
+            text-align: center;
+            padding: 1rem 1.5rem;
+            background: #fafafa;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+            min-width: 100px;
+        }
+
+        .llm-name {
+            display: block;
+            color: #9ca3af;
+            font-size: 0.8rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .llm-score {
+            font-size: 1.125rem;
+            font-weight: 600;
+        }
+
+        .llm-score.success {
+            color: #22c55e;
+        }
+
+        .llm-score.warning {
+            color: #ef4444;
+        }
+
+        /* Competitor Table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 0.875rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid #f3f4f6;
+        }
+
+        th {
+            color: #9ca3af;
+            font-weight: 500;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        td {
+            color: #374151;
+        }
+
+        .mention-count {
+            background: #fef3c7;
+            color: #92400e;
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        /* Tabs for LLM responses */
+        .example-tabs {
+            margin-top: 1.5rem;
+        }
+
+        .tabs-header {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+            padding-bottom: 0;
+        }
+
+        .tab-btn {
+            padding: 0.75rem 1.25rem;
+            background: transparent;
+            border: none;
+            color: #6b7280;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            margin-bottom: -1px;
+            transition: all 0.2s;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .tab-btn:hover {
+            color: #1f2937;
+        }
+
+        .tab-btn.active {
+            color: #1f2937;
+            border-bottom-color: #1f2937;
+        }
+
+        .tab-panel {
+            display: none;
+            background: #fafafa;
+            border-radius: 8px;
+            padding: 1.25rem;
+        }
+
+        .tab-panel.active {
+            display: block;
+        }
+
+        .example-question {
+            color: #1f2937;
+            font-weight: 500;
+            font-size: 0.95rem;
+            margin-bottom: 0.75rem;
+        }
+
+        /* Question breakdown table */
+        .question-breakdown {
+            margin-top: 1rem;
+        }
+
+        .breakdown-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        .breakdown-table th {
+            padding: 0.75rem;
+            text-align: center;
+            background: #f9fafb;
+            border-bottom: 2px solid #e5e7eb;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .breakdown-table th:first-child {
+            text-align: left;
+            width: 50%;
+        }
+
+        .breakdown-table td {
+            padding: 0.75rem;
+            border-bottom: 1px solid #f3f4f6;
+            vertical-align: middle;
+        }
+
+        .question-cell {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+        }
+
+        .question-num {
+            background: #e5e7eb;
+            color: #374151;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        .question-text {
+            color: #374151;
+            line-height: 1.4;
+        }
+
+        .llm-cell {
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-radius: 4px;
+        }
+
+        .llm-cell:hover {
+            background: #f3f4f6;
+        }
+
+        .llm-cell.mentioned {
+            color: #16a34a;
+        }
+
+        .llm-cell.mentioned .status-icon {
+            font-size: 1.25rem;
+        }
+
+        .llm-cell.not-mentioned {
+            color: #dc2626;
+        }
+
+        .llm-cell.not-mentioned .status-icon {
+            font-size: 1.25rem;
+        }
+
+        .breakdown-hint {
+            color: #9ca3af;
+            font-size: 0.8rem;
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+        /* Response modal */
+        .response-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+        }
+
+        .response-modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: #ffffff;
+            border-radius: 12px;
+            max-width: 800px;
+            width: 100%;
+            max-height: 90vh;
+            overflow: auto;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #9ca3af;
+            cursor: pointer;
+            padding: 0.25rem 0.5rem;
+        }
+
+        .modal-close:hover {
+            color: #374151;
+        }
+
+        .modal-header {
+            padding: 1.5rem 1.5rem 0;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            position: relative;
+        }
+
+        .modal-llm {
+            font-weight: 600;
+            color: #1f2937;
+            font-size: 1.1rem;
+        }
+
+        .modal-status {
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .modal-status.mentioned {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .modal-status.not-mentioned {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .modal-question {
+            padding: 1rem 1.5rem;
+            color: #6b7280;
+            font-size: 0.9rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .modal-response {
+            padding: 1.5rem;
+            overflow-y: auto;
+            flex: 1;
+            color: #374151;
+            font-size: 0.9rem;
+            line-height: 1.8;
+            min-height: 300px;
+            max-height: 60vh;
+            background: #fafafa;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .modal-response::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .modal-response::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        .modal-response::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 4px;
+        }
+
+        .modal-response::-webkit-scrollbar-thumb:hover {
+            background: #a1a1a1;
+        }
+
+        /* Brand highlight */
+        .brand-highlight {
+            background: linear-gradient(120deg, #fef08a 0%, #fde047 100%);
+            padding: 0.1rem 0.3rem;
+            border-radius: 3px;
+            font-weight: 600;
+        }
+
+        .example-content {
+            color: #6b7280;
+            font-size: 0.875rem;
+            line-height: 1.7;
+            max-height: 400px;
+            overflow-y: auto;
+            margin-bottom: 0.75rem;
+            padding: 1rem;
+            background: #f9fafb;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .example-status {
+            padding: 0.5rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            display: inline-block;
+        }
+
+        .example-status.mentioned {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .example-status.not-mentioned {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        /* Reddit Posts */
+        .reddit-posts {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .reddit-post {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: #fafafa;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: all 0.2s;
+            border: 1px solid transparent;
+        }
+
+        .reddit-post:hover {
+            background: #f3f4f6;
+            border-color: #e5e7eb;
+        }
+
+        .post-icon {
+            width: 40px;
+            height: 40px;
+            background: #1f2937;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .post-icon.pain {
+            background: #fef3c7;
+        }
+
+        .post-icon.pain svg {
+            color: #92400e;
+        }
+
+        .post-icon svg {
+            width: 20px;
+            height: 20px;
+            color: #ffffff;
+        }
+
+        .post-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .post-title {
+            color: #1f2937;
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .post-meta {
+            color: #9ca3af;
+            font-size: 0.8rem;
+        }
+
+        .post-arrow {
+            color: #9ca3af;
+            flex-shrink: 0;
+        }
+
+        .post-arrow svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .subsection-title {
+            color: #1f2937;
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin: 1.5rem 0 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .subsection-title:first-of-type {
+            margin-top: 0;
+        }
+
+        .subsection-desc {
+            color: #9ca3af;
+            font-size: 0.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .no-data {
+            color: #9ca3af;
+            font-style: italic;
+            text-align: center;
+            padding: 1rem;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            color: #9ca3af;
+            font-size: 0.8rem;
+            padding: 2rem;
+            border-top: 1px solid #e5e7eb;
+            margin-top: 2rem;
+        }
+
+        .footer a {
+            color: #1f2937;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* CTA */
+        .cta-section {
+            text-align: center;
+            padding: 3rem 2rem;
+            background: #fafafa;
+        }
+
+        .cta-section h2 {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 1.75rem;
+            color: #1f2937;
+            margin-bottom: 0.75rem;
+        }
+
+        .cta-section p {
+            color: #6b7280;
+            margin-bottom: 1.5rem;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background: #1f2937;
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .cta-button:hover {
+            background: #111827;
+            transform: translateY(-1px);
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .page-title h1 {
+                font-size: 1.75rem;
+            }
+
+            .section {
+                padding: 1.5rem;
+            }
+
+            .score-circle {
+                width: 130px;
+                height: 130px;
+            }
+
+            .score-value {
+                font-size: 2.25rem;
+            }
+
+            .llm-breakdown {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .tabs-header {
+                flex-wrap: wrap;
+            }
+
+            .tab-btn {
+                padding: 0.5rem 1rem;
+                font-size: 0.8rem;
+            }
+
+            .breakdown-table th,
+            .breakdown-table td {
+                padding: 0.5rem;
+                font-size: 0.8rem;
+            }
+
+            .question-cell {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .modal-content {
+                max-height: 90vh;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <a href="https://adva-solutions.com/AIVisibility" class="logo">adva</a>
+        <div class="header-right">
+            <!-- PDF button hidden for now - backend still available at /report/8b0ba6fd/pdf
+            <a href="/report/8b0ba6fd/pdf" class="pdf-button" title="Download as PDF">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                Download PDF
+            </a>
+            -->
+            <button class="copy-link-button" onclick="navigator.clipboard.writeText('https://adva-solutions.github.io/ai-visibility-report/report_walmer-group_8b0ba6fd.html'); showToast('Link copied!');" title="Copy shareable link">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                </svg>
+                Copy Link
+            </button>
+            <span class="header-date">January 29, 2026</span>
+        </div>
+    </header>
+    <div class="toast" id="toast">Link copied to clipboard!</div>
+
+    <div class="container">
+        <div class="page-title">
+            <div class="label">AI Visibility Report</div>
+            <h1>Your Brand's <em>AI Presence</em></h1>
+            <p class="brand">Analysis for Walmer Group</p>
+        </div>
+
+        <!-- Section 1: AI Visibility Score -->
+        <div class="section score-section">
+            <div class="score-circle">
+                <span class="score-value">0%</span>
+                <span class="score-label">0/15 mentions</span>
+            </div>
+            <p class="score-description">
+                Your brand appeared in <strong>0</strong> out of <strong>15</strong> AI recommendations
+            </p>
+            <div class="llm-breakdown">
+                
+            <div class="llm-stat">
+                <span class="llm-name">GPT</span>
+                <span class="llm-score warning">0/5</span>
+            </div>
+        
+            <div class="llm-stat">
+                <span class="llm-name">Claude</span>
+                <span class="llm-score warning">0/5</span>
+            </div>
+        
+            <div class="llm-stat">
+                <span class="llm-name">Gemini</span>
+                <span class="llm-score warning">0/5</span>
+            </div>
+        
+            </div>
+        </div>
+
+        <!-- Section 2: AI Response Breakdown -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                    </svg>
+                </div>
+                <h2 class="section-title">Question-by-Question Breakdown</h2>
+            </div>
+            <p style="color: #6b7280; margin-bottom: 1rem;">We asked these 5 questions to each AI model. Click any cell to see the full response:</p>
+            
+        <div class="question-breakdown">
+            <table class="breakdown-table">
+                <thead>
+                    <tr>
+                        <th>Question Asked</th>
+                        <th>GPT</th>
+                        <th>Claude</th>
+                        <th>Gemini</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q1</span>
+                    <span class="question-text">how to get r&d tax relief for my healthcare tech company</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="Certainly! Here are my top recommendations for securing R&D tax relief for your healthcare tech company:<br><br>### 1. **Understand Eligibility Criteria**<br>   - **Explanation**: Before applying, ensure that your projects qualify for R&D tax relief. In the UK, for instance, eligible projects must seek to achieve an advance in science or technology and involve overcoming scientific or technological uncertainties. Familiarize yourself with the specific guidelines set by the relevant authorities in your country to ensure your activities meet the criteria.<br><br>### 2. **Document Your R&D Activities Thoroughly**<br>   - **Explanation**: Maintain detailed records of your R&D projects, including project plans, technical documentation, and any experiments or prototypes developed. Document the objectives, challenges faced, and how you attempted to overcome them. This information will be crucial for justifying your claim and demonstrating the innovative nature of your work.<br><br>### 3. **Engage a Tax Advisor Specializing in R&D Claims**<br>   - **Explanation**: Consulting with a tax advisor who specializes in R&D tax relief can help navigate the complexities of the application process. They can assist in maximizing your claim by identifying all eligible expenditures, ensuring compliance with tax regulations, and making the process more efficient. Many advisors also have experience with specific industries, including healthcare technology.<br><br>### 4. **Identify Qualifying Expenditures**<br>   - **Explanation**: Make sure to identify all expenditures that qualify for R&D tax relief, including staff costs, materials used in R&D processes, and software development expenses. This can also include subcontractor costs and utilities used in R&D activities. A comprehensive understanding of what qualifies can significantly enhance your claim.<br><br>### 5. **Consider Collaboration with Research Institutions**<br>   - **Explanation**: Partnering with universities or research institutions can strengthen your R&D activities and provide additional resources. Collaborative projects may offer access to specialized expertise and funding opportunities. Not only can this enhance the quality of your R&D, but it may also open up additional avenues for tax relief and grants.<br><br>By following these recommendations, you can effectively position your healthcare tech company to benefit from R&D tax relief, ultimately supporting your innovation and growth in the industry."
+                    data-question="how to get r&d tax relief for my healthcare tech company"
+                    data-llm="gpt4"
+                    data-brand="Walmer Group"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top 5 recommendations for getting R&D tax relief for your healthcare tech company, listed in order of preference:<br><br>1. Consult with a specialized R&D tax credit firm:<br>   - These firms have deep expertise in navigating the complex R&D tax credit regulations, ensuring you claim the maximum eligible credits.<br>   - They can help identify all eligible R&D activities and expenses, maximizing your tax savings.<br>   - They can also handle the documentation and filing process, reducing the administrative burden on your team.<br><br>2. Maintain detailed records of R&D activities and expenses:<br>   - Carefully document the technological uncertainties you&#39;re seeking to address, the research process, and the associated costs.<br>   - This detailed documentation is crucial for substantiating your R&D tax credit claims and withstanding potential audits.<br>   - Organize your records in a way that aligns with the R&D tax credit guidelines, making the filing process more efficient.<br><br>3. Educate your team on R&D tax credit eligibility:<br>   - Ensure your employees understand the types of activities and expenses that qualify for the R&D tax credit.<br>   - This will help them identify and track relevant information throughout the R&D process, improving the completeness of your claims.<br>   - Providing training and resources to your team can also foster a culture of innovation and R&D-focused thinking.<br><br>4. Leverage industry-specific guidance and resources:<br>   - Research and stay up-to-date on any healthcare or technology-specific R&D tax credit guidelines or best practices.<br>   - Utilize industry associations, government publications, or specialized consultants to gain insights into maximizing your claims.<br>   - This can help you navigate the nuances of R&D activities in the healthcare tech sector.<br><br>5. Consider engaging with a tax professional or accountant:<br>   - While a specialized R&D tax credit firm is preferable, a trusted tax professional or accountant can also provide valuable guidance.<br>   - They can review your R&D activities and expenses, identify eligible items, and ensure compliance with the relevant tax regulations.<br>   - Their familiarity with your overall financial situation can also help optimize your tax planning and strategy.<br><br>By following these recommendations, you can maximize your chances of successfully claiming R&D tax credits, ultimately reducing your tax burden and freeing up resources to reinvest in your healthcare tech company&#39;s continued innovation and growth."
+                    data-question="how to get r&d tax relief for my healthcare tech company"
+                    data-llm="claude"
+                    data-brand="Walmer Group"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Okay, here are my top 3 recommendations for getting R&D tax relief for your healthcare tech company, listed in order of priority, along with brief explanations:<br><br>**Recommendations:**<br><br>1.  **Engage a Specialist R&D Tax Consultant (Highest Priority):**<br><br>    *   **Explanation:** This is the **single most effective** route. R&D tax relief is complex and requires a deep understanding of both the tax legislation and the relevant scientific or technological advancements in your field. A good specialist will:<br>        *   **Assess eligibility accurately:** They&#39;ll analyze your projects to determine if they meet the qualifying criteria, including overcoming technological uncertainties.<br>        *   **Maximize your claim:** They&#39;ll identify all eligible costs (staff, materials, software, sub-contractor costs, etc.) you might miss.<br>        *   **Prepare a robust technical narrative:** They&#39;ll articulate the technological challenges, solutions, and advancements your company achieved in a way that satisfies HMRC.<br>        *   **Manage the claim process:** They&#39;ll handle all communication with HMRC, minimizing the administrative burden on your team.<br>        *   **Defend your claim (if necessary):** They&#39;ll have experience in responding to HMRC inquiries and audits.<br>    *   **Why it&#39;s #1:**  Specialists drastically increase your chances of a successful and optimized claim while mitigating the risk of errors and potential penalties. They also free up your internal resources to focus on your core business.<br><br>2.  **Develop a Robust System for Tracking R&D Activities and Expenses:**<br><br>    *   **Explanation:** Whether you use a consultant or attempt the claim yourself, meticulous record-keeping is essential. This involves:<br>        *   **Project Documentation:** Keep detailed records of each project, including the specific technological challenges you faced, the solutions you explored, and the advancements you achieved.  Use a project management system to document this process.<br>        *   **Time Tracking:** Implement a system for employees to accurately track the time they spend on qualifying R&D activities.  This could be as simple as a spreadsheet or a more sophisticated time-tracking software.<br>        *   **Expense Allocation:**  Have a clear process for allocating expenses to specific R&D projects.  Keep detailed invoices and receipts.<br>        *   **Communication Records:** Keep records of emails, meeting minutes, and other communications related to the R&D projects.<br>    *   **Why it&#39;s #2:**  Having a well-organized system will make it much easier to identify eligible projects and costs, prepare a compelling claim, and respond to any HMRC inquiries. Poor record-keeping is a common reason for claim rejections or reductions.<br><br>3.  **Thoroughly Understand the HMRC Guidelines and Relevant Case Law:**<br><br>    *   **Explanation:** While a specialist consultant is ideal, it&#39;s important to have a basic understanding of the framework.  This involves:<br>        *   **Reviewing HMRC&#39;s CIRD Manual:**  The Corporate Intangibles Research and Development (CIRD) manual provides detailed guidance on R&D tax relief. Pay close attention to the definitions of R&D, qualifying activities, and eligible costs.  You can find it on the HMRC website.<br>        *   **Understanding the BEIS Guidelines:** The Department for Business, Energy & Industrial Strategy (BEIS) also offers guidance on the scientific and technological aspects of R&D.<br>        *   **Staying up-to-date on Case Law:**  Familiarize yourself with relevant court cases related to R&D tax relief.  These cases can provide valuable insights into how the legislation is interpreted and applied.<br>    *   **Why it&#39;s #3:**  Knowing the rules allows you to identify potential R&D projects early on, and it helps you to ask the right questions if you choose to engage a consultant.  It also empowers you to assess the quality of a consultant&#39;s advice.<br><br>**Important Considerations for Healthcare Tech Companies:**<br><br>*   **Software Development:** If you&#39;re developing software for medical devices, diagnostics, or patient management, ensure you can clearly demonstrate the technological challenges, such as overcoming integration problems with existing systems, improving data security, developing novel algorithms, or achieving specific performance benchmarks.<br>*   **Clinical Trials:**  Activities directly related to clinical trials may not always qualify as R&D. Focus on demonstrating the underlying scientific or technological advancements that are being evaluated in the trials.<br>*   **Regulatory Compliance:**  While compliance with regulations like FDA approval is important, it&#39;s not the primary focus of R&D tax relief.  The emphasis should be on the technological uncertainties you overcame during the development process.<br><br>By following these recommendations, you&#39;ll significantly increase your chances of successfully claiming R&D tax relief and maximizing the financial benefits for your healthcare tech"
+                    data-question="how to get r&d tax relief for my healthcare tech company"
+                    data-llm="gemini"
+                    data-brand="Walmer Group"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q2</span>
+                    <span class="question-text">innovation grants for uk healthcare startups</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top recommendations for innovation grants available for UK healthcare startups:<br><br>1. **Innovate UK Smart Grants**  <br>   **Overview**: Innovate UK offers Smart Grants that support innovative projects in any sector, including healthcare. This program funds high-risk, high-reward projects that demonstrate innovative solutions to problems.  <br>   **Why**: The grants can provide substantial funding (up to £2 million) and are ideal for startups looking to develop new technologies or services within healthcare. The application process encourages collaboration with academia and industry, fostering a rich ecosystem for innovation.<br><br>2. **Health Data Research UK (HDR UK)**  <br>   **Overview**: HDR UK supports innovative projects that leverage health data to improve patient care and outcomes. They offer various funding opportunities for projects that utilize data science in healthcare.  <br>   **Why**: For startups focused on data-driven healthcare solutions, this funding can be a significant boost. It encourages collaboration with leading research institutions and access to unique datasets, which can enhance product development and validation.<br><br>3. **The NHS Innovation Accelerator (NIA)**  <br>   **Overview**: The NIA supports the scale-up of high-impact innovations in healthcare. It provides funding, mentorship, and access to NHS networks to help startups navigate the healthcare landscape.  <br>   **Why**: This program is particularly beneficial for startups that have a viable product and need support in scaling their innovation within the NHS. The combination of funding and guidance from experienced professionals can significantly increase the chances of success in the healthcare market.<br><br>4. **Small Business Research Initiative (SBRI) Healthcare**  <br>   **Overview**: SBRI Healthcare funds small businesses to develop innovative solutions that address unmet health needs. The program offers contracts to support the development and testing of these innovations within the NHS.  <br>   **Why**: This initiative is excellent for startups looking to create products or services that directly address challenges faced by the NHS. The funding can cover the costs of prototyping and testing, making it a practical option for early-stage companies.<br><br>5. **UKRI Future Leaders Fellowship**  <br>   **Overview**: This fellowship provides funding to early-career researchers and innovators to develop their leadership skills while working on transformative projects. It supports a wide range of fields, including healthcare.  <br>   **Why**: Ideal for founders who are also researchers or have a strong academic background, the fellowship offers not only funding but also professional development opportunities. This can enhance the leadership capabilities necessary for driving a healthcare startup forward.<br><br>These options can provide essential financial support and resources to help healthcare startups innovate and grow within the UK market."
+                    data-question="innovation grants for uk healthcare startups"
+                    data-llm="gpt4"
+                    data-brand="Walmer Group"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top 5 recommendations for innovation grants for UK healthcare startups, listed in order of preference:<br><br>1. Innovate UK Smart Grants:<br>   - Innovate UK is the UK&#39;s innovation agency and offers a range of funding opportunities, including the Smart Grants program.<br>   - The Smart Grants provide funding for game-changing, innovative projects that have a clear potential for commercial success and growth.<br>   - Healthcare and life sciences projects are a key focus area, and startups can apply for grants ranging from £25,000 to £2 million.<br><br>2. NHS Innovation Accelerator (NIA):<br>   - The NIA is a prestigious program that supports the uptake and spread of high-impact, evidence-based innovations across the NHS and wider healthcare system.<br>   - Selected innovators receive tailored support, including funding, mentoring, and access to the NIA network.<br>   - The program focuses on innovations that address key challenges in the healthcare sector, making it a great fit for healthcare startups.<br><br>3. Digital Health Technology Catalyst:<br>   - This grant program, funded by Innovate UK, supports the development of digital health technologies that have the potential to transform healthcare delivery.<br>   - Grants are available for projects that focus on developing, testing, and validating digital health innovations.<br>   - The program is particularly interested in projects that address challenges related to prevention, early diagnosis, and self-management of health conditions.<br><br>4. SBRI Healthcare:<br>   - SBRI Healthcare is an NHS England and NHS Improvement initiative that provides funding and support for the development of innovative solutions to healthcare challenges.<br>   - The program offers a two-phase funding approach, with Phase 1 grants of up to £100,000 for feasibility studies and Phase 2 grants of up to £1 million for further development and testing.<br>   - Healthcare startups can apply for funding to develop innovative products, services, or technologies that address specific NHS needs.<br><br>5. HealthTech Connect:<br>   - HealthTech Connect is a free, online resource that helps healthcare innovators, including startups, navigate the various funding and support opportunities available in the UK.<br>   - The platform provides information on a range of grant programs, competitions, and accelerator programs, making it a valuable resource for healthcare startups seeking funding and support.<br>   - While HealthTech Connect does not directly provide funding, it can help startups identify and apply for the most relevant innovation grants and opportunities.<br><br>These recommendations cover a range of funding sources and support programs that are specifically tailored to healthcare startups in the UK. By exploring these options, UK healthcare startups can increase their chances of securing the necessary funding and resources to drive their innovations forward."
+                    data-question="innovation grants for uk healthcare startups"
+                    data-llm="claude"
+                    data-brand="Walmer Group"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Okay, here are my top 3 recommendations for innovation grants for UK healthcare startups, listed in order of preference, along with brief explanations:<br><br>**1. Innovate UK Smart Grants**<br><br>*   **Preference:** 1<br>*   **Explanation:** This is a broad grant that is not specific to healthcare but can be used for healthcare innovations. It is an &quot;open call&quot; grant, meaning that it is not for a specific theme, and welcomes applications from any area of technology or business. Innovative UK Smart Grants are awarded to projects that can demonstrate a significant and disruptive impact on the UK economy. They will fund projects that are high-risk with novel or challenging ideas.<br><br>**2. SBRI Healthcare**<br><br>*   **Preference:** 2<br>*   **Explanation:** SBRI (Small Business Research Initiative) Healthcare is specifically designed to support innovative solutions to challenges faced by the NHS. They run regular competitions focusing on specific healthcare needs and challenges. They provide funding for feasibility studies and prototype development. Check their website regularly for upcoming challenges that align with your startup&#39;s focus. This is a great option if your technology directly addresses a specific NHS need.<br><br>**3. NIHR (National Institute for Health Research) Funding Opportunities**<br><br>*   **Preference:** 3<br>*   **Explanation:** The NIHR offers a wide range of funding opportunities, from early-stage translational research to later-stage clinical trials. While some are highly competitive, they can provide significant funding for research and development. They have different programs depending on the stage of your innovation and the target patient population. This option is best suited for startups with a strong research component and a focus on improving patient outcomes.<br><br>**Important Considerations:**<br><br>*   **Eligibility Criteria:** Carefully review the eligibility criteria for each grant before applying. Some grants have specific requirements regarding company size, location, or the focus of the innovation.<br>*   **Alignment:** Ensure that your startup&#39;s goals and objectives align with the grant&#39;s priorities.<br>*   **Application Process:** The application process for these grants can be competitive, so it&#39;s essential to prepare a well-written and compelling proposal.<br>*   **Networking:** Attend industry events and connect with potential partners and collaborators to strengthen your application.<br><br>**Disclaimer:**<br>Grant availability and specific requirements can change, so please visit the official websites of these organisations for the most up-to-date information. I am an AI Chatbot and not a grant specialist, so always do your own research.<br>"
+                    data-question="innovation grants for uk healthcare startups"
+                    data-llm="gemini"
+                    data-brand="Walmer Group"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q3</span>
+                    <span class="question-text">best way to raise capital for medical technology business</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="Raising capital for a medical technology business can be challenging, but there are several effective strategies to consider. Here are my top recommendations, listed in order of preference:<br><br>### 1. **Venture Capital (VC) Funding**<br>   - **Explanation:** Venture capitalists specialize in funding high-growth startups, especially in the medical technology sector. They can provide significant capital in exchange for equity and often bring valuable industry connections, expertise, and mentorship. To attract VCs, ensure you have a solid business plan, a prototype or proof of concept, and a clear growth strategy.<br><br>### 2. **Angel Investors**<br>   - **Explanation:** Angel investors are affluent individuals who provide capital for startups in exchange for equity or convertible debt. They can be more flexible than VCs and often invest in early-stage companies. Building a network of angel investors can also lead to mentorship opportunities and valuable advice, making them a great option for medical tech entrepreneurs.<br><br>### 3. **Government Grants and Subsidies**<br>   - **Explanation:** Various government programs offer grants, subsidies, and tax incentives for medical technology innovation. These funds typically do not require equity in return, making them an attractive option. Programs like the Small Business Innovation Research (SBIR) grant in the U.S. can provide substantial funding for research and development in medical technologies.<br><br>### 4. **Crowdfunding**<br>   - **Explanation:** Platforms like Kickstarter, Indiegogo, or specialized medical technology crowdfunding sites can be used to raise capital from the general public. This approach not only helps in securing funds but also validates your product idea and builds a customer base. However, it requires a compelling pitch and marketing strategy to attract backers.<br><br>### 5. **Strategic Partnerships and Alliances**<br>   - **Explanation:** Forming partnerships with established companies in the medical field can provide access to capital, resources, and distribution channels. These partnerships can come in the form of joint ventures, licensing agreements, or co-development deals, where both parties can benefit from shared expertise and investment.<br><br>By following these recommendations and tailoring your approach to the specific needs and dynamics of your medical technology business, you can effectively raise the capital needed to succeed."
+                    data-question="best way to raise capital for medical technology business"
+                    data-llm="gpt4"
+                    data-brand="Walmer Group"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top 5 recommendations for the best ways to raise capital for a medical technology business, listed in order of preference:<br><br>1. Venture Capital Funding:<br>   - Venture capital firms are often the go-to source for funding medical technology startups with high growth potential.<br>   - They can provide significant amounts of capital, as well as valuable industry expertise and connections.<br>   - Securing venture capital funding can also lend credibility to your business and open doors to additional funding sources.<br><br>2. Angel Investors:<br>   - Angel investors are high-net-worth individuals who are interested in investing in early-stage companies.<br>   - They can offer not only financial support but also valuable mentorship and industry connections.<br>   - Connecting with angel investor networks or attending pitch events can be an effective way to find potential angel investors.<br><br>3. Crowdfunding:<br>   - Platforms like Kickstarter or Indiegogo can be used to raise funds from a large number of individual investors.<br>   - Crowdfunding can be particularly useful for generating initial capital, as well as building a community of supporters for your medical technology.<br>   - Successful crowdfunding campaigns can also attract the attention of larger investors and lend credibility to your business.<br><br>4. Grants and Competitions:<br>   - Various government agencies, foundations, and organizations offer grants and competitions specifically for medical technology startups.<br>   - These funding sources can provide non-dilutive capital, which means you don&#39;t have to give up equity in your company.<br>   - Researching and applying for relevant grants and competitions can be a valuable way to secure funding without giving up ownership.<br><br>5. Debt Financing:<br>   - Traditional bank loans or lines of credit can be an option for medical technology businesses with a strong financial track record and collateral.<br>   - Debt financing allows you to retain ownership of your company while accessing capital, but it may require personal guarantees or collateral.<br>   - This option is generally more suitable for later-stage companies with a proven revenue stream and clear path to profitability.<br><br>Remember, the best approach will depend on the stage of your business, the specific funding needs, and the strength of your business plan and team. It&#39;s often advisable to explore a combination of these funding sources to maximize your chances of success."
+                    data-question="best way to raise capital for medical technology business"
+                    data-llm="claude"
+                    data-brand="Walmer Group"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Okay, here are my top 5 recommendations for raising capital for a medical technology business, listed in order of preference, along with brief explanations:<br><br>**1.  Venture Capital (VC) Funding (Specialized in Healthcare/MedTech):**<br><br>*   **Preference Order:** Highest<br>*   **Explanation:**  VC firms specializing in healthcare or MedTech are often the ideal source for significant capital injections.  They bring more than just money; they bring expertise in navigating the regulatory landscape (FDA), understanding market dynamics, and building successful medical technology companies.  They are used to the long development timelines and high capital requirements typical of the industry.  Look for firms with a strong track record of investing in companies at your stage of development (seed, Series A, etc.) and a good understanding of your specific sub-sector (e.g., diagnostics, medical devices, therapeutics). This is the most effective way to get the large amounts of capital you need to get your medical technology business up and running.<br><br>**2.  Strategic Partnerships & Corporate Venture Capital (CVC):**<br><br>*   **Preference Order:** High<br>*   **Explanation:** Partnering with a larger, established medical device or pharmaceutical company can provide both capital and strategic advantages.  This could involve licensing agreements, joint ventures, or direct investment through the company&#39;s CVC arm.  The benefits extend beyond funding to include access to distribution channels, manufacturing capabilities, regulatory expertise, and potential acquisition opportunities.  Aligning with a strategic partner who sees synergy with your technology can significantly de-risk your venture and accelerate growth.<br><br>**3.  Government Grants and Non-Dilutive Funding (SBIR/STTR, NIH Grants):**<br><br>*   **Preference Order:** Medium<br>*   **Explanation:**  Explore government grants like Small Business Innovation Research (SBIR) and Small Business Technology Transfer (STTR) programs, as well as grants from the National Institutes of Health (NIH).  These are non-dilutive sources of funding, meaning you don&#39;t give up equity in your company.  While the application process can be competitive and time-consuming, these grants can provide crucial early-stage funding to validate your technology and achieve key milestones, making you more attractive to investors down the line.<br><br>**4.  Angel Investors (Healthcare-Focused):**<br><br>*   **Preference Order:** Medium<br>*   **Explanation:**  Angel investors are individuals who invest their own money in early-stage companies.  Focus on finding angel investors who have experience in the healthcare or medical technology industry.  They may have relevant industry knowledge, connections, and mentorship to offer, in addition to capital.  Angel networks focused on healthcare can be a good starting point.<br><br>**5.  Crowdfunding (Specialized Platforms):**<br><br>*   **Preference Order:** Lower<br>*   **Explanation:** While not typically suitable for large capital raises, crowdfunding, especially on platforms tailored to medical or scientific innovations (e.g., those focusing on healthcare research), can be a viable option for raising smaller amounts of capital and building early-stage validation.  It can also be a good way to generate public awareness and build a community around your product.  However, it is not usually sufficient to cover all the research and development costs associated with medical technology.<br><br>**Important Considerations for ALL options:**<br><br>*   **Strong Business Plan:**  A well-articulated business plan is crucial for attracting any type of investment.  It should clearly outline your technology, market opportunity, competitive landscape, financial projections, and management team.<br>*   **Intellectual Property (IP) Protection:**  Protecting your intellectual property through patents and other means is essential for securing funding.<br>*   **Regulatory Strategy:**  Demonstrate a clear understanding of the regulatory pathway for your technology (e.g., FDA approval process) and a well-defined regulatory strategy.<br>*   **Team:** Investors will heavily scrutinize your team&#39;s experience and expertise.  A strong, experienced team is a major asset.<br>*   **Due Diligence:** Be prepared for rigorous due diligence from potential investors.<br><br>This list prioritizes options that are most likely to provide the significant capital required for medical technology development, while also considering the strategic benefits that certain investors can offer. Good luck!<br>"
+                    data-question="best way to raise capital for medical technology business"
+                    data-llm="gemini"
+                    data-brand="Walmer Group"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q4</span>
+                    <span class="question-text">r&d advance loans for fintech companies</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="When seeking R&D advance loans for fintech companies, it&#39;s essential to consider options that cater specifically to technology-driven businesses. Here are my top recommendations:<br><br>1. **Innovation Refunds**<br>   - **Overview**: Innovation Refunds specializes in helping businesses, including fintech startups, access R&D tax credits and offers financing based on future credits.<br>   - **Why**: They provide non-dilutive capital, which is essential for startups looking to maintain equity. Their expertise in R&D financing for tech companies can facilitate quick access to funds.<br><br>2. **SBA 7(a) Loan Program**<br>   - **Overview**: The Small Business Administration (SBA) offers the 7(a) loan program, which can be used for various business purposes, including R&D.<br>   - **Why**: While not exclusively for fintech, this program provides favorable loan terms and lower interest rates, making it a solid choice for startups needing to fund innovative projects. It&#39;s particularly beneficial for companies that may not have extensive credit histories.<br><br>3. **BlueVine**<br>   - **Overview**: BlueVine provides financing solutions, including lines of credit and term loans, tailored for small businesses, including those in the fintech sector.<br>   - **Why**: Their flexible financing options and quick application process make it easier for fintech companies to access funds for R&D. They also understand the cash flow needs of tech-driven businesses.<br><br>4. **Kabbage (a part of American Express)**<br>   - **Overview**: Kabbage offers lines of credit to small businesses, with a focus on providing quick access to funds through a user-friendly platform.<br>   - **Why**: Fintech startups can benefit from Kabbage&#39;s streamlined process, allowing for rapid funding that can be directed towards R&D efforts. Their integration with financial data makes it easier for fintech companies to qualify.<br><br>5. **Fundera**<br>   - **Overview**: Fundera is an online marketplace that connects businesses with various lenders, including those that specialize in R&D financing.<br>   - **Why**: They offer a range of options tailored to the needs of startups, including fintech companies. Fundera&#39;s ability to compare multiple lenders allows businesses to find the best terms for their R&D financing needs.<br><br>Each of these options provides a unique approach to funding R&D in the fintech space, ensuring that you can choose one that aligns with your company&#39;s financial situation and growth plans."
+                    data-question="r&d advance loans for fintech companies"
+                    data-llm="gpt4"
+                    data-brand="Walmer Group"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top 5 recommendations for R&D advance loans for fintech companies, listed in order of preference:<br><br>1. Venture Debt Financing:<br>   - Venture debt firms like Silicon Valley Bank, Hercules Capital, and Horizon Technology Finance offer R&D advance loans specifically tailored for fintech companies.<br>   - These loans provide capital for research, development, and growth, without diluting equity.<br>   - Venture debt financing is often more flexible and faster to obtain compared to traditional bank loans.<br><br>2. Government Grants and Incentives:<br>   - Many countries and regions offer government-backed grants, tax credits, and other incentives for fintech companies engaged in R&D activities.<br>   - Examples include the UK&#39;s R&D tax credit scheme, the EU&#39;s Horizon Europe program, and the U.S. Small Business Innovation Research (SBIR) grants.<br>   - These programs can provide significant funding for fintech R&D without the need for repayment.<br><br>3. Crowdfunding Platforms:<br>   - Platforms like Kickstarter, Indiegogo, and Crowdcube allow fintech companies to raise funds for R&D through crowdfunding campaigns.<br>   - This can be a viable option for fintech startups or early-stage companies looking to fund specific projects or product development.<br>   - Crowdfunding can also help build a community of supporters and early adopters for the fintech solution.<br><br>4. Angel Investors and Accelerators:<br>   - Angel investors and fintech-focused accelerator programs may provide R&D advance loans or funding for fintech companies.<br>   - These sources often offer more than just capital, providing mentorship, networking opportunities, and access to industry expertise.<br>   - Examples include Fintech Sandbox, FinTech Innovation Lab, and various angel investor networks.<br><br>5. Peer-to-Peer Lending Platforms:<br>   - Peer-to-peer (P2P) lending platforms, such as Funding Circle and Lending Club, can be an alternative source of R&D financing for fintech companies.<br>   - These platforms connect fintech companies directly with individual or institutional lenders, often at more favorable terms than traditional bank loans.<br>   - However, the application process and requirements may be more stringent compared to other options.<br><br>It&#39;s important to thoroughly research and evaluate each option to determine the best fit for your fintech company&#39;s specific needs and stage of development."
+                    data-question="r&d advance loans for fintech companies"
+                    data-llm="claude"
+                    data-brand="Walmer Group"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Okay, here are 3-5 specific R&D Advance Loan recommendations for Fintech companies, ordered by my preference (assuming a generally strong Fintech company with promising IP and revenue, but needing cash flow to accelerate development):<br><br>**Important Disclaimer:**  _This is not financial advice.  The suitability of any particular option depends *heavily* on your specific company&#39;s financial situation, stage of development, intellectual property, and risk tolerance.  You should consult with financial advisors and legal counsel before making any decisions.  Also, lending terms and eligibility requirements can change._<br><br>Here&#39;s my list:<br><br>1.  **Main Street Capital (or Similar Specialty Finance Firms):**<br><br>    *   **Why it&#39;s #1:**  Main Street Capital is a Business Development Company (BDC) that invests in lower middle market companies. While technically not *exclusively* R&D advance loans, they often provide debt financing to companies with strong intellectual property and recurring revenue models, which many Fintechs possess.  They understand complex business models and can structure deals that take into account the potential of R&D.  Other similar firms include Hercules Capital, Horizon Technology Finance, and Trinity Capital.  The key is to look for BDCs with a strong track record in technology lending.<br>    *   **Pros:**  Can offer larger loan amounts than some specialized R&D lenders.  Potential for follow-on investments.  More flexible terms than traditional banks.  Experience with technology companies.<br>    *   **Cons:**  Higher interest rates than traditional bank loans.  May require warrants or equity participation.  More stringent due diligence process.<br>    *   **Why it&#39;s good for Fintech:** Fintech companies often have complex revenue models and intellectual property that traditional banks struggle to understand. Specialty finance firms are better equipped to assess the value of these assets.<br><br>2.  **Revenue-Based Financing (RBF) Providers (e.g., Pipe, Capchase):**<br><br>    *   **Why it&#39;s #2:**  While not strictly R&D advance loans, RBF is *highly* relevant to Fintechs and can be used to fund R&D indirectly and sustainably.  RBF provides capital in exchange for a percentage of future revenue.  This aligns incentives – the lender gets paid back faster as your revenue grows, and you retain equity.<br>    *   **Pros:**  Less dilutive than equity financing.  Repayments scale with revenue, making it more manageable.  Faster and simpler application process than traditional loans or venture capital.  Easier to qualify for than traditional loans, especially for companies with predictable revenue streams.<br>    *   **Cons:**  Can be more expensive than traditional loans if revenue grows rapidly.  May require sharing detailed financial data.  Not suitable for companies with highly volatile or unpredictable revenue.<br>    *   **Why it&#39;s good for Fintech:** Many Fintechs have subscription-based or recurring revenue models that are well-suited for RBF. The capital can be used to fund R&D efforts by freeing up existing cash flow.<br><br>3.  **Specialized R&D Financing Companies (e.g., Lighter Capital, Novel Capital):**<br><br>    *   **Why it&#39;s #3:**  These companies are specifically focused on providing financing for R&D activities. They have a deeper understanding of the R&D process and the challenges faced by innovative companies.<br>    *   **Pros:**  Tailored financing solutions for R&D.  Expertise in assessing the value of R&D projects.  May be more willing to take on riskier projects than traditional lenders.  Potentially faster funding than traditional loans.<br>    *   **Cons:**  Loan amounts may be smaller than those offered by other lenders.  Higher interest rates.  May require warrants or equity participation.<br>    *   **Why it&#39;s good for Fintech:** They understand the nuances of software development and intellectual property creation, which are crucial for Fintech companies.<br><br>4.  **Government Grants and Programs (e.g., SBIR/STTR):**<br><br>    *   **Why it&#39;s #4:** While not a loan, government grants are non-dilutive funding sources for R&D. The Small Business Innovation Research (SBIR) and Small Business Technology Transfer (STTR) programs are specifically designed to support small businesses engaged in R&D.<br>    *   **Pros:** Non-dilutive funding. Prestigious awards can enhance credibility. Access to government resources and expertise.<br>    *   **Cons:** Highly competitive application process. Can be time-consuming to apply. Strict reporting requirements. Funding amounts may be limited.<br>    *   **Why it&#39;s good for Fintech:** Fintech companies developing innovative technologies may be eligible for SBIR/STTR grants. The funding can be"
+                    data-question="r&d advance loans for fintech companies"
+                    data-llm="gemini"
+                    data-brand="Walmer Group"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q5</span>
+                    <span class="question-text">consulting services for r&d funding in the uk</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top recommendations for consulting services specializing in R&D funding in the UK:<br><br>1. **GrantTree**<br>   - **Overview**: GrantTree helps businesses secure funding through R&D tax credits and grants. They specialize in navigating the complexities of government funding and have a strong track record of helping clients maximize their claims.<br>   - **Why Recommend**: Their expertise in both R&D tax credits and grant applications makes them a one-stop-shop for companies looking to leverage government support for innovation. They provide tailored advice and have a high success rate.<br><br>2. **Brite Green**<br>   - **Overview**: Brite Green focuses on providing consulting services for R&D funding and innovation strategy, particularly in the environmental and sustainability sectors. They assist organizations in identifying funding opportunities and preparing applications.<br>   - **Why Recommend**: Their specialized focus on sustainability-related projects aligns with the growing emphasis on green innovation in the UK. They offer strategic insights and a deep understanding of relevant funding avenues.<br><br>3. **The Research and Development Tax Credit Group (R&D Tax Credit Group)**<br>   - **Overview**: This group specializes in helping businesses claim R&D tax credits and identifies eligible projects. They offer a comprehensive service from initial assessment to claim submission.<br>   - **Why Recommend**: Their dedicated focus on tax credits can help companies optimize their funding strategy, ensuring that they capture all eligible activities and expenses.<br><br>4. **Innovation Funding Service**<br>   - **Overview**: This consultancy helps businesses identify and apply for various innovation funding opportunities, including grants from UK Research and Innovation (UKRI) and Innovate UK. They provide insights into the application process and eligibility criteria.<br>   - **Why Recommend**: Their extensive knowledge of government funding programs and experience in the application process can significantly increase a company&#39;s chance of securing funding.<br><br>5. **R&D Tax Relief Specialists**<br>   - **Overview**: This consultancy focuses on R&D tax relief claims and provides expert advice on eligibility and documentation. They cater to a variety of industries, ensuring businesses can benefit from available tax reliefs.<br>   - **Why Recommend**: Their specialized knowledge in tax relief allows them to provide tailored support, ensuring clients maximize their claims and understand the nuances of R&D tax legislation.<br><br>These consultancies provide a mix of specialized support for both R&D tax credits and grant applications, making them valuable partners for any company looking to secure funding for research and development in the UK."
+                    data-question="consulting services for r&d funding in the uk"
+                    data-llm="gpt4"
+                    data-brand="Walmer Group"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top 5 recommendations for consulting services for R&D funding in the UK, listed in order of preference:<br><br>1. Innovate UK EDGE:<br>   - Innovate UK EDGE is a government-backed program that provides a range of support services to help businesses in the UK access R&D funding and other forms of innovation support.<br>   - They have a team of experienced innovation and growth specialists who can provide tailored advice and guidance on funding opportunities, including grants, loans, and tax incentives.<br>   - Innovate UK EDGE has a strong track record of helping businesses secure R&D funding and is well-connected with other funding bodies and support organizations in the UK.<br><br>2. Grant Thornton UK LLP:<br>   - Grant Thornton is a leading professional services firm that offers a dedicated R&D tax and grants advisory service.<br>   - Their team of experts can help businesses identify and claim eligible R&D tax credits, as well as assist with applying for a range of grant funding programs.<br>   - Grant Thornton has a deep understanding of the UK&#39;s R&D funding landscape and can provide strategic advice on maximizing funding opportunities.<br><br>3. BDO LLP:<br>   - BDO is another major professional services firm with a strong focus on R&D funding and innovation support.<br>   - Their R&D tax and grants advisory team can help businesses navigate the complex application processes and ensure they are claiming all eligible tax credits and grants.<br>   - BDO also has a network of regional offices across the UK, making it easier for businesses to access their services locally.<br><br>4. PwC UK:<br>   - PwC is a global professional services firm with a dedicated R&D tax and grants advisory practice in the UK.<br>   - Their team of specialists can provide comprehensive support, from identifying funding opportunities to preparing and submitting grant applications.<br>   - PwC&#39;s extensive experience and industry knowledge can be particularly valuable for businesses in highly technical or specialized sectors.<br><br>5. KPMG UK:<br>   - KPMG is a leading global professional services firm with a strong presence in the UK.<br>   - Their R&D tax and grants advisory team can help businesses maximize their R&D funding, including through the identification of tax credits and grant opportunities.<br>   - KPMG&#39;s extensive network and industry expertise can be beneficial for businesses seeking to navigate the complex R&D funding landscape in the UK.<br><br>It&#39;s important to note that the choice of consulting service will depend on the specific needs and requirements of your business, as well as your budget and preferred level of support. It&#39;s recommended to research and compare the services and expertise of these firms to determine the best fit for your R&D funding needs."
+                    data-question="consulting services for r&d funding in the uk"
+                    data-llm="claude"
+                    data-brand="Walmer Group"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Okay, here are my top 3 recommendations for R&D funding consulting services in the UK, based on a combination of reputation, expertise, sector focus, and client feedback.  I&#39;ve prioritized those with a strong track record and a good balance between price and value.<br><br>**Important Considerations Before We Start:**<br><br>*   **Your Sector:**  The best consultant often specializes in your industry.  For example, a company focused on biotech will need a consultant with strong life sciences expertise.<br>*   **Project Stage:**  Are you at the very early stages of defining your R&D, or are you already well into development?  Some consultants are better at early-stage grant applications, while others excel at later-stage claims.<br>*   **Desired Level of Support:** Do you want a full-service consultant to manage the entire process, or just someone to review your application?<br><br>**Recommendations (in order of preference):**<br><br>1.  **Leyton:**<br><br>    *   **Why:** Leyton is a well-established international consultancy with a significant presence in the UK. They have a strong reputation for securing R&D tax credits and grants across a wide range of sectors. They offer a full-service approach, from initial assessment to claim preparation and submission.  Their size allows them to invest in specialist teams with deep industry knowledge. They are particularly strong in engineering, manufacturing, and technology.<br>    *   **Strengths:**  Large, established, comprehensive service, deep industry expertise, strong track record.<br>    *   **Weaknesses:** Can be more expensive than smaller firms. Their size might mean you don&#39;t get the same level of personal attention as with a smaller boutique consultancy.<br>    *   **Best For:**  Larger companies, companies with complex R&D activities, companies seeking a full-service solution.<br><br>2.  **Ayming:**<br><br>    *   **Why:** Ayming is another international firm with a strong UK presence, known for its expertise in innovation funding and R&D tax relief. They have a good reputation for understanding the intricacies of the UK tax system and grant landscape. They offer a range of services, including R&D tax credit claims, grant applications, and innovation strategy consulting. They are particularly strong in sectors like manufacturing, software, and pharmaceuticals.<br>    *   **Strengths:** Global reach, deep expertise in innovation funding, strong client relationships, good understanding of complex regulations.<br>    *   **Weaknesses:** Similar to Leyton, their size can result in higher costs.<br>    *   **Best For:** Mid-sized to large companies, companies seeking a comprehensive approach to innovation funding, companies in regulated industries.<br><br>3.  **Myriad Associates:**<br><br>    *   **Why:** Myriad Associates is a UK-based consultancy specializing in R&D tax relief, grants, and other innovation incentives. They have a strong reputation for providing a personalized and proactive service. They work with companies of all sizes, from start-ups to established businesses. They are particularly strong in the technology, manufacturing, and construction sectors.<br>    *   **Strengths:** Strong focus on customer service, competitive pricing, good track record of success, expertise across various sectors.<br>    *   **Weaknesses:** Smaller than Leyton or Ayming, so may not have the same breadth of resources or expertise in every sector.<br>    *   **Best For:** SMEs, start-ups, companies seeking a more personalized service, companies looking for cost-effective solutions.<br><br>4.  **(Alternative - Consider if your sector is very niche): Granted Ltd:**<br><br>    *   **Why:** Granted Ltd is a specialist grant writing and consulting firm. They focus primarily on grant funding, and are very experienced in navigating the UK grant landscape (Innovate UK, etc.). This is a good option if your primary goal is to secure grant funding, rather than R&D tax credits.<br>    *   **Strengths:** Grant writing expertise, strong understanding of the grant application process, good success rates, focused service offering.<br>    *   **Weaknesses:** Less focus on R&D tax credits, may not be suitable if you need comprehensive innovation funding support.<br>    *   **Best For:** Companies primarily seeking grant funding, companies with well-defined R&D projects, companies needing assistance with grant application writing.<br><br>**Important Next Steps:**<br><br>*   **Check References:**  Always ask for and check references from previous clients.<br>*   **Initial Consultation:**  Schedule an initial consultation with each potential consultant to discuss your specific needs and assess their suitability.<br>*   **Get a Proposal:**  Obtain a detailed proposal outlining the scope of work, fees, and expected outcomes.<br>*   **Compare and Contrast:**  Carefully compare the proposals and choose the consultant that best meets your needs and budget.<br><br>"
+                    data-question="consulting services for r&d funding in the uk"
+                    data-llm="gemini"
+                    data-brand="Walmer Group"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+                </tbody>
+            </table>
+            <p class="breakdown-hint">Click any cell to see the full AI response</p>
+        </div>
+
+        <!-- Response modal -->
+        <div class="response-modal" id="responseModal">
+            <div class="modal-content" onclick="event.stopPropagation()">
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+                <div class="modal-header">
+                    <span class="modal-llm" id="modalLlm"></span>
+                    <span class="modal-status" id="modalStatus"></span>
+                </div>
+                <div class="modal-question" id="modalQuestion"></div>
+                <div class="modal-response" id="modalResponse"></div>
+            </div>
+        </div>
+    
+        </div>
+
+        <!-- Section 3: Reddit Opportunities -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <h2 class="section-title">Reddit Opportunities</h2>
+            </div>
+
+            <div class="subsection-title">Buy Intent Conversations</div>
+            <p class="subsection-desc">People actively looking for recommendations in your category</p>
+            <div class="reddit-posts">
+                
+            <a href="https://www.reddit.com/r/askanything/comments/1qmp858/why_is_health_insurance_and_medical_help_so/" target="_blank" class="reddit-post">
+                <div class="post-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">Why is health insurance and medical help so expensive? If ...</div>
+                    <div class="post-meta">
+                        r/askanything &bull; 66K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            <a href="https://www.reddit.com/r/cscareerquestions/comments/1qkxemp/why_the_job_market_is_this_bad/" target="_blank" class="reddit-post">
+                <div class="post-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">Why the job market is this bad? : r/cscareerquestions</div>
+                    <div class="post-meta">
+                        r/cscareerquestions &bull; 2.3M members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            <a href="https://www.reddit.com/r/Salary/comments/1qmux3o/anyone_in_biotech_whats_your_salary_like/" target="_blank" class="reddit-post">
+                <div class="post-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">Anyone in biotech?? What's your salary like</div>
+                    <div class="post-meta">
+                        r/Salary &bull; 382K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            <a href="https://www.reddit.com/r/Layoffs/comments/1qlre43/why_are_amazon_intel_microsoft_and_17_others/" target="_blank" class="reddit-post">
+                <div class="post-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">Why are Amazon, Intel, Microsoft and 17 others cutting ...</div>
+                    <div class="post-meta">
+                        r/Layoffs &bull; 147K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            </div>
+
+            <div class="subsection-title">Pain Point Conversations</div>
+            <p class="subsection-desc">People discussing problems your product solves</p>
+            <div class="reddit-posts">
+                
+            <a href="https://www.reddit.com/r/biotech/comments/1qnc3qw/is_biotech_cooked_need_some_positivity/" target="_blank" class="reddit-post">
+                <div class="post-icon pain">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">Is Biotech cooked? Need some positivity...</div>
+                    <div class="post-meta">
+                        r/biotech &bull; 221K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            <a href="https://www.reddit.com/r/biotech/comments/1qnlwkd/this_sub_is_an_echo_chamber_of_despair/" target="_blank" class="reddit-post">
+                <div class="post-icon pain">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">This sub is an echo chamber of despair - biotech</div>
+                    <div class="post-meta">
+                        r/biotech &bull; 221K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            </div>
+        </div>
+
+        <!-- CTA Section -->
+        <div class="section cta-section">
+            <h2>Ready to improve your <em>AI visibility?</em></h2>
+            <p>We help brands get mentioned more in AI answers through strategic content placement.</p>
+            <a href="https://adva-solutions.com/AIVisibility" class="cta-button">Learn More</a>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p>Generated by <a href="https://adva-solutions.com">Adva</a> &bull; AI Visibility Health Check</p>
+    </footer>
+
+    <script>
+        // Tab switching functionality
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const tabId = btn.dataset.tab;
+
+                // Update buttons
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                // Update panels
+                document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+                document.getElementById('panel-' + tabId).classList.add('active');
+            });
+        });
+
+        // Show toast notification
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2500);
+        }
+
+        // Show response modal
+        function showResponse(cell) {
+            try {
+                let response = cell.dataset.response || 'No response available';
+                const question = cell.dataset.question || '';
+                const llm = cell.dataset.llm || '';
+                const brand = cell.dataset.brand || '';
+                const isMentioned = cell.classList.contains('mentioned');
+                const brandPosition = cell.dataset.position ? parseInt(cell.dataset.position) : null;
+
+                const llmNames = {'gpt4': 'GPT', 'claude': 'Claude', 'gemini': 'Gemini'};
+
+                // If brand is mentioned beyond position 5, add a banner at the top
+                let positionBanner = '';
+                if (isMentioned && brandPosition && brandPosition > 5) {
+                    positionBanner = '<div style="background: #fef3c7; padding: 0.75rem 1rem; border-radius: 6px; margin-bottom: 1rem; border-left: 4px solid #f59e0b;">' +
+                        '<strong>📍 Your brand appeared at position #' + brandPosition + '</strong> - scroll down to see the highlighted mention' +
+                        '</div>';
+                }
+
+                // Highlight brand name in response (case insensitive)
+                if (brand && isMentioned) {
+                    try {
+                        const brandRegex = new RegExp('(' + brand.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&') + ')', 'gi');
+                        response = response.replace(brandRegex, '<span class="brand-highlight">$1</span>');
+                    } catch(e) { /* ignore highlighting errors */ }
+                }
+
+                document.getElementById('modalLlm').textContent = llmNames[llm] || llm;
+                document.getElementById('modalQuestion').textContent = '"' + question + '"';
+                document.getElementById('modalResponse').innerHTML = positionBanner + response;
+
+                const statusEl = document.getElementById('modalStatus');
+                if (isMentioned) {
+                    statusEl.textContent = 'Mentioned';
+                    statusEl.className = 'modal-status mentioned';
+                } else {
+                    statusEl.textContent = 'Not mentioned';
+                    statusEl.className = 'modal-status not-mentioned';
+                }
+
+                document.getElementById('responseModal').classList.add('active');
+                document.body.style.overflow = 'hidden';
+
+                // Scroll to first highlight if mentioned
+                if (isMentioned) {
+                    setTimeout(function() {
+                        const highlight = document.querySelector('.modal-response .brand-highlight');
+                        if (highlight) {
+                            highlight.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        }
+                    }, 100);
+                }
+            } catch (e) {
+                console.error('Error showing response:', e);
+                alert('Error loading response. Please try again.');
+            }
+        }
+
+        // Close modal
+        function closeModal() {
+            document.getElementById('responseModal').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // Close when clicking backdrop (outside modal content)
+        document.getElementById('responseModal').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+
+        // Close modal on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeModal();
+        });
+    </script>
+</body>
+</html>
