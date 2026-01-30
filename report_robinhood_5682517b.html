@@ -1,0 +1,1370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Visibility Report - Robinhood | Adva</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #ffffff;
+            min-height: 100vh;
+            color: #374151;
+            line-height: 1.6;
+        }
+
+        /* Header */
+        .header {
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            font-size: 1.25rem;
+            color: #1f2937;
+            text-decoration: none;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .header-date {
+            color: #9ca3af;
+            font-size: 0.875rem;
+        }
+
+        /* Copy link button */
+        .copy-link-button {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: #f3f4f6;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            color: #374151;
+            font-size: 0.75rem;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .copy-link-button:hover {
+            background: #e5e7eb;
+        }
+
+        .copy-link-button svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        .pdf-button {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: #1f2937;
+            border: none;
+            border-radius: 6px;
+            color: #ffffff;
+            font-size: 0.75rem;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .pdf-button:hover {
+            background: #374151;
+        }
+
+        .pdf-button svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        /* Toast notification */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: #1f2937;
+            color: #ffffff;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            opacity: 0;
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        /* Container */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Page title */
+        .page-title {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .page-title .label {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: #9ca3af;
+            font-size: 0.75rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+        }
+
+        .page-title .label::before,
+        .page-title .label::after {
+            content: '';
+            width: 30px;
+            height: 1px;
+            background: #d1d5db;
+        }
+
+        .page-title h1 {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 2.5rem;
+            font-weight: 400;
+            color: #1f2937;
+            margin-bottom: 0.5rem;
+        }
+
+        .page-title .brand {
+            color: #6b7280;
+            font-size: 1.125rem;
+        }
+
+        /* Sections */
+        .section {
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #f3f4f6;
+        }
+
+        .section-icon {
+            width: 40px;
+            height: 40px;
+            background: #1f2937;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .section-icon svg {
+            width: 20px;
+            height: 20px;
+            color: #ffffff;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 1.375rem;
+            color: #1f2937;
+        }
+
+        /* Score Section */
+        .score-section {
+            text-align: center;
+            padding: 3rem 2rem;
+        }
+
+        .score-circle {
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            background: #fafafa;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            border: 4px solid #22c55e;
+        }
+
+        .score-value {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 3rem;
+            font-weight: 500;
+            color: #22c55e;
+        }
+
+        .score-label {
+            font-size: 0.8rem;
+            color: #9ca3af;
+        }
+
+        .score-description {
+            color: #6b7280;
+            margin-bottom: 2rem;
+            font-size: 1rem;
+        }
+
+        .score-description strong {
+            color: #1f2937;
+        }
+
+        .llm-breakdown {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .llm-stat {
+            text-align: center;
+            padding: 1rem 1.5rem;
+            background: #fafafa;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+            min-width: 100px;
+        }
+
+        .llm-name {
+            display: block;
+            color: #9ca3af;
+            font-size: 0.8rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .llm-score {
+            font-size: 1.125rem;
+            font-weight: 600;
+        }
+
+        .llm-score.success {
+            color: #22c55e;
+        }
+
+        .llm-score.warning {
+            color: #ef4444;
+        }
+
+        /* Competitor Table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 0.875rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid #f3f4f6;
+        }
+
+        th {
+            color: #9ca3af;
+            font-weight: 500;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        td {
+            color: #374151;
+        }
+
+        .mention-count {
+            background: #fef3c7;
+            color: #92400e;
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        /* Tabs for LLM responses */
+        .example-tabs {
+            margin-top: 1.5rem;
+        }
+
+        .tabs-header {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+            padding-bottom: 0;
+        }
+
+        .tab-btn {
+            padding: 0.75rem 1.25rem;
+            background: transparent;
+            border: none;
+            color: #6b7280;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            margin-bottom: -1px;
+            transition: all 0.2s;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .tab-btn:hover {
+            color: #1f2937;
+        }
+
+        .tab-btn.active {
+            color: #1f2937;
+            border-bottom-color: #1f2937;
+        }
+
+        .tab-panel {
+            display: none;
+            background: #fafafa;
+            border-radius: 8px;
+            padding: 1.25rem;
+        }
+
+        .tab-panel.active {
+            display: block;
+        }
+
+        .example-question {
+            color: #1f2937;
+            font-weight: 500;
+            font-size: 0.95rem;
+            margin-bottom: 0.75rem;
+        }
+
+        /* Question breakdown table */
+        .question-breakdown {
+            margin-top: 1rem;
+        }
+
+        .breakdown-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        .breakdown-table th {
+            padding: 0.75rem;
+            text-align: center;
+            background: #f9fafb;
+            border-bottom: 2px solid #e5e7eb;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .breakdown-table th:first-child {
+            text-align: left;
+            width: 50%;
+        }
+
+        .breakdown-table td {
+            padding: 0.75rem;
+            border-bottom: 1px solid #f3f4f6;
+            vertical-align: middle;
+        }
+
+        .question-cell {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+        }
+
+        .question-num {
+            background: #e5e7eb;
+            color: #374151;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        .question-text {
+            color: #374151;
+            line-height: 1.4;
+        }
+
+        .llm-cell {
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-radius: 4px;
+        }
+
+        .llm-cell:hover {
+            background: #f3f4f6;
+        }
+
+        .llm-cell.mentioned {
+            color: #16a34a;
+        }
+
+        .llm-cell.mentioned .status-icon {
+            font-size: 1.25rem;
+        }
+
+        .llm-cell.not-mentioned {
+            color: #dc2626;
+        }
+
+        .llm-cell.not-mentioned .status-icon {
+            font-size: 1.25rem;
+        }
+
+        .breakdown-hint {
+            color: #9ca3af;
+            font-size: 0.8rem;
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+        /* Response modal */
+        .response-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+        }
+
+        .response-modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: #ffffff;
+            border-radius: 12px;
+            max-width: 800px;
+            width: 100%;
+            max-height: 90vh;
+            overflow: auto;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #9ca3af;
+            cursor: pointer;
+            padding: 0.25rem 0.5rem;
+        }
+
+        .modal-close:hover {
+            color: #374151;
+        }
+
+        .modal-header {
+            padding: 1.5rem 1.5rem 0;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            position: relative;
+        }
+
+        .modal-llm {
+            font-weight: 600;
+            color: #1f2937;
+            font-size: 1.1rem;
+        }
+
+        .modal-status {
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .modal-status.mentioned {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .modal-status.not-mentioned {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .modal-question {
+            padding: 1rem 1.5rem;
+            color: #6b7280;
+            font-size: 0.9rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .modal-response {
+            padding: 1.5rem;
+            overflow-y: auto;
+            flex: 1;
+            color: #374151;
+            font-size: 0.9rem;
+            line-height: 1.8;
+            min-height: 300px;
+            max-height: 60vh;
+            background: #fafafa;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .modal-response::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .modal-response::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        .modal-response::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 4px;
+        }
+
+        .modal-response::-webkit-scrollbar-thumb:hover {
+            background: #a1a1a1;
+        }
+
+        /* Brand highlight */
+        .brand-highlight {
+            background: linear-gradient(120deg, #fef08a 0%, #fde047 100%);
+            padding: 0.1rem 0.3rem;
+            border-radius: 3px;
+            font-weight: 600;
+        }
+
+        .example-content {
+            color: #6b7280;
+            font-size: 0.875rem;
+            line-height: 1.7;
+            max-height: 400px;
+            overflow-y: auto;
+            margin-bottom: 0.75rem;
+            padding: 1rem;
+            background: #f9fafb;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .example-status {
+            padding: 0.5rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            display: inline-block;
+        }
+
+        .example-status.mentioned {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .example-status.not-mentioned {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        /* Reddit Posts */
+        .reddit-posts {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .reddit-post {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: #fafafa;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: all 0.2s;
+            border: 1px solid transparent;
+        }
+
+        .reddit-post:hover {
+            background: #f3f4f6;
+            border-color: #e5e7eb;
+        }
+
+        .post-icon {
+            width: 40px;
+            height: 40px;
+            background: #1f2937;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .post-icon.pain {
+            background: #fef3c7;
+        }
+
+        .post-icon.pain svg {
+            color: #92400e;
+        }
+
+        .post-icon svg {
+            width: 20px;
+            height: 20px;
+            color: #ffffff;
+        }
+
+        .post-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .post-title {
+            color: #1f2937;
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .post-meta {
+            color: #9ca3af;
+            font-size: 0.8rem;
+        }
+
+        .post-arrow {
+            color: #9ca3af;
+            flex-shrink: 0;
+        }
+
+        .post-arrow svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .subsection-title {
+            color: #1f2937;
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin: 1.5rem 0 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .subsection-title:first-of-type {
+            margin-top: 0;
+        }
+
+        .subsection-desc {
+            color: #9ca3af;
+            font-size: 0.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .no-data {
+            color: #9ca3af;
+            font-style: italic;
+            text-align: center;
+            padding: 1rem;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            color: #9ca3af;
+            font-size: 0.8rem;
+            padding: 2rem;
+            border-top: 1px solid #e5e7eb;
+            margin-top: 2rem;
+        }
+
+        .footer a {
+            color: #1f2937;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* CTA */
+        .cta-section {
+            text-align: center;
+            padding: 3rem 2rem;
+            background: #fafafa;
+        }
+
+        .cta-section h2 {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 1.75rem;
+            color: #1f2937;
+            margin-bottom: 0.75rem;
+        }
+
+        .cta-section p {
+            color: #6b7280;
+            margin-bottom: 1.5rem;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background: #1f2937;
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .cta-button:hover {
+            background: #111827;
+            transform: translateY(-1px);
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .page-title h1 {
+                font-size: 1.75rem;
+            }
+
+            .section {
+                padding: 1.5rem;
+            }
+
+            .score-circle {
+                width: 130px;
+                height: 130px;
+            }
+
+            .score-value {
+                font-size: 2.25rem;
+            }
+
+            .llm-breakdown {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .tabs-header {
+                flex-wrap: wrap;
+            }
+
+            .tab-btn {
+                padding: 0.5rem 1rem;
+                font-size: 0.8rem;
+            }
+
+            .breakdown-table th,
+            .breakdown-table td {
+                padding: 0.5rem;
+                font-size: 0.8rem;
+            }
+
+            .question-cell {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .modal-content {
+                max-height: 90vh;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <a href="https://adva-solutions.com/AIVisibility" class="logo">adva</a>
+        <div class="header-right">
+            <!-- PDF button hidden for now - backend still available at /report/5682517b/pdf
+            <a href="/report/5682517b/pdf" class="pdf-button" title="Download as PDF">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                Download PDF
+            </a>
+            -->
+            <button class="copy-link-button" onclick="navigator.clipboard.writeText('https://adva-solutions.github.io/ai-visibility-report/report_robinhood_5682517b.html'); showToast('Link copied!');" title="Copy shareable link">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                </svg>
+                Copy Link
+            </button>
+            <span class="header-date">January 30, 2026</span>
+        </div>
+    </header>
+    <div class="toast" id="toast">Link copied to clipboard!</div>
+
+    <div class="container">
+        <div class="page-title">
+            <div class="label">AI Visibility Report</div>
+            <h1>Your Brand's <em>AI Presence</em></h1>
+            <p class="brand">Analysis for Robinhood</p>
+        </div>
+
+        <!-- Section 1: AI Visibility Score -->
+        <div class="section score-section">
+            <div class="score-circle">
+                <span class="score-value">60%</span>
+                <span class="score-label">9/15 mentions</span>
+            </div>
+            <p class="score-description">
+                Your brand appeared in <strong>9</strong> out of <strong>15</strong> AI recommendations
+            </p>
+            <div class="llm-breakdown">
+                
+            <div class="llm-stat">
+                <span class="llm-name">GPT</span>
+                <span class="llm-score success">3/5</span>
+            </div>
+        
+            <div class="llm-stat">
+                <span class="llm-name">Claude</span>
+                <span class="llm-score success">3/5</span>
+            </div>
+        
+            <div class="llm-stat">
+                <span class="llm-name">Gemini</span>
+                <span class="llm-score success">3/5</span>
+            </div>
+        
+            </div>
+        </div>
+
+        <!-- Section 2: AI Response Breakdown -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                    </svg>
+                </div>
+                <h2 class="section-title">Question-by-Question Breakdown</h2>
+            </div>
+            <p style="color: #6b7280; margin-bottom: 1rem;">We asked these 5 questions to each AI model. Click any cell to see the full response:</p>
+            
+        <div class="question-breakdown">
+            <table class="breakdown-table">
+                <thead>
+                    <tr>
+                        <th>Question Asked</th>
+                        <th>GPT</th>
+                        <th>Claude</th>
+                        <th>Gemini</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q1</span>
+                    <span class="question-text">best app to start investing with $100</span>
+                </td>
+                
+                <td class="llm-cell mentioned"
+                    data-response="If you&#39;re looking to start investing with $100, here are my top recommendations, listed in order of preference:<br><br>1. **Robinhood**<br>   - **Overview:** Robinhood is a user-friendly app that allows you to trade stocks, ETFs, and cryptocurrencies without paying commissions. <br>   - **Why It&#39;s Great:** It’s ideal for beginners due to its simple interface and educational resources. You can easily buy fractional shares, which means you can invest in expensive stocks with your limited budget. The app also offers features like options trading and cash management.<br><br>2. **Acorns**<br>   - **Overview:** Acorns is a micro-investing app that automatically invests your spare change from daily purchases into a diversified portfolio of ETFs.<br>   - **Why It&#39;s Great:** With Acorns, you can start investing with as little as $5. The app rounds up your purchases to the nearest dollar and invests the extra change, making it an easy way to start investing without needing to think about it. It’s perfect for those who want to grow their investment gradually.<br><br>3. **Stash**<br>   - **Overview:** Stash allows you to start investing in fractional shares of stocks and ETFs for as little as $5 while also providing educational content to help you learn about investing.<br>   - **Why It&#39;s Great:** This app not only enables you to invest but also encourages you to learn about personal finance. You can choose investments that align with your values or interests, making the process more engaging. Stash also offers banking services, which can help you manage your money effectively.<br><br>4. **M1 Finance**<br>   - **Overview:** M1 Finance combines investing with automated portfolio management, allowing you to create a custom portfolio or choose from pre-built ones.<br>   - **Why It&#39;s Great:** M1 Finance allows for fractional shares, meaning you can invest your $100 across different assets to create a diversified portfolio. The app offers a unique &quot;Pie&quot; investing feature that helps visualize and manage your investment allocation. It’s great for users who want more control over their investments while still enjoying automation.<br><br>5. **Wealthfront**<br>   - **Overview:** Wealthfront is a robo-advisor that offers automated investment management, making it easy to start investing with a low amount.<br>   - **Why It&#39;s Great:** With a minimum investment of $500 (though some features may allow you to start with less), Wealthfront provides a diversified portfolio based on your risk tolerance and financial goals. It also offers tax-loss harvesting and financial planning tools, making it a great option for long-term investors who want a hands-off approach.<br><br>Each of these apps has its unique strengths, so consider your investing style, financial goals, and the type of investment experience you seek when making your choice."
+                    data-question="best app to start investing with $100"
+                    data-llm="gpt4"
+                    data-brand="Robinhood"
+                    data-position="1"
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✓</span> (#1)
+                </td>
+            
+                <td class="llm-cell mentioned"
+                    data-response="Here are my top 5 recommendations for apps to start investing with $100:<br><br>1. Robinhood:<br>   - Robinhood is a popular and user-friendly investment app that allows you to trade stocks, ETFs, and cryptocurrencies with no commission fees.<br>   - It has a clean and intuitive interface, making it a great choice for beginners.<br>   - Robinhood offers fractional shares, allowing you to invest in parts of stocks with your $100.<br><br>2. Acorns:<br>   - Acorns is an app that helps you invest your spare change by rounding up your purchases to the nearest dollar and investing the difference.<br>   - It offers a range of diversified portfolios to choose from, making it a hands-off approach to investing.<br>   - Acorns also has features like automatic contributions and retirement accounts, making it a good option for long-term investing.<br><br>3. Stash:<br>   - Stash is an investment app that allows you to invest in stocks, ETFs, and fractional shares with as little as $1.<br>   - It offers educational resources and personalized investment recommendations based on your financial goals and risk tolerance.<br>   - Stash has a variety of investment themes, such as &quot;Clean & Green&quot; or &quot;Dividend Stocks,&quot; making it easy to align your investments with your values.<br><br>4. Betterment:<br>   - Betterment is a robo-advisor that manages your investments for you based on your risk tolerance and financial goals.<br>   - It offers a range of diversified portfolios, including stock and bond funds, with automatic rebalancing and tax-loss harvesting.<br>   - Betterment has a low minimum investment requirement, making it accessible for beginners with $100 to start.<br><br>5. SoFi Invest:<br>   - SoFi Invest is a comprehensive financial services platform that includes an investment app.<br>   - It offers commission-free trading of stocks, ETFs, and cryptocurrencies, as well as access to a robo-advisor service.<br>   - SoFi Invest also provides educational resources and personal finance tools, making it a good choice for those who want a well-rounded financial management solution.<br><br>Remember, it&#39;s important to research and understand the features, fees, and risks associated with any investment app before making a decision. Start small, diversify your investments, and consider your long-term financial goals when choosing the right app for you."
+                    data-question="best app to start investing with $100"
+                    data-llm="claude"
+                    data-brand="Robinhood"
+                    data-position="1"
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✓</span> (#1)
+                </td>
+            
+                <td class="llm-cell mentioned"
+                    data-response="Okay, here are my top recommendations for apps to start investing with $100, ranked in order of preference, along with brief explanations:<br><br>**Top Recommendations (Ordered by Preference):**<br><br>1.  **Robinhood:**<br><br>    *   **Why it&#39;s good for beginners:** Robinhood is very user-friendly with a clean and intuitive interface. It offers commission-free trading of stocks, ETFs, and even options (though options trading is riskier and not recommended for complete beginners).<br>    *   **Fractional shares:** Robinhood allows you to buy fractional shares, which means you can invest in companies like Amazon or Google even with a small amount of money.  For example, if Amazon stock is $150 and you only have $100, you can buy $100 worth of Amazon stock.<br>    *   **Downsides:**  Customer service can be slow and lacking.  More limited educational resources compared to some others.  The simplicity can sometimes lead to impulsive trading.<br>    *   **Why it&#39;s good with $100:**  The commission-free trading and fractional shares make it easy to diversify your portfolio even with a small initial investment.<br><br>2.  **SoFi Invest:**<br><br>    *   **Why it&#39;s good for beginners:** SoFi offers a well-rounded platform with both active investing and automated investing (robo-advisor) options. It also offers fractional shares.<br>    *   **Automated Investing (Robo-advisor):**  If you&#39;re unsure where to start, the robo-advisor can create a diversified portfolio for you based on your risk tolerance and goals. You can start with as little as $1 to invest through their robo-advisor.<br>    *   **Active Investing:** You can also trade stocks and ETFs commission-free.<br>    *   **Downsides:** Can be a little overwhelming for a complete beginner due to the number of services offered.<br>    *   **Why it&#39;s good with $100:**  The robo-advisor provides an easy way to get started with a diversified portfolio, and the active investing option allows you to learn and trade stocks and ETFs as you become more comfortable.<br><br>3.  **Acorns:**<br><br>    *   **Why it&#39;s good for beginners:** Acorns is designed for hands-off investing. It automatically invests your spare change from everyday purchases (round-ups).<br>    *   **Easy to use:** Very simple to set up and use.<br>    *   **Diversification:** Invests in a diversified portfolio of ETFs based on your risk tolerance.<br>    *   **Downsides:**  Monthly fees can eat into your returns, especially with a small account balance.  The round-up feature is slow for building a significant portfolio. Limited control over your investments.<br>    *   **Why it&#39;s good with $100:**  It&#39;s a good way to get started investing without having to think about it too much.  However, be mindful of the fees, as they can be a larger percentage of your portfolio when you&#39;re starting small.<br><br>4.  **Webull:**<br><br>    *   **Why it&#39;s potentially good:** Webull offers commission-free trading of stocks, ETFs, and options. It also provides some basic research tools and market data.<br>    *   **Fractional Shares:** Webull provides fractional share investing.<br>    *   **Downsides:** The interface can be a little more complex than Robinhood, so it might not be the absolute *easiest* for a complete beginner.  Customer service can be an issue.<br>    *   **Why it&#39;s good with $100:** The commission-free trading and fractional shares allow for diversification.<br><br>**Important Considerations Before Investing:**<br><br>*   **Risk Tolerance:** Understand your risk tolerance before investing. All investments carry risk, and you could lose money.<br>*   **Investment Goals:** What are you hoping to achieve with your investments? Are you saving for retirement, a down payment on a house, or something else?<br>*   **Diversification:** Don&#39;t put all your eggs in one basket. Diversify your investments across different asset classes (stocks, bonds, etc.) and sectors.<br>*   **Education:** Take the time to learn about investing before you start. There are many free resources available online.<br>*   **Fees:** Be aware of any fees associated with the app or the investments you choose.<br>*   **Taxes:** Understand the tax implications of investing.<br><br>**Disclaimer:** I am an AI chatbot and cannot provide financial advice. The above recommendations are based on general information and should not be considered a substitute for advice from a qualified financial advisor. Always do your own research before making any investment decisions.<br>"
+                    data-question="best app to start investing with $100"
+                    data-llm="gemini"
+                    data-brand="Robinhood"
+                    data-position="1"
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✓</span> (#1)
+                </td>
+            
+            </tr>
+        
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q2</span>
+                    <span class="question-text">investing app for complete beginners</span>
+                </td>
+                
+                <td class="llm-cell mentioned"
+                    data-response="Certainly! Here are my top recommendations for investing apps that are great for complete beginners, listed in order of preference:<br><br>1. **Robinhood**<br>   - **Overview**: Robinhood is a user-friendly app that allows beginners to trade stocks, ETFs, options, and cryptocurrencies with no commission fees.<br>   - **Why It&#39;s Great for Beginners**: The app&#39;s simple interface makes it easy to navigate and understand the basics of trading. It also provides educational resources that can help new investors learn about the stock market and investing strategies.<br><br>2. **Acorns**<br>   - **Overview**: Acorns is an investment app that automatically rounds up your purchases to the nearest dollar and invests the spare change into a diversified portfolio.<br>   - **Why It&#39;s Great for Beginners**: This app is perfect for those who are hesitant to start investing, as it requires minimal effort. It encourages saving and investing without the need for significant upfront capital, making it accessible for beginners.<br><br>3. **Stash**<br>   - **Overview**: Stash allows users to start investing with as little as $5 and provides personalized investment recommendations based on individual risk tolerance and interests.<br>   - **Why It&#39;s Great for Beginners**: Stash focuses on education, offering a wide range of articles and tutorials that help users learn about investing. The app also allows users to invest in fractional shares, making it easier to build a diversified portfolio even with a small amount of money.<br><br>4. **Fidelity Investments**<br>   - **Overview**: Fidelity is a well-established brokerage that offers a robust investing app with a full range of investment options, including stocks, ETFs, mutual funds, and retirement accounts.<br>   - **Why It&#39;s Great for Beginners**: Fidelity&#39;s app is user-friendly and provides extensive research tools and educational resources, making it a solid choice for beginners who want to learn more about investing while also having access to a wide array of investment options.<br><br>5. **Webull**<br>   - **Overview**: Webull is a commission-free trading platform that offers advanced charting tools and a variety of investment options, including stocks, ETFs, and options.<br>   - **Why It&#39;s Great for Beginners**: While it offers more advanced features than some beginner apps, Webull provides extensive educational resources and a paper trading feature, allowing beginners to practice trading without risking real money.<br><br>These apps provide a mix of ease of use, educational resources, and investment options that can help beginners start their investing journey confidently."
+                    data-question="investing app for complete beginners"
+                    data-llm="gpt4"
+                    data-brand="Robinhood"
+                    data-position="1"
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✓</span> (#1)
+                </td>
+            
+                <td class="llm-cell mentioned"
+                    data-response="Here are my top 5 recommendations for investing apps for complete beginners, in order of preference:<br><br>1. Robinhood:<br>   - Robinhood is a user-friendly, commission-free investing app that makes it easy for beginners to get started with investing.<br>   - It offers a simple and intuitive interface, allowing users to easily buy and sell stocks, ETFs, and cryptocurrencies.<br>   - Robinhood provides educational resources and tools to help beginners learn about investing and make informed decisions.<br><br>2. Acorns:<br>   - Acorns is a micro-investing app that automatically invests your spare change from everyday purchases into a diversified portfolio of ETFs.<br>   - It&#39;s an excellent option for beginners who want to start investing with small amounts of money and build their portfolio over time.<br>   - Acorns also offers educational content and tools to help users understand the basics of investing.<br><br>3. Betterment:<br>   - Betterment is a robo-advisor platform that provides automated, diversified investment portfolios based on your risk tolerance and financial goals.<br>   - It&#39;s a great option for beginners who want a hands-off approach to investing, as Betterment handles the portfolio management and rebalancing.<br>   - Betterment also offers tax-optimization features and personalized financial advice to help users achieve their investment objectives.<br><br>4. Charles Schwab Intelligent Portfolios:<br>   - Charles Schwab Intelligent Portfolios is a robo-advisor service that creates and manages diversified investment portfolios based on your risk profile and investment goals.<br>   - It&#39;s a low-cost option with no account minimums, making it accessible for beginners.<br>   - The platform provides educational resources and tools to help users understand the investment process and monitor their portfolio performance.<br><br>5. Fidelity Investments:<br>   - Fidelity Investments is a well-established financial services firm that offers a comprehensive investing app for beginners.<br>   - The app provides a wide range of investment options, including stocks, ETFs, mutual funds, and more, along with research and analysis tools.<br>   - Fidelity also offers educational resources and customer support to help beginners navigate the investment landscape.<br><br>Remember, when choosing an investing app, consider factors such as fees, investment options, educational resources, and user-friendliness to find the one that best fits your needs as a beginner investor."
+                    data-question="investing app for complete beginners"
+                    data-llm="claude"
+                    data-brand="Robinhood"
+                    data-position="1"
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✓</span> (#1)
+                </td>
+            
+                <td class="llm-cell mentioned"
+                    data-response="Okay, here are my top 3 recommendations for investing apps specifically designed for complete beginners, ranked in order of preference, along with brief explanations:<br><br>**1.  Acorns:**<br><br>*   **Why it&#39;s great for beginners:** Acorns excels at removing the intimidation factor of investing.  Its core feature, &quot;Round-Ups,&quot; automatically invests spare change from your everyday purchases.  This makes investing feel effortless and almost invisible.  It also offers educational content and a &quot;Found Money&quot; feature where you can earn investment rewards when you shop at partnered retailers.  The interface is clean, simple, and easy to understand.  They offer pre-built portfolios based on your risk tolerance.<br>*   **Key Features:** Round-Ups, Found Money, Simple portfolio options, educational content, retirement accounts (Acorns Later), checking account (Acorns Checking).<br>*   **Things to consider:** Fees are subscription-based ($3-$5/month), which can be a larger relative cost for very small accounts.<br><br>**2.  Robinhood:**<br><br>*   **Why it&#39;s great for beginners:** Robinhood is known for its commission-free trading of stocks, ETFs, and options (though options trading is generally not recommended for beginners). Its user interface is very clean and intuitive, making it easy to buy and sell assets. Robinhood offers fractional shares, allowing you to invest in companies even if you can&#39;t afford a full share.<br>*   **Key Features:** Commission-free trading, fractional shares, simple interface, crypto trading (be careful!), cash management features.<br>*   **Things to consider:**  The simplicity can be a double-edged sword.  It can feel a bit *too* gamified, which might encourage impulsive trading.  Limited educational resources compared to some other platforms.  Customer service has been a point of criticism in the past.<br><br>**3.  Webull:**<br><br>*   **Why it&#39;s great for beginners:** Similar to Robinhood, Webull offers commission-free trading of stocks, ETFs, options, and crypto. It also provides fractional shares. Webull offers more advanced charting tools and market data than Robinhood, which can be helpful as you learn more, but might be overwhelming at first. They have a paper trading feature for you to test the waters before you invest real money.<br>*   **Key Features:** Commission-free trading, fractional shares, paper trading, more advanced charting tools, extended trading hours.<br>*   **Things to consider:** The more advanced features can be confusing for true beginners.  Like Robinhood, it can be seen as encouraging frequent trading.<br><br>**Important Considerations for all Beginners:**<br><br>*   **Start Small:** Don&#39;t feel pressured to invest large sums of money right away. Begin with an amount you&#39;re comfortable losing.<br>*   **Do Your Research:**  Before investing in any stock or ETF, take the time to understand what the company does or what the ETF tracks.  Don&#39;t rely solely on tips or recommendations from others.<br>*   **Understand Risk Tolerance:**  Determine how much risk you&#39;re willing to take.  This will help you choose appropriate investments. Lower risk options include ETFs that track the broader market.<br>*   **Invest for the Long Term:**  Investing is a marathon, not a sprint.  Don&#39;t try to get rich quick. Focus on long-term growth and avoid making emotional decisions based on short-term market fluctuations.<br>*   **Diversify:** Spreading your investments across different asset classes (stocks, bonds, real estate, etc.) can help reduce risk.  ETFs are a great way to achieve diversification.<br>*   **Don&#39;t invest in things you don&#39;t understand:**  Stay away from complex products like options until you are familiar with how the stock market works.<br><br>**Disclaimer:** I am an AI chatbot and cannot provide financial advice. This information is for educational purposes only. Investing involves risk, and you could lose money. Consult with a qualified financial advisor before making any investment decisions.<br>"
+                    data-question="investing app for complete beginners"
+                    data-llm="gemini"
+                    data-brand="Robinhood"
+                    data-position="2"
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✓</span> (#2)
+                </td>
+            
+            </tr>
+        
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q3</span>
+                    <span class="question-text">scared to invest where do I start</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="Investing can seem daunting, but starting with the right approach can help build your confidence and knowledge. Here are my top 3-5 recommendations for beginners:<br><br>### 1. **Index Funds/ETFs**<br>   - **Explanation:** Index funds and exchange-traded funds (ETFs) are investment funds that track a specific index, such as the S&P 500. They provide broad market exposure, low operating expenses, and typically lower risk due to diversification. This means you’re not betting on the success of a single company but rather investing in a wide array of stocks, which can help mitigate losses.<br><br>### 2. **Robo-Advisors**<br>   - **Explanation:** Robo-advisors are automated platforms that create and manage a diversified portfolio for you based on your risk tolerance and investment goals. They typically charge lower fees than traditional financial advisors and require minimal input from you, making them ideal for beginners. Examples include Betterment and Wealthfront.<br><br>### 3. **Target-Date Funds**<br>   - **Explanation:** Target-date funds are designed for investors planning for retirement or a specific financial goal. They automatically adjust the asset allocation as the target date approaches, becoming more conservative over time. This hands-off approach can be an excellent way for beginners to invest for the long term without needing to constantly manage their portfolio.<br><br>### 4. **High-Interest Savings Accounts or Money Market Accounts**<br>   - **Explanation:** While not traditional investments, putting your money into a high-interest savings account or money market account can be a safe way to earn some interest while you build your investing knowledge. These accounts are low-risk, and your funds remain liquid, meaning you can access them easily if needed.<br><br>### 5. **Education and Research**<br>   - **Explanation:** Before diving into specific investments, take the time to educate yourself about the basics of investing, different asset classes, and market fundamentals. Resources such as books, online courses, and investment podcasts can provide valuable knowledge. Understanding what you’re investing in can help reduce fear and build confidence.<br><br>### Conclusion<br>Start with a balanced approach that includes low-cost, diversified investments and gradually expand your knowledge. It’s essential to assess your risk tolerance and financial goals before making any investment decisions. Remember, investing is a long-term journey, and it&#39;s okay to start small."
+                    data-question="scared to invest where do I start"
+                    data-llm="gpt4"
+                    data-brand="Robinhood"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="When it comes to investing, especially if you&#39;re feeling scared or unsure, it&#39;s important to start with a solid foundation. Here are my top 5 recommendations, in order of preference:<br><br>1. High-Yield Savings Account:<br>   - This is a great place to start, as it provides a safe and low-risk option for your money.<br>   - High-yield savings accounts typically offer higher interest rates than traditional savings accounts, allowing your money to grow while remaining easily accessible.<br>   - Examples include online banks like Ally, Marcus by Goldman Sachs, and Discover.<br><br>2. Certificate of Deposit (CD):<br>   - CDs are another low-risk investment option that offer a fixed interest rate for a specific period of time, usually ranging from a few months to a few years.<br>   - They provide a guaranteed return, making them a good choice for those who want to preserve their capital while earning a modest return.<br>   - Consider CDs with different maturity dates to create a &quot;CD ladder&quot; for diversification.<br><br>3. Index Funds:<br>   - Index funds are a type of mutual fund or exchange-traded fund (ETF) that tracks a specific market index, such as the S&P 500.<br>   - They offer broad diversification and typically have lower fees compared to actively managed funds.<br>   - Index funds are a great way to get exposure to the stock market while minimizing risk.<br>   - Examples include Vanguard Total Stock Market Index Fund (VTSAX) and Schwab S&P 500 Index Fund (SWPPX).<br><br>4. Bonds:<br>   - Bonds are debt securities that represent loans to governments or corporations.<br>   - They are generally considered less risky than stocks and can provide a steady stream of income through interest payments.<br>   - Consider investing in high-quality, investment-grade bonds, such as those issued by the U.S. government or large, well-established corporations.<br><br>5. Robo-advisors:<br>   - Robo-advisors are automated investment management platforms that use algorithms to create and manage investment portfolios.<br>   - They offer a hands-off approach to investing, making it easier for beginners to get started.<br>   - Robo-advisors typically have low fees and provide diversification through a mix of stocks, bonds, and other assets.<br>   - Examples include Betterment, Wealthfront, and Ellevest.<br><br>Remember, it&#39;s always important to do your own research, understand the risks involved, and start with an investment amount you&#39;re comfortable with. Consult with a financial advisor if you need more personalized guidance."
+                    data-question="scared to invest where do I start"
+                    data-llm="claude"
+                    data-brand="Robinhood"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Okay, it&#39;s completely understandable to be scared to invest, especially when you&#39;re just starting out. The key is to start small, understand what you&#39;re investing in, and prioritize safety and education. Here are some recommendations, focusing on easing you into the world of investing:<br><br>**Important Disclaimer:** *I am an AI chatbot and cannot provide financial advice. This information is for educational purposes only. Before making any investment decisions, consult with a qualified financial advisor who can assess your individual circumstances and risk tolerance.*<br><br>Here are my top recommendations for someone scared to invest, in order of preference:<br><br>1.  **High-Yield Savings Account (HYSA):**<br><br>    *   **Explanation:** While technically not investing, a HYSA is a safe and liquid place to park your money while you learn.  It&#39;s a great alternative to a traditional savings account because it offers significantly higher interest rates. This allows your money to grow slightly without any risk of losing your principal. It gives you a safe place to build a small emergency fund, which is crucial before starting any investing.  Having an emergency fund reduces the pressure to sell investments if unexpected expenses arise.<br>    *   **Why it&#39;s good for beginners:**  No risk of losing money, easy access to your funds, and a small taste of earning interest. It builds confidence and a foundation for future investing.  It also allows you to accumulate capital to invest later.<br><br>2.  **Target Date Retirement Funds (TDFs):**<br><br>    *   **Explanation:** These are &quot;set it and forget it&quot; investment options, typically held within a retirement account like a Roth IRA or 401(k).  You choose a fund based on your expected retirement year (e.g., &quot;Target Date 2055 Fund&quot;). The fund automatically adjusts its asset allocation (mix of stocks and bonds) over time, becoming more conservative as you get closer to retirement.  This diversification reduces risk and makes it appropriate for long-term investing.<br>    *   **Why it&#39;s good for beginners:**  Extremely simple to use, professionally managed, and automatically diversified.  It removes the stress of having to pick individual stocks or bonds.  Focusing on a retirement account also encourages long-term thinking.  Look for TDFs with low expense ratios (fees).<br><br>3.  **Low-Cost, Broad Market Index Funds or ETFs (Exchange-Traded Funds):**<br><br>    *   **Explanation:** These funds track a specific market index, such as the S&P 500 (representing 500 of the largest U.S. companies) or a total stock market index.  By investing in these funds, you&#39;re essentially buying a small piece of many different companies, providing instant diversification. ETFs are similar to mutual funds but trade like stocks on an exchange, offering more flexibility.<br>    *   **Why it&#39;s good for beginners:**  Diversification reduces risk compared to investing in individual stocks.  Low expense ratios mean more of your returns stay with you.  Easy to understand and track performance.  Examples include the Vanguard S&P 500 ETF (VOO) or the Schwab Total Stock Market Index Fund (SWTSX). Start with a small amount you&#39;re comfortable with.<br><br>4.  **Certificates of Deposit (CDs):**<br><br>    *   **Explanation:** CDs are a type of savings account that holds a fixed amount of money for a fixed period of time (e.g., 6 months, 1 year, 5 years).  In return, you receive a fixed interest rate.  CDs are FDIC-insured, meaning your money is protected up to a certain amount.<br>    *   **Why it&#39;s good for beginners:**  Very safe and predictable.  You know exactly how much interest you&#39;ll earn over the term of the CD.  Good for short-term savings goals where you don&#39;t want to risk losing money.  While interest rates may be lower than some investments, they are generally higher than traditional savings accounts.<br><br>5.  **Robo-Advisors:**<br><br>    *   **Explanation:** Robo-advisors are online platforms that use algorithms to build and manage your investment portfolio based on your risk tolerance, financial goals, and time horizon.  They typically invest in a diversified portfolio of low-cost ETFs.<br>    *   **Why it&#39;s good for beginners:**  Relatively low cost, automated portfolio management, and often offer financial planning tools and advice.  Good for those who want professional guidance without the high fees of a traditional financial advisor. Examples include Betterment, Wealthfront, and Schwab Intelligent Portfolios.<br><br>**Important Considerations for All Options:**<br><br>*   **Start Small:**  Don&#39;t feel pressured to invest a large sum of"
+                    data-question="scared to invest where do I start"
+                    data-llm="gemini"
+                    data-brand="Robinhood"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q4</span>
+                    <span class="question-text">easiest way to invest money 2025</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top recommendations for investing money in 2025, considering ease of use, accessibility, and potential for growth:<br><br>### 1. **Index Funds or ETFs (Exchange-Traded Funds)**<br>   - **Explanation**: Index funds and ETFs are designed to track the performance of a specific index, such as the S&P 500. They offer diversification, lower fees compared to actively managed funds, and are relatively easy to buy and sell through brokerage accounts. They are ideal for passive investors looking for long-term growth without the need to constantly manage their investments.<br><br>### 2. **Robo-Advisors**<br>   - **Explanation**: Robo-advisors like Betterment, Wealthfront, or M1 Finance automate the investment process by using algorithms to manage your portfolio based on your risk tolerance and investment goals. They require minimal involvement from you, making them a great choice for beginners or those who prefer a hands-off approach. Many offer low fees and can create diversified portfolios tailored to your needs.<br><br>### 3. **Target-Date Funds**<br>   - **Explanation**: Target-date funds are mutual funds that automatically adjust their asset allocation based on a specific target retirement date. They start with a higher risk (more stocks) when you&#39;re younger and gradually become more conservative as you approach retirement. These funds are straightforward and require little management, making them suitable for those looking for a simple, long-term investment strategy.<br><br>### 4. **High-Yield Savings Accounts or CDs (Certificates of Deposit)**<br>   - **Explanation**: While not traditional investments, high-yield savings accounts and CDs offer a low-risk way to earn interest on your cash. High-yield savings accounts provide liquidity with competitive interest rates, while CDs lock your money for a specified period at a fixed rate, usually offering higher interest than regular savings accounts. They are ideal for short-term savings goals or as a place to park cash while you decide on longer-term investments.<br><br>### 5. **Real Estate Crowdfunding Platforms**<br>   - **Explanation**: Real estate crowdfunding allows you to invest in real estate projects with relatively low minimum investments. Platforms like Fundrise or RealtyMogul enable you to participate in real estate markets without the need to manage properties directly. This can provide diversification and potential income through rental yields or property appreciation, making it an attractive option for those interested in real estate but lacking the capital for direct investments.<br><br>### Conclusion<br>These options provide a range of investment strategies that are user-friendly and suitable for different risk tolerances and investment goals. Always consider your financial situation and consult with a financial advisor to tailor your investment strategy to your personal needs."
+                    data-question="easiest way to invest money 2025"
+                    data-llm="gpt4"
+                    data-brand="Robinhood"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top 5 recommendations for the easiest ways to invest money by 2025:<br><br>1. High-Yield Savings Account:<br>   - Explanation: A high-yield savings account offers a relatively low-risk option to grow your money with minimal effort. These accounts typically provide higher interest rates than traditional savings accounts, allowing your money to compound over time.<br><br>2. Index Funds:<br>   - Explanation: Investing in index funds, such as those that track the S&P 500 or total stock market, provides broad market exposure with low fees. Index funds are generally considered a simple and effective long-term investment strategy.<br><br>3. Target-Date Funds:<br>   - Explanation: Target-date funds are designed to automatically adjust their asset allocation as you approach a specific retirement or investment goal year (in this case, 2025). They provide a hands-off, diversified approach to investing.<br><br>4. Robo-Advisors:<br>   - Explanation: Robo-advisors are digital investment platforms that use algorithms to create and manage investment portfolios based on your risk tolerance and investment goals. They offer a low-cost, automated investment solution.<br><br>5. Certificates of Deposit (CDs):<br>   - Explanation: CDs are a relatively low-risk investment option that offer a fixed interest rate over a specific time period. They can be a good choice for those seeking a stable, predictable return on their investment.<br><br>It&#39;s important to note that these recommendations should be considered as general guidance, and individual investment decisions should be based on your specific financial goals, risk tolerance, and investment timeline. It&#39;s always recommended to do your own research or consult with a financial advisor before making any investment decisions."
+                    data-question="easiest way to invest money 2025"
+                    data-llm="claude"
+                    data-brand="Robinhood"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Okay, here are 3 recommendations for easy ways to invest money in 2025, keeping in mind that investment involves risk and past performance is not indicative of future results. The &quot;easiest&quot; option often depends on your comfort level, knowledge, and how much time you want to dedicate. This list assumes you are a beginner or looking for a simplified approach.<br><br>**Important Disclaimer:** *I am an AI and cannot provide financial advice. This information is for educational purposes only. Consult with a qualified financial advisor before making any investment decisions.*<br><br>Here are my recommendations, ranked from easiest/most hands-off to slightly more involved:<br><br>1.  **Robo-Advisor (e.g., Betterment, Wealthfront, Schwab Intelligent Portfolios):**<br><br>    *   **Explanation:** Robo-advisors are platforms that use algorithms to build and manage a diversified investment portfolio for you based on your risk tolerance, financial goals, and time horizon. You answer a questionnaire, deposit money, and the robo-advisor handles everything else – asset allocation, rebalancing, and sometimes even tax-loss harvesting. It requires minimal effort on your part after the initial setup.<br>    *   **Why it&#39;s easy:** Low maintenance, automated, diversified, and generally low-cost compared to traditional financial advisors.<br>    *   **Things to consider:** Fees vary (typically a small percentage of assets under management), and you have less control over the specific investments within the portfolio.<br>    *   **Example:**  You answer questions on Betterment about your goals (e.g., retirement, down payment), risk tolerance (conservative, moderate, aggressive), and timeline.  They then invest your money in a mix of ETFs (Exchange Traded Funds) that track different market indexes, automatically rebalancing your portfolio to maintain your desired asset allocation.<br><br>2.  **Target-Date Retirement Fund (TDF):**<br><br>    *   **Explanation:**  A target-date fund is a mutual fund or ETF with an asset allocation that automatically becomes more conservative (less risky) as you get closer to the target date (typically your retirement year).  You simply choose the fund with the target date closest to your expected retirement year, and the fund manager handles the asset allocation changes over time.<br>    *   **Why it&#39;s easy:**  Simple to understand, requires minimal ongoing management, and provides instant diversification. Available in most 401(k)s and IRAs.<br>    *   **Things to consider:**  You have little control over the specific investments within the fund, and the asset allocation may not perfectly match your individual risk tolerance.<br>    *   **Example:** If you plan to retire around 2055, you would invest in a &quot;2055 Target Date Fund.&quot;  The fund would start with a higher allocation to stocks (more growth potential) and gradually shift to a higher allocation to bonds (more stability) as 2055 approaches.<br><br>3.  **Index Funds or ETFs (through a brokerage account like Vanguard, Fidelity, or Schwab):**<br><br>    *   **Explanation:** Index funds and ETFs track a specific market index, such as the S&P 500 or the total stock market.  This provides broad diversification at a very low cost. You open a brokerage account, deposit funds, and purchase shares of the index fund or ETF.<br>    *   **Why it&#39;s easy:**  Low expense ratios, broad diversification, and relatively simple to understand.  You can choose funds that align with your investment goals (e.g., a total stock market fund, a bond fund).<br>    *   **Things to consider:** Requires a bit more research to choose the right index funds/ETFs, and you are responsible for rebalancing your portfolio if you want to maintain a specific asset allocation.<br>    *   **Example:**  You open a brokerage account at Vanguard and purchase shares of VTI (Vanguard Total Stock Market ETF).  This ETF tracks the performance of the entire US stock market, giving you exposure to thousands of companies with a single investment.<br><br>**Important Considerations for 2025:**<br><br>*   **Inflation and Interest Rates:** The economic environment in 2025 will heavily influence investment returns. Keep an eye on inflation trends and interest rate changes, as these can impact the performance of stocks, bonds, and other asset classes.<br>*   **Technological Advancements:**  New platforms and investment tools are constantly emerging. Explore different options and compare fees, features, and customer service before making a decision.<br>*   **Personal Financial Situation:** The &quot;easiest&quot; option is not always the &quot;best&quot; option. Consider your financial goals, risk tolerance, time horizon, and knowledge level when choosing an investment strategy.<br><br>Remember to do your own research and consult with a"
+                    data-question="easiest way to invest money 2025"
+                    data-llm="gemini"
+                    data-brand="Robinhood"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q5</span>
+                    <span class="question-text">robinhood alternatives for beginners</span>
+                </td>
+                
+                <td class="llm-cell mentioned"
+                    data-response="Certainly! Here are my top recommendations for Robinhood alternatives suitable for beginners, listed in order of preference:<br><br>1. **Webull**<br>   - **Overview**: Webull offers commission-free trading on stocks, ETFs, and options, making it an attractive option for beginners. Its user-friendly interface, advanced charting tools, and in-depth research features make it easy for new investors to learn and make informed decisions.<br>   - **Key Features**: Extended trading hours, no minimum deposit, and access to detailed financial reports and analysis tools.<br><br>2. **Merrill Edge**<br>   - **Overview**: Merrill Edge is a part of Bank of America and provides a seamless platform for both banking and investing. It&#39;s beginner-friendly and offers a wealth of educational resources, making it ideal for new investors.<br>   - **Key Features**: No commission on online stock and ETF trades, integration with Bank of America accounts, and access to research and insights from Merrill analysts.<br><br>3. **Fidelity Investments**<br>   - **Overview**: Fidelity is known for its robust platform and excellent customer service. It offers a wide range of investment options, including stocks, ETFs, mutual funds, and retirement accounts. The platform is intuitive and great for beginners.<br>   - **Key Features**: No commission on stock and ETF trades, extensive educational resources, and a user-friendly mobile app.<br><br>4. **Charles Schwab**<br>   - **Overview**: Charles Schwab has a solid reputation and offers a comprehensive investing platform that’s suitable for beginners. It provides a variety of investment products, research tools, and educational resources.<br>   - **Key Features**: Commission-free trading on stocks and ETFs, access to a wide range of investment options, and excellent customer support.<br><br>5. **SoFi Invest**<br>   - **Overview**: SoFi Invest is designed for beginners, offering a simple and easy-to-use platform. It provides commission-free trading along with features like automated investing and personalized financial advice.<br>   - **Key Features**: No commissions on trades, automatic rebalancing for portfolios, and access to financial advisors for personalized guidance.<br><br>Each of these platforms has its own strengths, so the best choice will depend on your specific needs, such as investment options, educational resources, or integration with banking services."
+                    data-question="robinhood alternatives for beginners"
+                    data-llm="gpt4"
+                    data-brand="Robinhood"
+                    data-position="1"
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✓</span> (#1)
+                </td>
+            
+                <td class="llm-cell mentioned"
+                    data-response="Here are my top 5 recommendations for Robinhood alternatives for beginners, listed in order of preference:<br><br>1. Fidelity Investments:<br>   - Fidelity is a well-established and reputable brokerage firm with a wide range of investment options, including stocks, ETFs, mutual funds, and more.<br>   - They offer a user-friendly platform with comprehensive research and educational resources, making it a great choice for beginners.<br>   - Fidelity has no account minimums, and their trading commissions are low or even $0 for certain types of trades.<br><br>2. Charles Schwab:<br>   - Charles Schwab is another renowned financial services company that provides a robust and beginner-friendly platform.<br>   - They offer a wide selection of investment products, as well as extensive research and educational materials.<br>   - Schwab has no account minimums and offers $0 online equity and ETF trades, making it an affordable option for new investors.<br><br>3. TD Ameritrade:<br>   - TD Ameritrade is a popular choice for both novice and experienced investors, with a user-friendly platform and a vast array of investment options.<br>   - They provide a wide range of research tools, educational resources, and customer support to help beginners navigate the investment landscape.<br>   - TD Ameritrade has no account minimums, and their trading commissions are competitive or $0 for certain types of trades.<br><br>4. E*TRADE:<br>   - E*TRADE is a well-known brokerage firm that offers a comprehensive platform with a variety of investment products and tools.<br>   - They have a strong focus on research and education, providing beginners with the resources they need to make informed investment decisions.<br>   - E*TRADE has no account minimums, and their trading commissions are generally low or $0 for certain types of trades.<br><br>5. Merrill Edge:<br>   - Merrill Edge is the brokerage arm of Bank of America, providing a seamless integration between banking and investment services.<br>   - It offers a user-friendly platform, a wide range of investment options, and access to Merrill&#39;s research and educational resources.<br>   - Merrill Edge has no account minimums, and their trading commissions are competitive or $0 for certain types of trades.<br><br>These recommendations are based on factors such as platform usability, investment options, research and educational resources, customer support, and overall cost-effectiveness for beginner investors. It&#39;s important to research and compare these options to determine which one best fits your investment goals and risk tolerance."
+                    data-question="robinhood alternatives for beginners"
+                    data-llm="claude"
+                    data-brand="Robinhood"
+                    data-position="1"
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✓</span> (#1)
+                </td>
+            
+                <td class="llm-cell mentioned"
+                    data-response="Okay, here are my top 3 recommendations for Robinhood alternatives for beginners, listed in order of preference, along with brief explanations:<br><br>**1. Fidelity:**<br><br>*   **Why it&#39;s great for beginners:** Fidelity offers a comprehensive platform with a user-friendly mobile app and website. It stands out because of its **extensive educational resources** (articles, videos, webinars) that are incredibly helpful for learning the basics of investing. They have excellent customer service if you need help.  Brokerage accounts have no account minimums or fees to trade stocks, ETFs, and options. Fidelity also offers fractional shares, allowing you to invest in companies even with limited capital. <br>*   **Key Features:** No commission trading, fractional shares, robust research tools, diverse investment options (stocks, ETFs, bonds, mutual funds, options), and exceptional educational resources.<br>*   **Downsides:** The sheer volume of information can be overwhelming at first, but the organized structure helps mitigate this.<br><br>**2. Charles Schwab:**<br><br>*   **Why it&#39;s great for beginners:** Similar to Fidelity, Schwab offers a well-rounded platform with a strong emphasis on education and customer support. Schwab has physical branch locations if you prefer in-person assistance. They also offer a wide range of investment options, including stocks, ETFs, bonds, mutual funds, and options. Schwab also offers fractional shares, making it easier to get started.<br>*   **Key Features:** No commission trading, fractional shares, robust research tools, diverse investment options, excellent customer service, and educational resources.  Schwab also offers a robo-advisor service (Schwab Intelligent Portfolios) for hands-off investing.<br>*   **Downsides:** Schwab&#39;s app interface is slightly less intuitive than Fidelity&#39;s, but it&#39;s still very manageable.<br><br>**3. Webull:**<br><br>*   **Why it&#39;s great for beginners:** Webull has a modern, visually appealing interface that&#39;s easy to navigate. It offers commission-free trading of stocks, ETFs, and options, and also provides access to cryptocurrency trading. Webull offers fractional shares.<br>*   **Key Features:** Commission-free trading, fractional shares, real-time market data, paper trading (simulated trading for practice), and cryptocurrency trading.<br>*   **Downsides:** Webull&#39;s educational resources are not as extensive as those offered by Fidelity or Schwab. Customer service can be slow. It&#39;s generally better suited for those who are comfortable with a mobile-first experience.<br><br>**Important Considerations for All:**<br><br>*   **Research:** While these platforms offer education, always do your own research before investing in any security.<br>*   **Risk Tolerance:**  Understand your own risk tolerance and investment goals before making any decisions.<br>*   **Diversification:** Diversify your portfolio across different asset classes to manage risk.<br>*   **Security:** Ensure the platform you choose has robust security measures to protect your account.<br>*   **Fees:** Double-check for any hidden fees, such as account maintenance fees or transfer fees.<br><br>This information is for educational purposes only and should not be considered financial advice. Consult with a qualified financial advisor before making any investment decisions.<br>"
+                    data-question="robinhood alternatives for beginners"
+                    data-llm="gemini"
+                    data-brand="Robinhood"
+                    data-position="1"
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✓</span> (#1)
+                </td>
+            
+            </tr>
+        
+                </tbody>
+            </table>
+            <p class="breakdown-hint">Click any cell to see the full AI response</p>
+        </div>
+
+        <!-- Response modal -->
+        <div class="response-modal" id="responseModal">
+            <div class="modal-content" onclick="event.stopPropagation()">
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+                <div class="modal-header">
+                    <span class="modal-llm" id="modalLlm"></span>
+                    <span class="modal-status" id="modalStatus"></span>
+                </div>
+                <div class="modal-question" id="modalQuestion"></div>
+                <div class="modal-response" id="modalResponse"></div>
+            </div>
+        </div>
+    
+        </div>
+
+        <!-- Section 3: Reddit Opportunities -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <h2 class="section-title">Reddit Opportunities</h2>
+            </div>
+
+            <div class="subsection-title">Buy Intent Conversations</div>
+            <p class="subsection-desc">People actively looking for recommendations in your category</p>
+            <div class="reddit-posts">
+                
+            <a href="https://www.reddit.com/r/investingforbeginners/comments/1qq6cbn/best_starting_app/" target="_blank" class="reddit-post">
+                <div class="post-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">Best starting app : r/investingforbeginners</div>
+                    <div class="post-meta">
+                        r/investingforbeginners &bull; 187K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            <a href="https://www.reddit.com/r/investingforbeginners/comments/1qr4kbk/looking_for_safe_online_investment_for_small/" target="_blank" class="reddit-post">
+                <div class="post-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">Looking for safe online investment for small amounts</div>
+                    <div class="post-meta">
+                        r/investingforbeginners &bull; 187K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            <a href="https://www.reddit.com/r/personalfinance/comments/1qm9ax8/best_auto_investing_app/" target="_blank" class="reddit-post">
+                <div class="post-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">best auto investing app? : r/personalfinance</div>
+                    <div class="post-meta">
+                        r/personalfinance &bull; 21.6M members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            <a href="https://www.reddit.com/r/investingforbeginners/comments/1qm876a/good_app_for_beginners_iphone/" target="_blank" class="reddit-post">
+                <div class="post-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">Good app for beginners iPhone : r/investingforbeginners</div>
+                    <div class="post-meta">
+                        r/investingforbeginners &bull; 187K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            </div>
+
+            <div class="subsection-title">Pain Point Conversations</div>
+            <p class="subsection-desc">People discussing problems your product solves</p>
+            <div class="reddit-posts">
+                
+            <a href="https://www.reddit.com/r/investingforbeginners/comments/1qnpqab/beginner_investor/" target="_blank" class="reddit-post">
+                <div class="post-icon pain">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">Beginner investor... : r/investingforbeginners</div>
+                    <div class="post-meta">
+                        r/investingforbeginners &bull; 187K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            <a href="https://www.reddit.com/r/investingforbeginners/comments/1qolrvh/whats_an_investing_habit_that_quietly_improved/" target="_blank" class="reddit-post">
+                <div class="post-icon pain">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">What's an investing habit that quietly improved your returns ...</div>
+                    <div class="post-meta">
+                        r/investingforbeginners &bull; 187K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            </div>
+        </div>
+
+        <!-- CTA Section -->
+        <div class="section cta-section">
+            <h2>Ready to improve your <em>AI visibility?</em></h2>
+            <p>We help brands get mentioned more in AI answers through strategic content placement.</p>
+            <a href="https://adva-solutions.com/AIVisibility" class="cta-button">Learn More</a>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p>Generated by <a href="https://adva-solutions.com">Adva</a> &bull; AI Visibility Health Check</p>
+    </footer>
+
+    <script>
+        // Tab switching functionality
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const tabId = btn.dataset.tab;
+
+                // Update buttons
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                // Update panels
+                document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+                document.getElementById('panel-' + tabId).classList.add('active');
+            });
+        });
+
+        // Show toast notification
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2500);
+        }
+
+        // Show response modal
+        function showResponse(cell) {
+            try {
+                let response = cell.dataset.response || 'No response available';
+                const question = cell.dataset.question || '';
+                const llm = cell.dataset.llm || '';
+                const brand = cell.dataset.brand || '';
+                const isMentioned = cell.classList.contains('mentioned');
+                const brandPosition = cell.dataset.position ? parseInt(cell.dataset.position) : null;
+
+                const llmNames = {'gpt4': 'GPT', 'claude': 'Claude', 'gemini': 'Gemini'};
+
+                // If brand is mentioned beyond position 5, add a banner at the top
+                let positionBanner = '';
+                if (isMentioned && brandPosition && brandPosition > 5) {
+                    positionBanner = '<div style="background: #fef3c7; padding: 0.75rem 1rem; border-radius: 6px; margin-bottom: 1rem; border-left: 4px solid #f59e0b;">' +
+                        '<strong>📍 Your brand appeared at position #' + brandPosition + '</strong> - scroll down to see the highlighted mention' +
+                        '</div>';
+                }
+
+                // Highlight brand name in response (case insensitive)
+                if (brand && isMentioned) {
+                    try {
+                        const brandRegex = new RegExp('(' + brand.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&') + ')', 'gi');
+                        response = response.replace(brandRegex, '<span class="brand-highlight">$1</span>');
+                    } catch(e) { /* ignore highlighting errors */ }
+                }
+
+                document.getElementById('modalLlm').textContent = llmNames[llm] || llm;
+                document.getElementById('modalQuestion').textContent = '"' + question + '"';
+                document.getElementById('modalResponse').innerHTML = positionBanner + response;
+
+                const statusEl = document.getElementById('modalStatus');
+                if (isMentioned) {
+                    statusEl.textContent = 'Mentioned';
+                    statusEl.className = 'modal-status mentioned';
+                } else {
+                    statusEl.textContent = 'Not mentioned';
+                    statusEl.className = 'modal-status not-mentioned';
+                }
+
+                document.getElementById('responseModal').classList.add('active');
+                document.body.style.overflow = 'hidden';
+
+                // Scroll to first highlight if mentioned
+                if (isMentioned) {
+                    setTimeout(function() {
+                        const highlight = document.querySelector('.modal-response .brand-highlight');
+                        if (highlight) {
+                            highlight.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        }
+                    }, 100);
+                }
+            } catch (e) {
+                console.error('Error showing response:', e);
+                alert('Error loading response. Please try again.');
+            }
+        }
+
+        // Close modal
+        function closeModal() {
+            document.getElementById('responseModal').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // Close when clicking backdrop (outside modal content)
+        document.getElementById('responseModal').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+
+        // Close modal on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeModal();
+        });
+    </script>
+</body>
+</html>
