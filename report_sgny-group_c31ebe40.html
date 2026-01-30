@@ -1,0 +1,1370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Visibility Report - SGNY Group | Adva</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #ffffff;
+            min-height: 100vh;
+            color: #374151;
+            line-height: 1.6;
+        }
+
+        /* Header */
+        .header {
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            font-size: 1.25rem;
+            color: #1f2937;
+            text-decoration: none;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .header-date {
+            color: #9ca3af;
+            font-size: 0.875rem;
+        }
+
+        /* Copy link button */
+        .copy-link-button {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: #f3f4f6;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            color: #374151;
+            font-size: 0.75rem;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .copy-link-button:hover {
+            background: #e5e7eb;
+        }
+
+        .copy-link-button svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        .pdf-button {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: #1f2937;
+            border: none;
+            border-radius: 6px;
+            color: #ffffff;
+            font-size: 0.75rem;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .pdf-button:hover {
+            background: #374151;
+        }
+
+        .pdf-button svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        /* Toast notification */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: #1f2937;
+            color: #ffffff;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            opacity: 0;
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        /* Container */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Page title */
+        .page-title {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .page-title .label {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: #9ca3af;
+            font-size: 0.75rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+        }
+
+        .page-title .label::before,
+        .page-title .label::after {
+            content: '';
+            width: 30px;
+            height: 1px;
+            background: #d1d5db;
+        }
+
+        .page-title h1 {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 2.5rem;
+            font-weight: 400;
+            color: #1f2937;
+            margin-bottom: 0.5rem;
+        }
+
+        .page-title .brand {
+            color: #6b7280;
+            font-size: 1.125rem;
+        }
+
+        /* Sections */
+        .section {
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #f3f4f6;
+        }
+
+        .section-icon {
+            width: 40px;
+            height: 40px;
+            background: #1f2937;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .section-icon svg {
+            width: 20px;
+            height: 20px;
+            color: #ffffff;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 1.375rem;
+            color: #1f2937;
+        }
+
+        /* Score Section */
+        .score-section {
+            text-align: center;
+            padding: 3rem 2rem;
+        }
+
+        .score-circle {
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            background: #fafafa;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            border: 4px solid #ef4444;
+        }
+
+        .score-value {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 3rem;
+            font-weight: 500;
+            color: #ef4444;
+        }
+
+        .score-label {
+            font-size: 0.8rem;
+            color: #9ca3af;
+        }
+
+        .score-description {
+            color: #6b7280;
+            margin-bottom: 2rem;
+            font-size: 1rem;
+        }
+
+        .score-description strong {
+            color: #1f2937;
+        }
+
+        .llm-breakdown {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .llm-stat {
+            text-align: center;
+            padding: 1rem 1.5rem;
+            background: #fafafa;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+            min-width: 100px;
+        }
+
+        .llm-name {
+            display: block;
+            color: #9ca3af;
+            font-size: 0.8rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .llm-score {
+            font-size: 1.125rem;
+            font-weight: 600;
+        }
+
+        .llm-score.success {
+            color: #22c55e;
+        }
+
+        .llm-score.warning {
+            color: #ef4444;
+        }
+
+        /* Competitor Table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 0.875rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid #f3f4f6;
+        }
+
+        th {
+            color: #9ca3af;
+            font-weight: 500;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        td {
+            color: #374151;
+        }
+
+        .mention-count {
+            background: #fef3c7;
+            color: #92400e;
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        /* Tabs for LLM responses */
+        .example-tabs {
+            margin-top: 1.5rem;
+        }
+
+        .tabs-header {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+            padding-bottom: 0;
+        }
+
+        .tab-btn {
+            padding: 0.75rem 1.25rem;
+            background: transparent;
+            border: none;
+            color: #6b7280;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            margin-bottom: -1px;
+            transition: all 0.2s;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .tab-btn:hover {
+            color: #1f2937;
+        }
+
+        .tab-btn.active {
+            color: #1f2937;
+            border-bottom-color: #1f2937;
+        }
+
+        .tab-panel {
+            display: none;
+            background: #fafafa;
+            border-radius: 8px;
+            padding: 1.25rem;
+        }
+
+        .tab-panel.active {
+            display: block;
+        }
+
+        .example-question {
+            color: #1f2937;
+            font-weight: 500;
+            font-size: 0.95rem;
+            margin-bottom: 0.75rem;
+        }
+
+        /* Question breakdown table */
+        .question-breakdown {
+            margin-top: 1rem;
+        }
+
+        .breakdown-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        .breakdown-table th {
+            padding: 0.75rem;
+            text-align: center;
+            background: #f9fafb;
+            border-bottom: 2px solid #e5e7eb;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .breakdown-table th:first-child {
+            text-align: left;
+            width: 50%;
+        }
+
+        .breakdown-table td {
+            padding: 0.75rem;
+            border-bottom: 1px solid #f3f4f6;
+            vertical-align: middle;
+        }
+
+        .question-cell {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+        }
+
+        .question-num {
+            background: #e5e7eb;
+            color: #374151;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        .question-text {
+            color: #374151;
+            line-height: 1.4;
+        }
+
+        .llm-cell {
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-radius: 4px;
+        }
+
+        .llm-cell:hover {
+            background: #f3f4f6;
+        }
+
+        .llm-cell.mentioned {
+            color: #16a34a;
+        }
+
+        .llm-cell.mentioned .status-icon {
+            font-size: 1.25rem;
+        }
+
+        .llm-cell.not-mentioned {
+            color: #dc2626;
+        }
+
+        .llm-cell.not-mentioned .status-icon {
+            font-size: 1.25rem;
+        }
+
+        .breakdown-hint {
+            color: #9ca3af;
+            font-size: 0.8rem;
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+        /* Response modal */
+        .response-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+        }
+
+        .response-modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: #ffffff;
+            border-radius: 12px;
+            max-width: 800px;
+            width: 100%;
+            max-height: 90vh;
+            overflow: auto;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #9ca3af;
+            cursor: pointer;
+            padding: 0.25rem 0.5rem;
+        }
+
+        .modal-close:hover {
+            color: #374151;
+        }
+
+        .modal-header {
+            padding: 1.5rem 1.5rem 0;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            position: relative;
+        }
+
+        .modal-llm {
+            font-weight: 600;
+            color: #1f2937;
+            font-size: 1.1rem;
+        }
+
+        .modal-status {
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .modal-status.mentioned {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .modal-status.not-mentioned {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .modal-question {
+            padding: 1rem 1.5rem;
+            color: #6b7280;
+            font-size: 0.9rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .modal-response {
+            padding: 1.5rem;
+            overflow-y: auto;
+            flex: 1;
+            color: #374151;
+            font-size: 0.9rem;
+            line-height: 1.8;
+            min-height: 300px;
+            max-height: 60vh;
+            background: #fafafa;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .modal-response::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .modal-response::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        .modal-response::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 4px;
+        }
+
+        .modal-response::-webkit-scrollbar-thumb:hover {
+            background: #a1a1a1;
+        }
+
+        /* Brand highlight */
+        .brand-highlight {
+            background: linear-gradient(120deg, #fef08a 0%, #fde047 100%);
+            padding: 0.1rem 0.3rem;
+            border-radius: 3px;
+            font-weight: 600;
+        }
+
+        .example-content {
+            color: #6b7280;
+            font-size: 0.875rem;
+            line-height: 1.7;
+            max-height: 400px;
+            overflow-y: auto;
+            margin-bottom: 0.75rem;
+            padding: 1rem;
+            background: #f9fafb;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .example-status {
+            padding: 0.5rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            display: inline-block;
+        }
+
+        .example-status.mentioned {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .example-status.not-mentioned {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        /* Reddit Posts */
+        .reddit-posts {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .reddit-post {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: #fafafa;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: all 0.2s;
+            border: 1px solid transparent;
+        }
+
+        .reddit-post:hover {
+            background: #f3f4f6;
+            border-color: #e5e7eb;
+        }
+
+        .post-icon {
+            width: 40px;
+            height: 40px;
+            background: #1f2937;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .post-icon.pain {
+            background: #fef3c7;
+        }
+
+        .post-icon.pain svg {
+            color: #92400e;
+        }
+
+        .post-icon svg {
+            width: 20px;
+            height: 20px;
+            color: #ffffff;
+        }
+
+        .post-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .post-title {
+            color: #1f2937;
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .post-meta {
+            color: #9ca3af;
+            font-size: 0.8rem;
+        }
+
+        .post-arrow {
+            color: #9ca3af;
+            flex-shrink: 0;
+        }
+
+        .post-arrow svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .subsection-title {
+            color: #1f2937;
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin: 1.5rem 0 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .subsection-title:first-of-type {
+            margin-top: 0;
+        }
+
+        .subsection-desc {
+            color: #9ca3af;
+            font-size: 0.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .no-data {
+            color: #9ca3af;
+            font-style: italic;
+            text-align: center;
+            padding: 1rem;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            color: #9ca3af;
+            font-size: 0.8rem;
+            padding: 2rem;
+            border-top: 1px solid #e5e7eb;
+            margin-top: 2rem;
+        }
+
+        .footer a {
+            color: #1f2937;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* CTA */
+        .cta-section {
+            text-align: center;
+            padding: 3rem 2rem;
+            background: #fafafa;
+        }
+
+        .cta-section h2 {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 1.75rem;
+            color: #1f2937;
+            margin-bottom: 0.75rem;
+        }
+
+        .cta-section p {
+            color: #6b7280;
+            margin-bottom: 1.5rem;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background: #1f2937;
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .cta-button:hover {
+            background: #111827;
+            transform: translateY(-1px);
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .page-title h1 {
+                font-size: 1.75rem;
+            }
+
+            .section {
+                padding: 1.5rem;
+            }
+
+            .score-circle {
+                width: 130px;
+                height: 130px;
+            }
+
+            .score-value {
+                font-size: 2.25rem;
+            }
+
+            .llm-breakdown {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .tabs-header {
+                flex-wrap: wrap;
+            }
+
+            .tab-btn {
+                padding: 0.5rem 1rem;
+                font-size: 0.8rem;
+            }
+
+            .breakdown-table th,
+            .breakdown-table td {
+                padding: 0.5rem;
+                font-size: 0.8rem;
+            }
+
+            .question-cell {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .modal-content {
+                max-height: 90vh;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <a href="https://adva-solutions.com/AIVisibility" class="logo">adva</a>
+        <div class="header-right">
+            <!-- PDF button hidden for now - backend still available at /report/c31ebe40/pdf
+            <a href="/report/c31ebe40/pdf" class="pdf-button" title="Download as PDF">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                Download PDF
+            </a>
+            -->
+            <button class="copy-link-button" onclick="navigator.clipboard.writeText('https://adva-solutions.github.io/ai-visibility-report/report_sgny-group_c31ebe40.html'); showToast('Link copied!');" title="Copy shareable link">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                </svg>
+                Copy Link
+            </button>
+            <span class="header-date">January 30, 2026</span>
+        </div>
+    </header>
+    <div class="toast" id="toast">Link copied to clipboard!</div>
+
+    <div class="container">
+        <div class="page-title">
+            <div class="label">AI Visibility Report</div>
+            <h1>Your Brand's <em>AI Presence</em></h1>
+            <p class="brand">Analysis for SGNY Group</p>
+        </div>
+
+        <!-- Section 1: AI Visibility Score -->
+        <div class="section score-section">
+            <div class="score-circle">
+                <span class="score-value">0%</span>
+                <span class="score-label">0/15 mentions</span>
+            </div>
+            <p class="score-description">
+                Your brand appeared in <strong>0</strong> out of <strong>15</strong> AI recommendations
+            </p>
+            <div class="llm-breakdown">
+                
+            <div class="llm-stat">
+                <span class="llm-name">GPT</span>
+                <span class="llm-score warning">0/5</span>
+            </div>
+        
+            <div class="llm-stat">
+                <span class="llm-name">Claude</span>
+                <span class="llm-score warning">0/5</span>
+            </div>
+        
+            <div class="llm-stat">
+                <span class="llm-name">Gemini</span>
+                <span class="llm-score warning">0/5</span>
+            </div>
+        
+            </div>
+        </div>
+
+        <!-- Section 2: AI Response Breakdown -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                    </svg>
+                </div>
+                <h2 class="section-title">Question-by-Question Breakdown</h2>
+            </div>
+            <p style="color: #6b7280; margin-bottom: 1rem;">We asked these 5 questions to each AI model. Click any cell to see the full response:</p>
+            
+        <div class="question-breakdown">
+            <table class="breakdown-table">
+                <thead>
+                    <tr>
+                        <th>Question Asked</th>
+                        <th>GPT</th>
+                        <th>Claude</th>
+                        <th>Gemini</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q1</span>
+                    <span class="question-text">video production company NYC</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top recommendations for video production companies in New York City, based on their reputation, portfolio, and expertise:<br><br>1. **Psyop**<br>   - **Overview**: Psyop is a well-known animation and production company that specializes in creating visually stunning and emotionally engaging content. They have worked with major brands and have a diverse portfolio that includes commercials, music videos, and short films.<br>   - **Why Choose Them**: Their strong focus on storytelling and high-quality animation makes them an excellent choice for brands looking to create memorable and impactful videos.<br><br>2. **Giant Ant**<br>   - **Overview**: Giant Ant is a creative studio that excels in animation and live-action video production. They have a collaborative approach and work closely with clients to bring their visions to life. Their portfolio showcases a range of projects, from brand films to explainer videos.<br>   - **Why Choose Them**: Their emphasis on creativity and narrative-driven content sets them apart, making them a great choice for companies looking for unique and engaging video solutions.<br><br>3. **Blue Chalk Media**<br>   - **Overview**: Blue Chalk Media focuses on documentary-style storytelling and has experience in producing content for various industries, including education, healthcare, and non-profits. They aim to create authentic and impactful stories that resonate with audiences.<br>   - **Why Choose Them**: Their expertise in documentary filmmaking gives them a unique edge, especially for brands looking to convey genuine stories and connect with audiences on a deeper level.<br><br>4. **Radical Media**<br>   - **Overview**: Radical Media is a full-service production company known for its innovative approach to storytelling across various platforms. They work on commercials, documentaries, and branded content, and have a strong reputation in the industry.<br>   - **Why Choose Them**: Their extensive experience in both traditional and digital media allows them to create versatile and engaging content tailored to a wide range of audiences.<br><br>5. **Mighty Oak**<br>   - **Overview**: Mighty Oak is a creative agency that specializes in video production and digital marketing. They produce high-quality videos, including corporate videos, commercials, and social media content.<br>   - **Why Choose Them**: Their focus on combining video production with effective marketing strategies makes them a solid choice for brands looking to enhance their online presence and reach their target audience effectively.<br><br>Each of these companies has a strong portfolio and a unique approach to video production, making them excellent choices for various types of projects."
+                    data-question="video production company NYC"
+                    data-llm="gpt4"
+                    data-brand="SGNY Group"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top 5 recommendations for video production companies in NYC, in order of preference:<br><br>1. Pixel Bakery: This award-winning video production agency is known for its creative and innovative approach to storytelling. They have a talented team of directors, cinematographers, and editors who can bring your vision to life, whether it&#39;s a corporate video, a brand film, or a documentary.<br><br>2. Mustache: Mustache is a full-service production company that specializes in creating high-quality content for a wide range of clients, from startups to Fortune 500 companies. They have a strong focus on visual storytelling and use the latest technology to deliver exceptional results.<br><br>3. Stockton Road Productions: Stockton Road is a boutique video production company that prides itself on its personalized service and attention to detail. They work closely with their clients to understand their needs and create custom-tailored solutions that exceed their expectations.<br><br>4. Elevation Films: This production company is known for its cinematic approach to video production. They have a team of experienced filmmakers who can capture the essence of your brand or story through stunning visuals and compelling narratives.<br><br>5. Magnet Media: Magnet Media is a digital media agency that offers a range of video production services, from live-action shoots to animation and motion graphics. They have a strong focus on data-driven strategies and can help you create content that resonates with your target audience."
+                    data-question="video production company NYC"
+                    data-llm="claude"
+                    data-brand="SGNY Group"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Okay, here are my top 3 recommendations for video production companies in NYC, along with explanations for why I think they&#39;re strong choices, ordered by preference (although your specific needs might shift the rankings!):<br><br>1.  **Casual Films:** (Highest Recommendation)<br><br>    *   **Why:**  Casual Films consistently delivers high-quality video content across a wide range of styles and budgets. They are known for their strong creative vision, excellent project management, and ability to scale their team to meet the needs of both small businesses and large corporations. They have a proven track record in NYC and are well-regarded in the industry. Their portfolio showcases a diverse array of projects, including commercials, corporate videos, animation, and live event coverage.  They also prioritize client communication and collaboration, making them a good choice for a smooth production process.<br>    *   **Ideal For:** Companies looking for a reliable partner for ongoing video production needs, or projects requiring a high level of creative polish.<br><br>2.  **Veracity Colab:**<br><br>    *   **Why:** Veracity Colab stands out for their focus on brand storytelling and creating emotionally resonant content. They have a strong understanding of marketing principles and how to use video to achieve specific business goals. Their portfolio showcases a lot of work with startups and established brands, and they often incorporate innovative approaches to video production. They&#39;re a good choice if you&#39;re looking for a company that will go beyond just filming and editing, and will help you develop a compelling video strategy. They also have a good reputation for working within budgets.<br>    *   **Ideal For:** Companies looking to create impactful brand videos, documentaries, or social media campaigns that tell a story and connect with their audience on an emotional level.<br><br>3.  **NYC Video Production:**<br><br>    *   **Why:** This company offers a comprehensive range of services, from pre-production planning to post-production editing and distribution. They are known for their technical expertise and their ability to handle complex video shoots. They have a large team of experienced professionals, including cinematographers, editors, and sound designers. This makes them a good choice for projects that require a high level of technical skill or a large-scale production.<br>    *   **Ideal For:** Businesses requiring a full-service video production company with a strong technical background and the capacity to handle large and complex projects.<br><br>**Important Considerations Before Making a Decision:**<br><br>*   **Your Specific Needs:**  What kind of video are you looking to create?  A commercial? A corporate training video? A social media campaign?  Different companies specialize in different areas.<br>*   **Your Budget:** Video production costs can vary widely.  Get quotes from several companies and be clear about your budget constraints.<br>*   **Company Culture:**  Do you feel like you would work well with the team at each company?  Good communication and collaboration are essential for a successful video production project.<br>*   **Portfolio Review:**  Carefully review the portfolios of each company to see if their style and quality align with your vision.  Look for examples of work that are similar to what you want to create.<br>*   **Client Testimonials:**  Read reviews and testimonials from previous clients to get a sense of each company&#39;s reputation and customer service.<br><br>I strongly advise you to contact these companies, discuss your project, and get quotes before making a final decision. Good luck!<br>"
+                    data-question="video production company NYC"
+                    data-llm="gemini"
+                    data-brand="SGNY Group"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q2</span>
+                    <span class="question-text">best videographer in Manhattan</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top recommendations for videographers in Manhattan, known for their creativity, professionalism, and quality of work:<br><br>1. **Katch Studios**<br>   - **Overview**: Katch Studios specializes in video production for weddings, events, and corporate projects. They are known for their cinematic storytelling style and high production quality.<br>   - **Why Recommend**: Their team is experienced in capturing the essence of events with a fresh, artistic approach. They offer a variety of packages and have a strong portfolio showcasing dynamic editing and engaging narratives.<br><br>2. **Happily Ever After Films**<br>   - **Overview**: This team focuses on wedding videography and is celebrated for its personalized approach to capturing couples&#39; unique stories. They also offer services for other events.<br>   - **Why Recommend**: Their attention to detail and ability to create emotional, impactful films set them apart. Clients appreciate their professionalism and the way they make couples feel comfortable on camera, resulting in genuine moments.<br><br>3. **Blue Sky Films**<br>   - **Overview**: Blue Sky Films provides a wide range of video services, including commercial work, promotional videos, and high-end event coverage. They emphasize storytelling and creativity.<br>   - **Why Recommend**: Their diverse experience allows them to tailor their services to various industries and needs, ensuring a polished final product. They are known for their innovative techniques and strong client relationships.<br><br>4. **The Wedding Film Company**<br>   - **Overview**: While they mainly focus on weddings, they also take on corporate projects. Their films are known for their emotional depth and artistic flair.<br>   - **Why Recommend**: They have a reputation for crafting beautiful, narrative-driven films that resonate with viewers. Their team is experienced, and clients often praise their ability to capture candid moments seamlessly.<br><br>5. **CineVerse Productions**<br>   - **Overview**: This videography service specializes in corporate videos, commercials, and event coverage. They are recognized for their professional approach and high-quality production.<br>   - **Why Recommend**: CineVerse Productions is adept at understanding a client&#39;s vision and translating it into compelling visual content. Their corporate clients often highlight their reliability and quick turnaround times.<br><br>Each of these videographers brings a unique style and strength to their work, making them stand out in the competitive Manhattan market. Be sure to review their portfolios and discuss your specific needs with them to find the best fit for your project."
+                    data-question="best videographer in Manhattan"
+                    data-llm="gpt4"
+                    data-brand="SGNY Group"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top 5 recommendations for the best videographers in Manhattan, listed in order of preference:<br><br>1. John Smith Videography - With over 10 years of experience and a portfolio of visually stunning wedding, corporate, and event videos, John Smith is one of the most sought-after videographers in Manhattan. His attention to detail, cinematic style, and ability to capture the essence of any event make him a top choice.<br><br>2. Pixel Perfect Productions - Led by a talented team of videographers and editors, Pixel Perfect Productions is known for their innovative approach and use of the latest equipment and techniques. They excel at creating dynamic, high-quality videos for a wide range of clients, from small businesses to large corporations.<br><br>3. Manhattan Videography Collective - This collaborative group of experienced videographers offers a diverse range of styles and specialties, ensuring that they can cater to any client&#39;s needs. Their collaborative approach and commitment to delivering exceptional results make them a reliable choice.<br><br>4. Cityscape Visuals - Specializing in cinematic videography, Cityscape Visuals captures the energy and essence of Manhattan in their work. Their portfolio showcases their ability to create visually stunning videos that tell compelling stories, making them a great choice for those looking to highlight the unique character of the city.<br><br>5. Gotham Video Artistry - With a focus on creative storytelling and a keen eye for detail, Gotham Video Artistry produces high-quality videos that stand out. Their versatility in covering a variety of events, from weddings to corporate functions, makes them a reliable option for those seeking a videographer who can adapt to different needs."
+                    data-question="best videographer in Manhattan"
+                    data-llm="claude"
+                    data-brand="SGNY Group"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Okay, here are my top recommendations for videographers in Manhattan, keeping in mind that &quot;best&quot; is subjective and depends heavily on your specific needs (event type, budget, style, etc.). These are based on reputation, quality of work, reviews, and overall presence in the industry.<br><br>**Important Considerations Before Choosing:**<br><br>*   **Portfolio is Key:** Always, always, *always* review their portfolio thoroughly. Does their style match what you&#39;re envisioning?<br>*   **Read Reviews:** Check reviews on multiple platforms (Google, Yelp, The Knot, WeddingWire, etc.).<br>*   **Contact and Consult:** Schedule consultations with your top choices to discuss your project in detail and get a feel for their personality and professionalism.<br>*   **Budget:** Videography can be expensive. Be upfront about your budget from the start.<br><br>**My Recommendations (in order of preference, assuming a need for high-quality, professional work):**<br><br>1.  **Stillmotion:** (While they may have a national presence, they are a top leader in the industry and have a strong presence in NYC, and are worth considering for high-end projects)<br><br>    *   **Why:** Stillmotion are known for their cinematic storytelling, emotional depth, and exceptional production quality. Their work is often described as moving, artistic, and highly polished. They&#39;re great for weddings and commercial projects.<br>    *   **Best For:** High-end weddings, corporate storytelling, documentary-style projects.<br>    *   **Consider:** They are likely at the higher end of the price spectrum.<br><br>2.  **NST Pictures:**<br><br>    *   **Why:** NST Pictures specializes in wedding videography and is highly regarded for their cinematic style and attention to detail. They have a strong reputation for capturing the emotions of the day and creating beautiful, timeless wedding films. They are also consistently praised for their professionalism and customer service.<br>    *   **Best For:** Weddings, engagements.<br>    *   **Consider:** Wedding-focused, so might not be the best fit for other types of projects.<br><br>3.  **Frank Leo Films:**<br>    *   **Why:** Frank Leo Films is a boutique production company that excels in creating visually stunning and emotionally engaging videos. They are known for their creative approach, technical expertise, and commitment to delivering exceptional results.<br>    *   **Best For:** Corporate videos, commercials, and creative projects that require a unique and artistic touch.<br>    *   **Consider:** May be more expensive than some other options, but the quality of their work is worth the investment.<br><br>4.  **Kiss the Bride Films:**<br><br>    *   **Why:** Specializes in wedding videography. They are known for their unobtrusive approach and ability to capture natural, candid moments. Their films are often described as timeless, romantic, and beautifully edited.<br>    *   **Best For:** Weddings, engagements.<br>    *   **Consider:** Wedding-focused, so might not be the best fit for other types of projects.<br><br>5.  **LAK Weddings:**<br><br>    *   **Why:** LAK Weddings are known for their modern, stylish approach to wedding videography. They focus on creating cinematic films that are both visually stunning and emotionally resonant. They also offer a range of packages to suit different budgets and needs.<br>    *   **Best For:** Weddings, engagements.<br>    *   **Consider:** Wedding-focused, so might not be the best fit for other types of projects.<br><br>**How to Choose the Right One for You:**<br><br>1.  **Define Your Needs:** What type of video do you need? What&#39;s your budget? What style are you looking for?<br>2.  **Research:** Look at the portfolios of these videographers and others.<br>3.  **Contact and Consult:** Talk to your top choices, ask questions, and get a quote.<br>4.  **Trust Your Gut:** Choose the videographer you feel most comfortable with and who you believe will best capture your vision.<br><br>Good luck with your search!<br>"
+                    data-question="best videographer in Manhattan"
+                    data-llm="gemini"
+                    data-brand="SGNY Group"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q3</span>
+                    <span class="question-text">how to create an effective brand video</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="Creating an effective brand video can significantly enhance your brand&#39;s visibility and engagement. Here are my top recommendations:<br><br>1. **Define Your Brand Message Clearly**  <br>   Before you start filming, it’s crucial to have a clear understanding of what message you want to convey. Identify your brand&#39;s core values, mission, and unique selling propositions (USPs). A concise and compelling message will resonate with your audience and ensure that your video stays focused and impactful.<br><br>2. **Know Your Audience**  <br>Understanding your target audience is essential for creating content that speaks to them. Research their preferences, pain points, and interests. Tailor your video’s tone, style, and content to appeal to this demographic. Engaging with your audience on a personal level increases the likelihood of connection and conversion.<br><br>3. **Tell a Story**  <br>People connect with stories more than with plain facts. Use storytelling techniques to create an emotional connection with your audience. Whether it’s showcasing customer testimonials, employee experiences, or the journey of your brand, a narrative can make your message more relatable and memorable.<br><br>4. **Keep It Short and Engaging**  <br>Attention spans can be short, especially online. Aim for a duration of 1-3 minutes for your brand video. Keep your content concise and engaging, focusing on the most important elements of your message. Use dynamic visuals, music, and editing techniques to maintain viewer interest throughout the video.<br><br>5. **Include a Strong Call to Action (CTA)**  <br>Every effective brand video should include a clear call to action. Whether you want viewers to visit your website, subscribe to a newsletter, or follow your social media channels, make sure to guide them on what to do next. A strong CTA can significantly increase viewer engagement and drive desired actions.<br><br>By following these recommendations, you can create a brand video that not only captures attention but also effectively communicates your brand&#39;s message and values."
+                    data-question="how to create an effective brand video"
+                    data-llm="gpt4"
+                    data-brand="SGNY Group"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Certainly! Here are my top 5 recommendations for creating an effective brand video:<br><br>1. Clearly Define Your Brand Message and Identity:<br>   - Start by clearly defining your brand&#39;s core values, unique selling points, and the message you want to convey to your target audience.<br>   - Ensure that your brand video aligns with and effectively communicates this brand identity.<br><br>2. Craft a Compelling Storyline:<br>   - Develop a narrative that engages your audience and effectively showcases your brand&#39;s products, services, or overall value proposition.<br>   - Incorporate elements of storytelling, such as relatable characters, emotional connections, and a clear beginning, middle, and end.<br><br>3. Utilize High-Quality Visuals and Production:<br>   - Invest in professional-grade videography, cinematography, and post-production techniques to create visually stunning and polished content.<br>   - Ensure that the visual style and aesthetic align with your brand&#39;s image and appeal to your target audience.<br><br>4. Optimize for Viewer Engagement:<br>   - Capture the viewer&#39;s attention within the first few seconds of the video to keep them engaged throughout.<br>   - Incorporate interactive elements, such as calls-to-action or links to your website, to encourage further exploration of your brand.<br><br>5. Distribute and Promote the Video Effectively:<br>   - Identify the most relevant platforms and channels to share your brand video, such as your website, social media, email marketing, or paid advertising.<br>   - Leverage SEO best practices, such as optimizing titles, descriptions, and tags, to improve the visibility and discoverability of your brand video.<br><br>Remember, the key to an effective brand video is to strike a balance between your brand&#39;s identity, storytelling, production quality, viewer engagement, and strategic distribution. By following these recommendations, you can create a compelling and impactful brand video that resonates with your target audience and supports your overall marketing and branding efforts."
+                    data-question="how to create an effective brand video"
+                    data-llm="claude"
+                    data-brand="SGNY Group"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Okay, here are my top 5 recommendations for creating an effective brand video, ordered by importance:<br><br>1.  **Know Your Audience and Define a Clear Goal (Most Important):**  Before you even think about scripts or visuals, understand *who* you&#39;re talking to and *what* you want them to *do* after watching your video.  Is it to drive awareness, increase website traffic, generate leads, or boost sales?  A blurry target leads to a blurry video that doesn&#39;t connect.  *Example:* Instead of &quot;increase brand awareness,&quot; aim for &quot;increase website traffic among millennial women interested in sustainable fashion by showcasing our ethical sourcing practices.&quot; Knowing your audience will help you tailor your message, tone, and visuals to resonate with them effectively.<br><br>2.  **Tell a Compelling Story (Focus on Emotion & Connection):**  Facts and figures are important, but people connect with stories.  Focus on crafting a narrative that evokes emotion, whether it&#39;s joy, inspiration, empathy, or even a touch of humor.  Show, don&#39;t just tell.  Highlight the *why* behind your brand, not just the *what*.  *Example:* Instead of simply listing features, show how your product solves a problem or improves someone&#39;s life.  A relatable story will make your brand more memorable and build trust.<br><br>3.  **Keep it Concise and Visually Engaging:**  Attention spans are short.  Aim for a video that&#39;s no longer than 1-2 minutes (ideally closer to 1 minute) for most online platforms.  Use dynamic visuals, engaging music, and clear, concise messaging to keep viewers hooked.  Consider using animation, motion graphics, or high-quality footage to enhance the visual appeal. *Example:* Use B-roll footage of your product in action, customer testimonials, or behind-the-scenes glimpses of your company culture.<br><br>4.  **Optimize for Different Platforms (Consider Context):**  A video that works on YouTube might not work as well on Instagram or TikTok.  Consider the platform&#39;s specific requirements and user behavior.  For example, mobile-first videos (vertical format) perform better on social media, and videos on platforms like LinkedIn might require a more professional tone.  *Example:* Create shorter, punchier versions of your video for platforms like TikTok or Instagram Reels, and use subtitles or closed captions to cater to viewers who watch videos on mute.<br><br>5.  **Include a Clear Call to Action (CTA):**  Tell viewers exactly what you want them to do next.  Do you want them to visit your website, sign up for a newsletter, follow you on social media, or purchase your product?  Make your CTA clear, concise, and easy to follow.  *Example:* Use an end screen with clickable buttons that direct viewers to your desired destination.  A strong CTA will help you convert viewers into customers or followers.<br>"
+                    data-question="how to create an effective brand video"
+                    data-llm="gemini"
+                    data-brand="SGNY Group"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q4</span>
+                    <span class="question-text">cost of professional video production services</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="When considering professional video production services, the cost can vary widely based on the complexity of the project, the expertise of the production team, and the resources required. Here are my top 3-5 recommendations for video production services, along with brief explanations for each:<br><br>### 1. **Fiverr Pro**<br>   - **Overview**: Fiverr Pro connects clients with vetted professional freelancers who specialize in various aspects of video production, including editing, animation, and full-scale video shoots.<br>   - **Why Choose It**: The platform offers a wide range of pricing options and services, allowing you to select professionals based on your budget and project needs. You can view portfolios and read reviews to find the right match.<br><br>### 2. **Upwork**<br>   - **Overview**: Upwork is a freelance marketplace where you can hire professionals for video production, editing, and animation. You can post your project and receive bids from freelancers.<br>   - **Why Choose It**: Upwork provides flexibility in terms of budget and scope. You can negotiate rates and timelines directly with freelancers, and the platform has a robust review system to help you choose reliable professionals.<br><br>### 3. **Local Video Production Companies**<br>   - **Overview**: Searching for local video production companies can yield high-quality services that understand the local market and audience.<br>   - **Why Choose It**: Local companies often offer tailored services and can provide personalized attention. Costs can vary, but local firms may also have lower overhead than larger agencies, leading to competitive pricing.<br><br>### 4. **Promo**<br>   - **Overview**: Promo specializes in creating short promotional videos using stock footage, animations, and customizable templates. It’s designed for businesses looking to create marketing videos quickly.<br>   - **Why Choose It**: This service is cost-effective and ideal for those on a tight budget. With various templates available, you can produce professional-looking videos without needing extensive production resources.<br><br>### 5. **Vidyard**<br>   - **Overview**: Vidyard is a video hosting platform that also provides tools for creating and editing videos, particularly for marketing purposes.<br>   - **Why Choose It**: While primarily a hosting solution, Vidyard offers useful features for businesses looking to produce video content quickly and effectively. Pricing can be more affordable than traditional production services, especially for ongoing content needs.<br><br>### Conclusion<br>Each of these options has its own strengths, and your selection should depend on your specific requirements, such as budget, project complexity, and desired turnaround time. It&#39;s always a good idea to request quotes and compare services before making a decision."
+                    data-question="cost of professional video production services"
+                    data-llm="gpt4"
+                    data-brand="SGNY Group"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top 5 recommendations for professional video production services, listed in order of preference:<br><br>1. Videocraft Productions (www.videocraftproductions.com) - This full-service video production company has a team of experienced filmmakers and videographers who can handle projects of any scale, from corporate videos to high-end commercials. They are known for their attention to detail, creative storytelling, and exceptional technical expertise.<br><br>2. Blue Pixel Media (www.bluepixelmedia.com) - Blue Pixel Media is a boutique video production studio that specializes in creating visually stunning, cinematic-quality videos for businesses and brands. They have a strong focus on pre-production planning and use the latest camera and editing technology to deliver polished, impactful results.<br><br>3. Luminous Creative (www.luminouscreative.com) - Luminous Creative is a versatile video production company that excels in a wide range of services, including corporate videos, event coverage, and social media content. They are known for their collaborative approach, attention to client needs, and ability to work within tight budgets.<br><br>4. Cinematic Pixels (www.cinematicpixels.com) - Cinematic Pixels is a team of award-winning filmmakers and motion graphics artists who specialize in creating visually compelling, high-end videos for businesses and organizations. They have a strong focus on visual storytelling and can bring a cinematic flair to any project.<br><br>5. Elevate Media Group (www.elevatemediagroup.com) - Elevate Media Group is a full-service video production agency that offers a wide range of services, from corporate videos and explainer videos to live event coverage and video marketing strategies. They are known for their adaptability, technical expertise, and ability to deliver high-quality results on time and within budget.<br><br>When choosing a video production service, it&#39;s important to consider factors such as their portfolio, client testimonials, creative approach, technical capabilities, and pricing. These recommendations provide a solid starting point, but it&#39;s always a good idea to research and compare multiple options to find the best fit for your specific needs and budget."
+                    data-question="cost of professional video production services"
+                    data-llm="claude"
+                    data-brand="SGNY Group"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Okay, to give you the best recommendations for estimating the cost of professional video production services, I need to understand what you&#39;re looking for.  Video production costs vary *wildly* based on scope, complexity, location, and talent.  However, I can give you some great resources to help you get a handle on the pricing landscape.<br><br>**Here are my top 5 recommendations for understanding the cost of professional video production services (in order of preference):**<br><br>1.  **Production Hub Cost Calculator (Best for Ballpark & Specific Roles):**<br><br>    *   **Explanation:** Production Hub is a well-respected industry directory. Their cost calculator is an *excellent* starting point.  It allows you to select the type of video you&#39;re producing (e.g., commercial, corporate, event), the size of the crew you expect, and specific roles (e.g., Director, DP, Editor).  It then provides a range of average rates for those roles *based on your location* (you&#39;ll need to enter your zip code). This is crucial because rates vary geographically.<br>    *   **Why it&#39;s great:**  It provides location-specific insights, allows for detailed role selection, and offers a broad range of video types.  It&#39;s a good way to get a sense of what different roles cost.<br>    *   **Caveats:** It&#39;s still an *estimate*.  The actual cost will depend on the experience level of the crew, the length of the project, and other factors.<br><br>2.  **Bidding Platforms (e.g., Upwork, Fiverr Pro - for Smaller Projects/Specific Tasks):**<br><br>    *   **Explanation:** While not ideal for *full* video production (unless it&#39;s a very simple project), platforms like Upwork and Fiverr Pro can be useful for getting quotes on specific tasks or smaller components, like editing, motion graphics, or voiceover.  Search for experienced video editors, animators, etc., and request quotes for your project.  Be *very* specific in your requirements and provide as much detail as possible.<br>    *   **Why it&#39;s great:** You can get real quotes from actual freelancers.  It&#39;s also good for tasks outside of the core production (like transcription or captioning).<br>    *   **Caveats:** Quality can vary significantly.  Thoroughly vet freelancers&#39; portfolios and reviews.  Communication is key.  For larger projects, you&#39;ll likely need to manage multiple freelancers, which can be time-consuming.  These platforms are best for smaller projects or specific tasks within a larger production.<br><br>3.  **Reach Out to Local Video Production Companies for Quotes (Essential for Accurate Pricing):**<br><br>    *   **Explanation:** The *most accurate* way to determine the cost is to contact several reputable video production companies in your area.  Provide them with a detailed brief outlining your project goals, target audience, the type of video you want (e.g., explainer video, promotional video, testimonial), length, style, and any specific requirements you have (e.g., on-location shooting, actors, animation).  Ask for a detailed proposal including a breakdown of costs.<br>    *   **Why it&#39;s great:** You&#39;ll get a customized quote based on your specific needs and the expertise of the company. This allows for a discussion of your budget and potential trade-offs.<br>    *   **Caveats:** Requires time and effort to prepare a detailed brief and evaluate proposals.  Make sure to check references, review portfolios, and ensure they understand your brand and objectives.<br><br>4.  **Read Industry Articles and Blog Posts (For General Understanding):**<br><br>    *   **Explanation:** Search for articles and blog posts on websites like PremiumBeat, Film Riot, or other video production resources.  These often provide general guidelines and insights into pricing, but be aware that the information may be outdated or not location-specific.<br>    *   **Why it&#39;s great:** Helps you understand the factors that influence cost and gives you a general baseline.<br>    *   **Caveats:** Information can be general and not reflective of current market rates in your specific area.  Use it for background knowledge, not as a definitive pricing guide.<br><br>5. **&quot;How Much Does Video Production Cost?&quot; Articles (For Context):**<br><br>    * **Explanation** Many agencies and production companies have detailed articles about what factors influence the cost of a video. These will help you understand what makes one video cost $1000 and another $100,000<br>    * **Why it&#39;s great:** It helps the client understand the value of what they are paying for.<br>    * **Caveats:** Most of these articles will be written by a company trying to get you to hire them.<br><br>"
+                    data-question="cost of professional video production services"
+                    data-llm="gemini"
+                    data-brand="SGNY Group"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q5</span>
+                    <span class="question-text">top video production studios in New York</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="Certainly! Here are my top recommendations for video production studios in New York, listed in order of preference:<br><br>1. **Psyop**<br>   - **Overview**: Psyop is a highly acclaimed studio known for its innovative and visually stunning animation and storytelling. They have worked with major brands and have a reputation for blending creativity with technology.<br>   - **Why Choose Them**: Their diverse portfolio includes commercials, music videos, and short films, showcasing a unique style that sets them apart. They focus on design-driven narratives, making them ideal for projects that require a strong visual impact.<br><br>2. **Blue Sky Studios**<br>   - **Overview**: Famous for their animated feature films, including the &quot;Ice Age&quot; series, Blue Sky Studios has a strong presence in the animation industry. They have recently expanded their services to include various types of video production.<br>   - **Why Choose Them**: Their expertise in character-driven storytelling and high-quality animation makes them an excellent choice for projects that want to tap into the emotional resonance of animated content.<br><br>3. **Kirkland Productions**<br>   - **Overview**: Kirkland Productions is known for its exceptional work in commercial video production and branded content. They have a reputation for delivering high-quality videos that resonate with audiences.<br>   - **Why Choose Them**: Their team of experienced professionals focuses on collaborative storytelling, ensuring that the client’s vision is captured effectively. They have a robust portfolio that spans various industries, providing a wealth of experience.<br><br>4. **The Mill**<br>   - **Overview**: The Mill is a global creative studio with a strong presence in New York, specializing in visual effects, creative content, and design. They are known for their cutting-edge technology and high-end production capabilities.<br>   - **Why Choose Them**: The Mill has worked on numerous high-profile projects and commercials, offering a mix of creativity and technical excellence. Their ability to integrate visual effects with live-action footage makes them perfect for innovative projects.<br><br>5. **B-Reel**<br>   - **Overview**: B-Reel is a creative agency and production company that blends storytelling with technology. They focus on creating immersive experiences across various media formats, including film and digital platforms.<br>   - **Why Choose Them**: Their interdisciplinary approach allows for unique and engaging video content that stands out. They are known for their work with both emerging brands and established companies, making them versatile for different project needs.<br><br>These studios are recognized for their creativity, quality, and ability to deliver compelling visual content, making them excellent choices for your video production needs in New York."
+                    data-question="top video production studios in New York"
+                    data-llm="gpt4"
+                    data-brand="SGNY Group"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top 5 recommendations for the top video production studios in New York, listed in order of preference:<br><br>1. Radiant Media Group: Radiant Media Group is a leading video production studio in New York, known for its exceptional storytelling, high-quality cinematography, and innovative approach to video content creation. They have a talented team of directors, producers, and editors who collaborate closely with clients to bring their vision to life.<br><br>2. Superfly Productions: Superfly Productions is a full-service video production company that specializes in creating impactful and visually stunning content. They have a strong track record of producing award-winning videos for a diverse range of clients, from Fortune 500 companies to renowned artists and musicians.<br><br>3. Pixel Perfect Productions: Pixel Perfect Productions is a versatile video production studio that excels in a wide range of services, including corporate videos, commercial productions, and social media content. They are known for their attention to detail, creative problem-solving, and ability to deliver high-quality results on tight deadlines.<br><br>4. Blackbird Media: Blackbird Media is a boutique video production studio that focuses on crafting visually captivating and emotionally engaging content. They have a team of experienced professionals who are adept at storytelling and leveraging the latest technology to create innovative video solutions.<br><br>5. Vortex Media: Vortex Media is a dynamic video production studio that specializes in creating content for the digital age. They are known for their expertise in video marketing, social media content, and live-action productions, making them a valuable partner for businesses looking to elevate their video presence.<br><br>These studios have a proven track record of delivering exceptional video content, and their diverse portfolios and specialized expertise make them excellent choices for a wide range of video production needs in New York."
+                    data-question="top video production studios in New York"
+                    data-llm="claude"
+                    data-brand="SGNY Group"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Okay, here are my top 5 video production studios in New York City, ordered by my preference considering reputation, quality of work, versatility, and client feedback. Keep in mind that &quot;best&quot; is subjective and depends heavily on your specific project needs (budget, style, industry, etc.).<br><br>1.  **Casual Films:** Casual Films consistently produces high-quality, creative video content for a wide range of clients, from multinational corporations to smaller businesses. What sets them apart is their ability to deliver sophisticated, engaging videos within reasonable budgets. They have a strong focus on storytelling and a proven track record across various video types, including commercials, corporate videos, animations, and social media content. Their client list and case studies are impressive, and they have a reputation for being highly professional and responsive.<br><br>2.  **Garin Media:** Garin Media specializes in branded content and commercials, often with a cinematic and visually stunning aesthetic. They excel at creating high-impact videos that elevate brands and capture attention. Their work showcases strong direction, cinematography, and post-production. They&#39;re a good choice if you&#39;re looking for a studio with a premium feel and a focus on artistic storytelling.<br><br>3.  **Veracity Colab:** Veracity Colab is a full-service production company known for its expertise in live events, broadcast production, and corporate communications. They combine technical expertise with creative storytelling to deliver impactful experiences for their clients. If you need a partner to manage complex live productions or create engaging content for internal communications, Veracity Colab is a solid choice.<br><br>4.  **NYC Video Production:** This studio is a versatile option with experience in a variety of video types, including commercials, corporate videos, and documentaries. They have a strong online presence and a portfolio that demonstrates their ability to deliver high-quality work within budget and on time. They offer a full range of services, from pre-production to post-production, making them a convenient option for clients who need a one-stop shop.<br><br>5.  **Lemonlight:** Lemonlight specializes in video production for digital marketing and advertising. Their focus is on creating high-performing video ads and social media content that drives results. If you&#39;re looking for a studio with a strong understanding of digital marketing and a track record of creating effective video campaigns, Lemonlight is worth considering.<br><br>**Important Considerations Before Choosing:**<br><br>*   **Your Budget:** Video production costs vary significantly. Get quotes from multiple studios.<br>*   **Your Project Type:** Different studios specialize in different types of videos. Make sure their expertise aligns with your needs.<br>*   **Portfolio Review:** Thoroughly review each studio&#39;s portfolio to see if their style matches your vision.<br>*   **Client Testimonials:** Read testimonials and reviews to get a sense of each studio&#39;s reputation and client satisfaction.<br>*   **Communication:** Choose a studio that communicates clearly and responds promptly to your inquiries.<br><br>Good luck with your project!<br>"
+                    data-question="top video production studios in New York"
+                    data-llm="gemini"
+                    data-brand="SGNY Group"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+                </tbody>
+            </table>
+            <p class="breakdown-hint">Click any cell to see the full AI response</p>
+        </div>
+
+        <!-- Response modal -->
+        <div class="response-modal" id="responseModal">
+            <div class="modal-content" onclick="event.stopPropagation()">
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+                <div class="modal-header">
+                    <span class="modal-llm" id="modalLlm"></span>
+                    <span class="modal-status" id="modalStatus"></span>
+                </div>
+                <div class="modal-question" id="modalQuestion"></div>
+                <div class="modal-response" id="modalResponse"></div>
+            </div>
+        </div>
+    
+        </div>
+
+        <!-- Section 3: Reddit Opportunities -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <h2 class="section-title">Reddit Opportunities</h2>
+            </div>
+
+            <div class="subsection-title">Buy Intent Conversations</div>
+            <p class="subsection-desc">People actively looking for recommendations in your category</p>
+            <div class="reddit-posts">
+                
+            <a href="https://www.reddit.com/r/NYCjobs/comments/1qmniec/nyc_collab_dpeditor_seeking_cinematographers/" target="_blank" class="reddit-post">
+                <div class="post-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">[NYC] [Collab] [DP/Editor] Seeking Cinematographers & ...</div>
+                    <div class="post-meta">
+                        r/NYCjobs &bull; 48K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            <a href="https://www.reddit.com/r/cinematography/comments/1qnl00z/future_of_commercial_filmmaking_pulse_check_from/" target="_blank" class="reddit-post">
+                <div class="post-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">Future of Commercial Filmmaking / Pulse Check from NYC</div>
+                    <div class="post-meta">
+                        r/cinematography &bull; 413K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            <a href="https://www.reddit.com/r/Filmmakers/new/" target="_blank" class="reddit-post">
+                <div class="post-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">Filmmakers</div>
+                    <div class="post-meta">
+                        r/Filmmakers &bull; 3.0M members &bull; 2 days ago
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            <a href="https://www.reddit.com/r/findapath/comments/1qojk1y/40_years_old_near_20_years_in_nyc_film_tv/" target="_blank" class="reddit-post">
+                <div class="post-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">40 years old, near 20 years in NYC film & TV : industry ...</div>
+                    <div class="post-meta">
+                        r/findapath &bull; 753K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            </div>
+
+            <div class="subsection-title">Pain Point Conversations</div>
+            <p class="subsection-desc">People discussing problems your product solves</p>
+            <div class="reddit-posts">
+                
+            <a href="https://www.reddit.com/r/DigitalMarketing/comments/1qmg2q0/is_content_marketing_getting_harder_or_am_i/" target="_blank" class="reddit-post">
+                <div class="post-icon pain">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">Is content marketing getting harder, or am I missing ...</div>
+                    <div class="post-meta">
+                        r/DigitalMarketing &bull; 354K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            <a href="https://www.reddit.com/r/NewTubers/comments/1qofpf3/feeling_super_lost_in_this_youtuber_journey_it/" target="_blank" class="reddit-post">
+                <div class="post-icon pain">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">Feeling super lost in this YouTuber journey... It has not ...</div>
+                    <div class="post-meta">
+                        r/NewTubers &bull; 635K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            </div>
+        </div>
+
+        <!-- CTA Section -->
+        <div class="section cta-section">
+            <h2>Ready to improve your <em>AI visibility?</em></h2>
+            <p>We help brands get mentioned more in AI answers through strategic content placement.</p>
+            <a href="https://adva-solutions.com/AIVisibility" class="cta-button">Learn More</a>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p>Generated by <a href="https://adva-solutions.com">Adva</a> &bull; AI Visibility Health Check</p>
+    </footer>
+
+    <script>
+        // Tab switching functionality
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const tabId = btn.dataset.tab;
+
+                // Update buttons
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                // Update panels
+                document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+                document.getElementById('panel-' + tabId).classList.add('active');
+            });
+        });
+
+        // Show toast notification
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2500);
+        }
+
+        // Show response modal
+        function showResponse(cell) {
+            try {
+                let response = cell.dataset.response || 'No response available';
+                const question = cell.dataset.question || '';
+                const llm = cell.dataset.llm || '';
+                const brand = cell.dataset.brand || '';
+                const isMentioned = cell.classList.contains('mentioned');
+                const brandPosition = cell.dataset.position ? parseInt(cell.dataset.position) : null;
+
+                const llmNames = {'gpt4': 'GPT', 'claude': 'Claude', 'gemini': 'Gemini'};
+
+                // If brand is mentioned beyond position 5, add a banner at the top
+                let positionBanner = '';
+                if (isMentioned && brandPosition && brandPosition > 5) {
+                    positionBanner = '<div style="background: #fef3c7; padding: 0.75rem 1rem; border-radius: 6px; margin-bottom: 1rem; border-left: 4px solid #f59e0b;">' +
+                        '<strong>📍 Your brand appeared at position #' + brandPosition + '</strong> - scroll down to see the highlighted mention' +
+                        '</div>';
+                }
+
+                // Highlight brand name in response (case insensitive)
+                if (brand && isMentioned) {
+                    try {
+                        const brandRegex = new RegExp('(' + brand.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&') + ')', 'gi');
+                        response = response.replace(brandRegex, '<span class="brand-highlight">$1</span>');
+                    } catch(e) { /* ignore highlighting errors */ }
+                }
+
+                document.getElementById('modalLlm').textContent = llmNames[llm] || llm;
+                document.getElementById('modalQuestion').textContent = '"' + question + '"';
+                document.getElementById('modalResponse').innerHTML = positionBanner + response;
+
+                const statusEl = document.getElementById('modalStatus');
+                if (isMentioned) {
+                    statusEl.textContent = 'Mentioned';
+                    statusEl.className = 'modal-status mentioned';
+                } else {
+                    statusEl.textContent = 'Not mentioned';
+                    statusEl.className = 'modal-status not-mentioned';
+                }
+
+                document.getElementById('responseModal').classList.add('active');
+                document.body.style.overflow = 'hidden';
+
+                // Scroll to first highlight if mentioned
+                if (isMentioned) {
+                    setTimeout(function() {
+                        const highlight = document.querySelector('.modal-response .brand-highlight');
+                        if (highlight) {
+                            highlight.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        }
+                    }, 100);
+                }
+            } catch (e) {
+                console.error('Error showing response:', e);
+                alert('Error loading response. Please try again.');
+            }
+        }
+
+        // Close modal
+        function closeModal() {
+            document.getElementById('responseModal').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // Close when clicking backdrop (outside modal content)
+        document.getElementById('responseModal').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+
+        // Close modal on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeModal();
+        });
+    </script>
+</body>
+</html>
