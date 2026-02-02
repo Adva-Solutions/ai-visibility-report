@@ -1,0 +1,1370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Visibility Report - Wiser MD | Adva</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #ffffff;
+            min-height: 100vh;
+            color: #374151;
+            line-height: 1.6;
+        }
+
+        /* Header */
+        .header {
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            font-size: 1.25rem;
+            color: #1f2937;
+            text-decoration: none;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .header-date {
+            color: #9ca3af;
+            font-size: 0.875rem;
+        }
+
+        /* Copy link button */
+        .copy-link-button {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: #f3f4f6;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            color: #374151;
+            font-size: 0.75rem;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .copy-link-button:hover {
+            background: #e5e7eb;
+        }
+
+        .copy-link-button svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        .pdf-button {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: #1f2937;
+            border: none;
+            border-radius: 6px;
+            color: #ffffff;
+            font-size: 0.75rem;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .pdf-button:hover {
+            background: #374151;
+        }
+
+        .pdf-button svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        /* Toast notification */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: #1f2937;
+            color: #ffffff;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            opacity: 0;
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        /* Container */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Page title */
+        .page-title {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .page-title .label {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: #9ca3af;
+            font-size: 0.75rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+        }
+
+        .page-title .label::before,
+        .page-title .label::after {
+            content: '';
+            width: 30px;
+            height: 1px;
+            background: #d1d5db;
+        }
+
+        .page-title h1 {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 2.5rem;
+            font-weight: 400;
+            color: #1f2937;
+            margin-bottom: 0.5rem;
+        }
+
+        .page-title .brand {
+            color: #6b7280;
+            font-size: 1.125rem;
+        }
+
+        /* Sections */
+        .section {
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #f3f4f6;
+        }
+
+        .section-icon {
+            width: 40px;
+            height: 40px;
+            background: #1f2937;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .section-icon svg {
+            width: 20px;
+            height: 20px;
+            color: #ffffff;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 1.375rem;
+            color: #1f2937;
+        }
+
+        /* Score Section */
+        .score-section {
+            text-align: center;
+            padding: 3rem 2rem;
+        }
+
+        .score-circle {
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            background: #fafafa;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            border: 4px solid #ef4444;
+        }
+
+        .score-value {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 3rem;
+            font-weight: 500;
+            color: #ef4444;
+        }
+
+        .score-label {
+            font-size: 0.8rem;
+            color: #9ca3af;
+        }
+
+        .score-description {
+            color: #6b7280;
+            margin-bottom: 2rem;
+            font-size: 1rem;
+        }
+
+        .score-description strong {
+            color: #1f2937;
+        }
+
+        .llm-breakdown {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .llm-stat {
+            text-align: center;
+            padding: 1rem 1.5rem;
+            background: #fafafa;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+            min-width: 100px;
+        }
+
+        .llm-name {
+            display: block;
+            color: #9ca3af;
+            font-size: 0.8rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .llm-score {
+            font-size: 1.125rem;
+            font-weight: 600;
+        }
+
+        .llm-score.success {
+            color: #22c55e;
+        }
+
+        .llm-score.warning {
+            color: #ef4444;
+        }
+
+        /* Competitor Table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 0.875rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid #f3f4f6;
+        }
+
+        th {
+            color: #9ca3af;
+            font-weight: 500;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        td {
+            color: #374151;
+        }
+
+        .mention-count {
+            background: #fef3c7;
+            color: #92400e;
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        /* Tabs for LLM responses */
+        .example-tabs {
+            margin-top: 1.5rem;
+        }
+
+        .tabs-header {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+            padding-bottom: 0;
+        }
+
+        .tab-btn {
+            padding: 0.75rem 1.25rem;
+            background: transparent;
+            border: none;
+            color: #6b7280;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            margin-bottom: -1px;
+            transition: all 0.2s;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .tab-btn:hover {
+            color: #1f2937;
+        }
+
+        .tab-btn.active {
+            color: #1f2937;
+            border-bottom-color: #1f2937;
+        }
+
+        .tab-panel {
+            display: none;
+            background: #fafafa;
+            border-radius: 8px;
+            padding: 1.25rem;
+        }
+
+        .tab-panel.active {
+            display: block;
+        }
+
+        .example-question {
+            color: #1f2937;
+            font-weight: 500;
+            font-size: 0.95rem;
+            margin-bottom: 0.75rem;
+        }
+
+        /* Question breakdown table */
+        .question-breakdown {
+            margin-top: 1rem;
+        }
+
+        .breakdown-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        .breakdown-table th {
+            padding: 0.75rem;
+            text-align: center;
+            background: #f9fafb;
+            border-bottom: 2px solid #e5e7eb;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .breakdown-table th:first-child {
+            text-align: left;
+            width: 50%;
+        }
+
+        .breakdown-table td {
+            padding: 0.75rem;
+            border-bottom: 1px solid #f3f4f6;
+            vertical-align: middle;
+        }
+
+        .question-cell {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+        }
+
+        .question-num {
+            background: #e5e7eb;
+            color: #374151;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        .question-text {
+            color: #374151;
+            line-height: 1.4;
+        }
+
+        .llm-cell {
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-radius: 4px;
+        }
+
+        .llm-cell:hover {
+            background: #f3f4f6;
+        }
+
+        .llm-cell.mentioned {
+            color: #16a34a;
+        }
+
+        .llm-cell.mentioned .status-icon {
+            font-size: 1.25rem;
+        }
+
+        .llm-cell.not-mentioned {
+            color: #dc2626;
+        }
+
+        .llm-cell.not-mentioned .status-icon {
+            font-size: 1.25rem;
+        }
+
+        .breakdown-hint {
+            color: #9ca3af;
+            font-size: 0.8rem;
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+        /* Response modal */
+        .response-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+        }
+
+        .response-modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: #ffffff;
+            border-radius: 12px;
+            max-width: 800px;
+            width: 100%;
+            max-height: 90vh;
+            overflow: auto;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #9ca3af;
+            cursor: pointer;
+            padding: 0.25rem 0.5rem;
+        }
+
+        .modal-close:hover {
+            color: #374151;
+        }
+
+        .modal-header {
+            padding: 1.5rem 1.5rem 0;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            position: relative;
+        }
+
+        .modal-llm {
+            font-weight: 600;
+            color: #1f2937;
+            font-size: 1.1rem;
+        }
+
+        .modal-status {
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .modal-status.mentioned {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .modal-status.not-mentioned {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .modal-question {
+            padding: 1rem 1.5rem;
+            color: #6b7280;
+            font-size: 0.9rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .modal-response {
+            padding: 1.5rem;
+            overflow-y: auto;
+            flex: 1;
+            color: #374151;
+            font-size: 0.9rem;
+            line-height: 1.8;
+            min-height: 300px;
+            max-height: 60vh;
+            background: #fafafa;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .modal-response::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .modal-response::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        .modal-response::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 4px;
+        }
+
+        .modal-response::-webkit-scrollbar-thumb:hover {
+            background: #a1a1a1;
+        }
+
+        /* Brand highlight */
+        .brand-highlight {
+            background: linear-gradient(120deg, #fef08a 0%, #fde047 100%);
+            padding: 0.1rem 0.3rem;
+            border-radius: 3px;
+            font-weight: 600;
+        }
+
+        .example-content {
+            color: #6b7280;
+            font-size: 0.875rem;
+            line-height: 1.7;
+            max-height: 400px;
+            overflow-y: auto;
+            margin-bottom: 0.75rem;
+            padding: 1rem;
+            background: #f9fafb;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .example-status {
+            padding: 0.5rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            display: inline-block;
+        }
+
+        .example-status.mentioned {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .example-status.not-mentioned {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        /* Reddit Posts */
+        .reddit-posts {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .reddit-post {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: #fafafa;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: all 0.2s;
+            border: 1px solid transparent;
+        }
+
+        .reddit-post:hover {
+            background: #f3f4f6;
+            border-color: #e5e7eb;
+        }
+
+        .post-icon {
+            width: 40px;
+            height: 40px;
+            background: #1f2937;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .post-icon.pain {
+            background: #fef3c7;
+        }
+
+        .post-icon.pain svg {
+            color: #92400e;
+        }
+
+        .post-icon svg {
+            width: 20px;
+            height: 20px;
+            color: #ffffff;
+        }
+
+        .post-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .post-title {
+            color: #1f2937;
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .post-meta {
+            color: #9ca3af;
+            font-size: 0.8rem;
+        }
+
+        .post-arrow {
+            color: #9ca3af;
+            flex-shrink: 0;
+        }
+
+        .post-arrow svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .subsection-title {
+            color: #1f2937;
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin: 1.5rem 0 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .subsection-title:first-of-type {
+            margin-top: 0;
+        }
+
+        .subsection-desc {
+            color: #9ca3af;
+            font-size: 0.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .no-data {
+            color: #9ca3af;
+            font-style: italic;
+            text-align: center;
+            padding: 1rem;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            color: #9ca3af;
+            font-size: 0.8rem;
+            padding: 2rem;
+            border-top: 1px solid #e5e7eb;
+            margin-top: 2rem;
+        }
+
+        .footer a {
+            color: #1f2937;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* CTA */
+        .cta-section {
+            text-align: center;
+            padding: 3rem 2rem;
+            background: #fafafa;
+        }
+
+        .cta-section h2 {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 1.75rem;
+            color: #1f2937;
+            margin-bottom: 0.75rem;
+        }
+
+        .cta-section p {
+            color: #6b7280;
+            margin-bottom: 1.5rem;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background: #1f2937;
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .cta-button:hover {
+            background: #111827;
+            transform: translateY(-1px);
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .page-title h1 {
+                font-size: 1.75rem;
+            }
+
+            .section {
+                padding: 1.5rem;
+            }
+
+            .score-circle {
+                width: 130px;
+                height: 130px;
+            }
+
+            .score-value {
+                font-size: 2.25rem;
+            }
+
+            .llm-breakdown {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .tabs-header {
+                flex-wrap: wrap;
+            }
+
+            .tab-btn {
+                padding: 0.5rem 1rem;
+                font-size: 0.8rem;
+            }
+
+            .breakdown-table th,
+            .breakdown-table td {
+                padding: 0.5rem;
+                font-size: 0.8rem;
+            }
+
+            .question-cell {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .modal-content {
+                max-height: 90vh;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <a href="https://adva-solutions.com/AIVisibility" class="logo">adva</a>
+        <div class="header-right">
+            <!-- PDF button hidden for now - backend still available at /report/c287c3ea/pdf
+            <a href="/report/c287c3ea/pdf" class="pdf-button" title="Download as PDF">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                Download PDF
+            </a>
+            -->
+            <button class="copy-link-button" onclick="navigator.clipboard.writeText('https://adva-solutions.github.io/ai-visibility-report/report_wiser-md_c287c3ea.html'); showToast('Link copied!');" title="Copy shareable link">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                </svg>
+                Copy Link
+            </button>
+            <span class="header-date">February 02, 2026</span>
+        </div>
+    </header>
+    <div class="toast" id="toast">Link copied to clipboard!</div>
+
+    <div class="container">
+        <div class="page-title">
+            <div class="label">AI Visibility Report</div>
+            <h1>Your Brand's <em>AI Presence</em></h1>
+            <p class="brand">Analysis for Wiser MD</p>
+        </div>
+
+        <!-- Section 1: AI Visibility Score -->
+        <div class="section score-section">
+            <div class="score-circle">
+                <span class="score-value">0%</span>
+                <span class="score-label">0/15 mentions</span>
+            </div>
+            <p class="score-description">
+                Your brand appeared in <strong>0</strong> out of <strong>15</strong> AI recommendations
+            </p>
+            <div class="llm-breakdown">
+                
+            <div class="llm-stat">
+                <span class="llm-name">GPT</span>
+                <span class="llm-score warning">0/5</span>
+            </div>
+        
+            <div class="llm-stat">
+                <span class="llm-name">Claude</span>
+                <span class="llm-score warning">0/5</span>
+            </div>
+        
+            <div class="llm-stat">
+                <span class="llm-name">Gemini</span>
+                <span class="llm-score warning">0/5</span>
+            </div>
+        
+            </div>
+        </div>
+
+        <!-- Section 2: AI Response Breakdown -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                    </svg>
+                </div>
+                <h2 class="section-title">Question-by-Question Breakdown</h2>
+            </div>
+            <p style="color: #6b7280; margin-bottom: 1rem;">We asked these 5 questions to each AI model. Click any cell to see the full response:</p>
+            
+        <div class="question-breakdown">
+            <table class="breakdown-table">
+                <thead>
+                    <tr>
+                        <th>Question Asked</th>
+                        <th>GPT</th>
+                        <th>Claude</th>
+                        <th>Gemini</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q1</span>
+                    <span class="question-text">NYC plastic surgeon for breast reduction</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="When considering breast reduction surgery in New York City, it’s essential to choose a qualified and experienced plastic surgeon. Here are five highly regarded options, listed in order of preference:<br><br>1. **Dr. Norman Rowe**  <br>   - **Background**: Dr. Rowe is a board-certified plastic surgeon with extensive experience in breast surgery, including breast reduction. He is known for his patient-centered approach and dedication to achieving natural-looking results.<br>   - **Why Choose Him**: His practice emphasizes personalized care, and he has a strong reputation for his surgical skills and patient satisfaction. He also offers advanced techniques that can minimize scarring.<br><br>2. **Dr. R. Brannon Claytor**  <br>   - **Background**: Dr. Claytor is a board-certified plastic surgeon who specializes in cosmetic and reconstructive surgery. He is well-regarded for his breast procedures, and his artistry is often highlighted in patient reviews.<br>   - **Why Choose Him**: His commitment to understanding each patient’s unique needs and aesthetics ensures tailored results. He is also known for his thorough consultations and follow-up care.<br><br>3. **Dr. Jennifer Levine**  <br>   - **Background**: Dr. Levine is a board-certified plastic surgeon with a focus on breast surgery and aesthetic procedures. She is also known for her innovative techniques and minimally invasive approaches.<br>   - **Why Choose Her**: Dr. Levine emphasizes a holistic approach to her patients&#39; well-being, and her practice is recognized for its supportive environment. Many patients report high levels of satisfaction with their outcomes.<br><br>4. **Dr. David Shafer**  <br>   - **Background**: Dr. Shafer is a board-certified plastic surgeon who specializes in aesthetic surgery, including breast reductions. He is active in the latest surgical techniques and technologies.<br>   - **Why Choose Him**: His practice is known for its modern facilities and comprehensive patient care. Dr. Shafer’s attention to detail and focus on achieving balanced proportions make him a popular choice.<br><br>5. **Dr. Andrew Jacono**  <br>   - **Background**: Dr. Jacono is a double board-certified plastic surgeon with a reputation for excellence in both cosmetic and reconstructive surgery. He has significant experience in breast reduction and aesthetic enhancements.<br>   - **Why Choose Him**: Known for his meticulous technique and emphasis on natural results, Dr. Jacono has received numerous accolades. His innovative approaches often lead to shorter recovery times and less visible scarring.<br><br>When selecting a plastic surgeon, it’s crucial to schedule consultations, review before-and-after photos, and discuss your specific goals and concerns. This will help ensure you find the best fit for your needs."
+                    data-question="NYC plastic surgeon for breast reduction"
+                    data-llm="gpt4"
+                    data-brand="Wiser MD"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top 5 recommendations for plastic surgeons in New York City for breast reduction surgery, listed in order of preference:<br><br>1. Dr. David Hidalgo - Mount Sinai Hospital<br>   - Highly experienced and board-certified plastic surgeon specializing in breast procedures<br>   - Renowned for his natural-looking results and meticulous surgical techniques<br>   - Consistently ranked as one of the top plastic surgeons in NYC<br><br>2. Dr. Constance Chen - Lenox Hill Hospital<br>   - Skilled and compassionate surgeon with a focus on breast and body contouring<br>   - Utilizes advanced techniques to minimize scarring and optimize outcomes<br>   - Excellent patient reviews and reputation for personalized care<br><br>3. Dr. Stafford Broumand - 740 Park Plastic Surgery<br>   - Recognized leader in the field of plastic surgery with extensive experience<br>   - Specializes in breast reduction and other breast procedures<br>   - Committed to achieving natural-looking and proportionate results<br><br>4. Dr. Melissa Doft - Doft Plastic Surgery<br>   - Board-certified plastic surgeon with expertise in breast surgery<br>   - Utilizes the latest techniques to ensure minimal scarring and quick recovery<br>   - Highly regarded for her attention to detail and personalized approach<br><br>5. Dr. Darren Smith - Darren M. Smith, MD Plastic Surgery<br>   - Experienced plastic surgeon with a focus on breast and body contouring<br>   - Known for his artistic eye and ability to create natural-looking results<br>   - Offers a comprehensive range of breast reduction techniques<br><br>It&#39;s important to schedule consultations with multiple surgeons to find the one who best aligns with your goals and surgical needs. Be sure to review their credentials, experience, and patient testimonials to make an informed decision."
+                    data-question="NYC plastic surgeon for breast reduction"
+                    data-llm="claude"
+                    data-brand="Wiser MD"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Okay, here are 3-5 highly-regarded plastic surgeons in NYC for breast reduction, listed in order of preference based on factors like reputation, patient reviews, expertise, and board certification.  Keep in mind that &quot;preference&quot; is subjective, and the best choice for *you* will depend on your individual needs and priorities.  *Always* do your own thorough research and have consultations with multiple surgeons before making a decision.<br><br>**Important Considerations Before Reviewing the List:**<br><br>*   **Board Certification:** All surgeons listed are board-certified by the American Board of Plastic Surgery (ABPS). This is a crucial baseline requirement.<br>*   **Experience:** All have significant experience performing breast reductions.<br>*   **Consultations:**  Schedule consultations with several surgeons to discuss your specific goals, concerns, and medical history. This is the most important step in finding the right surgeon.<br>*   **Patient Reviews:** I&#39;ve considered reviews, but remember that online reviews can be subjective and may not always reflect the full picture.<br>*   **Surgical Technique:** Different surgeons may use different techniques. Discuss the pros and cons of each technique with the surgeon.<br>*   **Cost:** Breast reduction cost can vary significantly. The final price will depend on the surgeon, the location, and the specific procedure that you need. Make sure to get a detailed cost estimate during your consultation.<br><br>**Recommendations (In Order of Preference):**<br><br>1.  **Dr. Nolan S. Karp:**<br>    *   **Why:** Dr. Karp is a very well-regarded plastic surgeon in NYC specializing in breast reconstruction and reduction. He is known for his natural-looking results. He is affiliated with NYU Langone.<br>    *   **Things to consider:** Be sure to check if he accepts your insurance.<br>    *   **Reputation:** Excellent reputation, known for meticulous technique and patient care.<br><br>2.  **Dr. Lara Devgan:**<br>    *   **Why:** Dr. Devgan operates in Manhattan, and is known for her expertise in surgical and non-surgical cosmetic procedures. Her practice is known for it&#39;s high-end clientele.<br>    *   **Things to consider:** As a popular surgeon with a high-end practice, she can be more expensive than other options.<br>    *   **Reputation:** Known for her skill and attention to detail.<br><br>3.  **Dr. Stafford Broumand:**<br>    *  **Why:** He is a well-known and respected plastic surgeon in the NYC area, with a track record of positive patient outcomes.<br>    *  **Things to consider:** Costs can be higher due to location and experience.<br>    *  **Reputation:** Known for patient satisfaction and surgical skill.<br><br>4.  **Dr. Elliot Heller:**<br>    *   **Why:** Dr. Heller is known for his personalized approach and attention to detail. He&#39;s been recognized as a top doctor in New York.<br>    *   **Things to consider:** Make sure that you feel that he understands your goals during your consultation.<br>    *   **Reputation:** Known for his excellent bedside manner and surgical skills.<br><br>**Disclaimer:** *I am an AI chatbot and cannot provide medical advice. This information is for general knowledge and informational purposes only, and does not constitute medical advice. It is essential to consult with qualified healthcare professionals for any health concerns or before making any decisions related to your health or treatment.*<br>"
+                    data-question="NYC plastic surgeon for breast reduction"
+                    data-llm="gemini"
+                    data-brand="Wiser MD"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q2</span>
+                    <span class="question-text">best gynecomastia surgeon in New York City</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top recommendations for gynecomastia surgeons in New York City, based on their reputation, expertise, and patient reviews:<br><br>1. **Dr. Norman Rowe**  <br>   - **Overview**: Dr. Rowe is a board-certified plastic surgeon known for his specialization in gynecomastia surgery. He has extensive experience and has been practicing for over 20 years.<br>   - **Why Choose Him**: He is well-regarded for his personalized approach and thorough consultations, focusing on the unique needs of each patient. His results are often praised for being natural-looking and minimally invasive.<br><br>2. **Dr. Michael A. Fiorillo**  <br>   - **Overview**: A board-certified plastic surgeon with a focus on aesthetic surgery, Dr. Fiorillo has a reputation for his skill in gynecomastia procedures and body contouring.<br>   - **Why Choose Him**: Patients commend Dr. Fiorillo for his attention to detail and compassionate care. He utilizes advanced techniques to ensure optimal results, and he takes the time to explain the procedure thoroughly.<br><br>3. **Dr. David Shafer**  <br>   - **Overview**: Dr. Shafer is a prominent plastic surgeon in NYC who specializes in gynecomastia among other procedures. He is recognized for his innovative techniques and comprehensive care.<br>   - **Why Choose Him**: With numerous positive reviews, Dr. Shafer is known for his artistic approach to surgery and a commitment to patient satisfaction. He offers a range of options tailored to individual needs, ensuring a comfortable experience.<br><br>4. **Dr. J. David Holcomb**  <br>   - **Overview**: Dr. Holcomb is a board-certified plastic surgeon specializing in male breast reduction and gynecomastia. He has a strong background in both aesthetic and reconstructive surgery.<br>   - **Why Choose Him**: Known for his thorough consultation process and patient education, Dr. Holcomb emphasizes safety and optimal results. His minimally invasive techniques often lead to quicker recoveries.<br><br>5. **Dr. Andrew Jacono**  <br>   - **Overview**: Dr. Jacono is a highly regarded plastic surgeon known for his expertise in facial and body aesthetic surgery, including gynecomastia procedures.<br>   - **Why Choose Him**: He is celebrated for his meticulous technique and dedication to achieving natural-looking results. His practice places a strong emphasis on the patient experience, ensuring that each individual feels comfortable and supported throughout the process.<br><br>When selecting a surgeon, it’s essential to schedule consultations to find the best fit for your specific needs and ensure you feel confident in your choice."
+                    data-question="best gynecomastia surgeon in New York City"
+                    data-llm="gpt4"
+                    data-brand="Wiser MD"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top 5 recommendations for the best gynecomastia surgeons in New York City, listed in order of preference:<br><br>1. Dr. David Shafer, Shafer Plastic Surgery & Laser Center:<br>   - Highly experienced and board-certified plastic surgeon specializing in gynecomastia surgery<br>   - Utilizes advanced techniques to achieve natural-looking results with minimal scarring<br>   - Excellent patient reviews and a reputation for providing personalized care<br><br>2. Dr. Douglas Steinbrech, Gotham Plastic Surgery:<br>   - Renowned for his expertise in male body contouring, including gynecomastia treatment<br>   - Uses cutting-edge techniques to address the underlying causes of gynecomastia<br>   - Focuses on achieving a masculine, well-defined chest appearance<br><br>3. Dr. Elan Reisin, New York Aesthetic Consultants:<br>   - Specializes in male-specific procedures, including gynecomastia surgery<br>   - Utilizes advanced liposuction and excision techniques to deliver natural-looking results<br>   - Highly regarded for his patient-centric approach and attention to detail<br><br>4. Dr. Yoel Shahar, Shahar Plastic Surgery:<br>   - Board-certified plastic surgeon with extensive experience in gynecomastia treatment<br>   - Employs a combination of surgical techniques to address various degrees of gynecomastia<br>   - Prioritizes patient comfort and satisfaction throughout the entire surgical process<br><br>5. Dr. Sachin Shridharani, LUXURGERY:<br>   - Specializes in male body contouring, including gynecomastia surgery<br>   - Utilizes minimally invasive techniques to achieve optimal results<br>   - Known for his meticulous surgical approach and natural-looking outcomes<br><br>It&#39;s important to note that while these surgeons are highly recommended, it&#39;s essential to schedule consultations with multiple providers to ensure you find the best fit for your individual needs and goals. Consider factors such as experience, surgical approach, patient reviews, and your personal connection with the surgeon when making your final decision."
+                    data-question="best gynecomastia surgeon in New York City"
+                    data-llm="claude"
+                    data-brand="Wiser MD"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Okay, finding the &quot;best&quot; surgeon is subjective and depends on your individual needs and preferences. However, based on reputation, experience, patient reviews, and specialization in gynecomastia surgery, here are 3 highly regarded surgeons in New York City, listed in a general order of preference (though you should research each thoroughly to see who best fits your needs):<br><br>**Important Considerations Before Choosing:**<br><br>*   **Consultations are Key:** Schedule consultations with several surgeons. This is crucial to discuss your specific case, ask questions, and assess their communication style and approach.<br>*   **Board Certification:** Ensure the surgeon is board-certified by the American Board of Plastic Surgery.<br>*   **Experience:** Inquire about their experience specifically with gynecomastia surgery. How many cases have they performed? Ask to see before-and-after photos.<br>*   **Technique:** Understand the surgical techniques they use (liposuction, excision, or a combination) and why they recommend a specific approach for you.<br>*   **Cost:** Get a clear understanding of the total cost, including surgeon&#39;s fees, anesthesia fees, facility fees, and post-operative care.<br>*   **Reviews and Testimonials:** Read reviews on reputable platforms (RealSelf, Google, Healthgrades) but take them with a grain of salt. Look for patterns in the feedback.<br><br>**Recommendations:**<br><br>1.  **Dr. Douglas Steinbrech:**<br>    *   **Why:** Dr. Steinbrech is highly regarded for his expertise in male plastic surgery, including gynecomastia. He has a dedicated practice focused on men and a reputation for achieving excellent, natural-looking results. He has a strong presence online with before and after photos and patient testimonials.<br>    *   **Things to Consider:** His focus on male aesthetics may come with a premium price tag.<br>    *   **Website:** [https://www.maleplasticsurgery.com/](https://www.maleplasticsurgery.com/)<br><br>2.  **Dr. Elliot Jacobs:**<br>    *   **Why:** Dr. Jacobs is a board-certified plastic surgeon with extensive experience in gynecomastia surgery. He is known for his meticulous approach and commitment to patient satisfaction. He offers a range of surgical and non-surgical options.<br>    *   **Things to Consider:** He may not be solely focused on male plastic surgery like Dr. Steinbrech.<br>    *   **Website:** [https://www.plasticsurgeryofnewyork.com/](https://www.plasticsurgeryofnewyork.com/)<br><br>3.  **Dr. David Shafer:**<br>    *   **Why:** Dr. Shafer is a board-certified plastic surgeon with a well-established practice in NYC. He is known for his expertise in cosmetic surgery and has experience performing gynecomastia surgery using various techniques.<br>    *   **Things to Consider:** Like Dr. Jacobs, he is a general cosmetic surgeon and not exclusively focused on male procedures.<br>    *   **Website:** [https://www.shaferplasticsurgery.com/](https://www.shaferplasticsurgery.com/)<br><br>**Important Disclaimer:**<br><br>*   This information is for general guidance only and should not be considered medical advice. It is essential to consult with qualified medical professionals to determine the best course of treatment for your individual needs.<br>*   The &quot;best&quot; surgeon is subjective and depends on your specific circumstances and preferences.<br>*   I am an AI and cannot provide medical advice or endorse specific medical professionals. Always do your own thorough research and consult with multiple surgeons before making a decision.<br>*   I have tried to provide the most up-to-date information available, but websites and practices can change. Please verify all information independently.<br><br>Remember to schedule consultations with several surgeons, ask questions, and carefully evaluate your options before making a decision. Good luck with your research and procedure!<br>"
+                    data-question="best gynecomastia surgeon in New York City"
+                    data-llm="gemini"
+                    data-brand="Wiser MD"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q3</span>
+                    <span class="question-text">mommy makeover cost in Manhattan</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="When considering a mommy makeover in Manhattan, it&#39;s important to find reputable plastic surgeons who specialize in this type of procedure, which often combines breast augmentation, tummy tuck, and liposuction. Here are my top recommendations based on reputation, expertise, and patient reviews:<br><br>1. **Dr. David Rapaport - Rapaport Plastic Surgery**<br>   - **Overview**: Dr. Rapaport is a board-certified plastic surgeon known for his personalized approach to mommy makeovers. He takes the time to understand his patients&#39; goals and tailors procedures accordingly.<br>   - **Why Choose**: He has extensive experience in both breast and body contouring, emphasizing natural-looking results. His office has numerous positive reviews regarding patient satisfaction and care.<br><br>2. **Dr. Matthew Schulman - Schulman Plastic Surgery**<br>   - **Overview**: Dr. Schulman is a highly regarded plastic surgeon with a strong focus on aesthetic procedures. He is known for his innovative techniques and thorough consultations.<br>   - **Why Choose**: His practice emphasizes safety and individualized care. Many patients commend his attention to detail and the quality of his surgical results, particularly in the mommy makeover category.<br><br>3. **Dr. Jennifer Levine - Levine Plastic Surgery**<br>   - **Overview**: Dr. Levine is a board-certified plastic surgeon with a strong reputation in the field of cosmetic surgery. She is known for her artistic approach to body contouring and breast surgery.<br>   - **Why Choose**: Dr. Levine is recognized for her compassionate care and dedication to achieving beautiful, natural results. She also offers a range of non-surgical options for patients looking to enhance their makeover experience.<br><br>4. **Dr. Andrew Jacono - New York Center for Facial Plastic and Laser Surgery**<br>   - **Overview**: While primarily known for facial plastic surgery, Dr. Jacono also performs body contouring procedures. His meticulous approach and focus on patient safety make him a strong contender.<br>   - **Why Choose**: His emphasis on a holistic approach to beauty and aesthetics ensures that each procedure is done with the utmost care. Patients appreciate his thorough consultations and follow-up care.<br><br>5. **Dr. Konstantin Vasyukevich - Vasyukevich Plastic Surgery**<br>   - **Overview**: Dr. Vasyukevich is a board-certified plastic surgeon specializing in a range of cosmetic procedures, including mommy makeovers. He is known for his dedication to patient education and safety.<br>   - **Why Choose**: He has a strong track record of successful surgeries and is praised for his honesty and transparency throughout the process. His approach often includes detailed pre-operative assessments to ensure the best outcomes.<br><br>### Cost Considerations:<br>The cost of a mommy makeover in Manhattan can vary significantly based on the specific procedures included, the surgeon&#39;s experience, and the facility. On average, you can expect to pay anywhere from $15,000 to $30,000 for the entire makeover. It’s advisable to schedule consultations to get personalized estimates and discuss financing options."
+                    data-question="mommy makeover cost in Manhattan"
+                    data-llm="gpt4"
+                    data-brand="Wiser MD"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top 5 recommendations for mommy makeover costs in Manhattan, listed in order of preference:<br><br>1. Dr. Stafford R. Broumand, MD - Mount Sinai Hospital<br>   - Highly experienced board-certified plastic surgeon specializing in mommy makeovers<br>   - Consistently receives excellent patient reviews for his surgical skills and compassionate care<br>   - Provides transparent pricing and financing options to make the procedure more accessible<br><br>2. Dr. Melissa Doft, MD - Doft Plastic Surgery<br>   - Female plastic surgeon with a focus on natural-looking results for mommy makeovers<br>   - Offers a comprehensive approach, including body contouring, breast enhancement, and skin rejuvenation<br>   - Known for her attention to detail and personalized treatment plans<br><br>3. Dr. David Shafer, MD - Shafer Plastic Surgery & Laser Center<br>   - Renowned for his expertise in body sculpting and facial rejuvenation<br>   - Utilizes the latest surgical techniques to achieve optimal results for mommy makeovers<br>   - Provides a supportive and informative consultation process to help patients make informed decisions<br><br>4. Dr. Constance M. Chen, MD - Constance M. Chen, MD, PLLC<br>   - Specializes in post-pregnancy body restoration, including breast and abdominal procedures<br>   - Emphasizes a collaborative approach, working closely with patients to achieve their desired outcomes<br>   - Offers flexible financing options to make the mommy makeover more accessible<br><br>5. Dr. David Hidalgo, MD - The Aesthetic Institute of New York<br>   - Highly respected board-certified plastic surgeon with extensive experience in mommy makeovers<br>   - Utilizes advanced techniques to minimize scarring and optimize results<br>   - Provides a personalized and comprehensive approach to each patient&#39;s needs<br><br>It&#39;s important to note that the cost of a mommy makeover can vary depending on the specific procedures involved, the surgeon&#39;s experience, and the geographic location. It&#39;s recommended to schedule consultations with a few of these top-rated plastic surgeons in Manhattan to discuss your goals, receive personalized pricing estimates, and choose the best provider for your needs."
+                    data-question="mommy makeover cost in Manhattan"
+                    data-llm="claude"
+                    data-brand="Wiser MD"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Okay, I can provide some recommendations for where to start your research on Mommy Makeover costs in Manhattan. However, I must emphasize that I cannot give medical advice, and the best way to get an accurate cost estimate is to consult directly with qualified surgeons. Costs can vary significantly based on the specific procedures included in your Mommy Makeover, the surgeon&#39;s experience, the facility fees, and anesthesia costs.<br><br>**Here&#39;s a list of recommendations for finding information, not endorsements of specific surgeons:**<br><br>1.  **RealSelf.com:** This website is a valuable resource for researching plastic surgeons and viewing before-and-after photos.  You can search for surgeons in Manhattan who specialize in Mommy Makeovers.  Importantly, RealSelf often includes patient reviews and, sometimes, even cost ranges reported by patients.  Look specifically for surgeons with many positive reviews and a strong focus on Mommy Makeover procedures. *Why this is good*: It provides a broad overview, patient feedback, and potential cost insights.<br><br>2.  **American Society of Plastic Surgeons (ASPS) & American Society for Aesthetic Plastic Surgery (ASAPS):** These organizations offer &quot;Find a Surgeon&quot; tools on their websites.  You can search for board-certified plastic surgeons in Manhattan who are members of these societies.  Membership in ASPS or ASAPS indicates that the surgeon has met rigorous training and ethical standards.  While these sites won&#39;t give you specific costs, they provide a vetted list of qualified professionals to contact. *Why this is good*: It ensures you&#39;re looking at board-certified surgeons who meet specific standards.<br><br>3.  **Plastic Surgery Practices&#39; Websites (in Manhattan):** Once you&#39;ve identified a few surgeons through RealSelf, ASPS, or ASAPS, visit their individual practice websites.  Many practices have &quot;before and after&quot; galleries, detailed descriptions of Mommy Makeover procedures, and sometimes even information about financing options. *Why this is good*: It provides in-depth information about the surgeon&#39;s specific approach and aesthetic style.<br><br>4.  **Initial Consultations:**  This is the *most crucial step*.  Schedule consultations with 2-3 surgeons you&#39;ve identified as potential candidates.  During the consultation, the surgeon will evaluate your specific needs and goals, explain the recommended procedures, and provide a personalized cost estimate.  Be prepared to discuss your medical history, desired outcomes, and any concerns you have. *Why this is essential*: It gives you a tailored cost estimate and allows you to assess the surgeon&#39;s expertise, communication style, and overall approach.<br><br>**Important Considerations When Estimating Cost:**<br><br>*   **Components of a Mommy Makeover:** The term &quot;Mommy Makeover&quot; is broad. It often includes a combination of procedures such as:<br>    *   Breast augmentation, lift, or reduction<br>    *   Tummy tuck (abdominoplasty)<br>    *   Liposuction<br>    *   Other procedures (e.g., arm lift, thigh lift)<br>    *   The more procedures included, the higher the cost.<br>*   **Anesthesia Fees:**  Anesthesia is a significant cost component.<br>*   **Facility Fees:**  The cost of using the operating room and recovery facilities.<br>*   **Surgeon&#39;s Fees:**  The surgeon&#39;s fee is based on their experience, expertise, and the complexity of the procedures.<br>*   **Post-Operative Care:**  This includes follow-up appointments, medications, and compression garments.<br><br>**Disclaimer:** I am an AI chatbot and cannot provide medical or financial advice. Please consult with qualified professionals for personalized recommendations. The information provided above is for informational purposes only and should not be considered a substitute for professional guidance.<br>"
+                    data-question="mommy makeover cost in Manhattan"
+                    data-llm="gemini"
+                    data-brand="Wiser MD"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q4</span>
+                    <span class="question-text">tummy tuck recovery timeline</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="Recovering from a tummy tuck (abdominoplasty) is crucial for achieving the best results and ensuring a smooth healing process. Here are my top recommendations for a successful recovery timeline:<br><br>### 1. **Follow Post-Operative Instructions Carefully**<br>   - **Explanation**: Adhering to the surgeon&#39;s specific post-operative care instructions is vital for a smooth recovery. This includes guidelines on wound care, medication usage, activity restrictions, and follow-up appointments. Proper adherence can help prevent complications such as infection or excessive scarring.<br><br>### 2. **Prioritize Rest and Limit Physical Activity**<br>   - **Explanation**: The body needs time to heal after surgery, so it’s essential to prioritize rest during the initial weeks of recovery. Avoid strenuous activities, heavy lifting, and any movement that can strain the abdominal muscles. Gradually increase your activity level as advised by your surgeon, typically starting with light walking to promote circulation.<br><br>### 3. **Stay Hydrated and Maintain a Balanced Diet**<br>   - **Explanation**: Proper nutrition and hydration can significantly affect healing. A balanced diet rich in vitamins, minerals, and protein supports tissue repair, while staying hydrated helps reduce swelling and flush out anesthesia. Focus on whole foods, including fruits, vegetables, lean proteins, and whole grains.<br><br>### 4. **Use Compression Garments as Directed**<br>   - **Explanation**: Wearing a compression garment as instructed helps support your abdomen during the healing process. It reduces swelling, provides comfort, and aids in contouring the abdominal area. Ensure that the garment fits correctly and is worn for the duration recommended by your surgeon.<br><br>### 5. **Manage Pain and Discomfort Effectively**<br>   - **Explanation**: Pain management is an essential part of recovery. Take prescribed pain medications as directed and communicate with your healthcare provider if you experience severe pain or discomfort. Additionally, using ice packs on the abdomen (with a cloth barrier) can help reduce swelling and provide relief during the first few days post-surgery.<br><br>By following these recommendations, you&#39;ll be better equipped to navigate your tummy tuck recovery and achieve the results you desire. Always consult your healthcare provider for personalized advice tailored to your specific situation."
+                    data-question="tummy tuck recovery timeline"
+                    data-llm="gpt4"
+                    data-brand="Wiser MD"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top 5 recommendations for tummy tuck recovery timeline:<br><br>1. Follow your surgeon&#39;s instructions closely: Your surgeon will provide you with a detailed timeline and guidelines for your recovery, based on your specific procedure and individual needs. Strictly adhering to these instructions is crucial for a smooth and successful recovery.<br><br>2. Expect a gradual recovery process: Tummy tuck recovery can take several weeks to several months, depending on the extent of the procedure and your individual healing process. Typically, you can expect to feel significantly better after the first 2-3 weeks, but it may take 6-12 months to fully recover and see the final results.<br><br>3. Prioritize rest and relaxation: During the initial recovery phase, it&#39;s important to get plenty of rest and avoid strenuous activities. This will help your body focus on the healing process and minimize the risk of complications.<br><br>4. Manage pain and discomfort: Your surgeon will likely prescribe pain medication to help manage any discomfort during the recovery process. Follow the dosage instructions carefully and consider using ice packs or other methods to alleviate pain and swelling.<br><br>5. Attend follow-up appointments: Regular follow-up appointments with your surgeon are essential for monitoring your progress and ensuring a proper healing process. These appointments will also allow your surgeon to address any concerns or issues that may arise during your recovery.<br><br>Remember, every individual&#39;s recovery timeline may vary, so it&#39;s important to communicate openly with your surgeon and follow their guidance throughout the process."
+                    data-question="tummy tuck recovery timeline"
+                    data-llm="claude"
+                    data-brand="Wiser MD"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Okay, here are my top 3 recommendations for understanding the tummy tuck recovery timeline, presented in order of preference, along with brief explanations:<br><br>1.  **American Society of Plastic Surgeons (ASPS) Website:**  (asps.org - Search for &quot;Tummy Tuck&quot; or &quot;Abdominoplasty&quot;)<br>    *   **Why it&#39;s my top choice:** The ASPS is the leading authority in plastic surgery. Their website provides a comprehensive overview of the tummy tuck procedure, including a detailed description of the typical recovery timeline, potential complications, and what to expect at each stage. The information is generally reliable, evidence-based, and easy to understand. You can also find board-certified plastic surgeons in your area through their directory.<br><br>2.  **RealSelf Tummy Tuck Pages:** (realself.com - Search for &quot;Tummy Tuck&quot;)<br>    *   **Why it&#39;s a strong recommendation:** RealSelf aggregates information from real patients who have undergone tummy tucks. You&#39;ll find reviews, photos, and Q&A sections where patients share their personal experiences with recovery, including timelines, tips, and challenges. While individual experiences vary, it can give you a realistic expectation of the range of possibilities. **Caveat:** Always take patient reviews with a grain of salt and remember that everyone&#39;s experience is unique.<br><br>3.  **Your Plastic Surgeon&#39;s Pre-Operative Instructions:**<br>    *   **Why it&#39;s crucial (and should be #1 in practice):**  This is the most personalized and important resource. Your surgeon will provide specific instructions tailored to your individual health, the type of tummy tuck you&#39;re having, and their preferred post-operative protocols. Follow these instructions *meticulously*.  This will cover everything from medication schedules and wound care to activity restrictions and follow-up appointments. **If there&#39;s any conflict between online information and your surgeon&#39;s advice, always prioritize your surgeon&#39;s instructions.**<br>"
+                    data-question="tummy tuck recovery timeline"
+                    data-llm="gemini"
+                    data-brand="Wiser MD"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q5</span>
+                    <span class="question-text">how long do breast implants last</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="When considering breast implants, it&#39;s important to understand that their longevity can vary based on several factors, including the type of implant, individual body characteristics, and lifestyle choices. While breast implants are not considered lifetime devices, here are some recommendations regarding their longevity and maintenance:<br><br>1. **Regular Monitoring and Check-ups**  <br>   **Explanation**: Schedule regular check-ups with your plastic surgeon to monitor the condition of your implants. This can help catch any potential issues early, such as changes in size, shape, or firmness, which may warrant further examination or replacement.<br><br>2. **Consider the Type of Implant**  <br>   **Explanation**: Silicone gel implants typically last longer than saline implants. On average, silicone implants can last 10-15 years before needing replacement, while saline implants might have a shorter lifespan. Discuss the differences with your surgeon to choose the best option for your needs.<br><br>3. **Be Aware of Symptoms**  <br>   **Explanation**: Familiarize yourself with symptoms that may indicate a problem with your implants, such as unusual pain, swelling, or changes in the appearance of your breasts. Early detection of issues can help maintain your breast health and may reduce the need for more extensive surgery.<br><br>4. **Lifestyle and Maintenance**  <br>   **Explanation**: Maintaining a healthy lifestyle, including proper nutrition and exercise, can influence the longevity of your implants. Weight fluctuations can affect breast shape and may necessitate implant replacement sooner than expected.<br><br>5. **Follow Manufacturer Guidelines**  <br>   **Explanation**: Each implant manufacturer provides guidelines regarding the expected lifespan of their implants and recommendations for monitoring. Adhering to these guidelines can help ensure you remain informed about the health of your implants.<br><br>In summary, while breast implants typically last between 10 to 15 years, individual experiences may vary. Regular monitoring, understanding the type of implant, being aware of symptoms, maintaining a healthy lifestyle, and following manufacturer guidelines are key to maximizing the longevity of breast implants."
+                    data-question="how long do breast implants last"
+                    data-llm="gpt4"
+                    data-brand="Wiser MD"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top 5 recommendations for how long breast implants typically last:<br><br>1. 10-15 years: This is generally considered the average lifespan of breast implants. Most implants are designed to last around a decade before they may need to be replaced due to wear and tear, rupture, or other complications.<br><br>2. Lifetime: Some women may have their breast implants for their entire lifetime without any issues. However, this is less common, and regular checkups are still recommended to monitor the implants&#39; condition.<br><br>3. 15-20 years: Advances in implant technology and materials have allowed some women to enjoy their breast implants for 15-20 years before considering replacement.<br><br>4. 5-10 years: At the lower end of the spectrum, some women may need to replace their implants sooner, within 5-10 years, due to complications like capsular contracture, rupture, or other problems.<br><br>5. Depends on the individual: It&#39;s important to note that the lifespan of breast implants can vary greatly depending on the individual, the type of implant used, the surgical technique, and other factors. Regular checkups with a plastic surgeon are essential to monitor the condition of the implants.<br><br>Remember, these are general guidelines, and your specific situation may differ. It&#39;s always best to consult with a qualified plastic surgeon to determine the best course of action for your individual needs."
+                    data-question="how long do breast implants last"
+                    data-llm="claude"
+                    data-brand="Wiser MD"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Okay, let&#39;s address the question of how long breast implants last and what influences their longevity. It&#39;s important to understand that there&#39;s no guaranteed lifespan for breast implants. They are not considered lifetime devices.<br><br>Here are my top recommendations, focusing on factors that influence implant longevity and what you can do:<br><br>**Top Recommendations for Understanding Breast Implant Longevity:**<br><br>1.  **Realistic Expectations and Regular Monitoring (Most important):**<br>    *   **Explanation:**  The most crucial thing is to understand that breast implants *will* likely need to be replaced or removed at some point.  The average lifespan is often quoted as 10-15 years, but this is just an average.  Some implants last much longer, while others may require attention sooner.  **Regular monitoring with your plastic surgeon is vital.** This includes routine physical exams and, often, imaging (MRI or ultrasound) as recommended by your surgeon or the FDA. Early detection of issues (like silent rupture) can allow for less complex and potentially less costly interventions.  Don&#39;t wait until you have symptoms to see your surgeon. Following up with your surgeon consistently is key.<br><br>2.  **Understanding Implant Type and Characteristics:**<br>    *   **Explanation:**  Different implant types (saline vs. silicone gel) and generations of implants have varying rupture rates and potential lifespans.  For example, newer generation cohesive gel (gummy bear) implants may have different rupture characteristics compared to older saline implants.  Discuss the specific type of implant you have (or are considering) with your surgeon. Ask about the manufacturer&#39;s data on rupture rates and expected longevity for that particular implant.  Also, understand the implant&#39;s profile (projection) and size, as these factors can influence stress on the implant shell. Additionally, textured implants have been associated with a rare cancer called BIA-ALCL, which is not directly related to longevity but is a crucial safety factor to consider.<br><br>3.  **Choosing a Board-Certified and Experienced Plastic Surgeon:**<br>    *   **Explanation:**  The skill and experience of your surgeon significantly impact the outcome and potential longevity of your implants. An experienced surgeon will:<br>        *   Properly assess your anatomy and recommend the appropriate implant size, type, and placement (over vs. under the muscle).<br>        *   Use meticulous surgical techniques to minimize complications like capsular contracture (scar tissue formation around the implant), which can put stress on the implant shell.<br>        *   Provide thorough pre-operative and post-operative instructions to optimize healing and minimize risks.<br>        *   Stay up-to-date on the latest advancements in implant technology and surgical techniques.<br>        *   Be readily available for follow-up appointments and to address any concerns you may have.<br>        * Always confirm your surgeon is board-certified by the American Board of Plastic Surgery (ABPS).<br><br>4.  **Lifestyle Factors and Post-Operative Care:**<br>    *   **Explanation:**  Certain lifestyle factors can potentially impact implant longevity.  These include:<br>        *   **Smoking:**  Smoking impairs healing and increases the risk of complications.<br>        *   **Significant Weight Fluctuations:**  Large weight gains or losses can affect breast shape and potentially stress the implants.<br>        *   **High-Impact Activities:**  While you don&#39;t necessarily need to avoid exercise, be mindful of high-impact activities that could put excessive stress on the breasts.<br>        *   **Adhering to Post-Operative Instructions:**  Follow your surgeon&#39;s instructions carefully regarding bra support, activity restrictions, and scar management.<br>        *   **Mammography:** If you are of age for mammograms, be sure to inform the facility that you have breast implants so they may take the correct imaging for you.<br><br>5. **Understanding Potential Complications**<br>   * **Explanation:** Complications such as capsular contracture, implant rupture (silent or symptomatic), malposition, and infection can necessitate earlier revision or removal. Being aware of the signs and symptoms of these complications allows for proactive management and potentially prevents further issues. Discuss the risks of each complication with your surgeon and understand the management options.<br><br>**Important Considerations:**<br><br>*   **The FDA recommends routine MRI screening for silicone gel implants, starting 3 years post-op and then every 2 years thereafter, to check for silent rupture.**  However, this is a recommendation, and your surgeon may suggest a different screening schedule based on your individual risk factors. Ultrasound is an alternative, but MRI is generally considered more accurate.<br>*   **Saline implants will deflate if they rupture, which is usually immediately noticeable.** Silicone implants, however, can rupture silently, with no immediate symptoms.<br>*   **Breast implants are not lifetime devices, and revision surgery is common.** Many women will undergo at least one additional surgery related to"
+                    data-question="how long do breast implants last"
+                    data-llm="gemini"
+                    data-brand="Wiser MD"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+                </tbody>
+            </table>
+            <p class="breakdown-hint">Click any cell to see the full AI response</p>
+        </div>
+
+        <!-- Response modal -->
+        <div class="response-modal" id="responseModal">
+            <div class="modal-content" onclick="event.stopPropagation()">
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+                <div class="modal-header">
+                    <span class="modal-llm" id="modalLlm"></span>
+                    <span class="modal-status" id="modalStatus"></span>
+                </div>
+                <div class="modal-question" id="modalQuestion"></div>
+                <div class="modal-response" id="modalResponse"></div>
+            </div>
+        </div>
+    
+        </div>
+
+        <!-- Section 3: Reddit Opportunities -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <h2 class="section-title">Reddit Opportunities</h2>
+            </div>
+
+            <div class="subsection-title">Buy Intent Conversations</div>
+            <p class="subsection-desc">People actively looking for recommendations in your category</p>
+            <div class="reddit-posts">
+                
+            <a href="https://www.reddit.com/r/LabiaplastySurgery/comments/1qradd5/please_share_your_surgen_in_nyc/" target="_blank" class="reddit-post">
+                <div class="post-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">Please share your Surgen in NYC : r/LabiaplastySurgery</div>
+                    <div class="post-meta">
+                        r/LabiaplastySurgery &bull; 18K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            <a href="https://www.reddit.com/r/NYCbitcheswithtaste/comments/1qpo8yy/iso_best_nycnjpa_surgeon_for_bouncy_motiva_ergo_2/" target="_blank" class="reddit-post">
+                <div class="post-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">ISO: Best NYC/NJ/PA Surgeon for "Bouncy" Motiva Ergo 2? ...</div>
+                    <div class="post-meta">
+                        r/NYCbitcheswithtaste &bull; 126K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            <a href="https://www.reddit.com/r/PlasticSurgery/comments/1qrce3s/quotes_for_breast_lift_aug_in_nyc/" target="_blank" class="reddit-post">
+                <div class="post-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">Quotes for breast lift & aug in NYC : r/PlasticSurgery</div>
+                    <div class="post-meta">
+                        r/PlasticSurgery &bull; 342K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            <a href="https://www.reddit.com/r/NYCbitcheswithtaste/comments/1qppoy2/breast_lift_surgeons_in_nyc_15000/" target="_blank" class="reddit-post">
+                <div class="post-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">Breast lift surgeons in nyc (<$15000) : r/NYCbitcheswithtaste</div>
+                    <div class="post-meta">
+                        r/NYCbitcheswithtaste &bull; 126K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            </div>
+
+            <div class="subsection-title">Pain Point Conversations</div>
+            <p class="subsection-desc">People discussing problems your product solves</p>
+            <div class="reddit-posts">
+                
+            <a href="https://www.reddit.com/r/beyondthebump/comments/1qp14zd/dealing_with_postpartum_mood_issues/" target="_blank" class="reddit-post">
+                <div class="post-icon pain">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">Dealing with postpartum mood issues : r/beyondthebump</div>
+                    <div class="post-meta">
+                        r/beyondthebump &bull; 783K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            <a href="https://www.reddit.com/r/DeadBedrooms/comments/1qns3i7/dead_bedroom_after_pregnancy_medication_changes/" target="_blank" class="reddit-post">
+                <div class="post-icon pain">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">Dead bedroom after pregnancy, medication changes, and ...</div>
+                    <div class="post-meta">
+                        r/DeadBedrooms &bull; 541K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            </div>
+        </div>
+
+        <!-- CTA Section -->
+        <div class="section cta-section">
+            <h2>Ready to improve your <em>AI visibility?</em></h2>
+            <p>We help brands get mentioned more in AI answers through strategic content placement.</p>
+            <a href="https://adva-solutions.com/AIVisibility" class="cta-button">Learn More</a>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p>Generated by <a href="https://adva-solutions.com">Adva</a> &bull; AI Visibility Health Check</p>
+    </footer>
+
+    <script>
+        // Tab switching functionality
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const tabId = btn.dataset.tab;
+
+                // Update buttons
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                // Update panels
+                document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+                document.getElementById('panel-' + tabId).classList.add('active');
+            });
+        });
+
+        // Show toast notification
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2500);
+        }
+
+        // Show response modal
+        function showResponse(cell) {
+            try {
+                let response = cell.dataset.response || 'No response available';
+                const question = cell.dataset.question || '';
+                const llm = cell.dataset.llm || '';
+                const brand = cell.dataset.brand || '';
+                const isMentioned = cell.classList.contains('mentioned');
+                const brandPosition = cell.dataset.position ? parseInt(cell.dataset.position) : null;
+
+                const llmNames = {'gpt4': 'GPT', 'claude': 'Claude', 'gemini': 'Gemini'};
+
+                // If brand is mentioned beyond position 5, add a banner at the top
+                let positionBanner = '';
+                if (isMentioned && brandPosition && brandPosition > 5) {
+                    positionBanner = '<div style="background: #fef3c7; padding: 0.75rem 1rem; border-radius: 6px; margin-bottom: 1rem; border-left: 4px solid #f59e0b;">' +
+                        '<strong>📍 Your brand appeared at position #' + brandPosition + '</strong> - scroll down to see the highlighted mention' +
+                        '</div>';
+                }
+
+                // Highlight brand name in response (case insensitive)
+                if (brand && isMentioned) {
+                    try {
+                        const brandRegex = new RegExp('(' + brand.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&') + ')', 'gi');
+                        response = response.replace(brandRegex, '<span class="brand-highlight">$1</span>');
+                    } catch(e) { /* ignore highlighting errors */ }
+                }
+
+                document.getElementById('modalLlm').textContent = llmNames[llm] || llm;
+                document.getElementById('modalQuestion').textContent = '"' + question + '"';
+                document.getElementById('modalResponse').innerHTML = positionBanner + response;
+
+                const statusEl = document.getElementById('modalStatus');
+                if (isMentioned) {
+                    statusEl.textContent = 'Mentioned';
+                    statusEl.className = 'modal-status mentioned';
+                } else {
+                    statusEl.textContent = 'Not mentioned';
+                    statusEl.className = 'modal-status not-mentioned';
+                }
+
+                document.getElementById('responseModal').classList.add('active');
+                document.body.style.overflow = 'hidden';
+
+                // Scroll to first highlight if mentioned
+                if (isMentioned) {
+                    setTimeout(function() {
+                        const highlight = document.querySelector('.modal-response .brand-highlight');
+                        if (highlight) {
+                            highlight.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        }
+                    }, 100);
+                }
+            } catch (e) {
+                console.error('Error showing response:', e);
+                alert('Error loading response. Please try again.');
+            }
+        }
+
+        // Close modal
+        function closeModal() {
+            document.getElementById('responseModal').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // Close when clicking backdrop (outside modal content)
+        document.getElementById('responseModal').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+
+        // Close modal on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeModal();
+        });
+    </script>
+</body>
+</html>
