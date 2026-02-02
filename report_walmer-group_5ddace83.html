@@ -1,0 +1,1370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Visibility Report - Walmer Group | Adva</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #ffffff;
+            min-height: 100vh;
+            color: #374151;
+            line-height: 1.6;
+        }
+
+        /* Header */
+        .header {
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            font-size: 1.25rem;
+            color: #1f2937;
+            text-decoration: none;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .header-date {
+            color: #9ca3af;
+            font-size: 0.875rem;
+        }
+
+        /* Copy link button */
+        .copy-link-button {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: #f3f4f6;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            color: #374151;
+            font-size: 0.75rem;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .copy-link-button:hover {
+            background: #e5e7eb;
+        }
+
+        .copy-link-button svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        .pdf-button {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: #1f2937;
+            border: none;
+            border-radius: 6px;
+            color: #ffffff;
+            font-size: 0.75rem;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .pdf-button:hover {
+            background: #374151;
+        }
+
+        .pdf-button svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        /* Toast notification */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: #1f2937;
+            color: #ffffff;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            opacity: 0;
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        /* Container */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Page title */
+        .page-title {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .page-title .label {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: #9ca3af;
+            font-size: 0.75rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+        }
+
+        .page-title .label::before,
+        .page-title .label::after {
+            content: '';
+            width: 30px;
+            height: 1px;
+            background: #d1d5db;
+        }
+
+        .page-title h1 {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 2.5rem;
+            font-weight: 400;
+            color: #1f2937;
+            margin-bottom: 0.5rem;
+        }
+
+        .page-title .brand {
+            color: #6b7280;
+            font-size: 1.125rem;
+        }
+
+        /* Sections */
+        .section {
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #f3f4f6;
+        }
+
+        .section-icon {
+            width: 40px;
+            height: 40px;
+            background: #1f2937;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .section-icon svg {
+            width: 20px;
+            height: 20px;
+            color: #ffffff;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 1.375rem;
+            color: #1f2937;
+        }
+
+        /* Score Section */
+        .score-section {
+            text-align: center;
+            padding: 3rem 2rem;
+        }
+
+        .score-circle {
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            background: #fafafa;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            border: 4px solid #ef4444;
+        }
+
+        .score-value {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 3rem;
+            font-weight: 500;
+            color: #ef4444;
+        }
+
+        .score-label {
+            font-size: 0.8rem;
+            color: #9ca3af;
+        }
+
+        .score-description {
+            color: #6b7280;
+            margin-bottom: 2rem;
+            font-size: 1rem;
+        }
+
+        .score-description strong {
+            color: #1f2937;
+        }
+
+        .llm-breakdown {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .llm-stat {
+            text-align: center;
+            padding: 1rem 1.5rem;
+            background: #fafafa;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+            min-width: 100px;
+        }
+
+        .llm-name {
+            display: block;
+            color: #9ca3af;
+            font-size: 0.8rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .llm-score {
+            font-size: 1.125rem;
+            font-weight: 600;
+        }
+
+        .llm-score.success {
+            color: #22c55e;
+        }
+
+        .llm-score.warning {
+            color: #ef4444;
+        }
+
+        /* Competitor Table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 0.875rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid #f3f4f6;
+        }
+
+        th {
+            color: #9ca3af;
+            font-weight: 500;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        td {
+            color: #374151;
+        }
+
+        .mention-count {
+            background: #fef3c7;
+            color: #92400e;
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        /* Tabs for LLM responses */
+        .example-tabs {
+            margin-top: 1.5rem;
+        }
+
+        .tabs-header {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+            padding-bottom: 0;
+        }
+
+        .tab-btn {
+            padding: 0.75rem 1.25rem;
+            background: transparent;
+            border: none;
+            color: #6b7280;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            margin-bottom: -1px;
+            transition: all 0.2s;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .tab-btn:hover {
+            color: #1f2937;
+        }
+
+        .tab-btn.active {
+            color: #1f2937;
+            border-bottom-color: #1f2937;
+        }
+
+        .tab-panel {
+            display: none;
+            background: #fafafa;
+            border-radius: 8px;
+            padding: 1.25rem;
+        }
+
+        .tab-panel.active {
+            display: block;
+        }
+
+        .example-question {
+            color: #1f2937;
+            font-weight: 500;
+            font-size: 0.95rem;
+            margin-bottom: 0.75rem;
+        }
+
+        /* Question breakdown table */
+        .question-breakdown {
+            margin-top: 1rem;
+        }
+
+        .breakdown-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        .breakdown-table th {
+            padding: 0.75rem;
+            text-align: center;
+            background: #f9fafb;
+            border-bottom: 2px solid #e5e7eb;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .breakdown-table th:first-child {
+            text-align: left;
+            width: 50%;
+        }
+
+        .breakdown-table td {
+            padding: 0.75rem;
+            border-bottom: 1px solid #f3f4f6;
+            vertical-align: middle;
+        }
+
+        .question-cell {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+        }
+
+        .question-num {
+            background: #e5e7eb;
+            color: #374151;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        .question-text {
+            color: #374151;
+            line-height: 1.4;
+        }
+
+        .llm-cell {
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-radius: 4px;
+        }
+
+        .llm-cell:hover {
+            background: #f3f4f6;
+        }
+
+        .llm-cell.mentioned {
+            color: #16a34a;
+        }
+
+        .llm-cell.mentioned .status-icon {
+            font-size: 1.25rem;
+        }
+
+        .llm-cell.not-mentioned {
+            color: #dc2626;
+        }
+
+        .llm-cell.not-mentioned .status-icon {
+            font-size: 1.25rem;
+        }
+
+        .breakdown-hint {
+            color: #9ca3af;
+            font-size: 0.8rem;
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+        /* Response modal */
+        .response-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+        }
+
+        .response-modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: #ffffff;
+            border-radius: 12px;
+            max-width: 800px;
+            width: 100%;
+            max-height: 90vh;
+            overflow: auto;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #9ca3af;
+            cursor: pointer;
+            padding: 0.25rem 0.5rem;
+        }
+
+        .modal-close:hover {
+            color: #374151;
+        }
+
+        .modal-header {
+            padding: 1.5rem 1.5rem 0;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            position: relative;
+        }
+
+        .modal-llm {
+            font-weight: 600;
+            color: #1f2937;
+            font-size: 1.1rem;
+        }
+
+        .modal-status {
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .modal-status.mentioned {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .modal-status.not-mentioned {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .modal-question {
+            padding: 1rem 1.5rem;
+            color: #6b7280;
+            font-size: 0.9rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .modal-response {
+            padding: 1.5rem;
+            overflow-y: auto;
+            flex: 1;
+            color: #374151;
+            font-size: 0.9rem;
+            line-height: 1.8;
+            min-height: 300px;
+            max-height: 60vh;
+            background: #fafafa;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .modal-response::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .modal-response::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        .modal-response::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 4px;
+        }
+
+        .modal-response::-webkit-scrollbar-thumb:hover {
+            background: #a1a1a1;
+        }
+
+        /* Brand highlight */
+        .brand-highlight {
+            background: linear-gradient(120deg, #fef08a 0%, #fde047 100%);
+            padding: 0.1rem 0.3rem;
+            border-radius: 3px;
+            font-weight: 600;
+        }
+
+        .example-content {
+            color: #6b7280;
+            font-size: 0.875rem;
+            line-height: 1.7;
+            max-height: 400px;
+            overflow-y: auto;
+            margin-bottom: 0.75rem;
+            padding: 1rem;
+            background: #f9fafb;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .example-status {
+            padding: 0.5rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            display: inline-block;
+        }
+
+        .example-status.mentioned {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .example-status.not-mentioned {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        /* Reddit Posts */
+        .reddit-posts {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .reddit-post {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: #fafafa;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: all 0.2s;
+            border: 1px solid transparent;
+        }
+
+        .reddit-post:hover {
+            background: #f3f4f6;
+            border-color: #e5e7eb;
+        }
+
+        .post-icon {
+            width: 40px;
+            height: 40px;
+            background: #1f2937;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .post-icon.pain {
+            background: #fef3c7;
+        }
+
+        .post-icon.pain svg {
+            color: #92400e;
+        }
+
+        .post-icon svg {
+            width: 20px;
+            height: 20px;
+            color: #ffffff;
+        }
+
+        .post-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .post-title {
+            color: #1f2937;
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .post-meta {
+            color: #9ca3af;
+            font-size: 0.8rem;
+        }
+
+        .post-arrow {
+            color: #9ca3af;
+            flex-shrink: 0;
+        }
+
+        .post-arrow svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .subsection-title {
+            color: #1f2937;
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin: 1.5rem 0 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .subsection-title:first-of-type {
+            margin-top: 0;
+        }
+
+        .subsection-desc {
+            color: #9ca3af;
+            font-size: 0.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .no-data {
+            color: #9ca3af;
+            font-style: italic;
+            text-align: center;
+            padding: 1rem;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            color: #9ca3af;
+            font-size: 0.8rem;
+            padding: 2rem;
+            border-top: 1px solid #e5e7eb;
+            margin-top: 2rem;
+        }
+
+        .footer a {
+            color: #1f2937;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* CTA */
+        .cta-section {
+            text-align: center;
+            padding: 3rem 2rem;
+            background: #fafafa;
+        }
+
+        .cta-section h2 {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 1.75rem;
+            color: #1f2937;
+            margin-bottom: 0.75rem;
+        }
+
+        .cta-section p {
+            color: #6b7280;
+            margin-bottom: 1.5rem;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background: #1f2937;
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .cta-button:hover {
+            background: #111827;
+            transform: translateY(-1px);
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .page-title h1 {
+                font-size: 1.75rem;
+            }
+
+            .section {
+                padding: 1.5rem;
+            }
+
+            .score-circle {
+                width: 130px;
+                height: 130px;
+            }
+
+            .score-value {
+                font-size: 2.25rem;
+            }
+
+            .llm-breakdown {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .tabs-header {
+                flex-wrap: wrap;
+            }
+
+            .tab-btn {
+                padding: 0.5rem 1rem;
+                font-size: 0.8rem;
+            }
+
+            .breakdown-table th,
+            .breakdown-table td {
+                padding: 0.5rem;
+                font-size: 0.8rem;
+            }
+
+            .question-cell {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .modal-content {
+                max-height: 90vh;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <a href="https://adva-solutions.com/AIVisibility" class="logo">adva</a>
+        <div class="header-right">
+            <!-- PDF button hidden for now - backend still available at /report/5ddace83/pdf
+            <a href="/report/5ddace83/pdf" class="pdf-button" title="Download as PDF">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                Download PDF
+            </a>
+            -->
+            <button class="copy-link-button" onclick="navigator.clipboard.writeText('https://adva-solutions.github.io/ai-visibility-report/report_walmer-group_5ddace83.html'); showToast('Link copied!');" title="Copy shareable link">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                </svg>
+                Copy Link
+            </button>
+            <span class="header-date">February 02, 2026</span>
+        </div>
+    </header>
+    <div class="toast" id="toast">Link copied to clipboard!</div>
+
+    <div class="container">
+        <div class="page-title">
+            <div class="label">AI Visibility Report</div>
+            <h1>Your Brand's <em>AI Presence</em></h1>
+            <p class="brand">Analysis for Walmer Group</p>
+        </div>
+
+        <!-- Section 1: AI Visibility Score -->
+        <div class="section score-section">
+            <div class="score-circle">
+                <span class="score-value">0%</span>
+                <span class="score-label">0/15 mentions</span>
+            </div>
+            <p class="score-description">
+                Your brand appeared in <strong>0</strong> out of <strong>15</strong> AI recommendations
+            </p>
+            <div class="llm-breakdown">
+                
+            <div class="llm-stat">
+                <span class="llm-name">GPT</span>
+                <span class="llm-score warning">0/5</span>
+            </div>
+        
+            <div class="llm-stat">
+                <span class="llm-name">Claude</span>
+                <span class="llm-score warning">0/5</span>
+            </div>
+        
+            <div class="llm-stat">
+                <span class="llm-name">Gemini</span>
+                <span class="llm-score warning">0/5</span>
+            </div>
+        
+            </div>
+        </div>
+
+        <!-- Section 2: AI Response Breakdown -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                    </svg>
+                </div>
+                <h2 class="section-title">Question-by-Question Breakdown</h2>
+            </div>
+            <p style="color: #6b7280; margin-bottom: 1rem;">We asked these 5 questions to each AI model. Click any cell to see the full response:</p>
+            
+        <div class="question-breakdown">
+            <table class="breakdown-table">
+                <thead>
+                    <tr>
+                        <th>Question Asked</th>
+                        <th>GPT</th>
+                        <th>Claude</th>
+                        <th>Gemini</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q1</span>
+                    <span class="question-text">Which UK companies help startups claim R&D tax relief</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are five UK companies that specialize in helping startups claim R&D tax relief, listed in order of preference:<br><br>1. **Catax**<br>   - **Overview**: Catax is a well-established R&D tax relief consultancy with a strong reputation for helping businesses maximize their claims. They offer a comprehensive service that includes a free initial assessment and a no-win, no-fee approach.<br>   - **Why Choose Catax**: Their experienced team provides personalized support and detailed documentation to ensure that clients can successfully navigate the R&D tax relief process. They have a high success rate and extensive industry knowledge.<br><br>2. **R&D Tax Claims**<br>   - **Overview**: R&D Tax Claims specializes in securing R&D tax credits for companies across various sectors. They offer a straightforward, transparent service and have a dedicated team of specialists.<br>   - **Why Choose R&D Tax Claims**: Their focus on clear communication and thorough understanding of the R&D tax relief scheme means they can help clients identify eligible projects and expenses, maximizing the potential claim.<br><br>3. **TaxCloud**<br>   - **Overview**: TaxCloud provides tax advisory services and specializes in R&D tax relief claims. They have a team of tax experts and engineers who work closely with clients to ensure all eligible R&D work is captured.<br>   - **Why Choose TaxCloud**: Their unique approach combines technical expertise with tax knowledge, which helps in identifying eligible projects that may be overlooked by others. They also offer a contingency fee model, reducing upfront costs for startups.<br><br>4. **R&D Tax Solutions**<br>   - **Overview**: This company focuses on helping businesses with R&D tax relief claims and offers a tailored service to meet the specific needs of startups and SMEs.<br>   - **Why Choose R&D Tax Solutions**: They provide a detailed analysis of the R&D activities and costs involved, ensuring that all eligible projects are accounted for. Their client-centered service ensures that businesses feel supported throughout the process.<br><br>5. **Jumpstart**<br>   - **Overview**: Jumpstart focuses on helping innovative companies claim R&D tax credits in the UK. They provide a hands-on approach, working closely with clients to gather the necessary information for a successful claim.<br>   - **Why Choose Jumpstart**: Their experience in various industries allows them to adapt their services to different types of businesses. They are known for their strong customer service and commitment to maximizing claims.<br><br>These companies are known for their expertise in navigating the complexities of R&D tax relief, making them reliable partners for startups looking to claim this valuable financial incentive."
+                    data-question="Which UK companies help startups claim R&D tax relief"
+                    data-llm="gpt4"
+                    data-brand="Walmer Group"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top 5 recommendations for UK companies that help startups claim R&D tax relief, listed in order of preference:<br><br>1. Kene Partners:<br>   - Kene Partners is a leading R&D tax credit specialist firm that has helped hundreds of startups and SMEs claim millions in R&D tax relief.<br>   - They have a team of experienced tax and technical experts who can guide startups through the entire R&D tax relief process, from identifying eligible activities to preparing and submitting the claim.<br>   - Kene Partners is known for its personalized service, attention to detail, and high success rate in securing R&D tax credits for its clients.<br><br>2. Catax:<br>   - Catax is a well-established R&D tax credit consultancy that has been helping businesses, including startups, claim R&D tax relief for over a decade.<br>   - They have a deep understanding of the R&D tax relief scheme and can maximize the amount of relief that startups can claim.<br>   - Catax offers a range of services, including R&D tax credit assessments, claim preparation, and ongoing support to ensure that startups are taking full advantage of the scheme.<br><br>3. ForrestBrown:<br>   - ForrestBrown is a specialist R&D tax credit advisory firm with a strong track record of success in helping startups and SMEs claim R&D tax relief.<br>   - They have a team of chartered tax advisers, chartered accountants, and technical experts who work closely with startups to identify and document their eligible R&D activities.<br>   - ForrestBrown is known for its attention to detail, proactive approach, and excellent communication with its clients throughout the R&D tax relief process.<br><br>4. Jumpstart:<br>   - Jumpstart is a leading provider of R&D tax credit services, with a particular focus on helping startups and SMEs claim the relief they are entitled to.<br>   - They have a team of R&D tax specialists who work closely with startups to understand their business, identify eligible activities, and prepare comprehensive claims.<br>   - Jumpstart is known for its expertise in navigating the complexities of the R&D tax relief scheme and maximizing the amount of relief that startups can claim.<br><br>5. Leyton:<br>   - Leyton is a global innovation and R&D tax credit consultancy that has a strong presence in the UK market.<br>   - They have a team of tax and technical experts who can help startups identify and document their eligible R&D activities, as well as prepare and submit their claims.<br>   - Leyton is known for its international reach, which can be beneficial for startups that are part of a global organization or have international R&D activities.<br><br>It&#39;s worth noting that all of these companies have a strong track record in the R&D tax relief space and can provide valuable assistance to startups looking to claim the relief they are entitled to. The choice of which company to work with may depend on factors such as the specific needs of the startup, the level of support required, and the overall fit between the startup and the service provider."
+                    data-question="Which UK companies help startups claim R&D tax relief"
+                    data-llm="claude"
+                    data-brand="Walmer Group"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Okay, here are my top 3 recommendations for UK companies that help startups claim R&D tax relief, ordered by preference and with brief explanations.<br><br>**Important Considerations Before Choosing:**<br><br>*   **Your Specific Industry:**  Some firms specialize in certain sectors (e.g., tech, biotech, manufacturing).  If your startup is in a niche area, prioritizing a specialist can be beneficial.<br>*   **Complexity of Your R&D:**  The more complex your R&D activities, the more you&#39;ll need a firm with deep technical expertise and experience handling complex claims.<br>*   **Budget:**  Fees vary. Some firms charge a percentage of the relief claimed, while others have fixed fees or hourly rates.  Get clear quotes and understand the pricing structure.<br>*   **Communication & Support:**  Choose a firm that communicates clearly, provides good support, and is responsive to your questions.<br><br>**Recommendations:**<br><br>1.  **Leyton:** Leyton is a large international consultancy that is known for its expertise with R&D tax claims. They have a good reputation and a large team of technical consultants who can understand if your project qualifies for the relief.<br><br>2.  **ForrestBrown:** ForrestBrown is a well-regarded specialist R&D tax relief consultancy known for its in-depth technical expertise. They have a good track record of maximizing claims and navigating complex cases. They tend to be on the premium end of the price spectrum.<br><br>3.  **Myriad Associates:** Myriad Associates is another established player in the R&D tax relief space. They offer a good balance of technical expertise and client service. They are a good option to get a quote from and compare to others.<br><br>**Disclaimer:** I am an AI Chatbot and cannot provide financial or legal advice. This information is for general guidance only. It&#39;s crucial to conduct your own due diligence, get quotes from multiple providers, and ensure they are a good fit for your specific needs before making a decision.<br>"
+                    data-question="Which UK companies help startups claim R&D tax relief"
+                    data-llm="gemini"
+                    data-brand="Walmer Group"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q2</span>
+                    <span class="question-text">Best consultancies for innovation grant applications like UKRI and Innovate UK</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="Certainly! Here are my top recommendations for consultancies that specialize in innovation grant applications, particularly for funding opportunities like those offered by UKRI and Innovate UK:<br><br>### 1. **The FSE Group**<br>   - **Overview**: The FSE Group has extensive experience in helping businesses secure funding from various sources, including Innovate UK and other public sector grants.<br>   - **Strengths**: They offer a comprehensive range of services, from grant writing to project management and financial forecasting. Their team is well-versed in the nuances of UK funding landscape and has a strong track record of securing grants for clients.<br><br>### 2. **Innovate UK EDGE**<br>   - **Overview**: As part of Innovate UK, this consultancy provides tailored support to businesses looking to innovate and grow. <br>   - **Strengths**: They offer advice on funding opportunities, access to grant-writing support, and strategic guidance for innovation projects. Their close ties with Innovate UK ensure that they are up-to-date with all funding programs and priorities.<br><br>### 3. **GrantTree**<br>   - **Overview**: GrantTree specializes in helping startups and SMEs apply for grants and tax credits, including R&D tax credits and Innovate UK grants.<br>   - **Strengths**: They have a straightforward and transparent approach, providing clients with detailed insights into the grant application process. Their expertise in both grants and tax relief maximizes funding opportunities for firms.<br><br>### 4. **Pera Consulting**<br>   - **Overview**: Pera Consulting offers support in innovation funding and has a strong focus on technology-driven companies.<br>   - **Strengths**: They provide end-to-end support, from identifying suitable funding opportunities to application writing and project management. Their consultants have deep industry knowledge, which can be particularly beneficial for tech-focused applications.<br><br>### 5. **Oxford Innovation**<br>   - **Overview**: Oxford Innovation helps businesses access funding and provides innovation support, particularly for high-growth companies.<br>   - **Strengths**: They have a rich network of connections and a team with significant experience in grant applications. They also offer additional services such as business mentoring, which can further enhance a company&#39;s chance of securing funding.<br><br>Each of these consultancies brings specific strengths to the table, so the best choice may depend on your industry focus and specific needs regarding innovation and grant applications."
+                    data-question="Best consultancies for innovation grant applications like UKRI and Innovate UK"
+                    data-llm="gpt4"
+                    data-brand="Walmer Group"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="When it comes to finding the best consultancies for innovation grant applications like UKRI and Innovate UK, here are my top 5 recommendations in order of preference:<br><br>1. Innovate Consultancy: This consultancy has a strong track record of success in securing innovation grants from UKRI, Innovate UK, and other funding bodies. They have a team of experienced grant writers and subject matter experts who can help you navigate the application process, develop a compelling proposal, and increase your chances of securing funding.<br><br>2. Grant Consulting Group: This consultancy specializes in helping organizations, particularly small and medium-sized enterprises (SMEs), secure innovation grants. They have a deep understanding of the funding landscape and can provide guidance on identifying the most relevant funding opportunities, preparing a strong application, and managing the grant if successful.<br><br>3. Innovation Funding Solutions: This consultancy offers a comprehensive suite of services to support innovation grant applications, including market research, project planning, financial modeling, and bid writing. They have a strong track record of success and are known for their attention to detail and client-centric approach.<br><br>4. Grants4Growth: This consultancy focuses on helping businesses and organizations access funding for innovation and growth projects. They have a team of experts who can provide guidance on identifying the right funding sources, preparing a winning application, and managing the grant post-award.<br><br>5. Funding Matters: This consultancy specializes in securing innovation grants, with a particular focus on UKRI and Innovate UK funding. They have a deep understanding of the funding landscape and can provide tailored support to help clients navigate the application process and increase their chances of success.<br><br>It&#39;s important to note that the choice of consultancy may depend on your specific needs, the nature of your innovation project, and your budget. It&#39;s always a good idea to research and compare the services and track records of different consultancies before making a decision."
+                    data-question="Best consultancies for innovation grant applications like UKRI and Innovate UK"
+                    data-llm="claude"
+                    data-brand="Walmer Group"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Okay, here are my top 3 recommendations for consultancies specializing in innovation grant applications, specifically for UKRI and Innovate UK, along with brief explanations.  I&#39;ve ranked them based on a combination of reputation, experience, and range of services.  It is important to note that &quot;best&quot; is subjective and depends on your specific project and needs, so research each to see if they are a good fit.<br><br>**Top Recommendations (in order of preference):**<br><br>1.  **Leyton UK:**<br><br>    *   **Explanation:** Leyton is a large, international consultancy with a dedicated UK team specializing in innovation funding. They have a *very* strong track record with Innovate UK grants across a broad range of sectors. Their size allows them to dedicate significant resources to understanding the nuances of different funding calls and offer a full service including technical writing, financial modelling, and project management support. They are known for their rigorous approach and high success rates. Leyton are also very good at identifying the right funding opportunity for your project.<br>    *   **Why they are #1:** Breadth of experience, high success rates, comprehensive service offering.<br><br>2.  **Myriad Associates:**<br><br>    *   **Explanation:** Myriad Associates is another well-established and reputable consultancy focused on grant funding and R&D tax credits. They have a team of technical experts and experienced grant writers who understand the UKRI and Innovate UK landscape very well. They offer a range of services, including eligibility assessments, application writing, and project management support. They are particularly strong in the life sciences, engineering, and advanced manufacturing sectors. They frequently host webinars and produce insightful content on innovation funding.<br>    *   **Why they are #2:** Strong technical understanding, good reputation, and focused expertise in key sectors.<br><br>3.  **Vision Innovation:**<br><br>    *   **Explanation:** Vision Innovation are a highly regarded consultancy specialising in Innovate UK and Horizon Europe grant applications. They have a strong success rate and a reputation for providing high quality application writing and strategic advice. They are particularly strong in the digital technology and cleantech sectors. Vision Innovation focuses on helping companies develop innovative ideas and secure the funding needed to bring them to market.<br>    *   **Why they are #3:** Specialised expertise, strong track record and focus on innovation strategy.<br><br>**Important Considerations Before Choosing:**<br><br>*   **Sector Expertise:** Make sure the consultancy has experience in your specific industry or technology area.  A consultant with a background in AI will be much more effective for an AI project than one focused on materials science.<br>*   **Track Record:** Ask for specific success rates and case studies relevant to the type of project you are pursuing.<br>*   **Team Composition:** Understand who will be working on your application.  What are their backgrounds and experience levels?<br>*   **Cost Structure:** Understand the consultancy&#39;s pricing model (e.g., fixed fee, hourly rate, success fee) and ensure it aligns with your budget.<br>*   **Chemistry:**  It&#39;s important to have a good working relationship with the consultants.  Schedule introductory calls to discuss your project and assess their communication style and understanding of your needs.<br><br>**Disclaimer:**  This information is based on my general knowledge and publicly available information.  I recommend you conduct your own due diligence before making a decision.  I have no affiliation with any of these consultancies. Good luck!<br>"
+                    data-question="Best consultancies for innovation grant applications like UKRI and Innovate UK"
+                    data-llm="gemini"
+                    data-brand="Walmer Group"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q3</span>
+                    <span class="question-text">Companies that offer R&D advance loans for UK startups</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are several companies and organizations that offer R&D advance loans or similar funding options for UK startups, listed in order of preference:<br><br>1. **British Business Bank (BBB)**<br>   - **Description**: The British Business Bank is a government-owned development bank that provides a range of finance options for UK businesses, including R&D tax credits and funding initiatives. They partner with various financial institutions to facilitate loans that can support R&D activities, especially for startups looking to innovate.<br>   - **Why Choose**: As a government-backed entity, the BBB offers reliable support and a variety of financing options tailored to the needs of startups, making it a strong first choice.<br><br>2. **Innovate UK**<br>   - **Description**: Innovate UK is the UK’s innovation agency, offering funding and support to businesses engaged in R&D. They provide grants, loans, and other funding options specifically aimed at helping startups and SMEs develop innovative products and services.<br>   - **Why Choose**: Innovate UK not only offers financial support but also provides access to valuable resources, networks, and expertise, making it a comprehensive choice for startups focused on R&D.<br><br>3. **Funding Circle**<br>   - **Description**: Funding Circle is a peer-to-peer lending platform that connects businesses with investors. They offer unsecured business loans that can be used for various purposes, including R&D. Their process is relatively quick, providing businesses with fast access to funds.<br>   - **Why Choose**: The flexibility of their loans and the speed of funding make Funding Circle a great option for startups needing immediate capital for R&D projects.<br><br>4. **Crowdcube**<br>   - **Description**: Crowdcube is an equity crowdfunding platform allowing startups to raise funds by offering shares to investors. While not a traditional loan, it enables businesses to fund their R&D through community investment.<br>   - **Why Choose**: Crowdcube provides not just funding but also the opportunity to engage a community of investors who can offer mentorship and support, making it an attractive option for startups willing to share equity.<br><br>5. **The Prince&#39;s Trust**<br>   - **Description**: The Prince&#39;s Trust offers financial support and advice to young entrepreneurs in the UK. They provide loans, grants, and mentorship specifically tailored for startups, including those focused on innovative projects.<br>   - **Why Choose**: With a strong focus on supporting young entrepreneurs, The Prince&#39;s Trust offers not only financial assistance but also essential guidance and resources to help startups succeed.<br><br>Each of these organizations has unique offerings and support mechanisms to help UK startups secure funding for R&D, so it&#39;s advisable to assess which aligns best with your specific needs and stage of development."
+                    data-question="Companies that offer R&D advance loans for UK startups"
+                    data-llm="gpt4"
+                    data-brand="Walmer Group"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top 5 recommendations for companies that offer R&D advance loans for UK startups, listed in order of preference:<br><br>1. Innovate UK: Innovate UK is the UK&#39;s innovation agency, funded by the Department for Business, Energy & Industrial Strategy (BEIS). They offer a range of funding options, including the Innovate UK Loan, which provides R&D advance loans to eligible UK startups and SMEs. The loans are designed to help businesses scale up and commercialize their innovations.<br><br>2. British Business Bank: The British Business Bank is a government-owned development bank that aims to make finance markets work better for smaller businesses. They offer the Innovation Finance Loans program, which provides R&D advance loans to innovative UK startups and SMEs.<br><br>3. Barclays: Barclays is a major UK bank that offers an R&D Advance Loan specifically designed for UK startups and SMEs. The loan provides funding to help businesses finance their R&D activities and bring new products or services to market.<br><br>4. HSBC: HSBC is another leading UK bank that offers an R&D Loan for startups and SMEs. The loan is designed to support businesses in funding their research and development projects, with flexible repayment terms and competitive interest rates.<br><br>5. Funding Circle: Funding Circle is a peer-to-peer lending platform that offers R&D loans to UK startups and SMEs. While not a traditional bank, Funding Circle has a strong track record of providing financing to innovative businesses that may not qualify for traditional bank loans.<br><br>It&#39;s important to note that the eligibility criteria, loan terms, and application processes may vary between these providers, so it&#39;s recommended to research and compare the options to find the best fit for your startup&#39;s specific needs."
+                    data-question="Companies that offer R&D advance loans for UK startups"
+                    data-llm="claude"
+                    data-brand="Walmer Group"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Okay, here are my top 3 recommendations for companies that offer R&D advance loans for UK startups, ordered by preference and with brief explanations.  Keep in mind that the &quot;best&quot; option depends heavily on your specific circumstances, technology, and R&D spend.  *Always* compare multiple offers and read the fine print carefully.<br><br>**Important Note:**  These &quot;loans&quot; are often structured as advances *against* your future R&D tax credit claims. They are not unsecured loans. Their availability and terms depend heavily on the strength of your R&D claim.<br><br>**Top Recommendations:**<br><br>1.  **Liberis:**<br><br>    *   **Why it&#39;s a Top Pick:** Liberis stands out due to its flexibility and understanding of the specific needs of startups. They offer R&D advances with a relatively straightforward application process and a focus on helping businesses access their R&D tax credits more quickly. They understand the nuances of R&D claims and are known for being responsive. Their website provides clear information, and they often have competitive rates.<br>    *   **Key Advantages:** Fast turnaround, flexible repayment options tied to future revenue, and a good reputation for customer service.<br>    *   **Things to Consider:**  Interest rates and fees can vary depending on your company&#39;s profile and the size of your claim.<br><br>2.  **Investly:**<br><br>    *   **Why it&#39;s a Solid Choice:** Investly specializes in invoice financing and R&D advances, offering a platform that connects startups with investors willing to provide funding based on their R&D tax credit claims.  They often have a more streamlined process than traditional lenders.<br>    *   **Key Advantages:**  Potentially competitive rates due to the marketplace lending model, and a focus on speed and efficiency.<br>    *   **Things to Consider:**  The availability of funding can depend on investor demand.<br><br>3.  **Boost Capital:**<br><br>    *   **Why it&#39;s a Worth Considering:** Boost Capital provides a range of business finance options, including R&D advances.  They are a well-established lender with a broad reach.<br>    *   **Key Advantages:** Wide range of funding options beyond R&D advances, allowing them to potentially offer more comprehensive financial solutions.<br>    *   **Things to Consider:**  Their application process might be slightly more involved than some of the more specialized providers, and their rates may not always be the most competitive for specifically R&D-focused funding.<br><br>**Important Considerations When Choosing:**<br><br>*   **Fees and Interest Rates:**  Carefully compare the total cost of borrowing, including all fees.  Look beyond the headline interest rate.<br>*   **Repayment Terms:**  Understand how repayments are structured and how they align with your future R&D tax credit receipts.<br>*   **Eligibility Criteria:**  Ensure your company meets the lender&#39;s eligibility requirements, including minimum R&D spend and claim amounts.<br>*   **Due Diligence:**  The lender will conduct due diligence on your R&D claim.  Be prepared to provide detailed documentation.<br><br>**Disclaimer:** I am an AI chatbot and cannot provide financial advice. This information is for guidance only. It&#39;s crucial to conduct your own research and consult with a qualified financial advisor before making any financial decisions.  The availability and terms of these loans can change, so always verify the latest information directly with the lenders. Good luck!<br>"
+                    data-question="Companies that offer R&D advance loans for UK startups"
+                    data-llm="gemini"
+                    data-brand="Walmer Group"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q4</span>
+                    <span class="question-text">Firms that help tech startups find investors and raise capital in the UK</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top recommendations for firms that assist tech startups in the UK with finding investors and raising capital:<br><br>1. **Seedcamp**  <br>   Seedcamp is one of Europe&#39;s leading early-stage investment firms, focusing on tech startups. They provide not just capital but also mentorship, networking opportunities, and access to a vast community of experts and investors. Their program includes a strong emphasis on helping founders refine their business model and pitch, which is crucial for attracting further investment.<br><br>2. **Techstars London**  <br>   Techstars is a well-known global startup accelerator that has a strong presence in London. Their program offers seed funding, mentorship, and access to a network of investors, including their extensive alumni network. Techstars is particularly beneficial for startups looking for intensive support and resources to help them scale rapidly.<br><br>3. **Crowdcube**  <br>   Crowdcube is one of the UK&#39;s leading equity crowdfunding platforms, allowing startups to raise capital directly from investors in exchange for equity. This platform is particularly valuable for tech startups that want to engage with a community of investors and customers while building a loyal following. Crowdcube&#39;s user-friendly platform simplifies the fundraising process and provides startups with visibility.<br><br>4. **London & Partners**  <br>   As the Mayor of London’s official promotional agency, London & Partners offers support to startups in navigating the investment landscape. They provide resources, investment readiness programs, and connect startups with potential investors through various initiatives and events. Their focus on promoting London as a tech hub makes them a valuable resource for startups looking to establish themselves in the market.<br><br>5. **Ascension Ventures**  <br>   Ascension Ventures focuses on early-stage tech investments and has a strong track record of supporting startups in their growth journey. They offer tailored investment solutions and have a network of investors who are interested in high-potential tech companies. Their approach combines capital with strategic guidance, helping startups refine their business strategy and connect with the right investors.<br><br>These firms have established reputations in the UK tech ecosystem and can provide invaluable support and resources for startups looking to raise capital."
+                    data-question="Firms that help tech startups find investors and raise capital in the UK"
+                    data-llm="gpt4"
+                    data-brand="Walmer Group"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top 5 recommendations for firms in the UK that help tech startups find investors and raise capital, listed in order of preference:<br><br>1. Ascension Ventures: Ascension Ventures is a leading early-stage venture capital firm that specializes in supporting tech startups in the UK. They have a strong network of investors and a proven track record of helping startups secure funding. Their expertise spans a range of sectors, including fintech, AI, and healthcare.<br><br>2. Cornerstone Partners: Cornerstone Partners is a boutique investment firm that focuses on supporting innovative tech startups in the UK. They offer a comprehensive range of services, including fundraising support, strategic advisory, and access to their extensive network of investors.<br><br>3. Startup Funding Club: Startup Funding Club is a well-respected platform that connects tech startups with angel investors and venture capitalists in the UK. They provide a range of services, including pitch preparation, investor introductions, and ongoing support.<br><br>4. Techstars: Techstars is a global accelerator program that has a strong presence in the UK. They offer a comprehensive program that includes access to mentors, investors, and resources to help tech startups grow and secure funding.<br><br>5. Crowdcube: Crowdcube is a leading equity crowdfunding platform in the UK that has helped numerous tech startups raise capital. They offer a user-friendly platform and support services to help startups navigate the crowdfunding process.<br><br>These firms have a strong reputation in the UK tech ecosystem and have a proven track record of helping startups secure funding and achieve success."
+                    data-question="Firms that help tech startups find investors and raise capital in the UK"
+                    data-llm="claude"
+                    data-brand="Walmer Group"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Okay, here are 3-5 recommendations for firms that help tech startups find investors and raise capital in the UK, ordered by my (simulated) preference, considering a blend of factors like reputation, network, and focus on early-stage tech:<br><br>**Important Note:**  &quot;Best&quot; is subjective and depends heavily on your specific startup, stage, sector, and funding needs.  This list assumes a focus on *early-stage* tech startups in the UK.  Always do your own due diligence.<br><br>1.  **Beauhurst (Data Provider & Advisory):**<br>    *   **Why it&#39;s High on the List:** Beauhurst is primarily known as a leading data provider on UK startups, scale-ups, and investors.  This gives them an *unparalleled* view of the UK funding landscape. They&#39;ve increasingly moved into providing advisory services, leveraging their data to make highly targeted investor introductions.  They&#39;re particularly strong in helping startups understand the investment landscape and identify the *right* investors for their specific stage and sector.<br>    *   **Strengths:**  Data-driven approach, excellent understanding of the UK ecosystem, broad coverage, and increasingly active in direct advisory roles.  Good for startups needing precise targeting.<br>    *   **Considerations:**  Their advisory services might be newer than some of the more established firms, but their data advantage is significant.  You will likely need to engage their data subscriptions alongside their advisory services.<br><br>2.  **Angel Investment Network (Platform & Introductions):**<br>    *   **Why it&#39;s High on the List:**  Angel Investment Network is a global platform but has a very strong presence in the UK. It connects startups with a large network of angel investors.  This is a good option for companies seeking seed or early-stage funding.<br>    *   **Strengths:**  Large network of angels, relatively accessible for startups at different stages, good for initial funding rounds. They handle the early stage very well.<br>    *   **Considerations:**  Success depends on the quality of your pitch and the attractiveness of your business to the angel investors on the platform. May require more work on your side to manage investor relations. It&#39;s not a full-service advisory firm.<br><br>3.  **MMC Ventures (Venture Capital Firm with Support):**<br>    *   **Why it&#39;s on the List:** MMC Ventures is a well-respected venture capital firm that invests in early-stage, high-growth technology companies. While they are investors first, they offer significant support and guidance to their portfolio companies, including help with subsequent fundraising rounds.  Getting investment from MMC can also signal quality to other investors.<br>    *   **Strengths:** Strong track record, sector expertise, access to a broader network of investors, and hands-on support.<br>    *   **Considerations:** They are a VC firm, meaning they invest their own capital. You must meet their investment criteria, and they will take equity.  They&#39;re not solely a fundraising advisor. This is for companies that are further along than the first two options.<br><br>4.  **Corporate Finance Firms (e.g., finnCap Cavendish):**<br>    *   **Why it&#39;s on the List:**  Firms like finnCap Cavendish (and others) offer a broader range of corporate finance services, including fundraising advisory.  They often work with more established startups and scale-ups seeking larger funding rounds (Series A and beyond).<br>    *   **Strengths:**  Experience with larger and more complex funding rounds, access to institutional investors, and strategic advice.<br>    *   **Considerations:**  May be less focused on very early-stage startups. Their fees are typically higher than angel networks, reflecting the scale of deals they work on.<br><br>**Important Considerations Before Choosing:**<br><br>*   **Your Stage:**  Are you pre-seed, seed, Series A, etc.?  Different firms specialize in different stages.<br>*   **Your Sector:**  Do you have a specific technology focus (e.g., AI, Fintech, Biotech)?  Some firms have deep expertise in certain sectors.<br>*   **Your Funding Needs:**  How much capital are you trying to raise? This will influence which investors and firms are appropriate.<br>*   **Your Budget:**  Advisory fees can vary significantly. Understand the fee structure upfront.<br><br>**Next Steps:**<br><br>1.  **Research:** Visit the websites of these firms and read case studies.<br>2.  **Network:** Talk to other founders who have raised capital and ask for their recommendations.<br>3.  **Contact:**  Reach out to a few firms that seem like a good fit and schedule introductory calls to discuss your needs.<br><br>Good luck with your fundraising!<br>"
+                    data-question="Firms that help tech startups find investors and raise capital in the UK"
+                    data-llm="gemini"
+                    data-brand="Walmer Group"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q5</span>
+                    <span class="question-text">Top R&D tax credit specialists for UK technology companies</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are five top R&D tax credit specialists for UK technology companies, listed in order of preference:<br><br>1. **R&D Tax Solutions**<br>   - **Overview**: R&D Tax Solutions is a leading firm specializing in R&D tax relief claims for innovative companies across various sectors, including technology. They have a strong track record of successfully securing tax credits for their clients.<br>   - **Why Choose Them**: Their team consists of tax specialists and former HMRC staff who understand the intricacies of R&D tax relief, ensuring a comprehensive approach to claim preparation. They also offer a no-win, no-fee service, minimizing the risk for clients.<br><br>2. **Catax**<br>   - **Overview**: Catax is a well-known R&D tax credit consultancy that has helped numerous technology firms maximize their claims. They provide a full suite of services, including claim preparation, submission, and ongoing support.<br>   - **Why Choose Them**: Catax prides itself on its customer service and technical expertise. Their team includes ex-HMRC tax inspectors, which gives them an edge in understanding how to structure claims effectively.<br><br>3. **R&D Tax Credits Ltd**<br>   - **Overview**: This consultancy focuses exclusively on R&D tax credits and has a strong emphasis on technology sectors, including software and engineering. They offer tailored services to meet the specific needs of tech companies.<br>   - **Why Choose Them**: R&D Tax Credits Ltd is noted for its personalized approach, taking the time to understand each client&#39;s unique situation. Their expertise in the tech sector helps ensure that no qualifying activity is overlooked.<br><br>4. **Innovation Tax Relief (ITR)**<br>   - **Overview**: ITR specializes in R&D tax credits and innovation funding. They have a dedicated team that works with tech companies to identify qualifying R&D activities and maximize claims.<br>   - **Why Choose Them**: They offer a comprehensive service that includes not just tax relief claims but also guidance on innovation funding opportunities. Their focus on technology allows them to effectively navigate the complexities of R&D claims.<br><br>5. **Catax Group**<br>   - **Overview**: Catax Group, part of the Catax family, provides a range of tax relief services, including R&D tax credits, capital allowances, and patent box claims. They have a significant presence in the tech sector.<br>   - **Why Choose Them**: Their team of experts has a deep understanding of the technology landscape and offers a robust service that ensures clients receive the maximum benefits available.<br><br>When selecting an R&D tax credit specialist, it’s essential to consider their specific experience in your industry, their fee structure, and their approach to client service."
+                    data-question="Top R&D tax credit specialists for UK technology companies"
+                    data-llm="gpt4"
+                    data-brand="Walmer Group"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top 5 recommendations for R&D tax credit specialists for UK technology companies, listed in order of preference:<br><br>1. Ayming UK:<br>Ayming is a leading global consulting firm that specializes in R&D tax credits and other government incentives. They have a strong presence in the UK and a dedicated team of experts who have successfully helped numerous technology companies claim R&D tax credits. Their deep understanding of the UK tax system and extensive experience in the technology sector make them a top choice.<br><br>2. Catax:<br>Catax is a specialist R&D tax credit consultancy that has a proven track record of helping UK technology companies maximize their claims. They have a team of chartered tax advisors and technical experts who work closely with clients to identify eligible activities and ensure that the claims are accurate and compliant.<br><br>3. Kingly Brookes:<br>Kingly Brookes is a boutique firm that focuses exclusively on R&D tax credits and other government incentives. They have a strong reputation in the technology sector and are known for their personalized approach and attention to detail. Their expertise in navigating the complex R&D tax credit scheme can be particularly valuable for smaller or less experienced technology companies.<br><br>4. ForrestBrown:<br>ForrestBrown is a leading R&D tax credit advisory firm that has a dedicated technology practice. They have a team of chartered tax advisors and technical experts who work closely with clients to identify and document eligible R&D activities. Their expertise in the technology sector and strong track record of successful claims make them a reliable choice.<br><br>5. Myriad Associates:<br>Myriad Associates is a specialist R&D tax credit consultancy that has a strong focus on the technology sector. They have a team of experienced tax professionals who are well-versed in the latest R&D tax credit regulations and can provide tailored advice to technology companies. Their proactive approach and attention to detail can be particularly valuable for companies looking to maximize their R&D tax credit claims."
+                    data-question="Top R&D tax credit specialists for UK technology companies"
+                    data-llm="claude"
+                    data-brand="Walmer Group"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Okay, providing specific recommendations for R&D tax credit specialists is tricky.  It&#39;s difficult to definitively rank them without knowing your specific technology, company size, and needs.  However, based on reputation, experience, and industry recognition, here are 3-5 recommendations, along with explanations.  **Crucially, I strongly advise you to interview several firms before making a decision.**<br><br>**Important Considerations Before Choosing:**<br><br>*   **Industry Expertise:** Does the firm have experience with *your* specific technology area?  A specialist in software R&D might not be the best fit for advanced materials.<br>*   **Size of your company:** Some firms specialize in startups, while others are better suited for larger organizations.<br>*   **Fee Structure:** Understand their fee structure upfront.  Common models include contingency fees (a percentage of the claim), fixed fees, or a combination.<br>*   **Claim Preparation Process:**  How involved will you be in the process?  What support do they provide with documentation and HMRC interaction?<br>*   **HMRC Relationship:**  Do they have a good track record with HMRC and a strong understanding of their interpretation of the guidelines?<br><br>**Recommendations (in order of general preference and based on publicly available information and reputation):**<br><br>1.  **Leyton UK:** Leyton is a large, international consultancy with a strong presence in the UK.  They are known for their in-depth technical expertise and comprehensive approach to R&D tax credit claims. They have a large team of specialist consultants, with expertise across many industries and technologies. They are often recommended for larger companies or those with complex R&D activities.  *Potential downside:* Their size might mean a less personalized service compared to smaller firms.<br><br>2.  **ForrestBrown:** ForrestBrown is a well-regarded UK-based specialist firm focusing solely on R&D tax credits. They are known for their technical expertise and proactive approach. They have a good reputation for working closely with clients to maximize their claims and have a strong understanding of HMRC&#39;s requirements. ForrestBrown is often praised for its high success rate and client satisfaction. *Potential downside:* They might be more expensive than some other options, but the quality of service is often cited as being worth the investment.<br><br>3.  **Ayming:** Ayming is another international consultancy with a dedicated R&D tax relief team in the UK. They offer a broad range of services beyond R&D tax credits, which can be beneficial for companies looking for a more holistic approach to business optimization. Ayming has a reputation for being thorough and efficient in their claim preparation. *Potential downside:* While they have R&D tax credit expertise, their broader focus might mean they don&#39;t have the same level of specialization as firms like ForrestBrown.<br><br>4.  **Myriad Associates:** Myriad Associates cater to tech companies, with offices globally, including the UK. They are a good option for companies operating internationally. Myriad are a smaller consultancy, but they offer a personalised service. *Potential downside:* They are a smaller consultancy, so they may not have the same resources as the bigger players.<br><br>**Important Next Steps:**<br><br>*   **Research:** Visit the websites of these firms and read client testimonials.<br>*   **Contact:** Reach out to several firms and schedule introductory calls to discuss your specific needs and requirements.<br>*   **Ask Questions:** Prepare a list of questions to ask each firm, including their experience in your industry, their claim preparation process, their fee structure, and their track record with HMRC.<br>*   **Compare:** Carefully compare the proposals and approaches of each firm before making a decision.<br><br>By following these steps, you can choose the R&D tax credit specialist that is the best fit for your UK technology company. Good luck!<br>"
+                    data-question="Top R&D tax credit specialists for UK technology companies"
+                    data-llm="gemini"
+                    data-brand="Walmer Group"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+                </tbody>
+            </table>
+            <p class="breakdown-hint">Click any cell to see the full AI response</p>
+        </div>
+
+        <!-- Response modal -->
+        <div class="response-modal" id="responseModal">
+            <div class="modal-content" onclick="event.stopPropagation()">
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+                <div class="modal-header">
+                    <span class="modal-llm" id="modalLlm"></span>
+                    <span class="modal-status" id="modalStatus"></span>
+                </div>
+                <div class="modal-question" id="modalQuestion"></div>
+                <div class="modal-response" id="modalResponse"></div>
+            </div>
+        </div>
+    
+        </div>
+
+        <!-- Section 3: Reddit Opportunities -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <h2 class="section-title">Reddit Opportunities</h2>
+            </div>
+
+            <div class="subsection-title">Buy Intent Conversations</div>
+            <p class="subsection-desc">People actively looking for recommendations in your category</p>
+            <div class="reddit-posts">
+                
+            <a href="https://www.reddit.com/r/FluentInFinance/comments/1qpr2jg/a_finance_joke_thats_not_funny/" target="_blank" class="reddit-post">
+                <div class="post-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">A finance joke that's not funny : r/FluentInFinance</div>
+                    <div class="post-meta">
+                        r/FluentInFinance &bull; 567K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            <a href="https://www.reddit.com/r/investingforbeginners/comments/1qs5nv0/need_advice_on_how_to_approach_sp500/" target="_blank" class="reddit-post">
+                <div class="post-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">Need advice on how to approach S&P500</div>
+                    <div class="post-meta">
+                        r/investingforbeginners &bull; 188K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            <a href="https://www.reddit.com/r/cantax/comments/1qp4lf1/tcftef_exams_as_tax_credits/" target="_blank" class="reddit-post">
+                <div class="post-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">TCF/TEF exams as Tax Credits? : r/cantax</div>
+                    <div class="post-meta">
+                        r/cantax &bull; 38K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            <a href="https://www.reddit.com/r/AskReddit/comments/1qnw6lh/for_those_who_consider_themselves_fiscally/" target="_blank" class="reddit-post">
+                <div class="post-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">For those who consider themselves "fiscally conservative ...</div>
+                    <div class="post-meta">
+                        r/AskReddit &bull; 57.7M members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            </div>
+
+            <div class="subsection-title">Pain Point Conversations</div>
+            <p class="subsection-desc">People discussing problems your product solves</p>
+            <div class="reddit-posts">
+                
+            <a href="https://www.reddit.com/r/TurboTax/comments/1qqplix/this_is_for_everyone_who_claims_credits_and/" target="_blank" class="reddit-post">
+                <div class="post-icon pain">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">This is for everyone who claims credits and thinks you ...</div>
+                    <div class="post-meta">
+                        r/TurboTax &bull; 39K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            <a href="https://www.reddit.com/r/Accounting/comments/1qq97b0/what_is_the_most_creative_illegal_thing_a_client/" target="_blank" class="reddit-post">
+                <div class="post-icon pain">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">What is the most 'creative' (illegal) thing a client has ever ...</div>
+                    <div class="post-meta">
+                        r/Accounting &bull; 1.2M members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            </div>
+        </div>
+
+        <!-- CTA Section -->
+        <div class="section cta-section">
+            <h2>Ready to improve your <em>AI visibility?</em></h2>
+            <p>We help brands get mentioned more in AI answers through strategic content placement.</p>
+            <a href="https://adva-solutions.com/AIVisibility" class="cta-button">Learn More</a>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p>Generated by <a href="https://adva-solutions.com">Adva</a> &bull; AI Visibility Health Check</p>
+    </footer>
+
+    <script>
+        // Tab switching functionality
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const tabId = btn.dataset.tab;
+
+                // Update buttons
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                // Update panels
+                document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+                document.getElementById('panel-' + tabId).classList.add('active');
+            });
+        });
+
+        // Show toast notification
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2500);
+        }
+
+        // Show response modal
+        function showResponse(cell) {
+            try {
+                let response = cell.dataset.response || 'No response available';
+                const question = cell.dataset.question || '';
+                const llm = cell.dataset.llm || '';
+                const brand = cell.dataset.brand || '';
+                const isMentioned = cell.classList.contains('mentioned');
+                const brandPosition = cell.dataset.position ? parseInt(cell.dataset.position) : null;
+
+                const llmNames = {'gpt4': 'GPT', 'claude': 'Claude', 'gemini': 'Gemini'};
+
+                // If brand is mentioned beyond position 5, add a banner at the top
+                let positionBanner = '';
+                if (isMentioned && brandPosition && brandPosition > 5) {
+                    positionBanner = '<div style="background: #fef3c7; padding: 0.75rem 1rem; border-radius: 6px; margin-bottom: 1rem; border-left: 4px solid #f59e0b;">' +
+                        '<strong>📍 Your brand appeared at position #' + brandPosition + '</strong> - scroll down to see the highlighted mention' +
+                        '</div>';
+                }
+
+                // Highlight brand name in response (case insensitive)
+                if (brand && isMentioned) {
+                    try {
+                        const brandRegex = new RegExp('(' + brand.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&') + ')', 'gi');
+                        response = response.replace(brandRegex, '<span class="brand-highlight">$1</span>');
+                    } catch(e) { /* ignore highlighting errors */ }
+                }
+
+                document.getElementById('modalLlm').textContent = llmNames[llm] || llm;
+                document.getElementById('modalQuestion').textContent = '"' + question + '"';
+                document.getElementById('modalResponse').innerHTML = positionBanner + response;
+
+                const statusEl = document.getElementById('modalStatus');
+                if (isMentioned) {
+                    statusEl.textContent = 'Mentioned';
+                    statusEl.className = 'modal-status mentioned';
+                } else {
+                    statusEl.textContent = 'Not mentioned';
+                    statusEl.className = 'modal-status not-mentioned';
+                }
+
+                document.getElementById('responseModal').classList.add('active');
+                document.body.style.overflow = 'hidden';
+
+                // Scroll to first highlight if mentioned
+                if (isMentioned) {
+                    setTimeout(function() {
+                        const highlight = document.querySelector('.modal-response .brand-highlight');
+                        if (highlight) {
+                            highlight.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        }
+                    }, 100);
+                }
+            } catch (e) {
+                console.error('Error showing response:', e);
+                alert('Error loading response. Please try again.');
+            }
+        }
+
+        // Close modal
+        function closeModal() {
+            document.getElementById('responseModal').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // Close when clicking backdrop (outside modal content)
+        document.getElementById('responseModal').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+
+        // Close modal on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeModal();
+        });
+    </script>
+</body>
+</html>
