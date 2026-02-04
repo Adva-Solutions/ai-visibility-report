@@ -1,0 +1,1370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Visibility Report - EX.CO | Adva</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #ffffff;
+            min-height: 100vh;
+            color: #374151;
+            line-height: 1.6;
+        }
+
+        /* Header */
+        .header {
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            font-size: 1.25rem;
+            color: #1f2937;
+            text-decoration: none;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .header-date {
+            color: #9ca3af;
+            font-size: 0.875rem;
+        }
+
+        /* Copy link button */
+        .copy-link-button {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: #f3f4f6;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            color: #374151;
+            font-size: 0.75rem;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .copy-link-button:hover {
+            background: #e5e7eb;
+        }
+
+        .copy-link-button svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        .pdf-button {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: #1f2937;
+            border: none;
+            border-radius: 6px;
+            color: #ffffff;
+            font-size: 0.75rem;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .pdf-button:hover {
+            background: #374151;
+        }
+
+        .pdf-button svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        /* Toast notification */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: #1f2937;
+            color: #ffffff;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            opacity: 0;
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        /* Container */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Page title */
+        .page-title {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .page-title .label {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: #9ca3af;
+            font-size: 0.75rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+        }
+
+        .page-title .label::before,
+        .page-title .label::after {
+            content: '';
+            width: 30px;
+            height: 1px;
+            background: #d1d5db;
+        }
+
+        .page-title h1 {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 2.5rem;
+            font-weight: 400;
+            color: #1f2937;
+            margin-bottom: 0.5rem;
+        }
+
+        .page-title .brand {
+            color: #6b7280;
+            font-size: 1.125rem;
+        }
+
+        /* Sections */
+        .section {
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #f3f4f6;
+        }
+
+        .section-icon {
+            width: 40px;
+            height: 40px;
+            background: #1f2937;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .section-icon svg {
+            width: 20px;
+            height: 20px;
+            color: #ffffff;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 1.375rem;
+            color: #1f2937;
+        }
+
+        /* Score Section */
+        .score-section {
+            text-align: center;
+            padding: 3rem 2rem;
+        }
+
+        .score-circle {
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            background: #fafafa;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            border: 4px solid #ef4444;
+        }
+
+        .score-value {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 3rem;
+            font-weight: 500;
+            color: #ef4444;
+        }
+
+        .score-label {
+            font-size: 0.8rem;
+            color: #9ca3af;
+        }
+
+        .score-description {
+            color: #6b7280;
+            margin-bottom: 2rem;
+            font-size: 1rem;
+        }
+
+        .score-description strong {
+            color: #1f2937;
+        }
+
+        .llm-breakdown {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .llm-stat {
+            text-align: center;
+            padding: 1rem 1.5rem;
+            background: #fafafa;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+            min-width: 100px;
+        }
+
+        .llm-name {
+            display: block;
+            color: #9ca3af;
+            font-size: 0.8rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .llm-score {
+            font-size: 1.125rem;
+            font-weight: 600;
+        }
+
+        .llm-score.success {
+            color: #22c55e;
+        }
+
+        .llm-score.warning {
+            color: #ef4444;
+        }
+
+        /* Competitor Table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 0.875rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid #f3f4f6;
+        }
+
+        th {
+            color: #9ca3af;
+            font-weight: 500;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        td {
+            color: #374151;
+        }
+
+        .mention-count {
+            background: #fef3c7;
+            color: #92400e;
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        /* Tabs for LLM responses */
+        .example-tabs {
+            margin-top: 1.5rem;
+        }
+
+        .tabs-header {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+            padding-bottom: 0;
+        }
+
+        .tab-btn {
+            padding: 0.75rem 1.25rem;
+            background: transparent;
+            border: none;
+            color: #6b7280;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            margin-bottom: -1px;
+            transition: all 0.2s;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .tab-btn:hover {
+            color: #1f2937;
+        }
+
+        .tab-btn.active {
+            color: #1f2937;
+            border-bottom-color: #1f2937;
+        }
+
+        .tab-panel {
+            display: none;
+            background: #fafafa;
+            border-radius: 8px;
+            padding: 1.25rem;
+        }
+
+        .tab-panel.active {
+            display: block;
+        }
+
+        .example-question {
+            color: #1f2937;
+            font-weight: 500;
+            font-size: 0.95rem;
+            margin-bottom: 0.75rem;
+        }
+
+        /* Question breakdown table */
+        .question-breakdown {
+            margin-top: 1rem;
+        }
+
+        .breakdown-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        .breakdown-table th {
+            padding: 0.75rem;
+            text-align: center;
+            background: #f9fafb;
+            border-bottom: 2px solid #e5e7eb;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .breakdown-table th:first-child {
+            text-align: left;
+            width: 50%;
+        }
+
+        .breakdown-table td {
+            padding: 0.75rem;
+            border-bottom: 1px solid #f3f4f6;
+            vertical-align: middle;
+        }
+
+        .question-cell {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+        }
+
+        .question-num {
+            background: #e5e7eb;
+            color: #374151;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        .question-text {
+            color: #374151;
+            line-height: 1.4;
+        }
+
+        .llm-cell {
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-radius: 4px;
+        }
+
+        .llm-cell:hover {
+            background: #f3f4f6;
+        }
+
+        .llm-cell.mentioned {
+            color: #16a34a;
+        }
+
+        .llm-cell.mentioned .status-icon {
+            font-size: 1.25rem;
+        }
+
+        .llm-cell.not-mentioned {
+            color: #dc2626;
+        }
+
+        .llm-cell.not-mentioned .status-icon {
+            font-size: 1.25rem;
+        }
+
+        .breakdown-hint {
+            color: #9ca3af;
+            font-size: 0.8rem;
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+        /* Response modal */
+        .response-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+        }
+
+        .response-modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: #ffffff;
+            border-radius: 12px;
+            max-width: 800px;
+            width: 100%;
+            max-height: 90vh;
+            overflow: auto;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #9ca3af;
+            cursor: pointer;
+            padding: 0.25rem 0.5rem;
+        }
+
+        .modal-close:hover {
+            color: #374151;
+        }
+
+        .modal-header {
+            padding: 1.5rem 1.5rem 0;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            position: relative;
+        }
+
+        .modal-llm {
+            font-weight: 600;
+            color: #1f2937;
+            font-size: 1.1rem;
+        }
+
+        .modal-status {
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .modal-status.mentioned {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .modal-status.not-mentioned {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .modal-question {
+            padding: 1rem 1.5rem;
+            color: #6b7280;
+            font-size: 0.9rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .modal-response {
+            padding: 1.5rem;
+            overflow-y: auto;
+            flex: 1;
+            color: #374151;
+            font-size: 0.9rem;
+            line-height: 1.8;
+            min-height: 300px;
+            max-height: 60vh;
+            background: #fafafa;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .modal-response::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .modal-response::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        .modal-response::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 4px;
+        }
+
+        .modal-response::-webkit-scrollbar-thumb:hover {
+            background: #a1a1a1;
+        }
+
+        /* Brand highlight */
+        .brand-highlight {
+            background: linear-gradient(120deg, #fef08a 0%, #fde047 100%);
+            padding: 0.1rem 0.3rem;
+            border-radius: 3px;
+            font-weight: 600;
+        }
+
+        .example-content {
+            color: #6b7280;
+            font-size: 0.875rem;
+            line-height: 1.7;
+            max-height: 400px;
+            overflow-y: auto;
+            margin-bottom: 0.75rem;
+            padding: 1rem;
+            background: #f9fafb;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .example-status {
+            padding: 0.5rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            display: inline-block;
+        }
+
+        .example-status.mentioned {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .example-status.not-mentioned {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        /* Reddit Posts */
+        .reddit-posts {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .reddit-post {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: #fafafa;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: all 0.2s;
+            border: 1px solid transparent;
+        }
+
+        .reddit-post:hover {
+            background: #f3f4f6;
+            border-color: #e5e7eb;
+        }
+
+        .post-icon {
+            width: 40px;
+            height: 40px;
+            background: #1f2937;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .post-icon.pain {
+            background: #fef3c7;
+        }
+
+        .post-icon.pain svg {
+            color: #92400e;
+        }
+
+        .post-icon svg {
+            width: 20px;
+            height: 20px;
+            color: #ffffff;
+        }
+
+        .post-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .post-title {
+            color: #1f2937;
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .post-meta {
+            color: #9ca3af;
+            font-size: 0.8rem;
+        }
+
+        .post-arrow {
+            color: #9ca3af;
+            flex-shrink: 0;
+        }
+
+        .post-arrow svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .subsection-title {
+            color: #1f2937;
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin: 1.5rem 0 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .subsection-title:first-of-type {
+            margin-top: 0;
+        }
+
+        .subsection-desc {
+            color: #9ca3af;
+            font-size: 0.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .no-data {
+            color: #9ca3af;
+            font-style: italic;
+            text-align: center;
+            padding: 1rem;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            color: #9ca3af;
+            font-size: 0.8rem;
+            padding: 2rem;
+            border-top: 1px solid #e5e7eb;
+            margin-top: 2rem;
+        }
+
+        .footer a {
+            color: #1f2937;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* CTA */
+        .cta-section {
+            text-align: center;
+            padding: 3rem 2rem;
+            background: #fafafa;
+        }
+
+        .cta-section h2 {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 1.75rem;
+            color: #1f2937;
+            margin-bottom: 0.75rem;
+        }
+
+        .cta-section p {
+            color: #6b7280;
+            margin-bottom: 1.5rem;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background: #1f2937;
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .cta-button:hover {
+            background: #111827;
+            transform: translateY(-1px);
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .page-title h1 {
+                font-size: 1.75rem;
+            }
+
+            .section {
+                padding: 1.5rem;
+            }
+
+            .score-circle {
+                width: 130px;
+                height: 130px;
+            }
+
+            .score-value {
+                font-size: 2.25rem;
+            }
+
+            .llm-breakdown {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .tabs-header {
+                flex-wrap: wrap;
+            }
+
+            .tab-btn {
+                padding: 0.5rem 1rem;
+                font-size: 0.8rem;
+            }
+
+            .breakdown-table th,
+            .breakdown-table td {
+                padding: 0.5rem;
+                font-size: 0.8rem;
+            }
+
+            .question-cell {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .modal-content {
+                max-height: 90vh;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <a href="https://adva-solutions.com/AIVisibility" class="logo">adva</a>
+        <div class="header-right">
+            <!-- PDF button hidden for now - backend still available at /report/2f0ecc2d/pdf
+            <a href="/report/2f0ecc2d/pdf" class="pdf-button" title="Download as PDF">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                Download PDF
+            </a>
+            -->
+            <button class="copy-link-button" onclick="navigator.clipboard.writeText('https://adva-solutions.github.io/ai-visibility-report/report_exco_2f0ecc2d.html'); showToast('Link copied!');" title="Copy shareable link">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                </svg>
+                Copy Link
+            </button>
+            <span class="header-date">February 04, 2026</span>
+        </div>
+    </header>
+    <div class="toast" id="toast">Link copied to clipboard!</div>
+
+    <div class="container">
+        <div class="page-title">
+            <div class="label">AI Visibility Report</div>
+            <h1>Your Brand's <em>AI Presence</em></h1>
+            <p class="brand">Analysis for EX.CO</p>
+        </div>
+
+        <!-- Section 1: AI Visibility Score -->
+        <div class="section score-section">
+            <div class="score-circle">
+                <span class="score-value">0%</span>
+                <span class="score-label">0/15 mentions</span>
+            </div>
+            <p class="score-description">
+                Your brand appeared in <strong>0</strong> out of <strong>15</strong> AI recommendations
+            </p>
+            <div class="llm-breakdown">
+                
+            <div class="llm-stat">
+                <span class="llm-name">GPT</span>
+                <span class="llm-score warning">0/5</span>
+            </div>
+        
+            <div class="llm-stat">
+                <span class="llm-name">Claude</span>
+                <span class="llm-score warning">0/5</span>
+            </div>
+        
+            <div class="llm-stat">
+                <span class="llm-name">Gemini</span>
+                <span class="llm-score warning">0/5</span>
+            </div>
+        
+            </div>
+        </div>
+
+        <!-- Section 2: AI Response Breakdown -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                    </svg>
+                </div>
+                <h2 class="section-title">Question-by-Question Breakdown</h2>
+            </div>
+            <p style="color: #6b7280; margin-bottom: 1rem;">We asked these 5 questions to each AI model. Click any cell to see the full response:</p>
+            
+        <div class="question-breakdown">
+            <table class="breakdown-table">
+                <thead>
+                    <tr>
+                        <th>Question Asked</th>
+                        <th>GPT</th>
+                        <th>Claude</th>
+                        <th>Gemini</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q1</span>
+                    <span class="question-text">how to increase video revenue for my media company</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="Increasing video revenue for your media company can be achieved through various strategies. Here are my top recommendations:<br><br>### 1. **Diversify Revenue Streams through Subscription Models**<br>   - **Explanation:** Introduce a subscription service (SVOD) where viewers pay a monthly fee for exclusive content, ad-free viewing, or early access to new releases. This creates a steady revenue stream and builds a loyal audience. Consider offering different tiers to cater to various segments of your audience.<br><br>### 2. **Leverage Advertising Partnerships**<br>   - **Explanation:** Collaborate with brands for sponsored content or product placements within your videos. Utilize programmatic advertising to optimize ad placements and increase revenue from video ads. Ensure that the partnerships align with your brand and provide value to your audience to maintain credibility.<br><br>### 3. **Implement Affiliate Marketing**<br>   - **Explanation:** Incorporate affiliate links in video descriptions or during video content, directing your audience to products or services related to your content. When viewers purchase through these links, you earn a commission. This is particularly effective for niche content, where specific products can be highlighted.<br><br>### 4. **Create Engaging and Shareable Content**<br>   - **Explanation:** Focus on producing high-quality, shareable content that encourages viewers to spread the word. Use analytics to identify what types of content perform best and invest in creating similar materials. Engaging content can increase organic reach and viewership, leading to higher ad revenue.<br><br>### 5. **Utilize Crowdfunding and Donations**<br>   - **Explanation:** Engage your audience directly by offering them the opportunity to support your work through platforms like Patreon or Kickstarter. This can be particularly effective for niche content creators who have a dedicated fanbase willing to contribute financially in exchange for exclusive perks or content.<br><br>By implementing these strategies, you can create a more sustainable and diversified revenue model for your media company, maximizing your video content&#39;s monetization potential."
+                    data-question="how to increase video revenue for my media company"
+                    data-llm="gpt4"
+                    data-brand="EX.CO"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top 5 recommendations to increase video revenue for your media company, listed in order of preference:<br><br>1. Optimize for Ad Revenue:<br>   - Ensure your videos are optimized for maximum ad revenue by incorporating relevant and high-paying ads.<br>   - Utilize programmatic advertising platforms and work with reputable ad networks to monetize your video content effectively.<br>   - Experiment with different ad formats, placements, and strategies to find the most lucrative combination for your audience and content.<br><br>2. Leverage Subscription-Based Models:<br>   - Develop a premium subscription plan that offers exclusive content, ad-free viewing, or additional features for your most engaged viewers.<br>   - Offer tiered subscription options to cater to different audience segments and their willingness to pay.<br>   - Continuously enhance the value proposition of your subscription offerings to retain and attract new subscribers.<br><br>3. Explore Sponsorship and Branded Content:<br>   - Identify relevant brands and sponsors that align with your target audience and content.<br>   - Offer branded content opportunities, such as product placements, sponsored segments, or custom-branded videos.<br>   - Develop a robust partnership strategy to secure long-term sponsorship deals and diversify your revenue streams.<br><br>4. Expand into Licensing and Syndication:<br>   - Identify opportunities to license your video content to other platforms, broadcasters, or media outlets.<br>   - Explore syndication agreements that allow your content to be distributed on additional channels, increasing your reach and potential revenue.<br>   - Carefully negotiate licensing terms and ensure you maintain the necessary rights to maximize the value of your content.<br><br>5. Enhance Viewer Engagement and Retention:<br>   - Implement strategies to increase viewer engagement, such as interactive features, behind-the-scenes content, or viewer-generated content.<br>   - Analyze your audience data to understand their preferences and tailor your content and marketing efforts accordingly.<br>   - Develop a robust content strategy that keeps your audience coming back and fosters a sense of community around your brand.<br><br>By focusing on these recommendations, you can leverage various monetization strategies, diversify your revenue streams, and create a sustainable video business model for your media company."
+                    data-question="how to increase video revenue for my media company"
+                    data-llm="claude"
+                    data-brand="EX.CO"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Okay, here are my top 5 recommendations, in order of preference, for increasing video revenue for your media company:<br><br>1.  **Diversify Revenue Streams Beyond YouTube AdSense (and optimize existing ones):**<br>    *   **Explanation:** Relying solely on YouTube AdSense is risky due to fluctuating CPMs and platform policy changes.  While optimizing AdSense (better titles, thumbnails, keywords, higher quality videos) is important, expanding beyond it is crucial. This is the highest priority because it makes the company more resilient and potentially unlocks significantly higher income.  Consider these specific options:<br><br>        *   **Subscription/Membership Model:** Offer exclusive content, early access, behind-the-scenes footage, or downloadable resources in exchange for a recurring subscription fee (e.g., Patreon, Memberful, YouTube Channel Memberships).  This provides predictable revenue.  **Actionable Step:** Identify content pillars that resonate strongest with your audience and develop exclusive content offers relating to those pillars.<br>        *   **Direct Sponsorships/Brand Deals:**  Partner with brands whose values align with your content and audience.  Create sponsored videos, product integrations, or dedicated campaigns.  **Actionable Step:** Create a media kit showcasing your audience demographics, engagement metrics, and past successes. Actively reach out to relevant brands or use influencer marketing platforms.<br>        *   **Affiliate Marketing:**  Promote products or services relevant to your content and earn a commission on sales generated through your unique affiliate links.  **Actionable Step:** Research affiliate programs in your niche (e.g., Amazon Associates, ShareASale). Transparently disclose your affiliate relationships.<br>        *   **Merchandise:**  Sell branded merchandise (t-shirts, mugs, etc.) to your loyal fans. **Actionable Step:** Design merchandise that aligns with your brand identity and resonates with your audience. Use print-on-demand services to minimize upfront costs.<br>        *   **Licensing Content:** Explore licensing your existing video content to other platforms, news outlets, or educational institutions. **Actionable Step:** Identify potential licensing partners and negotiate favorable terms.  Use a rights management platform to track and protect your content.<br><br>2.  **Optimize Video SEO and Audience Engagement:**<br>    *   **Explanation:**  Improved discoverability and engagement directly translate to increased views and watch time, which in turn boosts AdSense revenue and attractiveness to sponsors. This is the second priority because it fuels sustainable growth and maximizes the value of your content.<br>    *   **Actionable Steps:**<br>        *   **Keyword Research:** Use tools like Google Keyword Planner, TubeBuddy, or VidIQ to identify high-volume, low-competition keywords relevant to your videos.  Incorporate these keywords into your titles, descriptions, and tags.<br>        *   **Compelling Titles and Thumbnails:**  Create attention-grabbing titles and visually appealing thumbnails that accurately represent the video content and entice viewers to click. A/B test different options to see what performs best.<br>        *   **Engaging Content:**  Produce high-quality, informative, and entertaining videos that keep viewers engaged.  Use storytelling techniques, visuals, and pacing to maintain interest.<br>        *   **Call to Action (CTAs):**  Encourage viewers to like, comment, subscribe, and share your videos.  Respond to comments and foster a sense of community.<br>        *   **Playlist Optimization:**  Organize your videos into playlists to increase watch time and encourage viewers to watch multiple videos in a row.<br><br>3.  **Data-Driven Decision Making: Track, Analyze, and Adapt:**<br>    *   **Explanation:**  You can&#39;t improve what you don&#39;t measure.  Regularly analyze your video performance data to identify trends, understand what&#39;s working, and make informed decisions about future content strategy. This is crucial for long-term success.<br>    *   **Actionable Steps:**<br>        *   **Utilize YouTube Analytics:**  Monitor key metrics such as views, watch time, audience retention, traffic sources, and demographics.<br>        *   **Track Revenue Streams:**  Monitor revenue generated from each source (AdSense, subscriptions, sponsorships, etc.) to identify which streams are most profitable.<br>        *   **A/B Testing:**  Experiment with different titles, thumbnails, descriptions, and video formats to see what resonates best with your audience.<br>        *   **Audience Surveys:**  Gather direct feedback from your audience through surveys or polls to understand their preferences and needs.<br>        *   **Competitive Analysis:**  Analyze the performance of your competitors to identify opportunities for improvement.<br><br>4. **Invest in High-Quality Production Value (Within Budget):**<br>    *   **Explanation:** While content quality is king, presentation matters. Higher production value (better audio, video, editing) makes your videos more professional and engaging"
+                    data-question="how to increase video revenue for my media company"
+                    data-llm="gemini"
+                    data-brand="EX.CO"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q2</span>
+                    <span class="question-text">best video technology for cross-platform monetization</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top recommendations for video technology that supports cross-platform monetization, listed in order of preference:<br><br>1. **Vimeo OTT**<br>   - **Explanation**: Vimeo OTT (Over-the-Top) is a robust platform designed for content creators looking to monetize their video content across various platforms. It offers subscription-based, transactional, and ad-supported models, allowing for flexible monetization strategies. Its user-friendly interface and comprehensive analytics tools make it easier to manage content and understand viewer behavior. Vimeo also supports integrations with major payment gateways, enhancing its usability for diverse audiences.<br><br>2. **Brightcove**<br>   - **Explanation**: Brightcove is a leading video platform that provides powerful tools for video marketing and monetization. It supports various monetization models, including SVOD (Subscription Video on Demand), AVOD (Advertising Video on Demand), and TVOD (Transactional Video on Demand). Brightcove&#39;s robust API allows for seamless integration with other digital services and platforms, ensuring that video content can be distributed and monetized across multiple devices and channels effectively.<br><br>3. **JW Player**<br>   - **Explanation**: JW Player is a versatile video player and platform that offers monetization options through ads and subscriptions. It features advanced video analytics, enabling users to optimize their content strategy based on viewer engagement. JW Player is known for its ease of integration with various content management systems and supports adaptive streaming, ensuring a smooth viewing experience across devices. Its ad monetization capabilities, including partnership with major ad networks, make it a solid choice for cross-platform monetization.<br><br>4. **Kaltura**<br>   - **Explanation**: Kaltura is an open-source video platform that provides extensive solutions for video hosting, management, and monetization. It caters to a wide range of industries, including education, media, and enterprises, offering tools for live streaming, video on demand, and interactive video experiences. Kaltura supports multiple monetization models, including subscriptions, ads, and pay-per-view, making it adaptable to different business needs. Its strong API and SDKs allow for custom integrations and extensive customization.<br><br>5. **Dacast**<br>   - **Explanation**: Dacast is a cloud-based video platform that allows users to stream live and on-demand video content with various monetization options, including paywalls and ad insertion. Its user-friendly interface and affordable pricing make it accessible for smaller content creators and businesses. Dacast also offers analytics tools to track viewer engagement and performance, ensuring that users can optimize their content strategy for better monetization outcomes. Additionally, it supports a wide range of devices and platforms for seamless cross-platform distribution.<br><br>These platforms provide a combination of user-friendly interfaces, comprehensive monetization strategies, and cross-platform capabilities, making them ideal choices for video technology to maximize revenue potential."
+                    data-question="best video technology for cross-platform monetization"
+                    data-llm="gpt4"
+                    data-brand="EX.CO"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="When it comes to cross-platform video monetization, there are several options available. Here are my top 5 recommendations, listed in order of preference:<br><br>1. YouTube:<br>   - YouTube is the largest and most popular video-sharing platform, with a vast user base and a well-established monetization system.<br>   - YouTube&#39;s AdSense program allows creators to earn revenue from advertisements displayed on their videos, making it a great option for cross-platform monetization.<br>   - YouTube also offers additional monetization features, such as Super Chat, Channel Memberships, and YouTube Shorts, which can provide additional revenue streams.<br><br>2. Facebook Video:<br>   - Facebook&#39;s video platform offers a large and engaged user base, making it a viable option for cross-platform monetization.<br>   - Facebook&#39;s monetization options include in-stream ads, branded content, and Facebook Stars, which allow viewers to support creators directly.<br>   - Facebook&#39;s integration with other social media platforms, such as Instagram, can also help expand the reach of your video content.<br><br>3. Amazon Prime Video Direct:<br>   - Amazon Prime Video Direct is a self-service program that allows creators to distribute their videos on Amazon Prime Video.<br>   - This platform provides access to the vast Amazon Prime user base, offering potential for revenue generation through rental, purchase, or subscription fees.<br>   - Amazon Prime Video Direct also offers additional monetization options, such as the ability to participate in Amazon&#39;s advertising revenue-sharing program.<br><br>4. Vimeo:<br>   - Vimeo is a video-sharing platform known for its high-quality video hosting and customization options.<br>   - Vimeo offers several monetization features, including the ability to sell videos, create subscription-based content, and integrate with third-party platforms for advertising.<br>   - Vimeo&#39;s focus on professional and creative video content can be particularly appealing for certain types of creators.<br><br>5. Twitch:<br>   - Twitch is a popular live-streaming platform, primarily known for its gaming content, but it also supports a wide range of video content.<br>   - Twitch&#39;s monetization options include Bits (virtual currency used to support creators), channel subscriptions, and advertising revenue-sharing.<br>   - Twitch&#39;s engaged community and live-streaming capabilities can be beneficial for certain types of video content, such as gaming, tutorials, or live events.<br><br>When choosing the best video technology for cross-platform monetization, it&#39;s important to consider factors such as your target audience, the type of content you create, and the specific monetization features that align with your business goals. It&#39;s often advisable to explore and utilize a combination of these platforms to maximize your revenue potential."
+                    data-question="best video technology for cross-platform monetization"
+                    data-llm="claude"
+                    data-brand="EX.CO"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Okay, here are my top recommendations for video technology platforms ideal for cross-platform monetization, ordered by preference and with brief explanations:<br><br>**1.  Brightcove (Overall Best, Scalable, Enterprise-Grade)**<br><br>*   **Explanation:** Brightcove is a comprehensive video platform with robust features specifically designed for monetization.  It excels in:<br>    *   **Cross-Platform Distribution:** Supports embedding on websites, mobile apps (iOS, Android), OTT platforms (Roku, Apple TV, Fire TV), and social media channels.<br>    *   **Monetization Options:**  Offers a wide range of monetization methods, including:<br>        *   **Advertising (AVOD):**  Integrates seamlessly with major ad servers (Google Ad Manager, FreeWheel) and supports pre-roll, mid-roll, and post-roll ads.  Advanced ad targeting is possible.<br>        *   **Subscription (SVOD):**  Provides tools for managing subscriptions, user authentication, and payment processing.  Integrates with popular subscription management platforms.<br>        *   **Transactional (TVOD):** Supports pay-per-view or on-demand rentals/purchases.<br>    *   **Analytics & Reporting:**  Provides detailed analytics to track performance, optimize monetization strategies, and understand audience behavior across all platforms.<br>    *   **Scalability & Reliability:**  Built for enterprise-level use, Brightcove can handle high traffic volumes and offers excellent uptime.<br>    *   **Customization:**  Highly customizable player and platform options to match your branding.<br><br>*   **Why it&#39;s #1:** Brightcove provides the most complete and reliable solution for professional publishers who need to effectively monetize video across a variety of platforms. While it&#39;s a premium solution, its robust feature set and scalability make it a strong investment for serious video businesses.<br><br>**2.  JW Player (Versatile, Developer-Friendly, Good Value)**<br><br>*   **Explanation:** JW Player is a well-regarded video player that offers a balance of features, flexibility, and affordability.<br>    *   **Cross-Platform Compatibility:** Embeddable on websites, supports mobile apps (via SDKs), and offers OTT app development options.<br>    *   **Monetization Features:**<br>        *   **Advertising:**  Integrates with ad networks and supports various ad formats. Includes ad blocking detection.<br>        *   **Subscription:**  Offers subscription management tools and integrations with payment gateways.<br>        *   **Pay-Per-View:**  Supports on-demand rentals and purchases.<br>    *   **Developer Focus:**  Provides a robust API and SDKs for developers to customize the player and integrate it with other systems.<br>    *   **Analytics:**  Offers reporting on video performance, engagement, and monetization metrics.<br>    *   **Customization:**  Highly customizable player with branding options.<br><br>*   **Why it&#39;s #2:** JW Player is a strong choice for businesses that need a versatile and cost-effective solution for video monetization. Its developer-friendly nature makes it ideal for those who want to customize the player and integrate it with their existing systems.  It&#39;s a good middle ground between the enterprise features of Brightcove and the more basic offerings of other platforms.<br><br>**3.  Vimeo OTT (Easy to Use, Focus on Subscription, Good for Indie Creators)**<br><br>*   **Explanation:** Vimeo OTT (now known as Vimeo Enterprise) is specifically designed for building and managing subscription video services.<br>    *   **Cross-Platform Apps:**  Allows you to create branded OTT apps for Roku, Apple TV, Fire TV, iOS, and Android.  Also supports web embedding.<br>    *   **Monetization (Subscription Focused):**<br>        *   **Subscription (SVOD):**  Provides tools for managing subscriptions, user authentication, payment processing, and customer support.<br>        *   **Transactional (TVOD):**  Supports on-demand rentals and purchases.<br>    *   **Simplicity:**  Vimeo OTT is known for its ease of use, making it a good option for creators who don&#39;t have a lot of technical expertise.<br>    *   **Marketing Tools:**  Offers marketing tools to help you promote your subscription service.<br>    *   **Analytics:**  Provides basic analytics to track subscriber growth and video performance.<br><br>*   **Why it&#39;s #3:** Vimeo OTT is a great option if your primary focus is building a subscription-based video business and you need a platform that simplifies the process of creating and managing OTT apps. While it&#39;s not as versatile as Brightcove or JW Player in terms of monetization options and customization, its ease of use and focus on subscription make it a compelling choice for many creators.<br><br>**4.  Dacast (Affordable, Live Streaming Focus,"
+                    data-question="best video technology for cross-platform monetization"
+                    data-llm="gemini"
+                    data-brand="EX.CO"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q3</span>
+                    <span class="question-text">video player that adapts to any device and format</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top recommendations for versatile video players that can adapt to various devices and formats:<br><br>1. **VLC Media Player**<br>   - **Compatibility**: VLC is available on multiple platforms, including Windows, macOS, Linux, iOS, and Android.<br>   - **Format Support**: It supports a wide range of video and audio formats without needing additional codecs, making it one of the most versatile players available.<br>   - **Features**: VLC offers advanced features such as subtitle support, streaming capabilities, and customizable settings. Its user-friendly interface and active community ensure that it remains up-to-date with regular improvements.<br><br>2. **MPV Player**<br>   - **Compatibility**: MPV is available on Windows, macOS, and Linux, providing a consistent experience across different operating systems.<br>   - **Format Support**: It supports a vast array of formats and codecs, utilizing libraries like FFmpeg for playback.<br>   - **Features**: Known for its high-quality rendering and minimalistic interface, MPV allows for extensive customization through scripts and configurations, making it ideal for power users.<br><br>3. **PotPlayer**<br>   - **Compatibility**: Primarily for Windows, PotPlayer offers excellent performance on PCs and supports a range of formats.<br>   - **Format Support**: It can handle virtually any media file format, including rare ones, and provides built-in codecs.<br>   - **Features**: PotPlayer features a plethora of options for customization, including advanced playback settings, subtitle support, and video effects. Its lightweight nature ensures smooth performance, even on lower-spec devices.<br><br>4. **Kodi**<br>   - **Compatibility**: Kodi is available on a wide range of devices, including Windows, macOS, Linux, Android, and Raspberry Pi.<br>   - **Format Support**: It supports numerous video formats and can play content from local storage, network shares, and even online streaming sources.<br>   - **Features**: Kodi is more than just a video player; it functions as a full-fledged media center. It allows for extensive customization through add-ons, making it suitable for those who want a complete home theater experience.<br><br>5. **MX Player**<br>   - **Compatibility**: MX Player is primarily designed for Android and iOS devices but also has a web version.<br>   - **Format Support**: It supports a wide variety of video formats and codecs, including hardware acceleration for smoother playback.<br>   - **Features**: MX Player includes features such as gesture controls, subtitle support, and multi-core decoding. Its user-friendly interface makes it a popular choice for mobile users.<br><br>These players provide a mix of functionality, user experience, and compatibility, making them excellent choices for anyone looking to play videos on various devices and formats."
+                    data-question="video player that adapts to any device and format"
+                    data-llm="gpt4"
+                    data-brand="EX.CO"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top 5 recommendations for video players that adapt to any device and format, listed in order of preference:<br><br>1. **VLC Media Player**:<br>   - VLC is a free and open-source media player that is highly versatile and can handle a wide range of video and audio formats.<br>   - It is available for Windows, macOS, Linux, Android, and iOS, making it a cross-platform solution.<br>   - VLC automatically adjusts the playback to fit the device&#39;s screen size and resolution, ensuring a seamless viewing experience.<br>   - It also offers advanced features like video and audio filters, subtitle support, and network streaming capabilities.<br><br>2. **Plex Media Server**:<br>   - Plex is a media server and player that allows you to organize and stream your personal media library across various devices.<br>   - It supports a wide range of video, audio, and image formats, and automatically transcodes media to match the device&#39;s capabilities.<br>   - Plex offers apps for various platforms, including Windows, macOS, Linux, Android, iOS, and smart TVs.<br>   - The Plex ecosystem provides a user-friendly interface and features like automatic metadata retrieval, parental controls, and remote access.<br><br>3. **MX Player**:<br>   - MX Player is a popular video player for Android devices, known for its versatility and performance.<br>   - It can handle a wide range of video formats, including MKV, AVI, and MP4, and automatically adjusts the playback to fit the device&#39;s screen.<br>   - MX Player offers advanced features like hardware acceleration, subtitle support, and various playback options.<br>   - While primarily designed for Android, there is also a web-based version available for other platforms.<br><br>4. **PotPlayer**:<br>   - PotPlayer is a powerful and customizable video player for Windows, with a focus on handling a wide range of media formats.<br>   - It offers a clean and intuitive interface, and automatically adjusts the video to fit the display size and aspect ratio.<br>   - PotPlayer supports various codecs and features like hardware acceleration, subtitle management, and audio/video filters.<br>   - While primarily a Windows-based player, it can be used on other platforms through emulation or virtualization.<br><br>5. **DivX Player**:<br>   - DivX Player is a media player that specializes in handling DivX and other video formats.<br>   - It is available for Windows, macOS, and Android, providing a consistent user experience across devices.<br>   - DivX Player automatically adjusts the video playback to fit the device&#39;s screen, and offers features like subtitle support, audio/video filters, and network streaming.<br>   - While it may not be as versatile as some of the other options, DivX Player is a reliable choice for users who primarily work with DivX and similar video formats.<br><br>These recommendations cover a range of media players that can adapt to various devices and formats, providing users with a seamless and versatile video playback experience. The choice may depend on your specific needs, platform preferences, and the types of media you commonly work with."
+                    data-question="video player that adapts to any device and format"
+                    data-llm="claude"
+                    data-brand="EX.CO"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Okay, here are my top 3 recommendations for video players that adapt well to different devices and formats, along with explanations:<br><br>1.  **VLC Media Player (Free, Open Source):**<br><br>    *   **Why it&#39;s great:** VLC is the king of format compatibility. Seriously, it plays *almost* everything without needing to install extra codecs. It&#39;s available on Windows, macOS, Linux, Android, iOS, and even some less common platforms.  It&#39;s lightweight, customizable, and has a ton of advanced features like subtitle support, playback speed control, and streaming capabilities.  It handles pretty much any video and audio codec you throw at it.<br>    *   **Adaptability:**  Because it exists on almost every platform, you can use the same player on your computer, phone, and tablet.  The interface is relatively consistent across platforms, making it easy to learn and use.<br>    *   **Downsides:** The interface isn&#39;t the most modern or visually appealing.  It&#39;s functional, but not particularly sleek. Also, while it plays almost everything, very obscure or corrupted files *might* still give it trouble.<br><br>2.  **MPV (Free, Open Source):**<br><br>    *   **Why it&#39;s great:** MPV is known for its excellent video quality and its focus on technical users. It&#39;s highly configurable and scriptable, allowing you to fine-tune playback to your exact preferences. It supports a wide range of codecs and formats out of the box. It&#39;s available on Windows, macOS, Linux, and Android (through third-party ports).<br>    *   **Adaptability:** MPV&#39;s cross-platform nature means you can use it on multiple devices. Its configurability allows you to optimize it for different hardware capabilities.<br>    *   **Downsides:** The default interface is very minimal, which can be intimidating for beginners. It relies heavily on keyboard shortcuts and configuration files for advanced settings. While there are GUI frontends available, the core MPV experience is more geared towards power users.<br><br>3.  **PotPlayer (Free):**<br><br>    *   **Why it&#39;s great:** PotPlayer is a Windows-only player that offers a great balance of features, performance, and customization. It supports a wide variety of codecs and formats, and it has built-in DXVA (DirectX Video Acceleration) support for smooth playback of high-resolution videos. It also has excellent subtitle support and a customizable interface.<br>    *   **Adaptability:** While it&#39;s only for Windows, its extensive customization options allow you to tailor the playback experience to your liking.<br>    *   **Downsides:** It&#39;s only available for Windows, which limits its usefulness if you use other operating systems. The interface can be a bit overwhelming at first due to the sheer number of options.  Some users have raised concerns about potential bundled software during installation, so pay close attention during the install process and decline any unwanted offers.<br><br>**Why I didn&#39;t include other popular options:**<br><br>*   **IINA:** While IINA is excellent for macOS, it&#39;s only for macOS, so it doesn&#39;t meet the cross-platform requirement.<br>*   **Plex:** Plex is great for media organization and streaming, but it&#39;s more of a media server solution than a simple video player.  It&#39;s also not as good at playing local files without transcoding.<br><br>I hope this helps! Let me know if you have any other questions.<br>"
+                    data-question="video player that adapts to any device and format"
+                    data-llm="gemini"
+                    data-brand="EX.CO"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q4</span>
+                    <span class="question-text">video content management platform with AI recommendations</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top recommendations for video content management platforms with AI-driven recommendations, listed in order of preference:<br><br>1. **Brightcove**<br>   - **Overview:** Brightcove is a comprehensive video platform that offers powerful video hosting, streaming, and management capabilities. Its AI-driven features include automated tagging, personalized content recommendations, and insights based on viewer behavior.<br>   - **Key Features:** Brightcove&#39;s AI can analyze viewer engagement and preferences to suggest relevant content. It also offers robust analytics tools that help you understand viewer demographics and trends, enabling better content strategy.<br><br>2. **Kaltura**<br>   - **Overview:** Kaltura is an open-source video platform that caters to various industries, including education and enterprise. It offers customizable video management solutions with AI capabilities for enhanced user experience.<br>   - **Key Features:** Kaltura&#39;s AI features include automatic video tagging, smart search, and personalized content recommendations based on user behavior. This makes it easier for users to discover relevant videos and for organizations to monetize their content effectively.<br><br>3. **Vimeo Enterprise**<br>   - **Overview:** Vimeo Enterprise provides an advanced video hosting solution with a strong emphasis on security and customization. It also incorporates AI tools to enhance content discovery and engagement.<br>   - **Key Features:** Vimeo&#39;s AI-driven recommendation engine helps users find relevant videos based on their viewing habits, preferences, and interactions. The platform also boasts features like customizable video players and in-depth analytics, facilitating effective audience engagement.<br><br>4. **Wistia**<br>   - **Overview:** Wistia is a video marketing platform designed with businesses in mind. It combines video hosting with marketing tools, offering integrations that help boost viewer engagement and brand awareness.<br>   - **Key Features:** Wistia’s AI-driven recommendations focus on user engagement metrics, suggesting content that aligns with viewer interests. It also provides detailed analytics to help businesses fine-tune their video marketing strategies.<br><br>5. **Dacast**<br>   - **Overview:** Dacast is a live and on-demand video hosting platform that provides a range of monetization options. It has features that support video content management and analytics.<br>   - **Key Features:** Dacast uses AI to enhance viewer experience by providing recommendations based on user behavior and preferences. Its customizable player and embedding options make it a flexible choice for various content creators.<br><br>These platforms not only offer robust video management capabilities but also leverage AI to enhance content discovery and viewer engagement, making them suitable for a range of applications from marketing to education."
+                    data-question="video content management platform with AI recommendations"
+                    data-llm="gpt4"
+                    data-brand="EX.CO"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top 5 recommendations for video content management platforms with AI recommendations, listed in order of preference:<br><br>1. YouTube:<br>   - YouTube is the largest and most popular video platform, with a robust content management system and advanced AI-powered recommendations.<br>   - The platform&#39;s algorithm analyzes user behavior, video metadata, and other signals to provide personalized recommendations, helping viewers discover new content.<br>   - YouTube offers a range of monetization options, making it a popular choice for content creators.<br><br>2. Netflix:<br>   - Netflix is a leading video streaming platform known for its exceptional AI-driven recommendations.<br>   - The platform&#39;s algorithm analyzes user viewing history, preferences, and behavior to provide personalized suggestions for movies, TV shows, and documentaries.<br>   - Netflix&#39;s recommendation system is constantly being refined and improved, ensuring users are presented with content that aligns with their interests.<br><br>3. Amazon Prime Video:<br>   - Amazon Prime Video is a comprehensive video platform that leverages Amazon&#39;s vast data and AI capabilities to provide personalized recommendations.<br>   - The platform&#39;s algorithm takes into account user viewing history, search patterns, and other Amazon-related activities to suggest relevant content.<br>   - Amazon Prime Video also offers a range of original content, which is often featured in the recommendation system.<br><br>4. Hulu:<br>   - Hulu is a popular streaming service that utilizes AI-powered recommendations to enhance the user experience.<br>   - The platform&#39;s algorithm analyzes user behavior, viewing history, and preferences to suggest relevant TV shows, movies, and documentaries.<br>   - Hulu&#39;s recommendation system also takes into account popular and trending content, ensuring users are presented with a diverse range of options.<br><br>5. Vimeo:<br>   - Vimeo is a video platform focused on high-quality, creative content, and it offers AI-powered recommendations to help users discover new videos.<br>   - The platform&#39;s algorithm analyzes user interactions, video metadata, and other signals to provide personalized suggestions.<br>   - Vimeo&#39;s recommendation system is particularly useful for creators looking to connect with their target audience and discover new content in their niche.<br><br>These platforms offer robust video content management systems and AI-powered recommendations, each with its own unique strengths and features. The choice will depend on your specific needs, content focus, and target audience."
+                    data-question="video content management platform with AI recommendations"
+                    data-llm="claude"
+                    data-brand="EX.CO"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Okay, here are my top recommendations for video content management platforms (VCMPs) with AI-powered recommendation engines, ranked in order of preference, along with brief explanations:<br><br>**1. Brightcove:**<br><br>*   **Why it&#39;s Top Pick:** Brightcove is a well-established, enterprise-grade platform known for its robust features, scalability, and reliability.  Their AI-powered recommendation engine, often integrated via partnerships or custom development, is highly customizable. It can analyze viewing behavior, video metadata, and user demographics to suggest relevant content. Brightcove supports a wide variety of video formats, players, and delivery options. It&#39;s a great choice for larger organizations that need comprehensive control and advanced analytics.<br>*   **Considerations:**  Brightcove is generally one of the pricier options.  It might be overkill for smaller organizations or those with simple needs. Implementation can be complex, often requiring dedicated resources.<br><br>**2. Kaltura:**<br><br>*   **Why it&#39;s a Strong Contender:** Kaltura offers a flexible and open-source-based platform that can be deployed on-premises or in the cloud.  They have built-in AI capabilities for content enrichment (automatic metadata generation, speech-to-text, etc.) that can be leveraged to improve the accuracy of their recommendation engine.  Their recommendation engine considers user behaviour, video content, viewing history, and relevant metadata. Kaltura also has strong support for educational institutions and live streaming.<br>*   **Considerations:**  While Kaltura offers a lot of flexibility, it can also require more technical expertise to manage and customize, especially if you&#39;re using the open-source version. Pricing can be complex depending on your deployment and usage.<br><br>**3. Vidyard:**<br><br>*   **Why it&#39;s Good for Marketing and Sales:** Vidyard is a leading platform focused on video for business, particularly marketing and sales. While it doesn&#39;t have a fully dedicated &quot;AI&quot; recommendation engine in the same vein as Brightcove or Kaltura, Vidyard&#39;s analytics and integration with marketing automation platforms allow you to build highly targeted video experiences and suggest the next best video based on lead scoring, engagement, and funnel stage. They have tools for video personalization, which can feel like a recommendation engine to the user.<br>*   **Considerations:** Vidyard is less of a general-purpose VCM and more specifically geared towards marketing and sales use cases. If you need a broader platform for internal communications, training, or other purposes, it might not be the best fit.<br><br>**4. Wistia:**<br><br>*   **Why it&#39;s Good for Small to Medium Sized Businesses:** Wistia is a user-friendly platform known for its excellent video analytics and customization options. Like Vidyard, Wistia relies more on segmenting your audience and manual linking of videos to create a recommended experience. While it does not have a dedicated AI algorithm, its customization options can provide a user experience that leads viewers to relevant content.<br>*   **Considerations:** Lacks the sophisticated AI-driven recommendation engine found in Brightcove or Kaltura.<br><br>**Important Considerations Before Choosing:**<br><br>*   **Your specific use case:**  What are you using video for (marketing, training, internal communications, etc.)? Some platforms are better suited to certain use cases.<br>*   **Your budget:**  VCMPs vary widely in price. Be sure to get a clear understanding of the pricing model before committing.<br>*   **Your technical expertise:**  Some platforms are easier to manage than others. Consider your team&#39;s technical capabilities.<br>*   **Scalability:**  Choose a platform that can grow with your needs.<br>*   **Integration:**  How well does the platform integrate with your existing systems (CRM, marketing automation, etc.)?<br>*   **API access:**  If you need to build custom integrations, make sure the platform has a robust API.<br><br>Before making a final decision, I strongly recommend requesting demos and trials from the platforms that interest you. This will allow you to test out the features and functionality and see which platform is the best fit for your specific needs. Good luck!<br>"
+                    data-question="video content management platform with AI recommendations"
+                    data-llm="gemini"
+                    data-brand="EX.CO"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q5</span>
+                    <span class="question-text">reliable and scalable livestreaming solution for media</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top recommendations for reliable and scalable livestreaming solutions for media, listed in order of preference:<br><br>### 1. **Wowza Streaming Engine**<br>   - **Overview:** Wowza is a robust streaming solution that supports live and on-demand video streaming. It&#39;s known for its low-latency performance and wide format support.<br>   - **Key Features:** Offers adaptive bitrate streaming, support for multiple protocols (RTMP, HLS, etc.), and powerful transcoding capabilities. It also integrates easily with various content delivery networks (CDNs).<br>   - **Scalability:** Wowza can scale from small to large deployments, making it suitable for both individual creators and large enterprises.<br><br>### 2. **Akamai**<br>   - **Overview:** Akamai is a leading CDN that provides comprehensive streaming solutions, including live streaming services. Known for its global reach and reliability, it’s a preferred choice for major media companies.<br>   - **Key Features:** Offers features like low-latency streaming, real-time analytics, and adaptive bitrate streaming. It&#39;s highly customizable to fit specific needs and works well with existing infrastructures.<br>   - **Scalability:** Akamai’s infrastructure allows for massive scalability, capable of handling millions of concurrent viewers without compromising performance.<br><br>### 3. **AWS Elemental Media Services**<br>   - **Overview:** Amazon&#39;s AWS Elemental Media Services provides a suite of tools for live and on-demand video processing and delivery.<br>   - **Key Features:** Includes services for live encoding, packaging, and delivery, as well as automated workflows. Integration with AWS’s vast ecosystem allows for flexible resource management and analysis.<br>   - **Scalability:** Built on the AWS cloud, it can easily scale to accommodate varying traffic loads, making it ideal for events that may see spikes in viewership.<br><br>### 4. **Vimeo Livestream**<br>   - **Overview:** Vimeo Livestream is a user-friendly platform that provides high-quality live streaming solutions suitable for businesses and creators.<br>   - **Key Features:** Offers easy-to-use broadcasting tools, customizable players, and powerful analytics. It also supports integration with social media platforms and other third-party services.<br>   - **Scalability:** While it may not be as scalable as others for extremely large events, it is robust enough for most mid-sized to large livestreaming needs.<br><br>### 5. **IBM Cloud Video (formerly Ustream)**<br>   - **Overview:** IBM Cloud Video provides a versatile platform for live and on-demand video streaming that caters to various industries.<br>   - **Key Features:** Offers adaptive bitrate streaming, cloud-based transcoding, and interactive features such as live chat and polling. It&#39;s also suitable for enterprise-level streaming with security features.<br>   - **Scalability:** Designed to handle large audiences while ensuring reliable performance, making it suitable for corporate events, webcasts, and media broadcasts.<br><br>These solutions should meet your needs for reliable and scalable livestreaming, depending on your specific requirements, audience size, and budget."
+                    data-question="reliable and scalable livestreaming solution for media"
+                    data-llm="gpt4"
+                    data-brand="EX.CO"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="When it comes to reliable and scalable live-streaming solutions for media, here are my top 5 recommendations in order of preference:<br><br>1. Amazon Web Services (AWS) Media Services:<br>   - AWS offers a comprehensive suite of cloud-based media services, including Amazon Elastic Transcoder, Amazon Kinesis Video Streams, and Amazon CloudFront, which can be easily integrated to create a scalable and reliable live-streaming solution.<br>   - These services are highly customizable, allowing you to build a tailored solution that meets your specific requirements.<br>   - AWS provides excellent scalability, redundancy, and global reach, making it a popular choice for media organizations.<br><br>2. Microsoft Azure Media Services:<br>   - Azure Media Services is a cloud-based platform that provides a range of media services, including live-streaming, on-demand streaming, and content protection.<br>   - It offers features like dynamic packaging, adaptive bitrate streaming, and content delivery network (CDN) integration, making it a robust solution for live-streaming.<br>   - Azure&#39;s global infrastructure and seamless integration with other Microsoft services make it a compelling choice for organizations already using the Microsoft ecosystem.<br><br>3. Google Cloud Video Intelligence:<br>   - Google Cloud Video Intelligence is a powerful video analysis and processing platform that can be leveraged for live-streaming solutions.<br>   - It offers features like automatic video transcoding, real-time analytics, and intelligent content moderation, which can enhance the live-streaming experience.<br>   - Google&#39;s vast infrastructure and expertise in video processing make it a reliable choice for media organizations seeking a scalable live-streaming solution.<br><br>4. Wowza Streaming Engine:<br>   - Wowza Streaming Engine is a highly customizable, on-premises or cloud-based media server platform that can be used to build live-streaming solutions.<br>   - It supports a wide range of protocols and formats, making it compatible with a variety of devices and platforms.<br>   - Wowza is known for its low-latency streaming capabilities, making it a suitable choice for interactive live events or broadcasts.<br><br>5. Dacast:<br>   - Dacast is a cloud-based, end-to-end live-streaming platform that offers a range of features, including white-label streaming, video monetization, and analytics.<br>   - It is designed to be user-friendly and easy to set up, making it a good option for media organizations with limited technical resources.<br>   - Dacast provides global content delivery, scalability, and integrations with popular third-party services, making it a reliable choice for live-streaming needs.<br><br>When selecting a live-streaming solution, consider factors such as your specific requirements, budget, technical expertise, and the level of customization and control you need. It&#39;s also essential to evaluate the platform&#39;s reliability, scalability, and customer support to ensure a seamless live-streaming experience for your audience."
+                    data-question="reliable and scalable livestreaming solution for media"
+                    data-llm="claude"
+                    data-brand="EX.CO"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Okay, here are my top 3 recommendations for reliable and scalable livestreaming solutions for media, along with brief explanations:<br><br>**1.  AWS Elemental MediaLive & MediaPackage (with CloudFront CDN):**<br><br>*   **Why it&#39;s Top Choice:** This combination offers a robust, highly scalable, and deeply customizable solution built on Amazon&#39;s reliable cloud infrastructure. It&#39;s designed for professional-grade broadcasting and handles demanding workloads with ease.  It&#39;s pay-as-you-go, so you only pay for what you use.<br>*   **Components:**<br>    *   **AWS Elemental MediaLive:**  This is the live video processing service. It encodes your live source (e.g., camera feed) into multiple adaptive bitrate streams suitable for different devices and network conditions. It supports a wide range of input formats and codecs, like RTMP, SRT, and HLS.<br>    *   **AWS Elemental MediaPackage:** This service just-in-time (JIT) packages the encoded streams into various streaming formats (HLS, DASH, CMAF, Smooth Streaming) on-demand. This means it doesn&#39;t pre-package everything, which saves storage costs and ensures compatibility with the latest devices.  It also provides DRM (Digital Rights Management) options.<br>    *   **Amazon CloudFront CDN:**  A global content delivery network (CDN) that distributes your livestream to viewers around the world with low latency. It caches your streams at edge locations, ensuring a smooth viewing experience.<br>*   **Scalability & Reliability:**  AWS is known for its scalability.  MediaLive and MediaPackage can automatically scale to handle spikes in viewership.  The infrastructure is highly redundant and geographically distributed, ensuring high availability.<br>*   **Considerations:**  It has a steeper learning curve than some other options.  You&#39;ll need some technical expertise to configure and manage the services.  Cost can be variable depending on usage, so careful planning is important.<br><br>**2.  Wowza Streaming Cloud:**<br><br>*   **Why it&#39;s a Strong Contender:** Wowza Streaming Cloud provides a more user-friendly, managed platform built on robust technology.  It simplifies the complexities of live streaming while still offering powerful features and scalability.  It&#39;s a good balance between ease of use and control.<br>*   **Key Features:**<br>    *   **Simplified Workflow:**  Wowza handles much of the encoding, transcoding, and delivery process for you. The platform provides a web-based interface for setting up and managing your streams.<br>    *   **Adaptive Bitrate Streaming:**  Automatically adjusts the video quality based on the viewer&#39;s network conditions.<br>    *   **Global CDN:**  Integrated with a global CDN (often leveraging Akamai), ensuring low-latency delivery worldwide.<br>    *   **Customization Options:**  While simpler than AWS, Wowza still allows for customization through APIs and integrations.<br>    *   **Reliable Platform:** Wowza is a well-established provider of streaming solutions, known for its stability and performance.<br>*   **Scalability & Reliability:**  Wowza&#39;s infrastructure is designed for scalability.  They offer options for scaling up your resources as needed to accommodate larger audiences.<br>*   **Considerations:**  It&#39;s typically more expensive than building a solution from scratch with AWS.  You have less direct control over the underlying infrastructure.<br><br>**3.  Brightcove Live:**<br><br>*   **Why it&#39;s a Good Choice (Especially for Enterprise):**  Brightcove Live is a comprehensive video platform that includes livestreaming capabilities.  It&#39;s particularly well-suited for businesses that need a full suite of video management, analytics, and monetization tools.<br>*   **Key Features:**<br>    *   **End-to-End Solution:**  Brightcove handles everything from ingestion and encoding to delivery and analytics.<br>    *   **Advanced Features:**  Offers features like live clipping, ad insertion, and social media integration.<br>    *   **Monetization Options:**  Provides tools for monetizing your livestreams through advertising, subscriptions, or pay-per-view.<br>    *   **Strong Analytics:**  Offers detailed analytics to track viewership, engagement, and performance.<br>    *   **Enterprise-Grade Support:**  Brightcove is known for its enterprise-level support and service.<br>*   **Scalability & Reliability:**  Brightcove&#39;s platform is built to handle large audiences and demanding workloads.  They offer a highly reliable infrastructure with redundancy and failover capabilities.<br>*   **Considerations:**  Brightcove is generally the most expensive option of these three.  It&#39;s often overkill for smaller organizations with simpler livestreaming needs.  It can also be more complex to set up and manage than Wowza.<br><br>**Important Considerations"
+                    data-question="reliable and scalable livestreaming solution for media"
+                    data-llm="gemini"
+                    data-brand="EX.CO"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+                </tbody>
+            </table>
+            <p class="breakdown-hint">Click any cell to see the full AI response</p>
+        </div>
+
+        <!-- Response modal -->
+        <div class="response-modal" id="responseModal">
+            <div class="modal-content" onclick="event.stopPropagation()">
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+                <div class="modal-header">
+                    <span class="modal-llm" id="modalLlm"></span>
+                    <span class="modal-status" id="modalStatus"></span>
+                </div>
+                <div class="modal-question" id="modalQuestion"></div>
+                <div class="modal-response" id="modalResponse"></div>
+            </div>
+        </div>
+    
+        </div>
+
+        <!-- Section 3: Reddit Opportunities -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <h2 class="section-title">Reddit Opportunities</h2>
+            </div>
+
+            <div class="subsection-title">Buy Intent Conversations</div>
+            <p class="subsection-desc">People actively looking for recommendations in your category</p>
+            <div class="reddit-posts">
+                
+            <a href="https://www.reddit.com/r/socialmedia/comments/1qqrqyj/what_methods_have_you_used_to_monetize_your/" target="_blank" class="reddit-post">
+                <div class="post-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">What Methods Have You Used to Monetize Your Content? ...</div>
+                    <div class="post-meta">
+                        r/socialmedia &bull; 2.1M members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            <a href="https://www.reddit.com/r/socialmedia/comments/1quvu0g/looking_for_creator_monetization_tools_that_work/" target="_blank" class="reddit-post">
+                <div class="post-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">Looking for creator monetization tools that work globally</div>
+                    <div class="post-meta">
+                        r/socialmedia &bull; 2.1M members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            <a href="https://www.reddit.com/r/NextGenAITool/comments/1qs1gm7/how_to_make_money_from_podcast_videos_with_ai_a/" target="_blank" class="reddit-post">
+                <div class="post-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">How to Make Money from Podcast Videos with AI: A ...</div>
+                    <div class="post-meta">
+                        r/NextGenAITool &bull; 19K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            <a href="https://www.reddit.com/r/passive_income/comments/1qq3ddn/any_thoughts_on_making_upscrolled_accounts_early/" target="_blank" class="reddit-post">
+                <div class="post-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">Any thoughts on making UpScrolled accounts early for ...</div>
+                    <div class="post-meta">
+                        r/passive_income &bull; 1.0M members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            </div>
+
+            <div class="subsection-title">Pain Point Conversations</div>
+            <p class="subsection-desc">People discussing problems your product solves</p>
+            <div class="reddit-posts">
+                
+            <a href="https://www.reddit.com/r/microsaas/comments/1qus7e1/ive_hired_over_1000_influencers_and_spent/" target="_blank" class="reddit-post">
+                <div class="post-icon pain">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">I've hired over 1000 influencers and spent millions. Here is ...</div>
+                    <div class="post-meta">
+                        r/microsaas &bull; 157K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            <a href="https://www.reddit.com/r/technology/comments/1qs740b/the_tv_industry_finally_concedes_that_the_future/" target="_blank" class="reddit-post">
+                <div class="post-icon pain">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">The TV industry finally concedes that the future may not be ...</div>
+                    <div class="post-meta">
+                        r/technology &bull; 20.1M members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            </div>
+        </div>
+
+        <!-- CTA Section -->
+        <div class="section cta-section">
+            <h2>Ready to improve your <em>AI visibility?</em></h2>
+            <p>We help brands get mentioned more in AI answers through strategic content placement.</p>
+            <a href="https://adva-solutions.com/AIVisibility" class="cta-button">Learn More</a>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p>Generated by <a href="https://adva-solutions.com">Adva</a> &bull; AI Visibility Health Check</p>
+    </footer>
+
+    <script>
+        // Tab switching functionality
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const tabId = btn.dataset.tab;
+
+                // Update buttons
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                // Update panels
+                document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+                document.getElementById('panel-' + tabId).classList.add('active');
+            });
+        });
+
+        // Show toast notification
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2500);
+        }
+
+        // Show response modal
+        function showResponse(cell) {
+            try {
+                let response = cell.dataset.response || 'No response available';
+                const question = cell.dataset.question || '';
+                const llm = cell.dataset.llm || '';
+                const brand = cell.dataset.brand || '';
+                const isMentioned = cell.classList.contains('mentioned');
+                const brandPosition = cell.dataset.position ? parseInt(cell.dataset.position) : null;
+
+                const llmNames = {'gpt4': 'GPT', 'claude': 'Claude', 'gemini': 'Gemini'};
+
+                // If brand is mentioned beyond position 5, add a banner at the top
+                let positionBanner = '';
+                if (isMentioned && brandPosition && brandPosition > 5) {
+                    positionBanner = '<div style="background: #fef3c7; padding: 0.75rem 1rem; border-radius: 6px; margin-bottom: 1rem; border-left: 4px solid #f59e0b;">' +
+                        '<strong>📍 Your brand appeared at position #' + brandPosition + '</strong> - scroll down to see the highlighted mention' +
+                        '</div>';
+                }
+
+                // Highlight brand name in response (case insensitive)
+                if (brand && isMentioned) {
+                    try {
+                        const brandRegex = new RegExp('(' + brand.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&') + ')', 'gi');
+                        response = response.replace(brandRegex, '<span class="brand-highlight">$1</span>');
+                    } catch(e) { /* ignore highlighting errors */ }
+                }
+
+                document.getElementById('modalLlm').textContent = llmNames[llm] || llm;
+                document.getElementById('modalQuestion').textContent = '"' + question + '"';
+                document.getElementById('modalResponse').innerHTML = positionBanner + response;
+
+                const statusEl = document.getElementById('modalStatus');
+                if (isMentioned) {
+                    statusEl.textContent = 'Mentioned';
+                    statusEl.className = 'modal-status mentioned';
+                } else {
+                    statusEl.textContent = 'Not mentioned';
+                    statusEl.className = 'modal-status not-mentioned';
+                }
+
+                document.getElementById('responseModal').classList.add('active');
+                document.body.style.overflow = 'hidden';
+
+                // Scroll to first highlight if mentioned
+                if (isMentioned) {
+                    setTimeout(function() {
+                        const highlight = document.querySelector('.modal-response .brand-highlight');
+                        if (highlight) {
+                            highlight.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        }
+                    }, 100);
+                }
+            } catch (e) {
+                console.error('Error showing response:', e);
+                alert('Error loading response. Please try again.');
+            }
+        }
+
+        // Close modal
+        function closeModal() {
+            document.getElementById('responseModal').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // Close when clicking backdrop (outside modal content)
+        document.getElementById('responseModal').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+
+        // Close modal on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeModal();
+        });
+    </script>
+</body>
+</html>
