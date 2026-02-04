@@ -1,0 +1,1370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Visibility Report - Treet | Adva</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #ffffff;
+            min-height: 100vh;
+            color: #374151;
+            line-height: 1.6;
+        }
+
+        /* Header */
+        .header {
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            font-size: 1.25rem;
+            color: #1f2937;
+            text-decoration: none;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .header-date {
+            color: #9ca3af;
+            font-size: 0.875rem;
+        }
+
+        /* Copy link button */
+        .copy-link-button {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: #f3f4f6;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            color: #374151;
+            font-size: 0.75rem;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .copy-link-button:hover {
+            background: #e5e7eb;
+        }
+
+        .copy-link-button svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        .pdf-button {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: #1f2937;
+            border: none;
+            border-radius: 6px;
+            color: #ffffff;
+            font-size: 0.75rem;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .pdf-button:hover {
+            background: #374151;
+        }
+
+        .pdf-button svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        /* Toast notification */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: #1f2937;
+            color: #ffffff;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            opacity: 0;
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        /* Container */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Page title */
+        .page-title {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .page-title .label {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: #9ca3af;
+            font-size: 0.75rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+        }
+
+        .page-title .label::before,
+        .page-title .label::after {
+            content: '';
+            width: 30px;
+            height: 1px;
+            background: #d1d5db;
+        }
+
+        .page-title h1 {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 2.5rem;
+            font-weight: 400;
+            color: #1f2937;
+            margin-bottom: 0.5rem;
+        }
+
+        .page-title .brand {
+            color: #6b7280;
+            font-size: 1.125rem;
+        }
+
+        /* Sections */
+        .section {
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #f3f4f6;
+        }
+
+        .section-icon {
+            width: 40px;
+            height: 40px;
+            background: #1f2937;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .section-icon svg {
+            width: 20px;
+            height: 20px;
+            color: #ffffff;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 1.375rem;
+            color: #1f2937;
+        }
+
+        /* Score Section */
+        .score-section {
+            text-align: center;
+            padding: 3rem 2rem;
+        }
+
+        .score-circle {
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            background: #fafafa;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            border: 4px solid #ef4444;
+        }
+
+        .score-value {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 3rem;
+            font-weight: 500;
+            color: #ef4444;
+        }
+
+        .score-label {
+            font-size: 0.8rem;
+            color: #9ca3af;
+        }
+
+        .score-description {
+            color: #6b7280;
+            margin-bottom: 2rem;
+            font-size: 1rem;
+        }
+
+        .score-description strong {
+            color: #1f2937;
+        }
+
+        .llm-breakdown {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .llm-stat {
+            text-align: center;
+            padding: 1rem 1.5rem;
+            background: #fafafa;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+            min-width: 100px;
+        }
+
+        .llm-name {
+            display: block;
+            color: #9ca3af;
+            font-size: 0.8rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .llm-score {
+            font-size: 1.125rem;
+            font-weight: 600;
+        }
+
+        .llm-score.success {
+            color: #22c55e;
+        }
+
+        .llm-score.warning {
+            color: #ef4444;
+        }
+
+        /* Competitor Table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 0.875rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid #f3f4f6;
+        }
+
+        th {
+            color: #9ca3af;
+            font-weight: 500;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        td {
+            color: #374151;
+        }
+
+        .mention-count {
+            background: #fef3c7;
+            color: #92400e;
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        /* Tabs for LLM responses */
+        .example-tabs {
+            margin-top: 1.5rem;
+        }
+
+        .tabs-header {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+            padding-bottom: 0;
+        }
+
+        .tab-btn {
+            padding: 0.75rem 1.25rem;
+            background: transparent;
+            border: none;
+            color: #6b7280;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            margin-bottom: -1px;
+            transition: all 0.2s;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .tab-btn:hover {
+            color: #1f2937;
+        }
+
+        .tab-btn.active {
+            color: #1f2937;
+            border-bottom-color: #1f2937;
+        }
+
+        .tab-panel {
+            display: none;
+            background: #fafafa;
+            border-radius: 8px;
+            padding: 1.25rem;
+        }
+
+        .tab-panel.active {
+            display: block;
+        }
+
+        .example-question {
+            color: #1f2937;
+            font-weight: 500;
+            font-size: 0.95rem;
+            margin-bottom: 0.75rem;
+        }
+
+        /* Question breakdown table */
+        .question-breakdown {
+            margin-top: 1rem;
+        }
+
+        .breakdown-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        .breakdown-table th {
+            padding: 0.75rem;
+            text-align: center;
+            background: #f9fafb;
+            border-bottom: 2px solid #e5e7eb;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .breakdown-table th:first-child {
+            text-align: left;
+            width: 50%;
+        }
+
+        .breakdown-table td {
+            padding: 0.75rem;
+            border-bottom: 1px solid #f3f4f6;
+            vertical-align: middle;
+        }
+
+        .question-cell {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+        }
+
+        .question-num {
+            background: #e5e7eb;
+            color: #374151;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        .question-text {
+            color: #374151;
+            line-height: 1.4;
+        }
+
+        .llm-cell {
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-radius: 4px;
+        }
+
+        .llm-cell:hover {
+            background: #f3f4f6;
+        }
+
+        .llm-cell.mentioned {
+            color: #16a34a;
+        }
+
+        .llm-cell.mentioned .status-icon {
+            font-size: 1.25rem;
+        }
+
+        .llm-cell.not-mentioned {
+            color: #dc2626;
+        }
+
+        .llm-cell.not-mentioned .status-icon {
+            font-size: 1.25rem;
+        }
+
+        .breakdown-hint {
+            color: #9ca3af;
+            font-size: 0.8rem;
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+        /* Response modal */
+        .response-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+        }
+
+        .response-modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: #ffffff;
+            border-radius: 12px;
+            max-width: 800px;
+            width: 100%;
+            max-height: 90vh;
+            overflow: auto;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #9ca3af;
+            cursor: pointer;
+            padding: 0.25rem 0.5rem;
+        }
+
+        .modal-close:hover {
+            color: #374151;
+        }
+
+        .modal-header {
+            padding: 1.5rem 1.5rem 0;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            position: relative;
+        }
+
+        .modal-llm {
+            font-weight: 600;
+            color: #1f2937;
+            font-size: 1.1rem;
+        }
+
+        .modal-status {
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .modal-status.mentioned {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .modal-status.not-mentioned {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .modal-question {
+            padding: 1rem 1.5rem;
+            color: #6b7280;
+            font-size: 0.9rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .modal-response {
+            padding: 1.5rem;
+            overflow-y: auto;
+            flex: 1;
+            color: #374151;
+            font-size: 0.9rem;
+            line-height: 1.8;
+            min-height: 300px;
+            max-height: 60vh;
+            background: #fafafa;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .modal-response::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .modal-response::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        .modal-response::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 4px;
+        }
+
+        .modal-response::-webkit-scrollbar-thumb:hover {
+            background: #a1a1a1;
+        }
+
+        /* Brand highlight */
+        .brand-highlight {
+            background: linear-gradient(120deg, #fef08a 0%, #fde047 100%);
+            padding: 0.1rem 0.3rem;
+            border-radius: 3px;
+            font-weight: 600;
+        }
+
+        .example-content {
+            color: #6b7280;
+            font-size: 0.875rem;
+            line-height: 1.7;
+            max-height: 400px;
+            overflow-y: auto;
+            margin-bottom: 0.75rem;
+            padding: 1rem;
+            background: #f9fafb;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .example-status {
+            padding: 0.5rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            display: inline-block;
+        }
+
+        .example-status.mentioned {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .example-status.not-mentioned {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        /* Reddit Posts */
+        .reddit-posts {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .reddit-post {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: #fafafa;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: all 0.2s;
+            border: 1px solid transparent;
+        }
+
+        .reddit-post:hover {
+            background: #f3f4f6;
+            border-color: #e5e7eb;
+        }
+
+        .post-icon {
+            width: 40px;
+            height: 40px;
+            background: #1f2937;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .post-icon.pain {
+            background: #fef3c7;
+        }
+
+        .post-icon.pain svg {
+            color: #92400e;
+        }
+
+        .post-icon svg {
+            width: 20px;
+            height: 20px;
+            color: #ffffff;
+        }
+
+        .post-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .post-title {
+            color: #1f2937;
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .post-meta {
+            color: #9ca3af;
+            font-size: 0.8rem;
+        }
+
+        .post-arrow {
+            color: #9ca3af;
+            flex-shrink: 0;
+        }
+
+        .post-arrow svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .subsection-title {
+            color: #1f2937;
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin: 1.5rem 0 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .subsection-title:first-of-type {
+            margin-top: 0;
+        }
+
+        .subsection-desc {
+            color: #9ca3af;
+            font-size: 0.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .no-data {
+            color: #9ca3af;
+            font-style: italic;
+            text-align: center;
+            padding: 1rem;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            color: #9ca3af;
+            font-size: 0.8rem;
+            padding: 2rem;
+            border-top: 1px solid #e5e7eb;
+            margin-top: 2rem;
+        }
+
+        .footer a {
+            color: #1f2937;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* CTA */
+        .cta-section {
+            text-align: center;
+            padding: 3rem 2rem;
+            background: #fafafa;
+        }
+
+        .cta-section h2 {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 1.75rem;
+            color: #1f2937;
+            margin-bottom: 0.75rem;
+        }
+
+        .cta-section p {
+            color: #6b7280;
+            margin-bottom: 1.5rem;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background: #1f2937;
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .cta-button:hover {
+            background: #111827;
+            transform: translateY(-1px);
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .page-title h1 {
+                font-size: 1.75rem;
+            }
+
+            .section {
+                padding: 1.5rem;
+            }
+
+            .score-circle {
+                width: 130px;
+                height: 130px;
+            }
+
+            .score-value {
+                font-size: 2.25rem;
+            }
+
+            .llm-breakdown {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .tabs-header {
+                flex-wrap: wrap;
+            }
+
+            .tab-btn {
+                padding: 0.5rem 1rem;
+                font-size: 0.8rem;
+            }
+
+            .breakdown-table th,
+            .breakdown-table td {
+                padding: 0.5rem;
+                font-size: 0.8rem;
+            }
+
+            .question-cell {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .modal-content {
+                max-height: 90vh;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <a href="https://adva-solutions.com/AIVisibility" class="logo">adva</a>
+        <div class="header-right">
+            <!-- PDF button hidden for now - backend still available at /report/847441cc/pdf
+            <a href="/report/847441cc/pdf" class="pdf-button" title="Download as PDF">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                Download PDF
+            </a>
+            -->
+            <button class="copy-link-button" onclick="navigator.clipboard.writeText('https://adva-solutions.github.io/ai-visibility-report/report_treet_847441cc.html'); showToast('Link copied!');" title="Copy shareable link">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                </svg>
+                Copy Link
+            </button>
+            <span class="header-date">February 04, 2026</span>
+        </div>
+    </header>
+    <div class="toast" id="toast">Link copied to clipboard!</div>
+
+    <div class="container">
+        <div class="page-title">
+            <div class="label">AI Visibility Report</div>
+            <h1>Your Brand's <em>AI Presence</em></h1>
+            <p class="brand">Analysis for Treet</p>
+        </div>
+
+        <!-- Section 1: AI Visibility Score -->
+        <div class="section score-section">
+            <div class="score-circle">
+                <span class="score-value">0%</span>
+                <span class="score-label">0/15 mentions</span>
+            </div>
+            <p class="score-description">
+                Your brand appeared in <strong>0</strong> out of <strong>15</strong> AI recommendations
+            </p>
+            <div class="llm-breakdown">
+                
+            <div class="llm-stat">
+                <span class="llm-name">GPT</span>
+                <span class="llm-score warning">0/5</span>
+            </div>
+        
+            <div class="llm-stat">
+                <span class="llm-name">Claude</span>
+                <span class="llm-score warning">0/5</span>
+            </div>
+        
+            <div class="llm-stat">
+                <span class="llm-name">Gemini</span>
+                <span class="llm-score warning">0/5</span>
+            </div>
+        
+            </div>
+        </div>
+
+        <!-- Section 2: AI Response Breakdown -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                    </svg>
+                </div>
+                <h2 class="section-title">Question-by-Question Breakdown</h2>
+            </div>
+            <p style="color: #6b7280; margin-bottom: 1rem;">We asked these 5 questions to each AI model. Click any cell to see the full response:</p>
+            
+        <div class="question-breakdown">
+            <table class="breakdown-table">
+                <thead>
+                    <tr>
+                        <th>Question Asked</th>
+                        <th>GPT</th>
+                        <th>Claude</th>
+                        <th>Gemini</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q1</span>
+                    <span class="question-text">best resale platform for global brands</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top recommendations for resale platforms that cater to global brands, listed in order of preference:<br><br>1. **StockX**<br>   - **Overview**: StockX is a leading online marketplace for buying and selling sneakers, streetwear, electronics, and more. Its unique model operates like a stock market, where prices fluctuate based on demand.<br>   - **Why It&#39;s Great**: The platform is well-regarded for its authentication process, ensuring that products sold are genuine. StockX appeals to a global audience, making it ideal for brands with an international reach. The transparent pricing model and real-time market data also provide valuable insights to buyers and sellers.<br><br>2. **Grailed**<br>   - **Overview**: Grailed is a curated marketplace specifically designed for men&#39;s fashion. It focuses on high-end and designer brands, offering a platform for buyers and sellers to connect over unique clothing items.<br>   - **Why It&#39;s Great**: Grailed has a dedicated community of fashion enthusiasts, which helps in building trust among users. Its focus on menswear, luxury, and streetwear makes it a go-to platform for global brands in the fashion industry. The user-friendly interface and detailed listings enhance the shopping experience.<br><br>3. **Depop**<br>   - **Overview**: Depop is a peer-to-peer social shopping app that allows users to buy and sell secondhand and vintage items, including clothing, accessories, and more. It&#39;s particularly popular among younger audiences.<br>   - **Why It&#39;s Great**: Depop combines social media elements with e-commerce, making it a vibrant platform for brands wanting to engage with a younger demographic. The app&#39;s global reach and emphasis on sustainable fashion resonate well with contemporary brand values, attracting eco-conscious consumers.<br><br>4. **eBay**<br>   - **Overview**: eBay is one of the largest online marketplaces in the world, offering a wide range of products, including new and used items from various global brands.<br>   - **Why It&#39;s Great**: eBay&#39;s established reputation and global reach make it an excellent platform for brands looking to tap into diverse markets. The auction format allows for competitive pricing, and its extensive buyer base helps sellers reach a wider audience.<br><br>5. **Vestiaire Collective**<br>   - **Overview**: Vestiaire Collective specializes in pre-owned luxury fashion items, offering a curated selection of high-end brands from around the world.<br>   - **Why It&#39;s Great**: The platform emphasizes sustainability and authenticity, attracting savvy luxury shoppers. Its global presence and focus on premium brands make it an attractive option for high-end resale, with a dedicated community of fashion lovers.<br><br>These platforms vary in their focus and audience, so your choice will depend on the specific type of products and target markets you wish to engage with."
+                    data-question="best resale platform for global brands"
+                    data-llm="gpt4"
+                    data-brand="Treet"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="When it comes to the best resale platforms for global brands, here are my top 5 recommendations in order of preference:<br><br>1. Vestiaire Collective:<br>   - Vestiaire Collective is a leading global platform for the resale of luxury and premium fashion items.<br>   - It offers a wide selection of authentic, pre-owned items from top global brands, ensuring a high-quality and trustworthy shopping experience.<br>   - The platform has a strong focus on sustainability and offers a seamless selling process for users.<br><br>2. The RealReal:<br>   - The RealReal is a renowned online consignment marketplace specializing in the resale of luxury and high-end brands.<br>   - It has a rigorous authentication process to ensure the authenticity of the items listed, providing buyers with confidence in their purchases.<br>   - The platform offers a wide range of categories, including clothing, accessories, jewelry, and home decor from leading global brands.<br><br>3. Poshmark:<br>   - Poshmark is a popular peer-to-peer resale platform that allows users to buy and sell new or gently used items from a variety of brands.<br>   - It offers a user-friendly interface and a social shopping experience, allowing users to engage with the community.<br>   - Poshmark caters to a wide range of budgets and has a strong presence in the North American market.<br><br>4. Depop:<br>   - Depop is a unique resale platform that focuses on vintage, one-of-a-kind, and sustainable fashion items.<br>   - It has a strong presence among younger generations and offers a curated selection of global brands.<br>   - Depop&#39;s social-media-inspired interface and community-driven approach make it a popular choice for fashion-conscious consumers.<br><br>5. Thredup:<br>   - Thredup is a leading online thrift store that offers a wide range of pre-owned items from both high-street and luxury brands.<br>   - It has a user-friendly platform and a focus on sustainability, making it a popular choice for eco-conscious consumers.<br>   - Thredup&#39;s extensive inventory and competitive pricing make it a valuable resource for finding quality, pre-owned global brands.<br><br>These platforms offer a combination of authenticity, brand selection, user experience, and sustainability, making them excellent choices for reselling or purchasing pre-owned global brands. The preference order is based on the platform&#39;s reputation, market presence, and the overall user experience they provide."
+                    data-question="best resale platform for global brands"
+                    data-llm="claude"
+                    data-brand="Treet"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Okay, here are my top 5 resale platforms for global brands, considering factors like reach, fees, authentication, and ease of use, listed in order of preference:<br><br>1.  **Vestiaire Collective:**<br>    *   **Why:** Vestiaire Collective is a leader in luxury and designer resale, with a strong global presence, particularly in Europe. They have a robust authentication process, which is crucial for high-value global brands, and offer both seller-managed and concierge selling options. Their commission fees are competitive, and they have a loyal customer base actively seeking designer items. They cater well to brands like Chanel, Gucci, Hermès, etc.<br>    *   **Key Strengths:** Authentication, Global reach (especially Europe), Luxury focus, Seller options.<br>    *   **Considerations:** Higher fees than some platforms, more stringent authentication.<br><br>2.  **The RealReal:**<br>    *   **Why:** The RealReal is another major player in the luxury resale market, known for its comprehensive authentication process and in-house experts. They handle the entire selling process, from photography to shipping, making it very convenient for sellers. They have a significant presence in the US and expanding globally. Great for brands like Louis Vuitton, Dior, and other high-end labels.<br>    *   **Key Strengths:** Full-service selling, Authentication, Strong US market presence.<br>    *   **Considerations:** Lower commission rates than selling yourself, primarily US-focused.<br><br>3.  **StockX:**<br>    *   **Why:** While primarily known for sneakers and streetwear, StockX is increasingly popular for reselling luxury handbags, watches, and other high-demand items. Their &quot;stock market&quot; approach, with bid/ask pricing, ensures fair market value. They have a global audience and a strict authentication process. Best for brands with highly standardized items and strong resale value, such as Nike, Adidas, Supreme, etc. However, it&#39;s expanding to include more traditional luxury brands.<br>    *   **Key Strengths:** Authentication, Price transparency, Global reach, Fast transactions.<br>    *   **Considerations:** Limited to specific in-demand items, less personal than other platforms.<br><br>4.  **eBay:**<br>    *   **Why:** eBay offers the broadest reach of any platform, with millions of users worldwide. While it requires more effort from the seller (photography, listing, shipping), it allows for maximum control over pricing and can yield higher profits. eBay has implemented authentication programs for certain luxury goods, providing added security. Good for a wide range of brands and item types.<br>    *   **Key Strengths:** Massive global reach, Seller control, Wide range of brands.<br>    *   **Considerations:** Requires more effort from the seller, risk of scams, higher competition.<br><br>5.  **Depop:**<br>    *   **Why:** Depop is a popular platform amongst younger demographics and is especially good for streetwear, vintage, and unique fashion items. It has a strong community aspect and is easy to use. While authentication isn&#39;t as strict as on Vestiaire or The RealReal, it&#39;s a good option for more accessible global brands and trend-driven pieces.<br>    *   **Key Strengths:** Mobile-first, Social selling, Younger audience.<br>    *   **Considerations:** Less established authentication, lower average selling price, more trend-focused.<br><br>**Important Considerations:**<br><br>*   **Brand and Item Type:** The best platform depends heavily on the specific brands you are selling and the types of items (e.g., handbags, clothing, shoes).<br>*   **Authentication:** If you&#39;re selling high-value luxury items, a platform with a strong authentication process is crucial.<br>*   **Effort vs. Commission:** Consider how much effort you&#39;re willing to put into selling (photography, listing, shipping) versus the commission you&#39;re willing to pay.<br>*   **Target Audience:** Each platform attracts a different demographic. Choose the platform that aligns with your target buyer.<br>*   **Fees**: Make sure to check out the specific fees each platform charges.<br><br>Before listing your items, research similar items on each platform to get an idea of pricing and demand. Good luck!<br>"
+                    data-question="best resale platform for global brands"
+                    data-llm="gemini"
+                    data-brand="Treet"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q2</span>
+                    <span class="question-text">how to start a branded resale program</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="Starting a branded resale program can be a great way to promote sustainability, engage customers, and create a new revenue stream. Here are my top recommendations:<br><br>### 1. **Define Your Brand&#39;s Value Proposition**<br>   - **Explanation**: Clearly articulate why your customers should participate in your resale program. Highlight benefits such as sustainability, affordability, or the chance to own unique, previously loved items. This proposition will guide your marketing strategy and help you communicate effectively with your audience.<br><br>### 2. **Create a User-Friendly Platform**<br>   - **Explanation**: Invest in a seamless online platform where customers can easily buy and sell items. This could be a dedicated section on your existing website or a partnership with an established resale platform. Ensure it has intuitive navigation, secure payment options, and clear guidelines for listing items to encourage participation.<br><br>### 3. **Implement a Robust Quality Control Process**<br>   - **Explanation**: Establish clear criteria for the condition and quality of items accepted into your resale program. This protects your brand&#39;s reputation and ensures customers receive high-quality products. Consider offering refurbishment or cleaning services to enhance the resale value of items.<br><br>### 4. **Incorporate Incentives for Participation**<br>   - **Explanation**: Encourage customers to engage in the resale program by providing incentives such as discounts, loyalty points, or rewards for both selling and buying. This not only boosts participation but also strengthens customer loyalty to your brand.<br><br>### 5. **Promote Your Program Through Marketing and Community Engagement**<br>   - **Explanation**: Utilize social media, email marketing, and community events to raise awareness of your resale program. Share success stories, showcase unique items, and promote sustainability efforts. Engaging your community can enhance brand loyalty and encourage word-of-mouth referrals.<br><br>By following these recommendations, you can effectively launch a branded resale program that resonates with your customers and aligns with your brand values."
+                    data-question="how to start a branded resale program"
+                    data-llm="gpt4"
+                    data-brand="Treet"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top 5 recommendations for starting a branded resale program, in order of preference:<br><br>1. Develop a Comprehensive Resale Strategy:<br>   - Clearly define your brand&#39;s values, target audience, and the desired positioning of your resale program.<br>   - Determine the types of products you will accept, the condition standards, and the pricing model.<br>   - Establish a streamlined process for product intake, authentication, and inventory management.<br><br>2. Leverage Technology and Automation:<br>   - Invest in a user-friendly e-commerce platform that can seamlessly integrate your resale offerings.<br>   - Implement automated systems for product listing, pricing, and customer communication to enhance efficiency.<br>   - Explore the use of blockchain technology for secure product tracking and transparency.<br><br>3. Focus on Customer Experience:<br>   - Provide a seamless and enjoyable shopping experience for your resale customers.<br>   - Offer transparent information about product condition, authenticity, and pricing.<br>   - Ensure a hassle-free return and exchange policy to build trust and loyalty.<br><br>4. Promote Sustainability and Circularity:<br>   - Emphasize the environmental benefits of your resale program, such as reducing waste and promoting a circular economy.<br>   - Collaborate with sustainability-focused organizations to amplify your brand&#39;s commitment to responsible consumption.<br>   - Educate your customers on the positive impact of their secondhand purchases.<br><br>5. Integrate with Your Primary Sales Channels:<br>   - Seamlessly integrate your resale program with your existing e-commerce platform and retail stores.<br>   - Leverage your brand&#39;s existing customer base and marketing channels to promote the resale offerings.<br>   - Explore opportunities for cross-selling and upselling between your new and pre-owned product lines.<br><br>By following these recommendations, you can create a successful and sustainable branded resale program that aligns with your brand&#39;s values, enhances customer loyalty, and contributes to a more circular economy."
+                    data-question="how to start a branded resale program"
+                    data-llm="claude"
+                    data-brand="Treet"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Okay, here are my top 5 recommendations for starting a branded resale program, listed in order of preference, with explanations:<br><br>1.  **Partner with a Resale Platform (e.g., ThredUp, Trove, Archive):** This is generally the fastest and most cost-effective way to launch.<br><br>    *   **Explanation:** These platforms have the infrastructure (technology, logistics, authentication, customer service) already in place.  They handle the heavy lifting, allowing you to focus on branding, marketing, and setting pricing/incentives.  Platforms like ThredUp and Archive are specifically designed to help brands launch resale programs and integrate them seamlessly with their existing e-commerce. Trove specializes in luxury brands and has been used by REI, Eileen Fisher, and Levi&#39;s. This is the lowest risk and fastest path to market. They also provide valuable data and insights into which of your products have good resale value.<br><br>2.  **Define a Clear Value Proposition and Target Audience:**  Know *why* you&#39;re doing this and *who* you&#39;re doing it for.<br><br>    *   **Explanation:**  Is your goal sustainability, customer loyalty, attracting new customers, or increased revenue?  Are you targeting Gen Z, eco-conscious millennials, or existing brand enthusiasts?  The answers to these questions will shape your program&#39;s design, pricing, marketing, and communication strategy.  A vague value proposition leads to a diluted and ineffective program.  For example, are you offering high trade-in values for premium items, discounts for returning any apparel, or focusing on a specific product category? Knowing your target audience helps you tailor the incentives and messaging for maximum appeal.<br><br>3.  **Incentivize Participation with a Carefully Crafted Rewards System:**  Make it attractive for customers to both sell and buy pre-owned items.<br><br>    *   **Explanation:**  Incentives are crucial for driving adoption.  Consider offering store credit, discounts on new items, exclusive access to sales, or even cash payouts.  The reward should be perceived as valuable and relevant to your target audience.  Experiment with different incentives to see what works best. Make sure the incentives are sustainable and profitable in the long run. Think about tiered rewards based on the condition and value of the returned items.<br><br>4.  **Integrate the Resale Program Seamlessly into Your Existing Brand Experience:**  Maintain brand consistency and make the process easy for customers.<br><br>    *   **Explanation:**  The resale program shouldn&#39;t feel like a separate entity.  It should be integrated into your website, marketing materials, and customer service channels.  Use consistent branding, messaging, and tone.  Make it easy for customers to find the resale section, understand the process, and track their orders/credits.  A clunky or confusing experience will deter participation.  Consider adding a clear &quot;Pre-Loved&quot; or &quot;Re-Commerce&quot; navigation link to your site.<br><br>5.  **Track, Measure, and Optimize:**  Continuously monitor the program&#39;s performance and make adjustments as needed.<br><br>    *   **Explanation:**  Don&#39;t launch and forget. Track key metrics like participation rates, sales volume, customer acquisition cost, and customer satisfaction.  Use this data to identify areas for improvement and optimize your program.  Are your incentives effective?  Is the pricing competitive?  Is the customer service experience smooth?  Regular analysis and iteration are essential for long-term success. A/B test different incentives and marketing messages to see what resonates with your audience.<br><br>These recommendations provide a solid foundation for building a successful branded resale program. Remember to prioritize partnering with an existing platform like ThredUp, Trove, or Archive to streamline the process and minimize risk. Good luck!<br>"
+                    data-question="how to start a branded resale program"
+                    data-llm="gemini"
+                    data-brand="Treet"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q3</span>
+                    <span class="question-text">how to recapture margin from returns and excess inventory</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="Recapturing margin from returns and excess inventory is crucial for maintaining profitability. Here are my top recommendations to effectively address these issues:<br><br>### 1. **Implement a Robust Returns Management System**<br>   - **Explanation:** Streamlining the returns process can significantly reduce costs associated with processing returns. Adopt technology solutions that automate returns tracking and processing, allowing for quicker resolution and restocking. Establish clear return policies and communicate them effectively to customers to reduce return rates.<br><br>### 2. **Optimize Inventory Management**<br>   - **Explanation:** Use data analytics to forecast demand more accurately and adjust inventory levels accordingly. Implement just-in-time (JIT) inventory practices to minimize excess stock and reduce holding costs. Regularly review inventory turnover rates and adjust purchasing strategies to align with market trends.<br><br>### 3. **Offer Incentives for Returns and Exchanges**<br>   - **Explanation:** Encourage customers to exchange items rather than return them outright by offering store credit or discounts. This approach can help retain sales while reducing the volume of items that need to be restocked or disposed of, ultimately preserving margins.<br><br>### 4. **Develop a Clearance Strategy for Excess Inventory**<br>   - **Explanation:** Create targeted sales promotions or clearance events for slow-moving inventory. Utilize online marketplaces or discount retailers to offload excess stock. This can help recover some costs while freeing up warehouse space for more in-demand products.<br><br>### 5. **Enhance Product Quality and Customer Education**<br>   - **Explanation:** Investing in product quality and providing comprehensive product information can reduce return rates. By ensuring that customers fully understand the product features and benefits, you can minimize mismatches between customer expectations and the actual product, leading to lower return rates and improved customer satisfaction.<br><br>Implementing these recommendations can help recapture margins from returns and excess inventory, leading to a more efficient and profitable operation."
+                    data-question="how to recapture margin from returns and excess inventory"
+                    data-llm="gpt4"
+                    data-brand="Treet"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top 5 recommendations to recapture margin from returns and excess inventory, listed in order of preference:<br><br>1. Optimize Reverse Logistics Processes:<br>   - Streamline the returns handling process to minimize costs and maximize recovery value.<br>   - Implement efficient inspection, sorting, and disposition procedures to identify resalable, repairable, or recyclable items.<br>   - Leverage data analytics to forecast return patterns and proactively manage inventory levels.<br><br>2. Establish a Robust Secondary Market Channel:<br>   - Develop a dedicated online or offline platform to sell returned and excess inventory at discounted prices.<br>   - Collaborate with liquidation marketplaces or wholesalers to offload inventory at the best possible prices.<br>   - Explore opportunities to sell directly to consumers or B2B buyers through flash sales or clearance events.<br><br>3. Implement Preventive Measures:<br>   - Review and optimize product design, packaging, and shipping processes to reduce the likelihood of returns.<br>   - Enhance customer education and support to address common issues that lead to returns.<br>   - Collaborate with suppliers to improve product quality and reliability, reducing the need for returns.<br><br>4. Leverage Refurbishment and Remanufacturing:<br>   - Invest in refurbishment capabilities to restore returned or excess items to like-new condition.<br>   - Explore opportunities to remanufacture products or components, extending their useful life and generating additional revenue.<br>   - Develop a certified pre-owned or refurbished product program to capture value from returns.<br><br>5. Optimize Inventory Management:<br>   - Implement advanced demand forecasting models to better anticipate and manage inventory levels.<br>   - Utilize inventory optimization techniques, such as dynamic safety stock levels and just-in-time replenishment, to minimize excess inventory.<br>   - Regularly review and adjust product assortment, pricing, and promotional strategies to align with customer demand and reduce overstocking.<br><br>By focusing on these recommendations, you can recapture margin from returns and excess inventory, improve overall profitability, and enhance the sustainability of your operations."
+                    data-question="how to recapture margin from returns and excess inventory"
+                    data-llm="claude"
+                    data-brand="Treet"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Okay, here are my top 3 recommendations for recapturing margin from returns and excess inventory, ordered by preference, along with brief explanations:<br><br>**1.  Implement Dynamic Pricing and Tiered Resale Channels for Returns & Excess (Highest Impact):**<br><br>*   **Explanation:**  Instead of treating all returns and excess the same, segment them based on condition, age, and demand.  Use dynamic pricing software to automatically adjust prices based on these factors and market conditions.  Then, utilize tiered resale channels.<br>    *   **Tier 1 (Near-Retail):**  Refurbished/Like-New items sold on your website, Amazon Renewed, eBay Certified Refurbished at slightly discounted prices.  Requires thorough inspection and refurbishment.<br>    *   **Tier 2 (Mid-Tier Discount):**  Items with minor cosmetic damage or missing packaging sold on discount marketplaces like Overstock, liquidation websites, or through a dedicated &quot;Outlet&quot; section on your own website.<br>    *   **Tier 3 (Deep Discount/Liquidation):**  Items with significant damage or very low demand sold in bulk to liquidators or through auction sites.<br>*   **Why it&#39;s best:**  This maximizes recovery by aligning the selling price with the actual value of the item and reaching different customer segments with varying price sensitivities.  It prevents good-condition returns from being lumped together and sold at a loss.<br>*   **Specific Action:** Invest in software that automates pricing and inventory management across these channels.  Establish clear grading guidelines for returns.<br><br>**2.  Proactive Returns Reduction (Significant Prevention):**<br><br>*   **Explanation:**  Focus on preventing returns *before* they happen.  Analyze return reasons meticulously to identify root causes (poor product descriptions, inaccurate sizing charts, shipping damage, etc.).  Implement solutions to address these causes.<br>    *   **Example 1:**  If sizing is a common issue, improve sizing charts, add customer reviews with sizing feedback, or offer virtual fitting tools.<br>    *   **Example 2:**  If shipping damage is high, improve packaging, choose more reliable carriers, or offer shipping insurance options.<br>*   **Why it&#39;s important:**  Preventing a return is always better than dealing with it. This reduces the initial margin loss and eliminates the costs associated with processing, restocking, and reselling.<br>*   **Specific Action:**  Create a cross-functional team (marketing, product development, customer service, operations) to analyze return data and implement corrective actions.  Track return rates by product and reason to measure progress.<br><br>**3.  Optimize Reverse Logistics (Cost Reduction):**<br><br>*   **Explanation:**  Streamline the process of receiving, inspecting, and processing returns.  This includes:<br>    *   **Easy Return Process:**  Provide clear return instructions, pre-paid return labels, and multiple return options (drop-off locations, mail-in).  Consider automated return portals.<br>    *   **Efficient Inspection and Sorting:**  Train staff to quickly and accurately assess the condition of returned items.  Implement a system for prioritizing returns based on potential resale value.<br>    *   **Fast Restocking:**  Get good-condition returns back into inventory as quickly as possible to avoid lost sales opportunities.<br>*   **Why it&#39;s valuable:**  Efficient reverse logistics minimizes the operational costs associated with handling returns and reduces the time it takes to get resalable items back on the market.<br>*   **Specific Action:**  Map your current reverse logistics process, identify bottlenecks, and implement improvements to reduce processing time and costs.  Consider outsourcing reverse logistics to a specialized provider.<br><br>**4. Bundle Excess Inventory (Creative Solution):**<br><br>*   **Explanation:** Combine slow-moving or excess inventory items into bundles with more popular items. This can drive sales of the less desirable products and clear out warehouse space.<br>*   **Why it&#39;s valuable:** It moves product that would otherwise sit stagnant, potentially becoming obsolete. It can also create perceived value for customers.<br>*   **Specific Action:** Analyze your inventory to identify opportunities for bundling. Consider offering bundled products at a discounted price to incentivize purchase.<br><br>These recommendations, when implemented strategically, can significantly improve margin recovery from returns and excess inventory. Remember to prioritize based on your specific circumstances and resources. Good luck!<br>"
+                    data-question="how to recapture margin from returns and excess inventory"
+                    data-llm="gemini"
+                    data-brand="Treet"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q4</span>
+                    <span class="question-text">ways to keep customers in brand's ecosystem through resale</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="Certainly! Here are my top recommendations for keeping customers in a brand&#39;s ecosystem through resale:<br><br>### 1. **Create a Branded Resale Platform**<br>   - **Explanation**: Develop an online marketplace specifically for your brand where customers can buy and sell pre-owned items. This platform can be integrated with your existing e-commerce site, allowing customers to easily trade in old products for store credit or purchase second-hand items at a discounted rate. Not only does this encourage repeat purchases, but it also fosters a sense of community among your customers.<br><br>### 2. **Offer Trade-In Programs**<br>   - **Explanation**: Implement a trade-in program where customers can return used products for store credit or discounts on future purchases. This not only incentivizes customers to remain engaged with your brand but also promotes sustainability. By making it easy for customers to exchange old items for new ones, you encourage them to stay within your brand&#39;s ecosystem.<br><br>### 3. **Loyalty Rewards for Resale Participation**<br>   - **Explanation**: Establish a loyalty program that rewards customers for participating in the resale process, such as selling back items or purchasing resale items. Points can be accumulated and redeemed for discounts, exclusive products, or early access to sales. This not only incentivizes resale but also strengthens customer loyalty to your brand.<br><br>### 4. **Community Building and Brand Storytelling**<br>   - **Explanation**: Use storytelling to connect your brand&#39;s values with the resale process. Share customer stories about the lifecycle of your products, showcasing how they can be reused or resold. Create community events, both online and offline, where customers can share their resale experiences. This helps to build a strong, loyal community around your brand and reinforces the idea that your products have lasting value.<br><br>### 5. **Subscription Resale Box**<br>   - **Explanation**: Introduce a subscription service where customers receive a curated box of second-hand items from your brand at regular intervals. This could include refurbished items or exclusive limited-edition products. Offering a subscription service creates a recurring revenue model while keeping customers engaged with your brand through ongoing interactions.<br><br>By implementing these strategies, brands can create a robust ecosystem that encourages customer retention and promotes sustainable practices through resale."
+                    data-question="ways to keep customers in brand's ecosystem through resale"
+                    data-llm="gpt4"
+                    data-brand="Treet"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top 5 recommendations for ways to keep customers in a brand&#39;s ecosystem through resale, listed in order of preference:<br><br>1. Implement a Robust Trade-In/Buyback Program:<br>   - Allow customers to trade in their used products in exchange for store credit or discounts on new purchases.<br>   - This encourages customers to continue engaging with the brand and keeps them within the ecosystem, as they are more likely to use the credit or discount towards a new purchase from the same brand.<br><br>2. Offer an Authenticated Resale Marketplace:<br>   - Create an official resale platform where customers can buy and sell pre-owned products from the brand.<br>   - This ensures the authenticity and quality of the products, while also keeping customers within the brand&#39;s ecosystem and potentially leading to repeat business.<br><br>3. Provide Repair and Refurbishment Services:<br>   - Offer comprehensive repair and refurbishment services for the brand&#39;s products, allowing customers to extend the lifespan of their purchases.<br>   - This encourages customers to continue using the brand&#39;s products and services, rather than seeking alternatives outside the ecosystem.<br><br>4. Establish a Product Subscription Model:<br>   - Develop a subscription-based service that allows customers to regularly upgrade or swap out their products for newer versions.<br>   - This keeps customers engaged with the brand and incentivizes them to remain within the ecosystem, as the subscription service is tied to the brand&#39;s products.<br><br>5. Implement a Loyalty Program with Resale Incentives:<br>   - Integrate a comprehensive loyalty program that rewards customers for engaging in resale activities, such as trading in or selling their used products.<br>   - This creates an additional incentive for customers to stay within the brand&#39;s ecosystem, as they can earn rewards or benefits for their continued participation.<br><br>By implementing these strategies, brands can effectively retain customers within their ecosystem, foster brand loyalty, and generate additional revenue streams through resale activities."
+                    data-question="ways to keep customers in brand's ecosystem through resale"
+                    data-llm="claude"
+                    data-brand="Treet"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Okay, here are my top 5 recommendations for keeping customers in your brand&#39;s ecosystem through resale, listed in order of preference, with brief explanations:<br><br>**1.  Brand-Operated Resale Platform (Preferred):**<br><br>*   **Explanation:**  Create your own dedicated resale platform (website or app) where customers can easily buy and sell pre-owned items of *your* brand.  This gives you maximum control over the resale experience, reinforces brand loyalty, and allows you to capture data on resale activity.  You can set pricing guidelines, authenticate items, offer trade-in credits for new purchases, and ensure a consistent brand experience.  It also combats the dilution of your brand by resale on third-party sites.  Think of Patagonia&#39;s &quot;Worn Wear&quot; or Eileen Fisher&#39;s &quot;Renew.&quot;  The key is to make it seamless, secure, and incentivizing for both buyers and sellers.<br><br>**2.  Trade-In Program with Store Credit or Discounts:**<br><br>*   **Explanation:**  Offer customers a simple way to trade in their used items in exchange for store credit or a discount on new purchases. This incentivizes them to stay within your brand ecosystem when upgrading or replacing products.  The traded-in items can then be refurbished, resold, or recycled.  This is a great option if setting up a full resale platform is too resource-intensive initially.  Think about Apple&#39;s trade-in program for iPhones.<br><br>**3.  Authentication & Repair Services for Resold Items:**<br><br>*   **Explanation:**  Establish your brand as the trusted authority for authenticating and repairing your products, even if they are being resold elsewhere (e.g., on Poshmark, eBay, etc.).  Offer authentication services for a fee, which can increase confidence in the resale market and protect your brand from counterfeits.  Provide repair services for a fee, extending the lifespan of your products and keeping them within your brand&#39;s circle of influence.  This builds trust and enhances the perceived value of your brand&#39;s products. Think of luxury brands offering authenticity checks and repairs for their handbags or watches.<br><br>**4.  Partnerships with Established Resale Platforms (Selective):**<br><br>*   **Explanation:** If building your own platform isn&#39;t feasible, strategically partner with existing, reputable resale platforms (like ThredUp, The RealReal, or specialized marketplaces relevant to your product category).  Ensure the partnership aligns with your brand values.  Potentially offer exclusive deals or discounts to customers who buy or sell your brand&#39;s products on the partner platform.  This expands your reach without the overhead of managing your own resale operation, but you have less control over the experience.<br><br>**5.  Community Building & Resale Events:**<br><br>*   **Explanation:**  Foster a community around your brand and encourage resale through organized events, both online and offline. These could be swap meets, consignment pop-up shops, or online forums where customers can connect and exchange items. This leverages the social aspect of resale and reinforces brand loyalty. It also provides a platform to educate customers on sustainable practices and the value of extending the product lifecycle. This is especially effective for brands with a strong community following.<br><br>These recommendations prioritize options that give you the most control over the resale experience and keep customers within your brand ecosystem for the long term.  The best approach will depend on your brand&#39;s specific product, target audience, and resources.<br>"
+                    data-question="ways to keep customers in brand's ecosystem through resale"
+                    data-llm="gemini"
+                    data-brand="Treet"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q5</span>
+                    <span class="question-text">customizable resale solutions for large enterprises</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top recommendations for customizable resale solutions tailored for large enterprises, listed in order of preference:<br><br>### 1. **Salesforce Commerce Cloud**<br>   - **Explanation**: Salesforce Commerce Cloud offers a comprehensive e-commerce platform that can be tailored to fit large enterprises&#39; needs. Its customizable features allow businesses to create personalized shopping experiences, integrate CRM capabilities, and leverage advanced analytics. The platform supports B2B and B2C models and provides robust tools for managing inventory, pricing, and promotions, making it ideal for large-scale operations.<br><br>### 2. **SAP Commerce Cloud (Hybris)**<br>   - **Explanation**: SAP Commerce Cloud is designed for complex business environments and offers extensive customization options. It supports multi-channel commerce, enabling businesses to sell across various platforms seamlessly. Its capabilities for handling large product catalogs, complex pricing models, and integration with SAP’s ERP systems make it a strong choice for large enterprises looking for a unified resale solution.<br><br>### 3. **Oracle NetSuite**<br>   - **Explanation**: Oracle NetSuite provides a cloud-based ERP that includes a built-in e-commerce platform. It offers extensive customization options while integrating seamlessly with financial and inventory management systems. This makes it suitable for large enterprises looking for a holistic approach to managing both their resale operations and backend processes. Additionally, its robust reporting and analytics capabilities help businesses make data-driven decisions.<br><br>### 4. **BigCommerce for Enterprises**<br>   - **Explanation**: BigCommerce offers a scalable e-commerce platform with a focus on customization and flexibility for large enterprises. It supports B2B and B2C sales with features like custom pricing, multi-storefront capabilities, and extensive integrations with third-party applications. BigCommerce is particularly known for its user-friendly interface and strong SEO capabilities, making it an excellent choice for enterprises looking to enhance their online presence.<br><br>### 5. **Magento Commerce (Adobe Commerce)**<br>   - **Explanation**: Magento Commerce is an open-source e-commerce platform that allows for deep customization and flexibility. It is particularly well-suited for enterprises with specific needs, as developers can tailor almost every aspect of the platform. With robust features for managing large inventories, complex promotions, and customer segmentation, Magento serves as a powerful solution for enterprises looking to maintain control over their resale processes.<br><br>These solutions provide robust capabilities and customization options to effectively meet the needs of large enterprises in the resale market."
+                    data-question="customizable resale solutions for large enterprises"
+                    data-llm="gpt4"
+                    data-brand="Treet"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top 5 recommendations for customizable resale solutions for large enterprises, in order of preference:<br><br>1. Shopify Plus:<br>   - Shopify Plus is a powerful e-commerce platform designed for large enterprises and high-volume businesses.<br>   - It offers a highly customizable and scalable solution, allowing businesses to create unique online stores and manage their entire sales process.<br>   - Shopify Plus provides advanced features such as multi-channel integration, wholesale capabilities, and robust reporting and analytics.<br><br>2. BigCommerce Enterprise:<br>   - BigCommerce Enterprise is a comprehensive e-commerce platform tailored for large, complex businesses.<br>   - It offers a high degree of customization, allowing enterprises to create custom storefronts and integrate with various third-party applications.<br>   - BigCommerce Enterprise also provides advanced features like multi-store management, B2B capabilities, and enterprise-level security and compliance.<br><br>3. Magento Commerce:<br>   - Magento Commerce is an open-source e-commerce platform known for its flexibility and scalability.<br>   - It offers a wide range of customization options, enabling enterprises to build highly tailored online stores.<br>   - Magento Commerce provides features like advanced order management, multi-store and multi-site management, and robust B2B functionalities.<br><br>4. SAP Commerce Cloud (formerly Hybris):<br>   - SAP Commerce Cloud is an enterprise-level e-commerce solution developed by SAP, a leading provider of business software.<br>   - It offers a highly customizable and integrated platform, allowing large enterprises to seamlessly manage their online sales, marketing, and customer experience.<br>   - SAP Commerce Cloud integrates with other SAP products, providing a comprehensive solution for enterprises.<br><br>5. Adobe Commerce (formerly Magento Commerce Cloud):<br>   - Adobe Commerce is a cloud-based e-commerce platform that offers a high degree of customization and scalability.<br>   - It is part of the Adobe Experience Cloud, allowing enterprises to integrate their e-commerce operations with other Adobe products for a unified digital experience.<br>   - Adobe Commerce provides advanced features like multi-source inventory, B2B capabilities, and AI-powered personalization.<br><br>These recommendations cover a range of established and reputable e-commerce platforms that cater to the specific needs of large enterprises, offering customizable resale solutions and a variety of advanced features to support their complex business requirements."
+                    data-question="customizable resale solutions for large enterprises"
+                    data-llm="claude"
+                    data-brand="Treet"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Okay, here are my top 3-5 recommendations for customizable resale solutions for large enterprises, ordered by preference based on a combination of flexibility, scalability, features, and enterprise-level support.  These are platforms that can be adapted to a variety of resale models (e.g., white-label, co-branded, affiliate) and product types.<br><br>**Important Considerations Before Choosing:**<br><br>*   **Your Specific Resale Model:**  Are you reselling software, hardware, services, or a combination?  Is it a subscription model, one-time purchase, or something else?<br>*   **Integration Needs:** How tightly do you need to integrate with your existing CRM, ERP, marketing automation, and other systems?<br>*   **Customization Requirements:**  How much control do you need over the branding, user interface, and overall customer experience?<br>*   **Budget:**  Pricing models vary widely, so be sure to understand the costs involved.<br>*   **Scalability:** The solution needs to grow with your business. Consider the number of resellers, transactions, and products you anticipate.<br>*   **Security:** Enterprise-grade security is paramount.<br><br>**Recommendations:**<br><br>1.  **PartnerStack:**<br><br>    *   **Why it&#39;s top choice:** PartnerStack is a purpose-built platform focused on partnership programs, which includes resale. It offers robust automation, tracking, and management tools specifically designed for scaling partner ecosystems. The platform is highly configurable, allowing you to customize the partner onboarding process, compensation structures, and reporting dashboards.  It excels at managing complex commission tiers and performance-based incentives, which is critical for motivating resellers.  Their integrations are strong, and their support is geared towards larger organizations with dedicated account managers.<br>    *   **Key Features:**<br>        *   Partner Management: Onboarding, training, communication, and support tools.<br>        *   Tracking & Analytics: Real-time performance monitoring, attribution modeling, and reporting.<br>        *   Commission Management: Automated commission calculations, payouts, and tax compliance.<br>        *   Integration Ecosystem: Pre-built integrations with leading CRM, marketing automation, and e-commerce platforms.<br>        *   Customizable Partner Portal: Branded experience for your resellers.<br>    *   **Ideal for:**  Enterprises with complex partner programs, diverse product offerings, and a need for deep integration with existing systems. Especially strong for SaaS resale.<br><br>2.  **Impact.com:**<br><br>    *   **Why it&#39;s a strong contender:** Impact.com is a comprehensive partnership automation platform that covers a broad range of partnerships, including resale, affiliate marketing, and influencer collaborations.  It offers advanced tracking and attribution capabilities, allowing you to accurately measure the performance of your resale partners and optimize your program accordingly.  Their focus on attribution is superior to many other platforms.  They provide robust reporting and analytics, and their platform is built to handle large volumes of data and transactions. Their customer success team is generally well-regarded.<br>    *   **Key Features:**<br>        *   Partnership Discovery: Tools to find and recruit new resale partners.<br>        *   Contract Management: Automated contract creation and management.<br>        *   Fraud Detection: Advanced fraud prevention and detection capabilities.<br>        *   Attribution Modeling: Sophisticated multi-touch attribution to understand the value of each partner.<br>        *   Payout Management: Automated payouts with global currency support.<br>    *   **Ideal for:** Enterprises seeking a holistic partnership management solution with advanced attribution capabilities and a focus on ROI. Good for diverse product offerings beyond just SaaS.<br><br>3.  **Tapfiliate:**<br><br>    *   **Why it&#39;s a solid option:** Tapfiliate is a user-friendly and affordable partnership platform that&#39;s suitable for a wide range of businesses, including enterprises.  While not as feature-rich as PartnerStack or Impact.com, it offers a good balance of functionality and ease of use.  It&#39;s particularly strong for businesses that need a customizable and brandable experience for their resellers.  It has a clean interface which eases the onboarding experience.<br>    *   **Key Features:**<br>        *   Affiliate Tracking: Accurate tracking of referrals and conversions.<br>        *   Customizable Branding: White-label platform with branding options.<br>        *   Recurring Commissions: Support for recurring commissions for subscription-based products.<br>        *   Performance Bonuses: Ability to incentivize resellers with performance-based bonuses.<br>        *   Direct Integrations: Integrations with popular e-commerce platforms and marketing tools.<br>    *   **Ideal for:** Enterprises that need a customizable and affordable resale solution with a strong emphasis on branding.  A good mid-range option.<br><br>4.  **Swell Rewards (Especially for E-commerce):**<br><br>    *   **Why it&#39;s good for E-Commerce"
+                    data-question="customizable resale solutions for large enterprises"
+                    data-llm="gemini"
+                    data-brand="Treet"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+                </tbody>
+            </table>
+            <p class="breakdown-hint">Click any cell to see the full AI response</p>
+        </div>
+
+        <!-- Response modal -->
+        <div class="response-modal" id="responseModal">
+            <div class="modal-content" onclick="event.stopPropagation()">
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+                <div class="modal-header">
+                    <span class="modal-llm" id="modalLlm"></span>
+                    <span class="modal-status" id="modalStatus"></span>
+                </div>
+                <div class="modal-question" id="modalQuestion"></div>
+                <div class="modal-response" id="modalResponse"></div>
+            </div>
+        </div>
+    
+        </div>
+
+        <!-- Section 3: Reddit Opportunities -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <h2 class="section-title">Reddit Opportunities</h2>
+            </div>
+
+            <div class="subsection-title">Buy Intent Conversations</div>
+            <p class="subsection-desc">People actively looking for recommendations in your category</p>
+            <div class="reddit-posts">
+                
+            <a href="https://www.reddit.com/r/ShopifyeCommerce/new/" target="_blank" class="reddit-post">
+                <div class="post-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">Shopify eCommerce</div>
+                    <div class="post-meta">
+                        r/ShopifyeCommerce &bull; 42K members &bull; 2 days ago
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            <a href="https://www.reddit.com/r/Entrepreneur/" target="_blank" class="reddit-post">
+                <div class="post-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">r/Entrepreneur</div>
+                    <div class="post-meta">
+                        r/Entrepreneur &bull; 5.1M members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            <a href="https://www.reddit.com/r/circular_economy/" target="_blank" class="reddit-post">
+                <div class="post-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">r/circular_economy</div>
+                    <div class="post-meta">
+                        r/circular_economy &bull; 4K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            <a href="https://www.reddit.com/r/TeslaModelX/comments/1qq5thn/i_was_planning_to_buy_an_x_this_year_now_what/" target="_blank" class="reddit-post">
+                <div class="post-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">I was planning to buy an X this year, now what?</div>
+                    <div class="post-meta">
+                        r/TeslaModelX &bull; 20K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            </div>
+
+            <div class="subsection-title">Pain Point Conversations</div>
+            <p class="subsection-desc">People discussing problems your product solves</p>
+            <div class="reddit-posts">
+                
+            <a href="https://www.reddit.com/r/Fire/comments/1qqs3i5/anyone_else_feel_a_bit_disconnected_from_normal/" target="_blank" class="reddit-post">
+                <div class="post-icon pain">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">Anyone else feel a bit disconnected from “normal” money ...</div>
+                    <div class="post-meta">
+                        r/Fire &bull; 867K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            <a href="https://www.reddit.com/r/FinancialPlanning/comments/1qsb7qn/how_do_people_live_off_interest_from/" target="_blank" class="reddit-post">
+                <div class="post-icon pain">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">How do people live off interest from stocks/investment ...</div>
+                    <div class="post-meta">
+                        r/FinancialPlanning &bull; 970K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            </div>
+        </div>
+
+        <!-- CTA Section -->
+        <div class="section cta-section">
+            <h2>Ready to improve your <em>AI visibility?</em></h2>
+            <p>We help brands get mentioned more in AI answers through strategic content placement.</p>
+            <a href="https://adva-solutions.com/AIVisibility" class="cta-button">Learn More</a>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p>Generated by <a href="https://adva-solutions.com">Adva</a> &bull; AI Visibility Health Check</p>
+    </footer>
+
+    <script>
+        // Tab switching functionality
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const tabId = btn.dataset.tab;
+
+                // Update buttons
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                // Update panels
+                document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+                document.getElementById('panel-' + tabId).classList.add('active');
+            });
+        });
+
+        // Show toast notification
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2500);
+        }
+
+        // Show response modal
+        function showResponse(cell) {
+            try {
+                let response = cell.dataset.response || 'No response available';
+                const question = cell.dataset.question || '';
+                const llm = cell.dataset.llm || '';
+                const brand = cell.dataset.brand || '';
+                const isMentioned = cell.classList.contains('mentioned');
+                const brandPosition = cell.dataset.position ? parseInt(cell.dataset.position) : null;
+
+                const llmNames = {'gpt4': 'GPT', 'claude': 'Claude', 'gemini': 'Gemini'};
+
+                // If brand is mentioned beyond position 5, add a banner at the top
+                let positionBanner = '';
+                if (isMentioned && brandPosition && brandPosition > 5) {
+                    positionBanner = '<div style="background: #fef3c7; padding: 0.75rem 1rem; border-radius: 6px; margin-bottom: 1rem; border-left: 4px solid #f59e0b;">' +
+                        '<strong>📍 Your brand appeared at position #' + brandPosition + '</strong> - scroll down to see the highlighted mention' +
+                        '</div>';
+                }
+
+                // Highlight brand name in response (case insensitive)
+                if (brand && isMentioned) {
+                    try {
+                        const brandRegex = new RegExp('(' + brand.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&') + ')', 'gi');
+                        response = response.replace(brandRegex, '<span class="brand-highlight">$1</span>');
+                    } catch(e) { /* ignore highlighting errors */ }
+                }
+
+                document.getElementById('modalLlm').textContent = llmNames[llm] || llm;
+                document.getElementById('modalQuestion').textContent = '"' + question + '"';
+                document.getElementById('modalResponse').innerHTML = positionBanner + response;
+
+                const statusEl = document.getElementById('modalStatus');
+                if (isMentioned) {
+                    statusEl.textContent = 'Mentioned';
+                    statusEl.className = 'modal-status mentioned';
+                } else {
+                    statusEl.textContent = 'Not mentioned';
+                    statusEl.className = 'modal-status not-mentioned';
+                }
+
+                document.getElementById('responseModal').classList.add('active');
+                document.body.style.overflow = 'hidden';
+
+                // Scroll to first highlight if mentioned
+                if (isMentioned) {
+                    setTimeout(function() {
+                        const highlight = document.querySelector('.modal-response .brand-highlight');
+                        if (highlight) {
+                            highlight.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        }
+                    }, 100);
+                }
+            } catch (e) {
+                console.error('Error showing response:', e);
+                alert('Error loading response. Please try again.');
+            }
+        }
+
+        // Close modal
+        function closeModal() {
+            document.getElementById('responseModal').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // Close when clicking backdrop (outside modal content)
+        document.getElementById('responseModal').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+
+        // Close modal on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeModal();
+        });
+    </script>
+</body>
+</html>
