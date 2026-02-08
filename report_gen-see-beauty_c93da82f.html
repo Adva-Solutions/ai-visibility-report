@@ -1,0 +1,1370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Visibility Report - Gen See Beauty | Adva</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #ffffff;
+            min-height: 100vh;
+            color: #374151;
+            line-height: 1.6;
+        }
+
+        /* Header */
+        .header {
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            font-size: 1.25rem;
+            color: #1f2937;
+            text-decoration: none;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .header-date {
+            color: #9ca3af;
+            font-size: 0.875rem;
+        }
+
+        /* Copy link button */
+        .copy-link-button {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: #f3f4f6;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            color: #374151;
+            font-size: 0.75rem;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .copy-link-button:hover {
+            background: #e5e7eb;
+        }
+
+        .copy-link-button svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        .pdf-button {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: #1f2937;
+            border: none;
+            border-radius: 6px;
+            color: #ffffff;
+            font-size: 0.75rem;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .pdf-button:hover {
+            background: #374151;
+        }
+
+        .pdf-button svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        /* Toast notification */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: #1f2937;
+            color: #ffffff;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            opacity: 0;
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        /* Container */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Page title */
+        .page-title {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .page-title .label {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: #9ca3af;
+            font-size: 0.75rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+        }
+
+        .page-title .label::before,
+        .page-title .label::after {
+            content: '';
+            width: 30px;
+            height: 1px;
+            background: #d1d5db;
+        }
+
+        .page-title h1 {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 2.5rem;
+            font-weight: 400;
+            color: #1f2937;
+            margin-bottom: 0.5rem;
+        }
+
+        .page-title .brand {
+            color: #6b7280;
+            font-size: 1.125rem;
+        }
+
+        /* Sections */
+        .section {
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #f3f4f6;
+        }
+
+        .section-icon {
+            width: 40px;
+            height: 40px;
+            background: #1f2937;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .section-icon svg {
+            width: 20px;
+            height: 20px;
+            color: #ffffff;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 1.375rem;
+            color: #1f2937;
+        }
+
+        /* Score Section */
+        .score-section {
+            text-align: center;
+            padding: 3rem 2rem;
+        }
+
+        .score-circle {
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            background: #fafafa;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            border: 4px solid #ef4444;
+        }
+
+        .score-value {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 3rem;
+            font-weight: 500;
+            color: #ef4444;
+        }
+
+        .score-label {
+            font-size: 0.8rem;
+            color: #9ca3af;
+        }
+
+        .score-description {
+            color: #6b7280;
+            margin-bottom: 2rem;
+            font-size: 1rem;
+        }
+
+        .score-description strong {
+            color: #1f2937;
+        }
+
+        .llm-breakdown {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .llm-stat {
+            text-align: center;
+            padding: 1rem 1.5rem;
+            background: #fafafa;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+            min-width: 100px;
+        }
+
+        .llm-name {
+            display: block;
+            color: #9ca3af;
+            font-size: 0.8rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .llm-score {
+            font-size: 1.125rem;
+            font-weight: 600;
+        }
+
+        .llm-score.success {
+            color: #22c55e;
+        }
+
+        .llm-score.warning {
+            color: #ef4444;
+        }
+
+        /* Competitor Table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 0.875rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid #f3f4f6;
+        }
+
+        th {
+            color: #9ca3af;
+            font-weight: 500;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        td {
+            color: #374151;
+        }
+
+        .mention-count {
+            background: #fef3c7;
+            color: #92400e;
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        /* Tabs for LLM responses */
+        .example-tabs {
+            margin-top: 1.5rem;
+        }
+
+        .tabs-header {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+            padding-bottom: 0;
+        }
+
+        .tab-btn {
+            padding: 0.75rem 1.25rem;
+            background: transparent;
+            border: none;
+            color: #6b7280;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            margin-bottom: -1px;
+            transition: all 0.2s;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .tab-btn:hover {
+            color: #1f2937;
+        }
+
+        .tab-btn.active {
+            color: #1f2937;
+            border-bottom-color: #1f2937;
+        }
+
+        .tab-panel {
+            display: none;
+            background: #fafafa;
+            border-radius: 8px;
+            padding: 1.25rem;
+        }
+
+        .tab-panel.active {
+            display: block;
+        }
+
+        .example-question {
+            color: #1f2937;
+            font-weight: 500;
+            font-size: 0.95rem;
+            margin-bottom: 0.75rem;
+        }
+
+        /* Question breakdown table */
+        .question-breakdown {
+            margin-top: 1rem;
+        }
+
+        .breakdown-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        .breakdown-table th {
+            padding: 0.75rem;
+            text-align: center;
+            background: #f9fafb;
+            border-bottom: 2px solid #e5e7eb;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .breakdown-table th:first-child {
+            text-align: left;
+            width: 50%;
+        }
+
+        .breakdown-table td {
+            padding: 0.75rem;
+            border-bottom: 1px solid #f3f4f6;
+            vertical-align: middle;
+        }
+
+        .question-cell {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+        }
+
+        .question-num {
+            background: #e5e7eb;
+            color: #374151;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        .question-text {
+            color: #374151;
+            line-height: 1.4;
+        }
+
+        .llm-cell {
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-radius: 4px;
+        }
+
+        .llm-cell:hover {
+            background: #f3f4f6;
+        }
+
+        .llm-cell.mentioned {
+            color: #16a34a;
+        }
+
+        .llm-cell.mentioned .status-icon {
+            font-size: 1.25rem;
+        }
+
+        .llm-cell.not-mentioned {
+            color: #dc2626;
+        }
+
+        .llm-cell.not-mentioned .status-icon {
+            font-size: 1.25rem;
+        }
+
+        .breakdown-hint {
+            color: #9ca3af;
+            font-size: 0.8rem;
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+        /* Response modal */
+        .response-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+        }
+
+        .response-modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: #ffffff;
+            border-radius: 12px;
+            max-width: 800px;
+            width: 100%;
+            max-height: 90vh;
+            overflow: auto;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #9ca3af;
+            cursor: pointer;
+            padding: 0.25rem 0.5rem;
+        }
+
+        .modal-close:hover {
+            color: #374151;
+        }
+
+        .modal-header {
+            padding: 1.5rem 1.5rem 0;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            position: relative;
+        }
+
+        .modal-llm {
+            font-weight: 600;
+            color: #1f2937;
+            font-size: 1.1rem;
+        }
+
+        .modal-status {
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .modal-status.mentioned {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .modal-status.not-mentioned {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .modal-question {
+            padding: 1rem 1.5rem;
+            color: #6b7280;
+            font-size: 0.9rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .modal-response {
+            padding: 1.5rem;
+            overflow-y: auto;
+            flex: 1;
+            color: #374151;
+            font-size: 0.9rem;
+            line-height: 1.8;
+            min-height: 300px;
+            max-height: 60vh;
+            background: #fafafa;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .modal-response::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .modal-response::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        .modal-response::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 4px;
+        }
+
+        .modal-response::-webkit-scrollbar-thumb:hover {
+            background: #a1a1a1;
+        }
+
+        /* Brand highlight */
+        .brand-highlight {
+            background: linear-gradient(120deg, #fef08a 0%, #fde047 100%);
+            padding: 0.1rem 0.3rem;
+            border-radius: 3px;
+            font-weight: 600;
+        }
+
+        .example-content {
+            color: #6b7280;
+            font-size: 0.875rem;
+            line-height: 1.7;
+            max-height: 400px;
+            overflow-y: auto;
+            margin-bottom: 0.75rem;
+            padding: 1rem;
+            background: #f9fafb;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .example-status {
+            padding: 0.5rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            display: inline-block;
+        }
+
+        .example-status.mentioned {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .example-status.not-mentioned {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        /* Reddit Posts */
+        .reddit-posts {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .reddit-post {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: #fafafa;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: all 0.2s;
+            border: 1px solid transparent;
+        }
+
+        .reddit-post:hover {
+            background: #f3f4f6;
+            border-color: #e5e7eb;
+        }
+
+        .post-icon {
+            width: 40px;
+            height: 40px;
+            background: #1f2937;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .post-icon.pain {
+            background: #fef3c7;
+        }
+
+        .post-icon.pain svg {
+            color: #92400e;
+        }
+
+        .post-icon svg {
+            width: 20px;
+            height: 20px;
+            color: #ffffff;
+        }
+
+        .post-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .post-title {
+            color: #1f2937;
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .post-meta {
+            color: #9ca3af;
+            font-size: 0.8rem;
+        }
+
+        .post-arrow {
+            color: #9ca3af;
+            flex-shrink: 0;
+        }
+
+        .post-arrow svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .subsection-title {
+            color: #1f2937;
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin: 1.5rem 0 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .subsection-title:first-of-type {
+            margin-top: 0;
+        }
+
+        .subsection-desc {
+            color: #9ca3af;
+            font-size: 0.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .no-data {
+            color: #9ca3af;
+            font-style: italic;
+            text-align: center;
+            padding: 1rem;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            color: #9ca3af;
+            font-size: 0.8rem;
+            padding: 2rem;
+            border-top: 1px solid #e5e7eb;
+            margin-top: 2rem;
+        }
+
+        .footer a {
+            color: #1f2937;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* CTA */
+        .cta-section {
+            text-align: center;
+            padding: 3rem 2rem;
+            background: #fafafa;
+        }
+
+        .cta-section h2 {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 1.75rem;
+            color: #1f2937;
+            margin-bottom: 0.75rem;
+        }
+
+        .cta-section p {
+            color: #6b7280;
+            margin-bottom: 1.5rem;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background: #1f2937;
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .cta-button:hover {
+            background: #111827;
+            transform: translateY(-1px);
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .page-title h1 {
+                font-size: 1.75rem;
+            }
+
+            .section {
+                padding: 1.5rem;
+            }
+
+            .score-circle {
+                width: 130px;
+                height: 130px;
+            }
+
+            .score-value {
+                font-size: 2.25rem;
+            }
+
+            .llm-breakdown {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .tabs-header {
+                flex-wrap: wrap;
+            }
+
+            .tab-btn {
+                padding: 0.5rem 1rem;
+                font-size: 0.8rem;
+            }
+
+            .breakdown-table th,
+            .breakdown-table td {
+                padding: 0.5rem;
+                font-size: 0.8rem;
+            }
+
+            .question-cell {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .modal-content {
+                max-height: 90vh;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <a href="https://adva-solutions.com/AIVisibility" class="logo">adva</a>
+        <div class="header-right">
+            <!-- PDF button hidden for now - backend still available at /report/c93da82f/pdf
+            <a href="/report/c93da82f/pdf" class="pdf-button" title="Download as PDF">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                Download PDF
+            </a>
+            -->
+            <button class="copy-link-button" onclick="navigator.clipboard.writeText('https://adva-solutions.github.io/ai-visibility-report/report_gen-see-beauty_c93da82f.html'); showToast('Link copied!');" title="Copy shareable link">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                </svg>
+                Copy Link
+            </button>
+            <span class="header-date">February 08, 2026</span>
+        </div>
+    </header>
+    <div class="toast" id="toast">Link copied to clipboard!</div>
+
+    <div class="container">
+        <div class="page-title">
+            <div class="label">AI Visibility Report</div>
+            <h1>Your Brand's <em>AI Presence</em></h1>
+            <p class="brand">Analysis for Gen See Beauty</p>
+        </div>
+
+        <!-- Section 1: AI Visibility Score -->
+        <div class="section score-section">
+            <div class="score-circle">
+                <span class="score-value">0%</span>
+                <span class="score-label">0/15 mentions</span>
+            </div>
+            <p class="score-description">
+                Your brand appeared in <strong>0</strong> out of <strong>15</strong> AI recommendations
+            </p>
+            <div class="llm-breakdown">
+                
+            <div class="llm-stat">
+                <span class="llm-name">GPT</span>
+                <span class="llm-score warning">0/5</span>
+            </div>
+        
+            <div class="llm-stat">
+                <span class="llm-name">Claude</span>
+                <span class="llm-score warning">0/5</span>
+            </div>
+        
+            <div class="llm-stat">
+                <span class="llm-name">Gemini</span>
+                <span class="llm-score warning">0/5</span>
+            </div>
+        
+            </div>
+        </div>
+
+        <!-- Section 2: AI Response Breakdown -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                    </svg>
+                </div>
+                <h2 class="section-title">Question-by-Question Breakdown</h2>
+            </div>
+            <p style="color: #6b7280; margin-bottom: 1rem;">We asked these 5 questions to each AI model. Click any cell to see the full response:</p>
+            
+        <div class="question-breakdown">
+            <table class="breakdown-table">
+                <thead>
+                    <tr>
+                        <th>Question Asked</th>
+                        <th>GPT</th>
+                        <th>Claude</th>
+                        <th>Gemini</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q1</span>
+                    <span class="question-text">vegan makeup that works well</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top vegan makeup recommendations, each known for their quality, performance, and commitment to cruelty-free and vegan standards:<br><br>1. **Too Faced Born This Way Foundation**<br>   - **Why:** This foundation offers a natural finish with buildable coverage and is infused with hyaluronic acid for hydration. It is lightweight and provides a skin-like appearance, making it suitable for various skin types. Plus, Too Faced is committed to being cruelty-free and offers a range of shades for diverse skin tones.<br><br>2. **Tarte Cosmetics Shape Tape Concealer**<br>   - **Why:** Renowned for its full coverage and long-lasting formula, this concealer is perfect for covering blemishes and dark circles. It has a creamy texture that blends seamlessly into the skin. Tarte is a pioneer in the vegan makeup space, and their products are also cruelty-free.<br><br>3. **e.l.f. Cosmetics Bite Size Eyeshadow Palettes**<br>   - **Why:** These affordable eyeshadow palettes are compact, highly pigmented, and easy to blend. They come in a variety of color combinations, making it easy to create both everyday and bold looks. e.l.f. is known for its commitment to vegan and cruelty-free products, making it a great option for budget-conscious consumers.<br><br>4. **ILIA Beauty Color Haze Multi-Use Pigment**<br>   - **Why:** This versatile cream pigment can be used on the lips and cheeks, providing a natural flush of color. Its buildable formula allows for customization, and it is made with clean ingredients. ILIA Beauty prioritizes sustainability and offers a range of vegan products.<br><br>5. **100% Pure Fruit Pigmented Lipstick**<br>   - **Why:** These lipsticks are made from fruit pigments, providing vibrant color without harmful chemicals. They offer a nourishing formula that hydrates the lips while delivering long-lasting wear. 100% Pure focuses on using natural, organic, and vegan ingredients, making their products a healthy choice for makeup lovers.<br><br>These recommendations feature a mix of high-end and affordable options, ensuring that you can find quality vegan makeup that suits your needs and preferences."
+                    data-question="vegan makeup that works well"
+                    data-llm="gpt4"
+                    data-brand="Gen See Beauty"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top 5 recommendations for vegan makeup that works well:<br><br>1. Ilia Beauty: This brand offers a wide range of vegan and cruelty-free makeup products, including foundations, concealers, blushes, and lip products. They use clean, natural ingredients and their formulas are known for being long-lasting and high-performing.<br><br>2. Milk Makeup: This brand is known for its innovative, vegan, and cruelty-free makeup products. Their Hydro Grip Primer and Lip + Cheek Cream Blush are particularly popular and provide a natural, dewy finish.<br><br>3. Tarte Cosmetics: Tarte is a well-known vegan and cruelty-free brand that offers a variety of high-quality makeup products. Their Shape Tape Concealer and Amazonian Clay Blush are standout items that provide great coverage and long-lasting wear.<br><br>4. Pacifica Beauty: This brand offers affordable, vegan, and cruelty-free makeup options. Their Stellar Gaze Length and Strength Mascara and Alight Clean Foundation are great choices for natural, everyday looks.<br><br>5. Ere Perez: This Australian brand focuses on using natural, plant-based ingredients in their vegan and cruelty-free makeup products. Their Oat Milk Foundation and Vanilla Highlighter are particularly impressive."
+                    data-question="vegan makeup that works well"
+                    data-llm="claude"
+                    data-brand="Gen See Beauty"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Okay, here are my top vegan makeup recommendations, focusing on brands and specific products known for performance and availability:<br><br>**1. Milk Makeup Hydro Grip Primer:**<br><br>*   **Why it&#39;s great:** This is a cult favorite for a reason. It&#39;s a silicone-free, hydrating primer that creates a super tacky base for makeup. It truly helps makeup grip and last longer, even in hot or humid conditions. It&#39;s also packed with skin-loving ingredients like hyaluronic acid and niacinamide.<br>*   **Suitable for:** Most skin types, especially those with dry or combination skin. Oily skin might find it a bit too hydrating in very humid climates, but it&#39;s still worth trying.<br>*   **Where to buy:** Sephora, Ulta, Milk Makeup Website<br><br>**2. Pacifica Beauty Alight Clean Foundation:**<br><br>*   **Why it&#39;s great:** This foundation provides a natural, skin-like finish with medium, buildable coverage. It&#39;s infused with ingredients like coconut water and hyaluronic acid to hydrate and nourish the skin. It is also fragrance free, making it good for sensitive skin. Pacifica is also available at most drugstores, making it the most accessible on this list.<br>*   **Suitable for:** Most skin types.<br>*   **Where to buy:** Ulta, Target, Amazon<br><br>**3. E.L.F. Cosmetics Camo Concealer:**<br><br>*   **Why it&#39;s great:** E.L.F. Cosmetics is a brand that is 100% vegan and cruelty free, and they offer very affordable products that are high quality. The camo concealer is a full coverage matte concealer that covers dark circles and blemishes.<br>*   **Suitable for:** Most skin types.<br>*   **Where to buy:** Ulta, Target, Amazon, E.L.F. Cosmetics Website<br><br>**4. Axiology Lipsticks:**<br><br>*   **Why it&#39;s great:** Axiology is a brand that is dedicated to creating vegan, cruelty-free and zero waste products. Their lipsticks are made with natural and nourishing ingredients and they come in a wide range of shades and finishes.<br>*   **Suitable for:** All skin types.<br>*   **Where to buy:** Axiology Website, Credo Beauty<br><br>**Important Considerations:**<br><br>*   **&quot;Cruelty-Free&quot; vs. &quot;Vegan&quot;:** Remember that &quot;cruelty-free&quot; means the product wasn&#39;t tested on animals, but it might still contain animal-derived ingredients. &quot;Vegan&quot; means it contains no animal ingredients *and* is usually cruelty-free. Always double-check ingredient lists if veganism is your top priority.<br>*   **Ingredient Lists Change:** Brands sometimes reformulate products. Always check the ingredient list on the product packaging before purchasing, especially if you have sensitivities or allergies.<br>*   **Personal Preference:** Makeup is highly personal! What works wonders for one person might not be ideal for another. Consider your skin type, desired finish, and budget when making your final choices.<br>"
+                    data-question="vegan makeup that works well"
+                    data-llm="gemini"
+                    data-brand="Gen See Beauty"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q2</span>
+                    <span class="question-text">clean makeup brands</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top recommendations for clean makeup brands:<br><br>1. **Ilia Beauty**  <br>   Ilia is known for its commitment to clean ingredients and sustainability. Their products often include skin-loving elements like aloe and vitamin E, which provide hydration and nourishment. The brand offers a range of products from foundations to lipsticks, all designed to enhance your natural beauty while being free from harmful chemicals. <br><br>2. **RMS Beauty**  <br>   RMS Beauty focuses on using raw, food-grade ingredients that are organic and non-toxic. Their makeup is designed to be multifunctional, allowing users to simplify their beauty routine. RMS products, such as their &quot;Un&quot; Cover-Up and Living Luminizer, are popular for their ability to provide a natural, dewy finish while keeping the skin healthy.<br><br>3. **Kosås**  <br>   Kosås combines clean formulations with high-performance makeup. Their products are free from common irritants and are designed to be both effective and luxurious. The brand is particularly known for its tinted face oil and lipsticks, which offer beautiful pigmentation and a comfortable wear, making them a favorite among clean beauty enthusiasts.<br><br>4. **Tarte Cosmetics**  <br>   Tarte has a long-standing reputation in the clean beauty space, with a focus on natural ingredients and cruelty-free practices. They offer a wide variety of products, from foundations to eyeshadows, all formulated without parabens and phthalates. Tarte is also known for incorporating eco-friendly packaging, aligning with their commitment to sustainability.<br><br>5. **100% Pure**  <br>   Known for its fruit-pigmented makeup, 100% Pure emphasizes the use of natural ingredients that are both safe and effective. Their makeup products are free from synthetic chemicals and are cruelty-free. The brand offers a comprehensive range of products, including skincare-infused cosmetics, which makes it a great choice for those looking for clean beauty that nourishes the skin.<br><br>These brands not only prioritize clean ingredients but also deliver high-quality makeup products that cater to various beauty needs."
+                    data-question="clean makeup brands"
+                    data-llm="gpt4"
+                    data-brand="Gen See Beauty"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top 5 recommendations for clean makeup brands:<br><br>1. Ilia Beauty - This brand uses clean, non-toxic ingredients and focuses on creating high-performance, skin-nourishing makeup. They offer a wide range of products, including foundations, concealers, blushes, and lipsticks, all formulated with natural and organic components.<br><br>2. Kosas - Known for their minimalist, high-quality makeup, Kosas prioritizes clean, non-toxic formulas that are kind to the skin. Their product range includes complexion products, eyeshadows, and lip colors that are both effective and sustainable.<br><br>3. Beautycounter - This brand has a strong commitment to safety and transparency, ensuring that all their products are free from harmful chemicals and toxins. They offer a comprehensive range of makeup, skincare, and personal care items that are both high-performing and eco-friendly.<br><br>4. RMS Beauty - Founded by makeup artist Rose-Marie Swift, RMS Beauty focuses on creating nourishing, organic makeup that enhances natural beauty. Their products, including their cult-favorite &quot;Un&quot; Cover-Up concealer and lip-and-cheek tints, are formulated with pure, raw ingredients.<br><br>5. W3LL PEOPLE - This brand is dedicated to producing clean, non-toxic makeup that is also high-performing. They offer a variety of complexion products, eye makeup, and lip colors that are made with natural, sustainable ingredients and are cruelty-free."
+                    data-question="clean makeup brands"
+                    data-llm="claude"
+                    data-brand="Gen See Beauty"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Okay, here are my top 5 recommendations for clean makeup brands, listed in order of preference, along with brief explanations:<br><br>1.  **ILIA Beauty:** (Overall Best Balance of Performance and Clean Ingredients)<br>    *   **Why:** ILIA consistently delivers high-performing products with a focus on skin-loving ingredients. They are known for their dewy finishes and buildable coverage. They strike a great balance between efficacy, trendiness, and ingredient safety.<br>    *   **Highlight Product:** Their Super Serum Skin Tint SPF 40 is a cult favorite for a reason. It provides light coverage, sun protection, and a healthy glow.<br><br>2.  **Saie:** (Excellent for Beginners, Affordable and Effective)<br>    *   **Why:** Saie is a fantastic brand for those new to &quot;clean&quot; makeup. Their products are easy to use, often multi-purpose, and generally very forgiving. They have a focus on being accessibly priced compared to some other luxury clean brands.<br>    *   **Highlight Product:** Their Dew Blush is a universally flattering cream blush that blends seamlessly.<br><br>3.  **RMS Beauty:** (Focus on Raw and Minimal Ingredients, Great for Sensitive Skin)<br>    *   **Why:** RMS Beauty uses raw, food-grade, and organic ingredients whenever possible. This makes them a great choice for those with sensitive skin or who prefer a very minimalist approach to makeup. Their products often have a dewy, &quot;no makeup makeup&quot; look.<br>    *   **Highlight Product:** Their &quot;Un&quot; Cover-Up is a creamy concealer/foundation that provides natural-looking coverage.<br><br>4.  **Kosas:** (Innovative Formulas and Bold Colors)<br>    *   **Why:** Kosas is known for its innovative formulas and bolder color choices. They focus on creating products that are both good for your skin and deliver high-impact results.<br>    *   **Highlight Product:** Their Revealer Concealer is a creamy, medium-coverage concealer that brightens and hydrates.<br><br>5.  **Tower28:** (Specifically Formulated for Sensitive Skin, Simple and Effective)<br>    *   **Why:** Tower28 is hyper-focused on creating products specifically formulated for sensitive and eczema-prone skin. Their formulas are simple, effective, and free of common irritants.<br>    *   **Highlight Product:** Their SOS (Save Our Skin) Daily Rescue Facial Spray is a gentle and soothing spray that helps to calm irritation and redness.<br>**Important Considerations for &quot;Clean&quot; Beauty:**<br><br>*   **No Universal Definition:** It&#39;s important to remember that there&#39;s no single, universally agreed-upon definition of &quot;clean&quot; beauty. Different brands and retailers have their own standards.<br>*   **Research Ingredients:** Always check the ingredient lists and research any ingredients you&#39;re unsure about. Websites like EWG&#39;s Skin Deep database can be helpful.<br>*   **Personal Preference:** Ultimately, the best &quot;clean&quot; makeup brand for you will depend on your skin type, preferences, and budget.<br><br>I hope this helps! Good luck finding the perfect clean makeup for you.<br>"
+                    data-question="clean makeup brands"
+                    data-llm="gemini"
+                    data-brand="Gen See Beauty"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q3</span>
+                    <span class="question-text">cruelty free makeup that's high performance</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top recommendations for high-performance cruelty-free makeup brands, listed in order of preference:<br><br>### 1. **Too Faced**<br>Too Faced is well-known for its playful packaging and innovative products. The brand offers a wide range of makeup, including their **Born This Way Foundation**, which provides excellent coverage with a natural finish. Their products are formulated to be long-lasting and blend seamlessly, making them suitable for various skin types.<br><br>### 2. **Fenty Beauty**<br>Founded by Rihanna, Fenty Beauty has revolutionized the beauty industry with its inclusive shade range and high-quality formulations. The **Pro Filt&#39;r Soft Matte Longwear Foundation** is a standout product that caters to a diverse audience. It offers a soft matte finish with buildable coverage and is known for its long-lasting wear, making it a favorite for many.<br><br>### 3. **Tarte Cosmetics**<br>Tarte is recognized for its commitment to using natural ingredients and eco-friendly practices. The **Shape Tape Concealer** is a cult favorite that provides full coverage while remaining lightweight. It’s known for its blendability and long-wearing formula, making it an excellent choice for concealing imperfections and brightening the under-eye area.<br><br>### 4. **Urban Decay**<br>Urban Decay is celebrated for its edgy products and bold colors. Their **All Nighter Setting Spray** is a must-have for anyone looking to ensure their makeup lasts all day. It helps prevent makeup from fading or settling into fine lines, making it an essential step in any makeup routine.<br><br>### 5. **e.l.f. Cosmetics**<br>e.l.f. Cosmetics offers an impressive range of affordable, cruelty-free products without compromising quality. Their **Hydrating Camo Concealer** provides excellent coverage while hydrating the skin, making it a great option for those with dry skin. The brand has gained a loyal following for its high-performance products at budget-friendly prices.<br><br>These brands are not only cruelty-free but also deliver high-quality products that perform well across various makeup needs."
+                    data-question="cruelty free makeup that's high performance"
+                    data-llm="gpt4"
+                    data-brand="Gen See Beauty"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top 5 recommendations for cruelty-free, high-performance makeup:<br><br>1. Ilia Beauty: This brand is known for its clean, non-toxic formulas and high-performing products. Their Super Serum Skin Tint is a favorite for its luminous, skin-like finish, and their Multi-Stick cream blushes and highlighters are incredibly versatile and long-lasting.<br><br>2. Rare Beauty by Selena Gomez: Selena Gomez&#39;s makeup line is cruelty-free, vegan, and focused on enhancing natural beauty. The Liquid Blush and Soft Pinch Liquid Luminizer are standout products that blend seamlessly and provide a gorgeous, radiant glow.<br><br>3. Milk Makeup: This brand is known for its innovative, high-performance formulas that are also cruelty-free and vegan. The Hydro Grip Primer and Kush Mascara are must-try products that deliver long-lasting, high-impact results.<br><br>4. Fenty Beauty by Rihanna: Rihanna&#39;s inclusive makeup line offers a wide range of high-quality, cruelty-free products. The Pro Filt&#39;r Soft Matte Longwear Foundation and Killawatt Highlighters are particularly impressive for their flawless, long-wearing finish.<br><br>5. Kosas: This clean beauty brand creates high-performance, cruelty-free makeup that is both effective and good for the skin. The Revealer Concealer and the Wet Lip Oil Glosses are standout products that deliver beautiful, natural-looking results."
+                    data-question="cruelty free makeup that's high performance"
+                    data-llm="claude"
+                    data-brand="Gen See Beauty"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Okay, here are my top cruelty-free makeup recommendations that deliver high performance, listed in order of preference:<br><br>1.  **ILIA Super Serum Skin Tint SPF 40:** This is my top pick because it&#39;s a makeup *and* skincare hybrid. It provides light, dewy coverage that evens out skin tone while also delivering SPF 40 protection and skincare benefits like hydration and brightening. It&#39;s incredibly easy to apply (fingers work great!), feels lightweight, and gives a natural, healthy-looking glow. It&#39;s perfect for everyday wear and those who prefer a minimal makeup look but want a polished finish.<br><br>2.  **Rare Beauty by Selena Gomez Liquid Touch Weightless Foundation:** This foundation offers buildable medium coverage that feels incredibly lightweight on the skin. It blends beautifully and provides a natural, skin-like finish that lasts throughout the day. It&#39;s also designed to be comfortable and hydrating, making it suitable for various skin types. Rare Beauty is committed to cruelty-free practices and offers a wide range of shades.<br><br>3.  **Kosas Revealer Concealer:** This concealer is a cult favorite for a reason. It&#39;s a creamy, medium-coverage concealer that brightens, conceals, and hydrates. It&#39;s formulated with skincare ingredients like caffeine and peptides to help improve the appearance of the skin over time. It blends seamlessly and doesn&#39;t crease easily, making it ideal for under-eye circles and blemishes.<br><br>4.  **Pacifica Beauty Stellar Gaze Length & Strength Mineral Mascara:** This mascara delivers impressive length and volume without clumping or flaking. It&#39;s formulated with mineral pigments and plant-based fibers to enhance lashes naturally. Pacifica is a fully vegan and cruelty-free brand, and their makeup is generally very affordable and accessible.<br><br>5.  **MOB Beauty Cream Clay Blush:** A cream blush that is long lasting, vibrant and buildable. MOB Beauty is a sustainable and cruelty free company that has refillable compacts.<br>"
+                    data-question="cruelty free makeup that's high performance"
+                    data-llm="gemini"
+                    data-brand="Gen See Beauty"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q4</span>
+                    <span class="question-text">best clean beauty makeup</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top recommendations for clean beauty makeup products, each known for their effective formulations and commitment to clean ingredients:<br><br>1. **Ilia Super Serum Skin Tint SPF 40**  <br>   This product combines the benefits of a serum, tint, and sunscreen in one. It provides light coverage while hydrating the skin with hyaluronic acid and calming ingredients like niacinamide. The mineral SPF protects against UV rays, making it a great option for everyday wear.<br><br>2. **RMS Beauty &quot;Un&quot; Cover-Up**  <br>   This versatile concealer and foundation duo gives a natural, dewy finish while covering imperfections. Made with organic ingredients like coconut oil, it nourishes the skin while providing buildable coverage. Its lightweight formula makes it perfect for a fresh-faced look.<br><br>3. **BareMinerals Gen Nude Blonzer**  <br>   A unique hybrid between a blush and bronzer, this product offers a soft, radiant finish. It&#39;s infused with a blend of mineral pigments and is free from synthetic fragrances and parabens. The blendable formula makes it easy to achieve a sun-kissed glow without looking overdone.<br><br>4. **Alima Pure Satin Matte Foundation**  <br>   This loose powder foundation is made with clean, non-toxic ingredients and provides buildable coverage with a natural finish. It&#39;s suitable for all skin types and is free from synthetic dyes, fragrances, and preservatives. The product is also available in a wide range of shades to suit diverse skin tones.<br><br>5. **100% Pure Fruit Pigmented Lip Glaze**  <br>   Infused with fruit pigments, this lip glaze delivers vibrant color while nourishing the lips with antioxidants. It&#39;s free from synthetic dyes and harsh chemicals, making it a great choice for those looking for a clean and effective lip product. The glossy finish provides hydration and a luscious look.<br><br>These products are not only clean and safe for your skin but also perform well and provide a beautiful finish."
+                    data-question="best clean beauty makeup"
+                    data-llm="gpt4"
+                    data-brand="Gen See Beauty"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top 5 recommendations for the best clean beauty makeup products:<br><br>1. Ilia Super Serum Skin Tint SPF 40 - This multitasking tinted serum provides sheer, buildable coverage while also hydrating and protecting the skin with mineral-based SPF 40. It&#39;s formulated with clean, nourishing ingredients like squalane and plant-based stem cells.<br><br>2. Kosas Revealer Concealer - This clean, crease-resistant concealer effectively covers imperfections while also brightening and smoothing the skin. It&#39;s infused with peptides, caffeine, and hyaluronic acid for a radiant, healthy-looking finish.<br><br>3. RMS Beauty Lip Shine - These hydrating, glossy lip products are made with nourishing, organic ingredients like coconut oil and cocoa butter. They provide a sheer, flattering tint of color while keeping lips soft and moisturized.<br><br>4. Ere Perez Oat Milk Foundation - This buildable, medium-coverage foundation is formulated with soothing oat milk and antioxidant-rich botanical extracts. It leaves a natural, dewy finish on the skin.<br><br>5. W3LL PEOPLE Bio Brightener Cream - This clean, mineral-based highlighter imparts a radiant, luminous glow to the high points of the face. It&#39;s made with nourishing ingredients like aloe vera and vitamin E."
+                    data-question="best clean beauty makeup"
+                    data-llm="claude"
+                    data-brand="Gen See Beauty"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Okay, here are my top 3 recommendations for clean beauty makeup, ranked in order of preference, considering performance, ingredient quality, and overall value:<br><br>1.  **Ilia Super Serum Skin Tint SPF 40:** This is my #1 pick because it combines skincare and makeup beautifully. It offers light, dewy coverage that evens out skin tone while providing sun protection and hydration. The formula is packed with skin-loving ingredients like hyaluronic acid, squalane, and niacinamide. It&#39;s perfect for everyday wear and gives a natural, healthy-looking glow.  The shade range is also quite inclusive. It&#39;s a bit pricey, but worth the investment for its multi-tasking benefits.<br><br>2.  **RMS Beauty &quot;Un&quot; Cover-Up Concealer/Foundation:** This product does double duty and is fantastic for creating a natural, &quot;your skin but better&quot; look. It&#39;s a creamy, buildable formula that can be used as a concealer or a light foundation. It contains coconut oil, jojoba oil, and cocoa butter, which nourish the skin. RMS Beauty prioritizes raw, food-grade ingredients, and their products are known for their minimalist approach. While it might not be ideal for those who prefer full coverage, it&#39;s excellent for achieving a dewy, radiant complexion.<br><br>3.  **Saie Mascara 101:** Finding a truly clean mascara can be challenging, but Saie&#39;s Mascara 101 is a winner. It delivers length, volume, and definition without any harsh chemicals or synthetic fragrances. The formula is buildable and doesn&#39;t flake or smudge. Plus, it&#39;s made with ingredients like beeswax and shea butter to condition lashes. It&#39;s a great everyday mascara that&#39;s gentle on the eyes and effective.<br>"
+                    data-question="best clean beauty makeup"
+                    data-llm="gemini"
+                    data-brand="Gen See Beauty"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q5</span>
+                    <span class="question-text">sustainable makeup options</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top sustainable makeup recommendations, listed in order of preference:<br><br>1. **Ilia Beauty**  <br>   Ilia is known for its commitment to clean ingredients and sustainable packaging. Their products are formulated with organic botanicals and are free from harmful chemicals. The brand offers a wide range of makeup, including their popular &quot;Super Serum Skin Tint,&quot; which provides light coverage while nourishing the skin.<br><br>2. **RMS Beauty**  <br>   RMS Beauty focuses on using raw, food-grade ingredients that are organic and non-toxic. Their packaging is designed to be refillable, reducing waste. The &quot;Un&quot; Cover-Up concealer is a standout product, providing excellent coverage while maintaining a natural finish and promoting skin health.<br><br>3. **100% Pure**  <br>   This brand emphasizes using fruit pigments and natural ingredients, avoiding synthetic dyes and harmful chemicals. Their products are cruelty-free and vegan. The &quot;Fruit Pigmented® Foundation&quot; is a favorite for its lightweight feel and natural coverage, offering a variety of shades suitable for different skin tones.<br><br>4. **Kjaer Weis**  <br>   Kjaer Weis is a luxury makeup brand that offers refillable products in beautiful packaging. Their formulations are organic and high-performing. The &quot;Cream Blush&quot; is particularly notable for its creamy texture, easy application, and vibrant color payoff while being gentle on the skin.<br><br>5. **Eminence Organic Skin Care**  <br>   While primarily known for skincare, Eminence also offers a small range of makeup products. They focus on organic and biodynamic ingredients, and their commitment to sustainability is evident in their eco-friendly packaging. The &quot;Organic Makeup Primer&quot; can be a great addition to your routine to prepare the skin for makeup application while providing hydration.<br><br>These brands not only prioritize sustainability but also offer high-quality products that cater to various makeup needs."
+                    data-question="sustainable makeup options"
+                    data-llm="gpt4"
+                    data-brand="Gen See Beauty"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top 5 recommendations for sustainable makeup options:<br><br>1. Ilia Beauty: This brand focuses on clean, non-toxic ingredients and sustainable packaging. Their products include foundation, concealer, blush, and lip products. They use recycled and recyclable materials in their packaging.<br><br>2. Kjaer Weis: A luxury, refillable makeup line that uses organic, high-quality ingredients. Their sleek, metal compacts can be refilled, reducing waste. They offer a range of complexion, eye, and lip products.<br><br>3. Alima Pure: A mineral-based makeup brand that uses natural, non-toxic ingredients. Their products are vegan, cruelty-free, and packaged in recyclable or compostable materials.<br><br>4. RMS Beauty: Known for their coconut oil-based, multi-use products, RMS Beauty emphasizes clean, nourishing ingredients. Their packaging is recyclable or reusable.<br><br>5. Ere Perez: This Australian brand focuses on plant-based, cruelty-free formulas. They offer a variety of makeup, skincare, and nail polish products with sustainable, eco-friendly packaging.<br><br>These brands prioritize sustainability, ethical sourcing, and non-toxic formulas, making them excellent choices for those seeking more environmentally-conscious makeup options."
+                    data-question="sustainable makeup options"
+                    data-llm="claude"
+                    data-brand="Gen See Beauty"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Okay, here are my top sustainable makeup recommendations, prioritizing both environmental impact and product quality, listed in order of preference:<br><br>1.  **Elate Cosmetics (Multi-Use Products & Refill System):**<br><br>    *   **Why I Rate it High:** Elate Cosmetics is a leader in sustainability, focusing on refillable bamboo compacts and a wide range of vegan, cruelty-free, and ethically sourced ingredients. Their multi-use products like their Pressed EyeColors (which can be used as eyeliner, brow filler, or eyeshadow) and Universal Crème (can be used for cheeks, lips, eyes)  greatly minimize waste.  They also use seed paper for packaging some of their products, which can be planted.<br>    *   **Best For:** Someone looking for a complete makeup system with a strong commitment to the environment and wants to reduce plastic waste drastically.<br>    *   **Considerations:**  The initial investment in the compacts can be higher, but the long-term savings and environmental benefits are significant.<br><br>2.  **ILIA Beauty (Hybrid Skincare & Makeup):**<br><br>    *   **Why I Rate it High:** ILIA bridges the gap between skincare and makeup, using primarily organic and natural ingredients. They focus on creating products that nourish the skin while providing coverage and color. They have a strong recycling program for their packaging. Their focus on less is more and multi-use products helps reduce the amount of makeup you need.<br>    *   **Best For:** People who prioritize healthy skin and want makeup that is both effective and gentle.<br>    *   **Considerations:**  While they use sustainable practices, some of their packaging still involves plastic, though they are actively working to improve this.<br><br>3.  **RMS Beauty (Minimalist & Organic):**<br><br>    *   **Why I Rate it High:** RMS Beauty is known for its raw, food-grade, and organic ingredients. Their focus is on creating &quot;living skin&quot; makeup that enhances your natural beauty without clogging pores or causing irritation. They use minimal packaging, often in recyclable glass or metal.<br>    *   **Best For:** Those with sensitive skin or who prefer a natural, dewy makeup look.<br>    *   **Considerations:** Their product range is smaller compared to some other brands, and the minimalist aesthetic might not appeal to everyone.<br><br>4. **Axiology Beauty (Vegan & Zero-Waste Lip Products):**<br><br>    *   **Why I Rate it High:** Axiology specializes in vegan and cruelty-free lipsticks, lip crayons, and lip balms. They are committed to zero-waste packaging, using recycled paper boxes that are made by a women&#39;s cooperative in Bali. Their products are richly pigmented and long-lasting.<br>    *   **Best For:** Lipstick lovers who want a sustainable and ethical option.<br>    *   **Considerations:** Their focus is primarily on lip products, so you&#39;ll need to source other makeup items from other brands.<br><br>5. **Zao Organic Makeup (Bamboo Packaging & Refills):**<br><br>   * **Why I Rate it High:** Zao Organic Makeup is another brand that utilizes bamboo packaging for many of its products, offering refills to reduce waste. They are committed to using organic ingredients and are certified by Ecocert. They offer a wide range of makeup products, from foundation to eyeshadows.<br>   * **Best For:** People who are looking for a more affordable refillable option and want a wide variety of makeup products to choose from.<br>   * **Considerations:** While their bamboo packaging is beautiful, it&#39;s important to handle it with care to avoid damage.<br><br>**Important Considerations for Choosing Sustainable Makeup:**<br><br>*   **Ingredients:** Look for brands that prioritize organic, natural, and ethically sourced ingredients. Avoid ingredients known to be harmful to the environment or human health.<br>*   **Packaging:** Consider packaging materials (recycled, recyclable, refillable, compostable) and minimize single-use plastic.<br>*   **Certifications:** Look for certifications like Leaping Bunny (cruelty-free), COSMOS/Ecocert (organic), and Vegan Society.<br>*   **Company Ethics:** Research the brand&#39;s overall commitment to sustainability, ethical labor practices, and environmental initiatives.<br>*   **Refills:** Refillable products are one of the best ways to reduce your carbon footprint. Look for brands that offer refills of their most popular products.<br><br>I hope this comprehensive list helps you find the perfect sustainable makeup options for your needs and values!<br>"
+                    data-question="sustainable makeup options"
+                    data-llm="gemini"
+                    data-brand="Gen See Beauty"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+                </tbody>
+            </table>
+            <p class="breakdown-hint">Click any cell to see the full AI response</p>
+        </div>
+
+        <!-- Response modal -->
+        <div class="response-modal" id="responseModal">
+            <div class="modal-content" onclick="event.stopPropagation()">
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+                <div class="modal-header">
+                    <span class="modal-llm" id="modalLlm"></span>
+                    <span class="modal-status" id="modalStatus"></span>
+                </div>
+                <div class="modal-question" id="modalQuestion"></div>
+                <div class="modal-response" id="modalResponse"></div>
+            </div>
+        </div>
+    
+        </div>
+
+        <!-- Section 3: Reddit Opportunities -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <h2 class="section-title">Reddit Opportunities</h2>
+            </div>
+
+            <div class="subsection-title">Buy Intent Conversations</div>
+            <p class="subsection-desc">People actively looking for recommendations in your category</p>
+            <div class="reddit-posts">
+                
+            <a href="https://www.reddit.com/r/Makeup101/comments/1qsu8ea/clean_girl_makeup_any_tips/" target="_blank" class="reddit-post">
+                <div class="post-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">Clean girl makeup! Any tips? : r/Makeup101</div>
+                    <div class="post-meta">
+                        r/Makeup101 &bull; 102K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            <a href="https://www.reddit.com/r/makeuptips/comments/1qulnxt/i_asked_what_i_should_do_to_improve_my_makeup_a/" target="_blank" class="reddit-post">
+                <div class="post-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">i asked what i should do to improve my makeup a while ...</div>
+                    <div class="post-meta">
+                        r/makeuptips &bull; 151K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            <a href="https://www.reddit.com/r/SkincareAddiction/comments/1qveaed/product_question_clean_beauty_products_love_it_or/" target="_blank" class="reddit-post">
+                <div class="post-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">[Product Question] Clean beauty products: love it or list it?</div>
+                    <div class="post-meta">
+                        r/SkincareAddiction &bull; 4.9M members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            <a href="https://www.reddit.com/r/Makeup/comments/1qw6mq0/whats_the_worst_makeup_advice_you_were_taught/" target="_blank" class="reddit-post">
+                <div class="post-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">What's the worst makeup advice you were taught that ...</div>
+                    <div class="post-meta">
+                        r/Makeup &bull; 1.9M members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            </div>
+
+            <div class="subsection-title">Pain Point Conversations</div>
+            <p class="subsection-desc">People discussing problems your product solves</p>
+            <div class="reddit-posts">
+                
+            <a href="https://www.reddit.com/r/MakeupAddiction/comments/1quf2ae/est%C3%A9e_lauder_stock_el_in_focus_after_company_is/" target="_blank" class="reddit-post">
+                <div class="post-icon pain">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">Estée Lauder Stock (EL) in Focus After Company Is Fined ...</div>
+                    <div class="post-meta">
+                        r/MakeupAddiction &bull; 7.3M members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            <a href="https://www.reddit.com/r/TheGirlSurvivalGuide/comments/1qxd88y/please_help_with_good_skincare_products_no/" target="_blank" class="reddit-post">
+                <div class="post-icon pain">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">Please help with good skincare products (no polymers, ...</div>
+                    <div class="post-meta">
+                        r/TheGirlSurvivalGuide &bull; 573K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            </div>
+        </div>
+
+        <!-- CTA Section -->
+        <div class="section cta-section">
+            <h2>Ready to improve your <em>AI visibility?</em></h2>
+            <p>We help brands get mentioned more in AI answers through strategic content placement.</p>
+            <a href="https://adva-solutions.com/AIVisibility" class="cta-button">Learn More</a>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p>Generated by <a href="https://adva-solutions.com">Adva</a> &bull; AI Visibility Health Check</p>
+    </footer>
+
+    <script>
+        // Tab switching functionality
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const tabId = btn.dataset.tab;
+
+                // Update buttons
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                // Update panels
+                document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+                document.getElementById('panel-' + tabId).classList.add('active');
+            });
+        });
+
+        // Show toast notification
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2500);
+        }
+
+        // Show response modal
+        function showResponse(cell) {
+            try {
+                let response = cell.dataset.response || 'No response available';
+                const question = cell.dataset.question || '';
+                const llm = cell.dataset.llm || '';
+                const brand = cell.dataset.brand || '';
+                const isMentioned = cell.classList.contains('mentioned');
+                const brandPosition = cell.dataset.position ? parseInt(cell.dataset.position) : null;
+
+                const llmNames = {'gpt4': 'GPT', 'claude': 'Claude', 'gemini': 'Gemini'};
+
+                // If brand is mentioned beyond position 5, add a banner at the top
+                let positionBanner = '';
+                if (isMentioned && brandPosition && brandPosition > 5) {
+                    positionBanner = '<div style="background: #fef3c7; padding: 0.75rem 1rem; border-radius: 6px; margin-bottom: 1rem; border-left: 4px solid #f59e0b;">' +
+                        '<strong>📍 Your brand appeared at position #' + brandPosition + '</strong> - scroll down to see the highlighted mention' +
+                        '</div>';
+                }
+
+                // Highlight brand name in response (case insensitive)
+                if (brand && isMentioned) {
+                    try {
+                        const brandRegex = new RegExp('(' + brand.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&') + ')', 'gi');
+                        response = response.replace(brandRegex, '<span class="brand-highlight">$1</span>');
+                    } catch(e) { /* ignore highlighting errors */ }
+                }
+
+                document.getElementById('modalLlm').textContent = llmNames[llm] || llm;
+                document.getElementById('modalQuestion').textContent = '"' + question + '"';
+                document.getElementById('modalResponse').innerHTML = positionBanner + response;
+
+                const statusEl = document.getElementById('modalStatus');
+                if (isMentioned) {
+                    statusEl.textContent = 'Mentioned';
+                    statusEl.className = 'modal-status mentioned';
+                } else {
+                    statusEl.textContent = 'Not mentioned';
+                    statusEl.className = 'modal-status not-mentioned';
+                }
+
+                document.getElementById('responseModal').classList.add('active');
+                document.body.style.overflow = 'hidden';
+
+                // Scroll to first highlight if mentioned
+                if (isMentioned) {
+                    setTimeout(function() {
+                        const highlight = document.querySelector('.modal-response .brand-highlight');
+                        if (highlight) {
+                            highlight.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        }
+                    }, 100);
+                }
+            } catch (e) {
+                console.error('Error showing response:', e);
+                alert('Error loading response. Please try again.');
+            }
+        }
+
+        // Close modal
+        function closeModal() {
+            document.getElementById('responseModal').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // Close when clicking backdrop (outside modal content)
+        document.getElementById('responseModal').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+
+        // Close modal on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeModal();
+        });
+    </script>
+</body>
+</html>
