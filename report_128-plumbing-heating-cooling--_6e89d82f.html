@@ -1,0 +1,1370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Visibility Report - 128 Plumbing, Heating, Cooling & Electric | Adva</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #ffffff;
+            min-height: 100vh;
+            color: #374151;
+            line-height: 1.6;
+        }
+
+        /* Header */
+        .header {
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            font-size: 1.25rem;
+            color: #1f2937;
+            text-decoration: none;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .header-date {
+            color: #9ca3af;
+            font-size: 0.875rem;
+        }
+
+        /* Copy link button */
+        .copy-link-button {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: #f3f4f6;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            color: #374151;
+            font-size: 0.75rem;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .copy-link-button:hover {
+            background: #e5e7eb;
+        }
+
+        .copy-link-button svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        .pdf-button {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: #1f2937;
+            border: none;
+            border-radius: 6px;
+            color: #ffffff;
+            font-size: 0.75rem;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .pdf-button:hover {
+            background: #374151;
+        }
+
+        .pdf-button svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        /* Toast notification */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: #1f2937;
+            color: #ffffff;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            opacity: 0;
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        /* Container */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Page title */
+        .page-title {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .page-title .label {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: #9ca3af;
+            font-size: 0.75rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+        }
+
+        .page-title .label::before,
+        .page-title .label::after {
+            content: '';
+            width: 30px;
+            height: 1px;
+            background: #d1d5db;
+        }
+
+        .page-title h1 {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 2.5rem;
+            font-weight: 400;
+            color: #1f2937;
+            margin-bottom: 0.5rem;
+        }
+
+        .page-title .brand {
+            color: #6b7280;
+            font-size: 1.125rem;
+        }
+
+        /* Sections */
+        .section {
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #f3f4f6;
+        }
+
+        .section-icon {
+            width: 40px;
+            height: 40px;
+            background: #1f2937;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .section-icon svg {
+            width: 20px;
+            height: 20px;
+            color: #ffffff;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 1.375rem;
+            color: #1f2937;
+        }
+
+        /* Score Section */
+        .score-section {
+            text-align: center;
+            padding: 3rem 2rem;
+        }
+
+        .score-circle {
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            background: #fafafa;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            border: 4px solid #ef4444;
+        }
+
+        .score-value {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 3rem;
+            font-weight: 500;
+            color: #ef4444;
+        }
+
+        .score-label {
+            font-size: 0.8rem;
+            color: #9ca3af;
+        }
+
+        .score-description {
+            color: #6b7280;
+            margin-bottom: 2rem;
+            font-size: 1rem;
+        }
+
+        .score-description strong {
+            color: #1f2937;
+        }
+
+        .llm-breakdown {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .llm-stat {
+            text-align: center;
+            padding: 1rem 1.5rem;
+            background: #fafafa;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+            min-width: 100px;
+        }
+
+        .llm-name {
+            display: block;
+            color: #9ca3af;
+            font-size: 0.8rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .llm-score {
+            font-size: 1.125rem;
+            font-weight: 600;
+        }
+
+        .llm-score.success {
+            color: #22c55e;
+        }
+
+        .llm-score.warning {
+            color: #ef4444;
+        }
+
+        /* Competitor Table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 0.875rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid #f3f4f6;
+        }
+
+        th {
+            color: #9ca3af;
+            font-weight: 500;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        td {
+            color: #374151;
+        }
+
+        .mention-count {
+            background: #fef3c7;
+            color: #92400e;
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        /* Tabs for LLM responses */
+        .example-tabs {
+            margin-top: 1.5rem;
+        }
+
+        .tabs-header {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+            padding-bottom: 0;
+        }
+
+        .tab-btn {
+            padding: 0.75rem 1.25rem;
+            background: transparent;
+            border: none;
+            color: #6b7280;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            margin-bottom: -1px;
+            transition: all 0.2s;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .tab-btn:hover {
+            color: #1f2937;
+        }
+
+        .tab-btn.active {
+            color: #1f2937;
+            border-bottom-color: #1f2937;
+        }
+
+        .tab-panel {
+            display: none;
+            background: #fafafa;
+            border-radius: 8px;
+            padding: 1.25rem;
+        }
+
+        .tab-panel.active {
+            display: block;
+        }
+
+        .example-question {
+            color: #1f2937;
+            font-weight: 500;
+            font-size: 0.95rem;
+            margin-bottom: 0.75rem;
+        }
+
+        /* Question breakdown table */
+        .question-breakdown {
+            margin-top: 1rem;
+        }
+
+        .breakdown-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        .breakdown-table th {
+            padding: 0.75rem;
+            text-align: center;
+            background: #f9fafb;
+            border-bottom: 2px solid #e5e7eb;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .breakdown-table th:first-child {
+            text-align: left;
+            width: 50%;
+        }
+
+        .breakdown-table td {
+            padding: 0.75rem;
+            border-bottom: 1px solid #f3f4f6;
+            vertical-align: middle;
+        }
+
+        .question-cell {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+        }
+
+        .question-num {
+            background: #e5e7eb;
+            color: #374151;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        .question-text {
+            color: #374151;
+            line-height: 1.4;
+        }
+
+        .llm-cell {
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-radius: 4px;
+        }
+
+        .llm-cell:hover {
+            background: #f3f4f6;
+        }
+
+        .llm-cell.mentioned {
+            color: #16a34a;
+        }
+
+        .llm-cell.mentioned .status-icon {
+            font-size: 1.25rem;
+        }
+
+        .llm-cell.not-mentioned {
+            color: #dc2626;
+        }
+
+        .llm-cell.not-mentioned .status-icon {
+            font-size: 1.25rem;
+        }
+
+        .breakdown-hint {
+            color: #9ca3af;
+            font-size: 0.8rem;
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+        /* Response modal */
+        .response-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+        }
+
+        .response-modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: #ffffff;
+            border-radius: 12px;
+            max-width: 800px;
+            width: 100%;
+            max-height: 90vh;
+            overflow: auto;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #9ca3af;
+            cursor: pointer;
+            padding: 0.25rem 0.5rem;
+        }
+
+        .modal-close:hover {
+            color: #374151;
+        }
+
+        .modal-header {
+            padding: 1.5rem 1.5rem 0;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            position: relative;
+        }
+
+        .modal-llm {
+            font-weight: 600;
+            color: #1f2937;
+            font-size: 1.1rem;
+        }
+
+        .modal-status {
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .modal-status.mentioned {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .modal-status.not-mentioned {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .modal-question {
+            padding: 1rem 1.5rem;
+            color: #6b7280;
+            font-size: 0.9rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .modal-response {
+            padding: 1.5rem;
+            overflow-y: auto;
+            flex: 1;
+            color: #374151;
+            font-size: 0.9rem;
+            line-height: 1.8;
+            min-height: 300px;
+            max-height: 60vh;
+            background: #fafafa;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .modal-response::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .modal-response::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        .modal-response::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 4px;
+        }
+
+        .modal-response::-webkit-scrollbar-thumb:hover {
+            background: #a1a1a1;
+        }
+
+        /* Brand highlight */
+        .brand-highlight {
+            background: linear-gradient(120deg, #fef08a 0%, #fde047 100%);
+            padding: 0.1rem 0.3rem;
+            border-radius: 3px;
+            font-weight: 600;
+        }
+
+        .example-content {
+            color: #6b7280;
+            font-size: 0.875rem;
+            line-height: 1.7;
+            max-height: 400px;
+            overflow-y: auto;
+            margin-bottom: 0.75rem;
+            padding: 1rem;
+            background: #f9fafb;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .example-status {
+            padding: 0.5rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            display: inline-block;
+        }
+
+        .example-status.mentioned {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .example-status.not-mentioned {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        /* Reddit Posts */
+        .reddit-posts {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .reddit-post {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: #fafafa;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: all 0.2s;
+            border: 1px solid transparent;
+        }
+
+        .reddit-post:hover {
+            background: #f3f4f6;
+            border-color: #e5e7eb;
+        }
+
+        .post-icon {
+            width: 40px;
+            height: 40px;
+            background: #1f2937;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .post-icon.pain {
+            background: #fef3c7;
+        }
+
+        .post-icon.pain svg {
+            color: #92400e;
+        }
+
+        .post-icon svg {
+            width: 20px;
+            height: 20px;
+            color: #ffffff;
+        }
+
+        .post-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .post-title {
+            color: #1f2937;
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .post-meta {
+            color: #9ca3af;
+            font-size: 0.8rem;
+        }
+
+        .post-arrow {
+            color: #9ca3af;
+            flex-shrink: 0;
+        }
+
+        .post-arrow svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .subsection-title {
+            color: #1f2937;
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin: 1.5rem 0 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .subsection-title:first-of-type {
+            margin-top: 0;
+        }
+
+        .subsection-desc {
+            color: #9ca3af;
+            font-size: 0.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .no-data {
+            color: #9ca3af;
+            font-style: italic;
+            text-align: center;
+            padding: 1rem;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            color: #9ca3af;
+            font-size: 0.8rem;
+            padding: 2rem;
+            border-top: 1px solid #e5e7eb;
+            margin-top: 2rem;
+        }
+
+        .footer a {
+            color: #1f2937;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* CTA */
+        .cta-section {
+            text-align: center;
+            padding: 3rem 2rem;
+            background: #fafafa;
+        }
+
+        .cta-section h2 {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 1.75rem;
+            color: #1f2937;
+            margin-bottom: 0.75rem;
+        }
+
+        .cta-section p {
+            color: #6b7280;
+            margin-bottom: 1.5rem;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background: #1f2937;
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .cta-button:hover {
+            background: #111827;
+            transform: translateY(-1px);
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .page-title h1 {
+                font-size: 1.75rem;
+            }
+
+            .section {
+                padding: 1.5rem;
+            }
+
+            .score-circle {
+                width: 130px;
+                height: 130px;
+            }
+
+            .score-value {
+                font-size: 2.25rem;
+            }
+
+            .llm-breakdown {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .tabs-header {
+                flex-wrap: wrap;
+            }
+
+            .tab-btn {
+                padding: 0.5rem 1rem;
+                font-size: 0.8rem;
+            }
+
+            .breakdown-table th,
+            .breakdown-table td {
+                padding: 0.5rem;
+                font-size: 0.8rem;
+            }
+
+            .question-cell {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .modal-content {
+                max-height: 90vh;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <a href="https://adva-solutions.com/AIVisibility" class="logo">adva</a>
+        <div class="header-right">
+            <!-- PDF button hidden for now - backend still available at /report/6e89d82f/pdf
+            <a href="/report/6e89d82f/pdf" class="pdf-button" title="Download as PDF">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                Download PDF
+            </a>
+            -->
+            <button class="copy-link-button" onclick="navigator.clipboard.writeText('https://adva-solutions.github.io/ai-visibility-report/report_128-plumbing-heating-cooling--_6e89d82f.html'); showToast('Link copied!');" title="Copy shareable link">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                </svg>
+                Copy Link
+            </button>
+            <span class="header-date">February 12, 2026</span>
+        </div>
+    </header>
+    <div class="toast" id="toast">Link copied to clipboard!</div>
+
+    <div class="container">
+        <div class="page-title">
+            <div class="label">AI Visibility Report</div>
+            <h1>Your Brand's <em>AI Presence</em></h1>
+            <p class="brand">Analysis for 128 Plumbing, Heating, Cooling & Electric</p>
+        </div>
+
+        <!-- Section 1: AI Visibility Score -->
+        <div class="section score-section">
+            <div class="score-circle">
+                <span class="score-value">0%</span>
+                <span class="score-label">0/14 mentions</span>
+            </div>
+            <p class="score-description">
+                Your brand appeared in <strong>0</strong> out of <strong>14</strong> AI recommendations
+            </p>
+            <div class="llm-breakdown">
+                
+            <div class="llm-stat">
+                <span class="llm-name">GPT</span>
+                <span class="llm-score warning">0/5</span>
+            </div>
+        
+            <div class="llm-stat">
+                <span class="llm-name">Claude</span>
+                <span class="llm-score warning">0/5</span>
+            </div>
+        
+            <div class="llm-stat">
+                <span class="llm-name">Gemini</span>
+                <span class="llm-score warning">0/4</span>
+            </div>
+        
+            </div>
+        </div>
+
+        <!-- Section 2: AI Response Breakdown -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                    </svg>
+                </div>
+                <h2 class="section-title">Question-by-Question Breakdown</h2>
+            </div>
+            <p style="color: #6b7280; margin-bottom: 1rem;">We asked these 5 questions to each AI model. Click any cell to see the full response:</p>
+            
+        <div class="question-breakdown">
+            <table class="breakdown-table">
+                <thead>
+                    <tr>
+                        <th>Question Asked</th>
+                        <th>GPT</th>
+                        <th>Claude</th>
+                        <th>Gemini</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q1</span>
+                    <span class="question-text">plumber near me in boston</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are some top recommendations for plumbers in Boston:<br><br>1. **Boston Standard Plumbing, Heating & Air Conditioning**<br>   - **Overview**: Known for their high-quality service and customer satisfaction, Boston Standard offers a wide range of plumbing services, from emergency repairs to routine maintenance.<br>   - **Why Choose Them**: They have a team of licensed and insured plumbers, and they are praised for their punctuality and professionalism. They also provide free estimates and have a strong reputation in the local community.<br><br>2. **D. M. Plumbing & Heating**<br>   - **Overview**: D. M. Plumbing & Heating specializes in both residential and commercial plumbing services. They have a solid track record for their expertise in plumbing and heating systems.<br>   - **Why Choose Them**: Clients appreciate their transparency in pricing and their ability to handle complex plumbing issues. Their technicians are highly trained, and they offer a satisfaction guarantee on their work.<br><br>3. **A. A. Plumbing & Heating**<br>   - **Overview**: A. A. Plumbing & Heating is a family-owned business that has been serving the Boston area for over 30 years. They offer a full range of plumbing services, including installations and repairs.<br>   - **Why Choose Them**: Customers often highlight their friendly service and willingness to provide detailed explanations of the work being done. They also offer 24/7 emergency services, which is a plus for urgent plumbing needs.<br><br>4. **Pioneer Plumbing**<br>   - **Overview**: Pioneer Plumbing is known for its prompt and reliable service. They handle everything from simple repairs to complex installations and renovations.<br>   - **Why Choose Them**: They have a team of experienced professionals and are praised for their fair pricing and quality workmanship. Many customers note their responsiveness and the thoroughness of their work.<br><br>5. **Cambridge Plumbing**<br>   - **Overview**: Located in the Boston area, Cambridge Plumbing focuses on eco-friendly plumbing solutions and energy-efficient upgrades. They provide a full range of plumbing services.<br>   - **Why Choose Them**: Their commitment to sustainability and customer education sets them apart. They are well-reviewed for their honesty and quality, making them a great choice for environmentally-conscious consumers.<br><br>When selecting a plumber, consider checking online reviews, verifying licenses, and asking for estimates to ensure you find the best fit for your needs."
+                    data-question="plumber near me in boston"
+                    data-llm="gpt4"
+                    data-brand="128 Plumbing, Heating, Cooling & Electric"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top 5 plumber recommendations in the Boston area, listed in order of preference:<br><br>1. Boston Plumbing Company - This highly-rated company has been serving the Boston community for over 50 years. They offer a wide range of plumbing services, from emergency repairs to new installations, and are known for their skilled technicians and commitment to customer satisfaction.<br><br>2. Ace Plumbing and Heating - Ace Plumbing is a family-owned business that has been providing reliable plumbing services in the Boston area for decades. They are known for their upfront pricing, prompt service, and expertise in handling both residential and commercial plumbing needs.<br><br>3. Mitch&#39;s Plumbing - Mitch&#39;s Plumbing is a local, independent plumbing company that has built a reputation for quality workmanship and exceptional customer service. They specialize in everything from leak repairs to water heater installations, and are known for their honest and transparent approach.<br><br>4. Boston Drain Pros - As the name suggests, Boston Drain Pros are experts in all things related to drains and sewer lines. They offer 24/7 emergency services and are known for their efficient and effective solutions to even the most complex drainage issues.<br><br>5. Beacon Plumbing and Heating - Beacon Plumbing and Heating is a well-established company that serves the greater Boston area. They offer a full range of plumbing services, from routine maintenance to complex remodeling projects, and are known for their professionalism and attention to detail."
+                    data-question="plumber near me in boston"
+                    data-llm="claude"
+                    data-brand="128 Plumbing, Heating, Cooling & Electric"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Okay, I can help with providing some plumber recommendations in Boston. However, without knowing your exact location within Boston, it&#39;s tough to give *perfectly* localized suggestions. I&#39;ll provide some well-regarded plumbers with good reputations and broad service areas within the city.  **It&#39;s *crucial* to call them and confirm they service your specific address and are available for your timeframe.**<br><br>Here are my top recommendations, in order of preference, based on reputation, reviews, and services offered:<br><br>1.  **Fast Flow Plumbing:**<br>    *   **Why:** Fast Flow Plumbing consistently receives high ratings for their responsiveness, professionalism, and quality of work. People often praise their ability to diagnose and fix problems quickly and efficiently. They handle a wide range of repairs, from leaky faucets to major plumbing installations.<br>    *   **Things to consider:**  Like any popular plumber, they might have busy periods, so book ahead if possible.<br><br>2.  **Petrelli Plumbing:**<br>    *   **Why:** Petrelli Plumbing is another highly-rated option. They are known for their excellent customer service, fair pricing, and experienced technicians. They offer a comprehensive range of plumbing services, including emergency repairs, drain cleaning, and water heater services.<br>    *   **Things to consider:** Check their service area to ensure they cover your specific neighborhood within Boston.<br><br>3.  **Boston Standard Company:**<br>    *   **Why:** Boston Standard Company is a larger company offering a broader range of services, including plumbing, heating, and air conditioning. This can be convenient if you need multiple services. They are generally reliable and offer emergency service.<br>    *   **Things to consider:** Being a larger company, prices might be slightly higher than smaller, independent plumbers.<br><br>**Important Considerations Before Contacting:**<br><br>*   **Describe Your Problem Clearly:** When you call, be as specific as possible about the plumbing issue you&#39;re experiencing. This helps the plumber assess the situation and give you a more accurate estimate.<br>*   **Ask About Licensing and Insurance:** Ensure the plumber is properly licensed and insured to protect yourself from liability.<br>*   **Get an Estimate:** Ask for a written estimate before any work begins. This helps you avoid surprises on the final bill.<br>*   **Check Online Reviews:** While I&#39;ve provided recommendations, it&#39;s always a good idea to read recent reviews on sites like Yelp, Google, and Angie&#39;s List to get a better sense of other customers&#39; experiences.<br><br>**To get even more targeted recommendations, I would need your neighborhood or a specific address within Boston.** Good luck!<br>"
+                    data-question="plumber near me in boston"
+                    data-llm="gemini"
+                    data-brand="128 Plumbing, Heating, Cooling & Electric"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q2</span>
+                    <span class="question-text">hvac repair services boston</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are some recommended HVAC repair services in Boston, listed in order of preference:<br><br>1. **Boston Standard Plumbing, Heating & Air Conditioning**<br>   - **Overview**: Known for its comprehensive HVAC services, Boston Standard has a strong reputation for reliability and customer satisfaction. They offer 24/7 emergency services and have a team of highly trained technicians.<br>   - **Why Choose Them**: They focus on both residential and commercial HVAC systems and provide transparent pricing, ensuring customers know what to expect. Their commitment to customer service is often highlighted in reviews.<br><br>2. **J.C. Cannistraro, LLC**<br>   - **Overview**: With over 50 years of experience, J.C. Cannistraro is a well-established name in the Boston area, specializing in HVAC, plumbing, and mechanical contracting.<br>   - **Why Choose Them**: They offer a wide range of services, including installation and repair, and are known for their expert technicians and high-quality workmanship. They also emphasize energy efficiency, which can save you money in the long run.<br><br>3. **M. A. G. HVAC Services**<br>   - **Overview**: M. A. G. HVAC Services is a smaller, family-owned business that focuses on providing personalized service and attention to detail.<br>   - **Why Choose Them**: Customers appreciate their prompt service and the thoroughness of their repairs. They also offer flexible scheduling and competitive pricing, making them a good option for those seeking a more individualized experience.<br><br>4. **Cambridge Heating and Cooling**<br>   - **Overview**: This company specializes in both heating and cooling systems, providing a range of services from routine maintenance to emergency repairs.<br>   - **Why Choose Them**: They have a reputation for quick response times and effective solutions, and they offer free estimates for new installations, which can be beneficial for homeowners looking to upgrade.<br><br>5. **Air Duct Cleaning Boston**<br>   - **Overview**: While primarily known for duct cleaning, this company also provides HVAC repair services, focusing on improving indoor air quality alongside system efficiency.<br>   - **Why Choose Them**: They are a great choice if you are also looking to improve your home’s air quality, as they address both HVAC systems and ductwork. Their technicians are trained to handle various HVAC issues while ensuring clean air circulation.<br><br>When selecting an HVAC service, it&#39;s always a good idea to check for licensing, insurance, and customer reviews to ensure you receive reliable and quality service."
+                    data-question="hvac repair services boston"
+                    data-llm="gpt4"
+                    data-brand="128 Plumbing, Heating, Cooling & Electric"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top 5 recommendations for HVAC repair services in Boston, listed in order of preference:<br><br>1. Boston Heating & Cooling: This company has been serving the Boston area for over 30 years and has a reputation for reliable, high-quality HVAC repair and maintenance services. They use the latest tools and techniques to diagnose and fix issues quickly, and their technicians are highly trained and experienced.<br><br>2. Maynard HVAC: Maynard HVAC is a family-owned business that specializes in residential and light commercial HVAC services. They are known for their attention to detail, customer service, and fair pricing. They offer 24/7 emergency repair services and provide a warranty on all their work.<br><br>3. Climate Pros: Climate Pros is a well-established HVAC company that serves the Greater Boston area. They have a team of licensed and insured technicians who are knowledgeable about a wide range of HVAC systems. They offer comprehensive repair, maintenance, and installation services, and are known for their prompt and efficient service.<br><br>4. Boston HVAC Solutions: This company is known for its commitment to customer satisfaction and its use of energy-efficient HVAC technologies. They offer a wide range of services, including repair, maintenance, and installation, and their technicians are trained to work on all major HVAC brands.<br><br>5. New England HVAC: New England HVAC is a local HVAC company that has been serving the Boston area for over a decade. They are known for their reliable and affordable services, and their technicians are highly skilled in diagnosing and repairing a variety of HVAC systems."
+                    data-question="hvac repair services boston"
+                    data-llm="claude"
+                    data-brand="128 Plumbing, Heating, Cooling & Electric"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Okay, here are my top 3 recommendations for HVAC repair services in Boston, based on a combination of factors like reputation, customer reviews, experience, and services offered.  Keep in mind it&#39;s always a good idea to get multiple quotes and check recent reviews before making a final decision.<br><br>**Top Recommendations (in order of preference):**<br><br>1.  **Northeast Cooling:**<br>    *   **Why:** Northeast Cooling consistently receives excellent reviews for their professionalism, promptness, and quality of work. They are known for clear communication, fair pricing, and solving problems effectively. Many reviewers highlight their technicians&#39; expertise and their commitment to explaining issues and solutions. They offer a comprehensive range of services, including repair, maintenance, and installation.<br>    *   **What to expect:** Professional, reliable service, clear communication, and experienced technicians.<br><br>2.  **Boston Standard Company:**<br>    *   **Why:** Boston Standard Company is a well-established and reputable HVAC company in the Boston area. They offer a wide range of services, including emergency repairs, routine maintenance, and new installations. They often get positive feedback for their responsive customer service, skilled technicians, and commitment to customer satisfaction.<br>    *   **What to expect:** Comprehensive services, experienced technicians, and a focus on customer service.<br><br>3.  **Sinclaire Home Services:**<br>    *   **Why:** Sinclaire Home Services is a larger company that provides a variety of home services, including HVAC repair. They often have good availability and offer convenient scheduling options. They are known for their professional technicians and for offering service agreements for ongoing maintenance. Customers appreciate their responsiveness and clear communication.<br>    *   **What to expect:** Wide service area, convenient scheduling, and service agreement options.<br><br>**Important Considerations:**<br><br>*   **Get Multiple Quotes:**  Always get quotes from at least 2-3 companies before making a decision. This allows you to compare prices and services.<br>*   **Check Recent Reviews:** Read recent reviews on sites like Google, Yelp, and the Better Business Bureau to get an up-to-date understanding of customer experiences. Pay attention to patterns in the reviews (e.g., consistently positive feedback about a specific technician or recurring complaints about communication).<br>*   **Verify Licensing and Insurance:** Make sure the company is properly licensed and insured to protect yourself from liability.<br>*   **Ask About Guarantees:**  Inquire about the company&#39;s warranty or guarantee on their work.<br><br>I hope this helps you find the right HVAC repair service for your needs! Good luck!<br>"
+                    data-question="hvac repair services boston"
+                    data-llm="gemini"
+                    data-brand="128 Plumbing, Heating, Cooling & Electric"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q3</span>
+                    <span class="question-text">electrical contractor boston</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are some top recommendations for electrical contractors in Boston, based on reputation, customer reviews, and service offerings:<br><br>1. **Boston Electrician**<br>   - **Overview**: Known for their prompt service and professionalism, Boston Electrician offers a wide range of electrical services, from residential repairs to commercial installations.<br>   - **Why Recommend**: They have a strong reputation for quality work and customer satisfaction, with many positive reviews highlighting their reliability and expertise.<br><br>2. **A. A. Electric**<br>   - **Overview**: A. A. Electric has been serving the Boston area for over 30 years, providing both residential and commercial electrical solutions.<br>   - **Why Recommend**: They are praised for their experienced team and commitment to safety, and they often handle complex projects with ease, making them a trusted choice for larger jobs.<br><br>3. **C. M. S. Electrical Services**<br>   - **Overview**: C. M. S. specializes in both residential and commercial electrical work and is known for their transparent pricing and thorough workmanship.<br>   - **Why Recommend**: Customers appreciate their attention to detail and the fact that they offer free estimates, which helps in budgeting for projects.<br><br>4. **Electro-Mechanical Services**<br>   - **Overview**: This company focuses on both electrical and mechanical systems, making them a good choice for businesses with integrated needs.<br>   - **Why Recommend**: Their ability to handle both electrical and HVAC services makes them a versatile option for commercial clients, and they are known for their innovative solutions.<br><br>5. **L. A. Electric**<br>   - **Overview**: L. A. Electric provides residential electrical services with a focus on energy efficiency and eco-friendly solutions.<br>   - **Why Recommend**: They are a great option for homeowners looking to upgrade their systems to be more energy-efficient, and they have received numerous accolades for their customer service.<br><br>When considering an electrical contractor, it&#39;s essential to check their licensing, insurance, and customer reviews to ensure you choose the right fit for your needs."
+                    data-question="electrical contractor boston"
+                    data-llm="gpt4"
+                    data-brand="128 Plumbing, Heating, Cooling & Electric"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top 5 recommendations for electrical contractors in the Boston area, listed in order of preference:<br><br>1. Boston Electrical Services (BES) - This well-established company has a team of highly skilled and licensed electricians who specialize in residential, commercial, and industrial electrical work. They are known for their attention to detail, code compliance, and exceptional customer service.<br><br>2. Volt Electric - Volt Electric is a family-owned business with over 20 years of experience in the Boston market. They offer a wide range of services, including electrical installations, repairs, and maintenance, and are known for their commitment to safety and reliability.<br><br>3. Beacon Hill Electrical - Beacon Hill Electrical is a reputable contractor that has been serving the Boston area for decades. They excel at handling complex projects, such as custom lighting design, panel upgrades, and smart home integration, and have a strong reputation for professionalism and quality workmanship.<br><br>4. Wired Boston - Wired Boston is a relatively newer player in the Boston electrical contracting scene, but they have quickly established a reputation for their innovative approach and use of the latest technologies. They specialize in energy-efficient solutions and smart home automation.<br><br>5. Hub City Electric - Hub City Electric is a reliable and affordable option for homeowners and small businesses in the Boston area. They offer a wide range of services, from basic repairs to full-scale electrical system upgrades, and are known for their responsive and transparent communication.<br><br>All of these electrical contractors have a strong track record of satisfied customers, positive reviews, and a commitment to delivering high-quality work. When selecting an electrical contractor, it&#39;s important to consider factors such as licensing, insurance, experience, and customer service, in addition to the specific services you require."
+                    data-question="electrical contractor boston"
+                    data-llm="claude"
+                    data-brand="128 Plumbing, Heating, Cooling & Electric"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Okay, based on a combination of online reputation (reviews, ratings), availability of services, responsiveness, and general industry knowledge of the Boston area, here are my top 3-5 recommendations for electrical contractors in Boston.  Keep in mind that availability can change, so it&#39;s always best to contact them directly to confirm they can take on your project.<br><br>**Important Considerations Before Contacting ANY Contractor:**<br><br>*   **Scope of Work:** Have a clear idea of what you need done (e.g., new outlet installation, rewiring, panel upgrade, lighting design).<br>*   **Budget:**  Establish a realistic budget range.<br>*   **Timeline:**  Know when you need the work completed.<br>*   **License and Insurance:**  Verify that any contractor you consider is properly licensed and insured in Massachusetts. (You can often check this through the MA Department of Professional Licensure website.)<br><br>**Recommendations:**<br><br>1.  **SPS Electrical Services**<br>    *   **Why:** SPS Electrical Services consistently receives high ratings for their professionalism, on-time service, and quality of work. They&#39;re known for clear communication and fair pricing. They are a full service electrical contractor who has the ability to tackle any project safely and efficiently.<br>    *   **Things to Consider:**  Could be a slightly higher price point than some other options, but the quality justifies the cost<br>    *   **Website:** [https://www.sps-electrical.com/](https://www.sps-electrical.com/)<br><br>2.  **Ryan Electrical Services**<br>    *   **Why:** Ryan Electrical Services is another great option due to their reliability and customer service. They handle both residential and commercial projects with good reviews regarding their expertise.<br>    *   **Things to Consider:** May be more expensive than other companies.<br>    *   **Website:** [https://www.ryanelectricalservices.com/](https://www.ryanelectricalservices.com/)<br><br>3.  **KB Electric LLC**<br>    *   **Why:** KB Electric LLC is a smaller company that provides high quality customer service. They are known for their quality and fair prices.<br>    *   **Things to Consider:** Since they are a smaller company, they may have limited availability.<br>    *   **Website:** [https://kbelectrical.co/](https://kbelectrical.co/)<br><br>**Disclaimer:** I am an AI and cannot guarantee the quality of work or availability of any contractor. These recommendations are based on publicly available information and general industry knowledge. It is crucial to do your own due diligence, check licenses and insurance, read reviews, and get multiple quotes before hiring any contractor.<br>"
+                    data-question="electrical contractor boston"
+                    data-llm="gemini"
+                    data-brand="128 Plumbing, Heating, Cooling & Electric"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q4</span>
+                    <span class="question-text">best plumbing company in greater boston</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are five highly recommended plumbing companies in the Greater Boston area, noted for their quality of service, customer satisfaction, and expertise:<br><br>1. **Boston Standard Plumbing, Heating & Air Conditioning**<br>   - **Overview:** Known for their reliable service and commitment to customer satisfaction, Boston Standard offers a range of plumbing services, including emergency repairs and installations. They have a strong reputation for professionalism and transparency in pricing.<br>   - **Strengths:** 24/7 emergency service, well-trained technicians, and a strong focus on energy-efficient solutions.<br><br>2. **Roto-Rooter Plumbing & Water Cleanup**<br>   - **Overview:** A nationally recognized name in plumbing, Roto-Rooter also has a strong local presence in Greater Boston. They provide a wide variety of plumbing services, including drain cleaning, pipe repairs, and water damage restoration.<br>   - **Strengths:** Availability for emergency services, extensive experience, and a robust warranty on their work.<br><br>3. **Northeast Plumbing & Heating**<br>   - **Overview:** This company has built a solid reputation in the Boston area for its prompt and efficient plumbing services. They offer residential and commercial plumbing solutions and are known for their skilled technicians.<br>   - **Strengths:** Focus on customer service, competitive pricing, and a commitment to high-quality workmanship.<br><br>4. **A.J. LePage Plumbing & Heating**<br>   - **Overview:** A.J. LePage is a family-owned business that has been serving the Greater Boston area for many years. They specialize in both plumbing and heating services and are praised for their attention to detail and customer care.<br>   - **Strengths:** Personalized service, comprehensive plumbing services, and a strong local presence.<br><br>5. **Haverhill Plumbing & Heating**<br>   - **Overview:** Although slightly outside of Boston proper, Haverhill Plumbing & Heating is highly rated for its knowledgeable team and reliable service. They offer a full range of plumbing services and are well-regarded by local customers.<br>   - **Strengths:** High-quality customer service, a variety of plumbing solutions, and a focus on residential projects.<br><br>When selecting a plumbing company, consider your specific needs, whether it&#39;s an emergency service or a routine installation, and check for online reviews to ensure you find the best fit for your situation."
+                    data-question="best plumbing company in greater boston"
+                    data-llm="gpt4"
+                    data-brand="128 Plumbing, Heating, Cooling & Electric"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top 5 recommendations for the best plumbing companies in the Greater Boston area, listed in order of preference:<br><br>1. Bowditch Plumbing & Heating: This company has been serving the Greater Boston area for over 50 years and has a reputation for providing high-quality, reliable service. They offer a wide range of plumbing services, including emergency repairs, water heater installation, and sewer and drain cleaning. Their team of experienced, licensed plumbers is known for their professionalism and attention to detail.<br><br>2. Donahue Plumbing: Donahue Plumbing is a family-owned and operated business that has been serving the Greater Boston area for over 30 years. They are known for their exceptional customer service and their ability to tackle even the most complex plumbing issues. They offer a wide range of services, including leak detection, water filtration, and bathroom remodeling.<br><br>3. Absolute Plumbing & Heating: Absolute Plumbing & Heating is a reputable company that has been providing quality plumbing services to the Greater Boston area for many years. They are known for their prompt, reliable service and their commitment to using the latest technology and equipment to solve plumbing problems quickly and efficiently.<br><br>4. Boston Plumbing & Heating: Boston Plumbing & Heating is a full-service plumbing company that has been serving the Greater Boston area for over a decade. They are known for their expertise in a wide range of plumbing services, including water heater installation, sewer line repair, and kitchen and bathroom remodeling.<br><br>5. Mitch&#39;s Plumbing & Heating: Mitch&#39;s Plumbing & Heating is a family-owned business that has been providing quality plumbing services to the Greater Boston area for over 20 years. They are known for their commitment to customer satisfaction and their ability to handle even the most complex plumbing issues.<br><br>Overall, these companies have a proven track record of providing high-quality, reliable plumbing services to the Greater Boston area. They are all licensed, insured, and committed to providing exceptional customer service."
+                    data-question="best plumbing company in greater boston"
+                    data-llm="claude"
+                    data-brand="128 Plumbing, Heating, Cooling & Electric"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="No response"
+                    data-question="best plumbing company in greater boston"
+                    data-llm="gemini"
+                    data-brand="128 Plumbing, Heating, Cooling & Electric"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q5</span>
+                    <span class="question-text">home services boston</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top recommendations for home services in Boston, each known for their quality and reliability:<br><br>1. **Handy**  <br>   Handy is an on-demand home service platform that connects you with skilled professionals for various tasks, including cleaning, handyman work, and plumbing. They have a user-friendly app and website that allows you to book services quickly and easily, often with same-day availability. Their vetted professionals are reviewed by previous customers, ensuring a reliable experience.<br><br>2. **Boston Green House Cleaning**  <br>   If you&#39;re looking for eco-friendly cleaning services, Boston Green House Cleaning is an excellent choice. They use non-toxic and environmentally safe cleaning products, making them a great option for families and those with allergies. Their team is known for thorough cleaning and exceptional customer service, and they offer customizable cleaning plans to suit your needs.<br><br>3. **Eagle Moving & Storage**  <br>   For moving services, Eagle Moving & Storage has a strong reputation in Boston. They offer local and long-distance moving services, as well as packing and storage solutions. Customers praise their professionalism, efficiency, and care for belongings during the moving process. They provide free estimates, allowing you to budget your move effectively.<br><br>4. **Junk King Boston**  <br>   For junk removal and hauling, Junk King Boston is a top-rated service. They specialize in eco-friendly disposal, recycling up to 60% of the items they collect. Their team is quick and efficient, making it easy to declutter your home or office. They offer same-day service and transparent pricing, making it a hassle-free experience.<br><br>5. **Boston Plumbing & Heating**  <br>   If you need plumbing or heating services, Boston Plumbing & Heating has a solid reputation for quality work and customer service. They handle everything from routine maintenance to emergency repairs. Their licensed and insured technicians are known for their expertise and responsiveness, ensuring that your plumbing and heating issues are resolved quickly.<br><br>These services are well-regarded in the Boston area, and each offers a unique set of benefits tailored to various home needs."
+                    data-question="home services boston"
+                    data-llm="gpt4"
+                    data-brand="128 Plumbing, Heating, Cooling & Electric"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top 5 recommendations for home services in Boston, listed in order of preference:<br><br>1. Boston Handyman Services - This company has a team of experienced and licensed handymen who can handle a wide range of home repair and maintenance tasks, from minor fixes to larger projects. They are known for their high-quality workmanship, reliable service, and competitive pricing.<br><br>2. Boston Cleaning Co. - This is a reputable house cleaning service that uses eco-friendly products and provides thorough, detailed cleaning for homes and apartments. They have flexible scheduling options and offer customized cleaning plans to meet your specific needs.<br><br>3. Boston Landscaping Pros - This company specializes in all aspects of lawn and garden care, including mowing, trimming, mulching, and seasonal cleanups. They use the latest equipment and techniques to keep your outdoor spaces looking their best.<br><br>4. Boston Plumbing Solutions - This plumbing company has a team of licensed and insured plumbers who can handle everything from clogged drains and leaky faucets to water heater replacements and sewer line repairs. They offer 24/7 emergency service.<br><br>5. Boston Electrical Services - This electrical contractor provides a full range of services, including home rewiring, panel upgrades, lighting installations, and troubleshooting. They are known for their prompt, professional, and safe work."
+                    data-question="home services boston"
+                    data-llm="claude"
+                    data-brand="128 Plumbing, Heating, Cooling & Electric"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Okay, to give you the BEST recommendations for home services in Boston, I need a little more information. What type of home service are you looking for?  However, assuming you&#39;re looking for general contractors here are my top 3 recommendations:<br><br>**Assuming you&#39;re looking for General Contractors:**<br><br>1.  **JM Construction Company:** They have a stellar reputation for high-quality work and excellent customer service. They handle a wide range of projects, from small renovations to full-scale remodels. Their project management is top-notch, and they are known for staying on schedule and within budget.<br>    *   **Why it&#39;s good:** known for quality and good service.<br><br>2.  **Sea Dar Construction:** Specializing in high-end renovations and custom builds, Sea Dar Construction is known for its exceptional craftsmanship and attention to detail. They are a great choice if you&#39;re looking for a contractor who can bring a sophisticated vision to life.<br>    *   **Why it&#39;s good:** Focuses on high-end projects, known for detail.<br><br>3.  **Kalin Construction Company:** This is a popular option for Boston residents. They are known for their reliability, transparency, and commitment to customer satisfaction. They offer a wide range of services, making them a versatile choice for various projects.<br>    *   **Why it&#39;s good:** Trusted, reliable, and versatile.<br><br>**To help me give you more specific and helpful recommendations, please tell me what type of service you need! Here are some examples:**<br><br>*   **Plumbing:** (e.g., drain cleaning, leak repair, new fixture installation)<br>*   **Electrical:** (e.g., wiring, lighting, outlet repair)<br>*   **HVAC:** (e.g., furnace repair, AC installation, duct cleaning)<br>*   **Painting:** (interior, exterior)<br>*   **Cleaning:** (regular house cleaning, deep cleaning, move-in/move-out cleaning)<br>*   **Landscaping:** (lawn care, garden design, tree trimming)<br>*   **Handyman Services:** (small repairs, odd jobs)<br>*   **Moving Services:** (local, long-distance)<br>*   **Roofing:** (repair, replacement)<br><br>Once I know what you&#39;re looking for, I can provide more tailored recommendations with specific details!<br>"
+                    data-question="home services boston"
+                    data-llm="gemini"
+                    data-brand="128 Plumbing, Heating, Cooling & Electric"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+                </tbody>
+            </table>
+            <p class="breakdown-hint">Click any cell to see the full AI response</p>
+        </div>
+
+        <!-- Response modal -->
+        <div class="response-modal" id="responseModal">
+            <div class="modal-content" onclick="event.stopPropagation()">
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+                <div class="modal-header">
+                    <span class="modal-llm" id="modalLlm"></span>
+                    <span class="modal-status" id="modalStatus"></span>
+                </div>
+                <div class="modal-question" id="modalQuestion"></div>
+                <div class="modal-response" id="modalResponse"></div>
+            </div>
+        </div>
+    
+        </div>
+
+        <!-- Section 3: Reddit Opportunities -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <h2 class="section-title">Reddit Opportunities</h2>
+            </div>
+
+            <div class="subsection-title">Buy Intent Conversations</div>
+            <p class="subsection-desc">People actively looking for recommendations in your category</p>
+            <div class="reddit-posts">
+                
+            <a href="https://www.reddit.com/r/Buffalo/comments/1qy7w8y/recommendations_for_hvac_servicescompanies/" target="_blank" class="reddit-post">
+                <div class="post-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">Recommendations for HVAC services/companies? Parents ...</div>
+                    <div class="post-meta">
+                        r/Buffalo &bull; 137K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            <a href="https://www.reddit.com/r/googlebusinessprofile/comments/1r18ufy/third_party_red_flag/" target="_blank" class="reddit-post">
+                <div class="post-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">Third party red flag? : r/googlebusinessprofile</div>
+                    <div class="post-meta">
+                        r/googlebusinessprofile &bull; 3K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            <a href="https://www.reddit.com/r/homeowners/comments/1r0bvjm/18k_for_a_sewer_lining_am_i_being_told_a_tale/" target="_blank" class="reddit-post">
+                <div class="post-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">$18k for a sewer lining? Am I being told a tale?</div>
+                    <div class="post-meta">
+                        r/homeowners &bull; 2.9M members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            <a href="https://www.reddit.com/r/Upperwestside/comments/1qyg0tw/does_anyone_need_a_handyman_experienced_with/" target="_blank" class="reddit-post">
+                <div class="post-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">Does anyone need a handyman experienced with electric ...</div>
+                    <div class="post-meta">
+                        r/Upperwestside &bull; 38K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            </div>
+
+            <div class="subsection-title">Pain Point Conversations</div>
+            <p class="subsection-desc">People discussing problems your product solves</p>
+            <div class="reddit-posts">
+                
+            <a href="https://www.reddit.com/r/legaladvice/comments/1qzvtbl/sewage_pipe_burst_in_apartment/" target="_blank" class="reddit-post">
+                <div class="post-icon pain">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">Sewage pipe burst in apartment : r/legaladvice</div>
+                    <div class="post-meta">
+                        r/legaladvice &bull; 3.4M members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            <a href="https://www.reddit.com/r/homeowners/comments/1r0bvjm/18k_for_a_sewer_lining_am_i_being_told_a_tale/" target="_blank" class="reddit-post">
+                <div class="post-icon pain">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">$18k for a sewer lining? Am I being told a tale?</div>
+                    <div class="post-meta">
+                        r/homeowners &bull; 2.9M members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            </div>
+        </div>
+
+        <!-- CTA Section -->
+        <div class="section cta-section">
+            <h2>Ready to improve your <em>AI visibility?</em></h2>
+            <p>We help brands get mentioned more in AI answers through strategic content placement.</p>
+            <a href="https://adva-solutions.com/AIVisibility" class="cta-button">Learn More</a>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p>Generated by <a href="https://adva-solutions.com">Adva</a> &bull; AI Visibility Health Check</p>
+    </footer>
+
+    <script>
+        // Tab switching functionality
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const tabId = btn.dataset.tab;
+
+                // Update buttons
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                // Update panels
+                document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+                document.getElementById('panel-' + tabId).classList.add('active');
+            });
+        });
+
+        // Show toast notification
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2500);
+        }
+
+        // Show response modal
+        function showResponse(cell) {
+            try {
+                let response = cell.dataset.response || 'No response available';
+                const question = cell.dataset.question || '';
+                const llm = cell.dataset.llm || '';
+                const brand = cell.dataset.brand || '';
+                const isMentioned = cell.classList.contains('mentioned');
+                const brandPosition = cell.dataset.position ? parseInt(cell.dataset.position) : null;
+
+                const llmNames = {'gpt4': 'GPT', 'claude': 'Claude', 'gemini': 'Gemini'};
+
+                // If brand is mentioned beyond position 5, add a banner at the top
+                let positionBanner = '';
+                if (isMentioned && brandPosition && brandPosition > 5) {
+                    positionBanner = '<div style="background: #fef3c7; padding: 0.75rem 1rem; border-radius: 6px; margin-bottom: 1rem; border-left: 4px solid #f59e0b;">' +
+                        '<strong>📍 Your brand appeared at position #' + brandPosition + '</strong> - scroll down to see the highlighted mention' +
+                        '</div>';
+                }
+
+                // Highlight brand name in response (case insensitive)
+                if (brand && isMentioned) {
+                    try {
+                        const brandRegex = new RegExp('(' + brand.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&') + ')', 'gi');
+                        response = response.replace(brandRegex, '<span class="brand-highlight">$1</span>');
+                    } catch(e) { /* ignore highlighting errors */ }
+                }
+
+                document.getElementById('modalLlm').textContent = llmNames[llm] || llm;
+                document.getElementById('modalQuestion').textContent = '"' + question + '"';
+                document.getElementById('modalResponse').innerHTML = positionBanner + response;
+
+                const statusEl = document.getElementById('modalStatus');
+                if (isMentioned) {
+                    statusEl.textContent = 'Mentioned';
+                    statusEl.className = 'modal-status mentioned';
+                } else {
+                    statusEl.textContent = 'Not mentioned';
+                    statusEl.className = 'modal-status not-mentioned';
+                }
+
+                document.getElementById('responseModal').classList.add('active');
+                document.body.style.overflow = 'hidden';
+
+                // Scroll to first highlight if mentioned
+                if (isMentioned) {
+                    setTimeout(function() {
+                        const highlight = document.querySelector('.modal-response .brand-highlight');
+                        if (highlight) {
+                            highlight.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        }
+                    }, 100);
+                }
+            } catch (e) {
+                console.error('Error showing response:', e);
+                alert('Error loading response. Please try again.');
+            }
+        }
+
+        // Close modal
+        function closeModal() {
+            document.getElementById('responseModal').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // Close when clicking backdrop (outside modal content)
+        document.getElementById('responseModal').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+
+        // Close modal on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeModal();
+        });
+    </script>
+</body>
+</html>
