@@ -1,0 +1,1370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Visibility Report - The Valuu Makers | Adva</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #ffffff;
+            min-height: 100vh;
+            color: #374151;
+            line-height: 1.6;
+        }
+
+        /* Header */
+        .header {
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            font-size: 1.25rem;
+            color: #1f2937;
+            text-decoration: none;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .header-date {
+            color: #9ca3af;
+            font-size: 0.875rem;
+        }
+
+        /* Copy link button */
+        .copy-link-button {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: #f3f4f6;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            color: #374151;
+            font-size: 0.75rem;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .copy-link-button:hover {
+            background: #e5e7eb;
+        }
+
+        .copy-link-button svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        .pdf-button {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: #1f2937;
+            border: none;
+            border-radius: 6px;
+            color: #ffffff;
+            font-size: 0.75rem;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .pdf-button:hover {
+            background: #374151;
+        }
+
+        .pdf-button svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        /* Toast notification */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: #1f2937;
+            color: #ffffff;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            opacity: 0;
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        /* Container */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Page title */
+        .page-title {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .page-title .label {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: #9ca3af;
+            font-size: 0.75rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+        }
+
+        .page-title .label::before,
+        .page-title .label::after {
+            content: '';
+            width: 30px;
+            height: 1px;
+            background: #d1d5db;
+        }
+
+        .page-title h1 {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 2.5rem;
+            font-weight: 400;
+            color: #1f2937;
+            margin-bottom: 0.5rem;
+        }
+
+        .page-title .brand {
+            color: #6b7280;
+            font-size: 1.125rem;
+        }
+
+        /* Sections */
+        .section {
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #f3f4f6;
+        }
+
+        .section-icon {
+            width: 40px;
+            height: 40px;
+            background: #1f2937;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .section-icon svg {
+            width: 20px;
+            height: 20px;
+            color: #ffffff;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 1.375rem;
+            color: #1f2937;
+        }
+
+        /* Score Section */
+        .score-section {
+            text-align: center;
+            padding: 3rem 2rem;
+        }
+
+        .score-circle {
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            background: #fafafa;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            border: 4px solid #ef4444;
+        }
+
+        .score-value {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 3rem;
+            font-weight: 500;
+            color: #ef4444;
+        }
+
+        .score-label {
+            font-size: 0.8rem;
+            color: #9ca3af;
+        }
+
+        .score-description {
+            color: #6b7280;
+            margin-bottom: 2rem;
+            font-size: 1rem;
+        }
+
+        .score-description strong {
+            color: #1f2937;
+        }
+
+        .llm-breakdown {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .llm-stat {
+            text-align: center;
+            padding: 1rem 1.5rem;
+            background: #fafafa;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+            min-width: 100px;
+        }
+
+        .llm-name {
+            display: block;
+            color: #9ca3af;
+            font-size: 0.8rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .llm-score {
+            font-size: 1.125rem;
+            font-weight: 600;
+        }
+
+        .llm-score.success {
+            color: #22c55e;
+        }
+
+        .llm-score.warning {
+            color: #ef4444;
+        }
+
+        /* Competitor Table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 0.875rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid #f3f4f6;
+        }
+
+        th {
+            color: #9ca3af;
+            font-weight: 500;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        td {
+            color: #374151;
+        }
+
+        .mention-count {
+            background: #fef3c7;
+            color: #92400e;
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        /* Tabs for LLM responses */
+        .example-tabs {
+            margin-top: 1.5rem;
+        }
+
+        .tabs-header {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+            padding-bottom: 0;
+        }
+
+        .tab-btn {
+            padding: 0.75rem 1.25rem;
+            background: transparent;
+            border: none;
+            color: #6b7280;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            margin-bottom: -1px;
+            transition: all 0.2s;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .tab-btn:hover {
+            color: #1f2937;
+        }
+
+        .tab-btn.active {
+            color: #1f2937;
+            border-bottom-color: #1f2937;
+        }
+
+        .tab-panel {
+            display: none;
+            background: #fafafa;
+            border-radius: 8px;
+            padding: 1.25rem;
+        }
+
+        .tab-panel.active {
+            display: block;
+        }
+
+        .example-question {
+            color: #1f2937;
+            font-weight: 500;
+            font-size: 0.95rem;
+            margin-bottom: 0.75rem;
+        }
+
+        /* Question breakdown table */
+        .question-breakdown {
+            margin-top: 1rem;
+        }
+
+        .breakdown-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        .breakdown-table th {
+            padding: 0.75rem;
+            text-align: center;
+            background: #f9fafb;
+            border-bottom: 2px solid #e5e7eb;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .breakdown-table th:first-child {
+            text-align: left;
+            width: 50%;
+        }
+
+        .breakdown-table td {
+            padding: 0.75rem;
+            border-bottom: 1px solid #f3f4f6;
+            vertical-align: middle;
+        }
+
+        .question-cell {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+        }
+
+        .question-num {
+            background: #e5e7eb;
+            color: #374151;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        .question-text {
+            color: #374151;
+            line-height: 1.4;
+        }
+
+        .llm-cell {
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-radius: 4px;
+        }
+
+        .llm-cell:hover {
+            background: #f3f4f6;
+        }
+
+        .llm-cell.mentioned {
+            color: #16a34a;
+        }
+
+        .llm-cell.mentioned .status-icon {
+            font-size: 1.25rem;
+        }
+
+        .llm-cell.not-mentioned {
+            color: #dc2626;
+        }
+
+        .llm-cell.not-mentioned .status-icon {
+            font-size: 1.25rem;
+        }
+
+        .breakdown-hint {
+            color: #9ca3af;
+            font-size: 0.8rem;
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+        /* Response modal */
+        .response-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+        }
+
+        .response-modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: #ffffff;
+            border-radius: 12px;
+            max-width: 800px;
+            width: 100%;
+            max-height: 90vh;
+            overflow: auto;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #9ca3af;
+            cursor: pointer;
+            padding: 0.25rem 0.5rem;
+        }
+
+        .modal-close:hover {
+            color: #374151;
+        }
+
+        .modal-header {
+            padding: 1.5rem 1.5rem 0;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            position: relative;
+        }
+
+        .modal-llm {
+            font-weight: 600;
+            color: #1f2937;
+            font-size: 1.1rem;
+        }
+
+        .modal-status {
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .modal-status.mentioned {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .modal-status.not-mentioned {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .modal-question {
+            padding: 1rem 1.5rem;
+            color: #6b7280;
+            font-size: 0.9rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .modal-response {
+            padding: 1.5rem;
+            overflow-y: auto;
+            flex: 1;
+            color: #374151;
+            font-size: 0.9rem;
+            line-height: 1.8;
+            min-height: 300px;
+            max-height: 60vh;
+            background: #fafafa;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .modal-response::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .modal-response::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        .modal-response::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 4px;
+        }
+
+        .modal-response::-webkit-scrollbar-thumb:hover {
+            background: #a1a1a1;
+        }
+
+        /* Brand highlight */
+        .brand-highlight {
+            background: linear-gradient(120deg, #fef08a 0%, #fde047 100%);
+            padding: 0.1rem 0.3rem;
+            border-radius: 3px;
+            font-weight: 600;
+        }
+
+        .example-content {
+            color: #6b7280;
+            font-size: 0.875rem;
+            line-height: 1.7;
+            max-height: 400px;
+            overflow-y: auto;
+            margin-bottom: 0.75rem;
+            padding: 1rem;
+            background: #f9fafb;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .example-status {
+            padding: 0.5rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            display: inline-block;
+        }
+
+        .example-status.mentioned {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .example-status.not-mentioned {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        /* Reddit Posts */
+        .reddit-posts {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .reddit-post {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: #fafafa;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: all 0.2s;
+            border: 1px solid transparent;
+        }
+
+        .reddit-post:hover {
+            background: #f3f4f6;
+            border-color: #e5e7eb;
+        }
+
+        .post-icon {
+            width: 40px;
+            height: 40px;
+            background: #1f2937;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .post-icon.pain {
+            background: #fef3c7;
+        }
+
+        .post-icon.pain svg {
+            color: #92400e;
+        }
+
+        .post-icon svg {
+            width: 20px;
+            height: 20px;
+            color: #ffffff;
+        }
+
+        .post-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .post-title {
+            color: #1f2937;
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .post-meta {
+            color: #9ca3af;
+            font-size: 0.8rem;
+        }
+
+        .post-arrow {
+            color: #9ca3af;
+            flex-shrink: 0;
+        }
+
+        .post-arrow svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .subsection-title {
+            color: #1f2937;
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin: 1.5rem 0 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .subsection-title:first-of-type {
+            margin-top: 0;
+        }
+
+        .subsection-desc {
+            color: #9ca3af;
+            font-size: 0.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .no-data {
+            color: #9ca3af;
+            font-style: italic;
+            text-align: center;
+            padding: 1rem;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            color: #9ca3af;
+            font-size: 0.8rem;
+            padding: 2rem;
+            border-top: 1px solid #e5e7eb;
+            margin-top: 2rem;
+        }
+
+        .footer a {
+            color: #1f2937;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* CTA */
+        .cta-section {
+            text-align: center;
+            padding: 3rem 2rem;
+            background: #fafafa;
+        }
+
+        .cta-section h2 {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 1.75rem;
+            color: #1f2937;
+            margin-bottom: 0.75rem;
+        }
+
+        .cta-section p {
+            color: #6b7280;
+            margin-bottom: 1.5rem;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background: #1f2937;
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .cta-button:hover {
+            background: #111827;
+            transform: translateY(-1px);
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .page-title h1 {
+                font-size: 1.75rem;
+            }
+
+            .section {
+                padding: 1.5rem;
+            }
+
+            .score-circle {
+                width: 130px;
+                height: 130px;
+            }
+
+            .score-value {
+                font-size: 2.25rem;
+            }
+
+            .llm-breakdown {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .tabs-header {
+                flex-wrap: wrap;
+            }
+
+            .tab-btn {
+                padding: 0.5rem 1rem;
+                font-size: 0.8rem;
+            }
+
+            .breakdown-table th,
+            .breakdown-table td {
+                padding: 0.5rem;
+                font-size: 0.8rem;
+            }
+
+            .question-cell {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .modal-content {
+                max-height: 90vh;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <a href="https://adva-solutions.com/AIVisibility" class="logo">adva</a>
+        <div class="header-right">
+            <!-- PDF button hidden for now - backend still available at /report/7e853783/pdf
+            <a href="/report/7e853783/pdf" class="pdf-button" title="Download as PDF">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                Download PDF
+            </a>
+            -->
+            <button class="copy-link-button" onclick="navigator.clipboard.writeText('https://adva-solutions.github.io/ai-visibility-report/report_the-valuu-makers_7e853783.html'); showToast('Link copied!');" title="Copy shareable link">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                </svg>
+                Copy Link
+            </button>
+            <span class="header-date">February 12, 2026</span>
+        </div>
+    </header>
+    <div class="toast" id="toast">Link copied to clipboard!</div>
+
+    <div class="container">
+        <div class="page-title">
+            <div class="label">AI Visibility Report</div>
+            <h1>Your Brand's <em>AI Presence</em></h1>
+            <p class="brand">Analysis for The Valuu Makers</p>
+        </div>
+
+        <!-- Section 1: AI Visibility Score -->
+        <div class="section score-section">
+            <div class="score-circle">
+                <span class="score-value">0%</span>
+                <span class="score-label">0/15 mentions</span>
+            </div>
+            <p class="score-description">
+                Your brand appeared in <strong>0</strong> out of <strong>15</strong> AI recommendations
+            </p>
+            <div class="llm-breakdown">
+                
+            <div class="llm-stat">
+                <span class="llm-name">GPT</span>
+                <span class="llm-score warning">0/5</span>
+            </div>
+        
+            <div class="llm-stat">
+                <span class="llm-name">Claude</span>
+                <span class="llm-score warning">0/5</span>
+            </div>
+        
+            <div class="llm-stat">
+                <span class="llm-name">Gemini</span>
+                <span class="llm-score warning">0/5</span>
+            </div>
+        
+            </div>
+        </div>
+
+        <!-- Section 2: AI Response Breakdown -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                    </svg>
+                </div>
+                <h2 class="section-title">Question-by-Question Breakdown</h2>
+            </div>
+            <p style="color: #6b7280; margin-bottom: 1rem;">We asked these 5 questions to each AI model. Click any cell to see the full response:</p>
+            
+        <div class="question-breakdown">
+            <table class="breakdown-table">
+                <thead>
+                    <tr>
+                        <th>Question Asked</th>
+                        <th>GPT</th>
+                        <th>Claude</th>
+                        <th>Gemini</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q1</span>
+                    <span class="question-text">podcast about innovation in business and technology</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top recommendations for podcasts focused on innovation in business and technology:<br><br>1. **&quot;How I Built This&quot; with Guy Raz**<br>   - This NPR podcast dives into the stories behind the people who created some of the world&#39;s best-known companies. Guy Raz interviews entrepreneurs and innovators, exploring their journeys, challenges, and the innovative ideas that led to their success. It&#39;s not just about business strategies but also the human side of innovation.<br><br>2. **&quot;The Tim Ferriss Show&quot;**<br>   - Tim Ferriss interviews a wide range of guests, including entrepreneurs, investors, and thought leaders. While the focus is broader than just business and technology, many episodes delve into innovative practices, tools, and mindsets that can be applied in various fields. Ferriss’s unique approach to questioning often reveals actionable insights and innovative strategies.<br><br>3. **&quot;Masters of Scale&quot; with Reid Hoffman**<br>   - Hosted by LinkedIn co-founder Reid Hoffman, this podcast discusses how companies grow from zero to a gazillion. Hoffman interviews successful leaders and entrepreneurs to uncover the strategies and innovations that helped them scale their businesses. The storytelling approach, combined with practical lessons, makes it both engaging and informative.<br><br>4. **&quot;The Innovation Show&quot;**<br>   - This podcast focuses specifically on innovation in business, technology, and leadership. Hosted by Aidan McCullen, it features interviews with industry leaders and experts discussing the latest trends, tools, and methodologies in innovation. It emphasizes actionable insights and practical strategies for fostering a culture of innovation.<br><br>5. **&quot;Exponent&quot; with Ben Thompson and James Allworth**<br>   - This podcast analyzes the intersection of technology and business strategy, focusing on how technology shapes markets and consumer behavior. Ben Thompson, a well-known technology analyst, and James Allworth discuss current events and trends, providing deep insights into the forces driving innovation in the tech industry.<br><br>These podcasts provide a mix of inspiring stories, practical advice, and deep dives into the latest trends in innovation, making them valuable resources for anyone interested in the intersection of business and technology."
+                    data-question="podcast about innovation in business and technology"
+                    data-llm="gpt4"
+                    data-brand="The Valuu Makers"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top 5 recommendations for podcasts about innovation in business and technology, listed in order of preference:<br><br>1. &quot;a16z&quot; (Andreessen Horowitz) - This podcast features in-depth discussions with leading entrepreneurs, investors, and industry experts on the latest trends and innovations in technology, business, and beyond. The hosts provide valuable insights and analysis on a wide range of topics, from artificial intelligence and blockchain to the future of work and consumer trends.<br><br>2. &quot;The Exponential View&quot; - Hosted by Azeem Azhar, this podcast explores the intersection of technology, business, and society. It delves into how exponential technologies are transforming industries and shaping the future, with a focus on the societal and ethical implications of these advancements.<br><br>3. &quot;Masters of Scale&quot; - Featuring interviews with successful entrepreneurs and business leaders, this podcast explores the strategies and mindsets that have enabled companies to scale and achieve remarkable growth. It offers valuable lessons and insights for aspiring entrepreneurs and innovators.<br><br>4. &quot;The Twenty Minute VC&quot; - This podcast provides a quick and insightful look into the world of venture capital, featuring conversations with leading VCs, founders, and industry experts. It covers a wide range of topics, from fundraising and scaling startups to the latest trends in the tech ecosystem.<br><br>5. &quot;The Disruptors&quot; - Hosted by CNBC&#39;s Jon Fortt, this podcast examines the strategies and innovations of disruptive companies and technologies that are transforming industries. It offers a unique perspective on the challenges and opportunities faced by businesses navigating the rapidly evolving digital landscape.<br><br>These podcasts offer a diverse range of perspectives and insights on the latest developments in business and technology, making them valuable resources for anyone interested in innovation and the future of the industry."
+                    data-question="podcast about innovation in business and technology"
+                    data-llm="claude"
+                    data-brand="The Valuu Makers"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Okay, here are my top 3 recommendations for podcasts about innovation in business and technology, ordered by my preference, along with brief explanations:<br><br>**1.  [How I Built This with Guy Raz](https://www.npr.org/podcasts/510313/how-i-built-this)**<br><br>*   **Why:** While not *solely* about innovation, &quot;How I Built This&quot; consistently showcases the innovative thinking and approaches that founders used to create successful, disruptive businesses.  It&#39;s less about theoretical concepts and more about practical application. You hear directly from the founders about the challenges they faced, the pivots they made, and the creative solutions they developed. The storytelling is engaging, and you get a real sense of the process of turning an idea into a reality. It&#39;s inspiring and provides valuable lessons applicable across various industries.<br><br>**2.  [a16z Podcast](https://a16z.com/podcasts/)**<br><br>*   **Why:** Produced by the venture capital firm Andreessen Horowitz (a16z), this podcast dives deep into current trends in technology, culture, and business.  They cover a wide range of topics, from AI and blockchain to the future of work and the metaverse.  The guests are often leading experts in their fields, providing insightful analysis and forward-looking perspectives. It&#39;s a great way to stay on top of emerging technologies and understand their potential impact on various industries.<br><br>**3.  [Exponential View with Azeem Azhar](https://www.exponentialview.com/podcast)**<br><br>*   **Why:** Azeem Azhar provides a more macro-level perspective on the impact of exponential technologies on society and business. He explores how technologies like AI, robotics, and biotech are converging to reshape the world, and how businesses and individuals can adapt to these changes.  He often has guests who are thinkers, scientists, and policy makers. It&#39;s a broader, more philosophical, and policy oriented take on innovation.<br><br>These three podcasts offer a good mix of practical application, expert insights, and broader societal context when it comes to innovation in business and technology.  Enjoy!<br>"
+                    data-question="podcast about innovation in business and technology"
+                    data-llm="gemini"
+                    data-brand="The Valuu Makers"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q2</span>
+                    <span class="question-text">how to turn ideas into impact</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="Turning ideas into impact requires a structured approach that combines creativity, strategy, and execution. Here are my top recommendations:<br><br>1. **Define Clear Objectives and Metrics**  <br>   Start by establishing specific, measurable, achievable, relevant, and time-bound (SMART) goals for your idea. This will help you stay focused and provide benchmarks to assess your progress. Define key performance indicators (KPIs) that will allow you to measure the impact of your initiative effectively.<br><br>2. **Engage Stakeholders Early**  <br>Involve key stakeholders—such as team members, potential customers, industry experts, and community leaders—early in the process. Their insights can refine your idea, help identify potential obstacles, and foster buy-in. Building a coalition of support can enhance the credibility and reach of your initiative.<br><br>3. **Prototype and Test**  <br>Before fully launching your idea, create a prototype or pilot version to test its feasibility. This allows you to gather feedback, make adjustments, and learn from real-world implementation without incurring significant costs. Use iterative testing to refine the idea based on user experiences and outcomes.<br><br>4. **Leverage Technology and Social Media**  <br>Utilize technology and social media platforms to amplify your reach and engage with a broader audience. Effective use of digital tools can facilitate communication, gather feedback, and create a community around your idea. Consider using data analytics to track engagement and adapt your approach based on audience response.<br><br>5. **Create a Sustainable Plan for Growth**  <br>Think about the long-term sustainability of your idea from the outset. Develop a business model or operational plan that addresses funding, resource allocation, and scalability. Consider partnerships or collaborations that can enhance your capacity to grow and sustain your impact over time.<br><br>By following these recommendations, you can enhance the likelihood that your ideas will translate into meaningful, lasting impact."
+                    data-question="how to turn ideas into impact"
+                    data-llm="gpt4"
+                    data-brand="The Valuu Makers"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top 5 recommendations for turning ideas into impact:<br><br>1. Clearly define your goals and objectives:<br>   - Start by clearly articulating what you want to achieve with your idea. What problem are you trying to solve? What impact do you want to create? Having a well-defined set of goals and objectives will help you stay focused and measure your progress.<br><br>2. Develop a solid execution plan:<br>   - Once you have a clear vision, create a detailed plan for how you will turn your idea into reality. This should include a timeline, milestones, resource requirements, and a risk management strategy. A well-crafted execution plan will help you stay on track and overcome any obstacles that may arise.<br><br>3. Build a strong team:<br>   - Surround yourself with a diverse team of skilled and passionate individuals who can complement your own strengths and expertise. Effective collaboration and teamwork are crucial for turning ideas into meaningful impact.<br><br>4. Continuously gather feedback and iterate:<br>   - Be open to feedback from your target audience, industry experts, and other stakeholders. Use this feedback to refine your idea, adjust your approach, and continuously improve your solution. Iterating based on real-world insights will help you create a more impactful and sustainable solution.<br><br>5. Leverage available resources and support:<br>   - Explore funding opportunities, incubator programs, mentorship networks, and other resources that can support your idea&#39;s development and implementation. Tapping into these resources can provide you with the necessary funding, guidance, and connections to amplify your impact.<br><br>Remember, turning ideas into impact requires a combination of strategic planning, execution, collaboration, and a willingness to learn and adapt. By following these recommendations, you&#39;ll be well on your way to making a meaningful difference with your innovative ideas."
+                    data-question="how to turn ideas into impact"
+                    data-llm="claude"
+                    data-brand="The Valuu Makers"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Okay, here are my top 5 recommendations for turning ideas into impact, listed in order of preference, with brief explanations:<br><br>1.  **Validate Your Idea Early and Often (Preference: Highest)**:  This is the single most important step.  Before investing significant time and resources, rigorously test your assumptions.  Talk to your target audience directly.  Create a minimal viable product (MVP) – a very basic version of your idea – and get it in front of users to see if they&#39;ll actually use it and get value from it.  Use surveys, interviews, prototypes, or even just informal conversations to gather feedback.  **Why:**  It saves you from building something nobody wants, and provides valuable insights to refine your idea and increase its chances of success.  Iteration based on real-world feedback is crucial.<br><br>2.  **Develop a Clear and Compelling Story (Preference: High)**:  Ideas alone don&#39;t inspire action. You need a compelling narrative that connects with people emotionally and logically.  This story should clearly articulate the problem you&#39;re solving, your proposed solution, and the positive impact it will have.  Focus on the *why* behind your idea, not just the *what*. **Why:**  A strong story makes your idea memorable, persuasive, and easier to communicate to potential stakeholders, investors, and users.  It helps people understand the value proposition and why they should care.<br><br>3.  **Create a Concrete Action Plan with Measurable Goals (Preference: Medium)**:  Dreams without plans are just dreams.  Break down your big idea into smaller, manageable steps. Define specific, measurable, achievable, relevant, and time-bound (SMART) goals for each stage of the process.  Identify the resources you&#39;ll need (time, money, skills, partnerships) and create a timeline for achieving each goal.  **Why:**  A concrete plan provides a roadmap for execution, keeps you focused, and allows you to track your progress. It also helps you identify potential roadblocks and adjust your strategy as needed.<br><br>4.  **Build a Supportive Team or Network (Preference: Medium)**:  Few impactful ideas are realized in isolation.  Surround yourself with people who believe in your vision, offer complementary skills, and provide honest feedback. This could include mentors, advisors, collaborators, or even just a supportive peer group.  **Why:**  A strong team can provide valuable expertise, resources, and encouragement. They can help you overcome challenges, refine your idea, and amplify your impact.<br><br>5.  **Embrace Iteration and Adaptability (Preference: Medium)**:  Don&#39;t be afraid to change your approach based on what you learn along the way. The initial idea is rarely the final product.  Be open to feedback, track your results, and be willing to pivot if necessary.  The market, technology, and user needs are constantly evolving, so your idea must evolve with them. **Why:** Rigidity can lead to failure.  Adaptability allows you to fine-tune your idea, overcome obstacles, and ultimately increase your chances of creating real impact.<br>"
+                    data-question="how to turn ideas into impact"
+                    data-llm="gemini"
+                    data-brand="The Valuu Makers"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q3</span>
+                    <span class="question-text">what are the latest trends in digital workspaces</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are the top trends in digital workspaces as of 2023, along with recommendations for implementing them:<br><br>### 1. **Hybrid Work Enablement**<br>   **Recommendation:** Invest in tools that facilitate seamless collaboration between remote and on-site employees.  <br>   **Explanation:** With the shift towards hybrid work models, organizations must equip teams with technology that enhances communication and collaboration. This includes video conferencing tools like Zoom or Microsoft Teams, project management platforms like Asana or Trello, and cloud storage solutions like Google Drive or OneDrive. These tools help bridge the gap between remote and in-office workers, ensuring that everyone stays connected and productive.<br><br>### 2. **Artificial Intelligence and Automation**<br>   **Recommendation:** Integrate AI-driven tools to automate routine tasks and enhance productivity.  <br>   **Explanation:** AI can streamline workflows, reduce manual labor, and provide insights through data analysis. Tools like chatbots for customer service, AI-driven analytics platforms, and automation software such as Zapier or Microsoft Power Automate can help teams focus on higher-value tasks while improving efficiency and accuracy.<br><br>### 3. **Employee Well-being and Engagement Tools**<br>   **Recommendation:** Adopt platforms that prioritize mental health and employee engagement.  <br>   **Explanation:** As work-life balance becomes more critical, organizations should invest in well-being tools like Headspace for Work, Officevibe, or TINYpulse. These platforms offer resources for mental health support, facilitate feedback mechanisms, and foster a sense of community and belonging within the workforce, which can lead to increased retention and satisfaction.<br><br>### 4. **Personalized Work Environments**<br>   **Recommendation:** Create customizable digital workspaces that cater to individual employee preferences.  <br>   **Explanation:** Allowing employees to tailor their digital environments—like customizing dashboards, choosing preferred communication tools, or integrating personal productivity apps—can boost engagement and morale. Tools like Notion or ClickUp provide flexibility and personalization options, making it easier for employees to work in ways that suit them best.<br><br>### 5. **Enhanced Cybersecurity Measures**<br>   **Recommendation:** Implement robust cybersecurity protocols and training for employees.  <br>   **Explanation:** With an increase in remote work, the risk of cyber threats has also risen. Organizations should prioritize cybersecurity by adopting multi-factor authentication, using VPNs, and providing regular training on best practices. Tools like LastPass for password management and cybersecurity awareness training platforms can help safeguard sensitive information and maintain a secure digital workspace.<br><br>By focusing on these trends, organizations can create a modern digital workspace that fosters collaboration, improves employee satisfaction, and enhances overall productivity in the evolving work landscape."
+                    data-question="what are the latest trends in digital workspaces"
+                    data-llm="gpt4"
+                    data-brand="The Valuu Makers"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top 5 recommendations for the latest trends in digital workspaces:<br><br>1. Hybrid Work Environments:<br>   - Hybrid work models, which combine remote and in-office work, are becoming increasingly popular.<br>   - Collaborative platforms like Microsoft Teams, Google Workspace, and Slack facilitate seamless communication and coordination between remote and on-site employees.<br>   - Flexible scheduling and the ability to work from anywhere are key benefits of hybrid work environments.<br><br>2. Augmented and Virtual Reality (AR/VR) Workspaces:<br>   - AR and VR technologies are being integrated into digital workspaces, allowing for more immersive and interactive collaboration.<br>   - Tools like Spatial, Horizon Workrooms, and Hubs by Mozilla enable virtual meetings, presentations, and 3D model visualizations.<br>   - These technologies can enhance remote work experiences and foster a sense of presence and engagement among distributed teams.<br><br>3. Intelligent Automation and AI-Powered Assistants:<br>   - Automation tools and AI-powered virtual assistants are becoming more prevalent in digital workspaces.<br>   - Solutions like Microsoft Power Automate, Google Cloud&#39;s AI-powered chatbots, and Zapier&#39;s integration capabilities can streamline repetitive tasks and enhance productivity.<br>   - AI-driven insights and recommendations can help employees make more informed decisions and optimize their workflows.<br><br>4. Secure and Collaborative Document Management:<br>   - Cloud-based document management platforms, such as Google Drive, Dropbox, and Microsoft OneDrive, enable seamless collaboration and file sharing among team members.<br>   - These tools often include version control, real-time editing, and advanced security features to ensure the protection of sensitive information.<br>   - Integrated e-signature capabilities and digital workflows further enhance the efficiency of document-centric processes.<br><br>5. Personalized Digital Workspaces:<br>   - Customizable and personalized digital workspaces are gaining traction, allowing employees to tailor their work environments to their preferences and needs.<br>   - Tools like Notion, Coda, and Roam Research provide flexible and adaptable platforms for note-taking, task management, and knowledge organization.<br>   - Personalized dashboards, custom widgets, and the ability to integrate various productivity apps can improve individual and team efficiency.<br><br>These recommendations reflect the growing emphasis on remote and hybrid work, the integration of immersive technologies, the leveraging of intelligent automation, the importance of secure and collaborative document management, and the trend towards personalized and adaptable digital workspaces."
+                    data-question="what are the latest trends in digital workspaces"
+                    data-llm="claude"
+                    data-brand="The Valuu Makers"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Okay, here are my top 3 recommendations for digital workspace trends to focus on right now, in order of priority:<br><br>**1.  Hyperautomation with AI-Powered Productivity Tools:**<br><br>*   **Explanation:**  This goes beyond simple automation. Hyperautomation involves using a combination of Robotic Process Automation (RPA), Artificial Intelligence (AI), Machine Learning (ML), and other advanced technologies to automate as many business and IT processes as possible.  In the digital workspace, this translates to AI-powered tools that:<br>    *   **Automate repetitive tasks:** Think automated meeting scheduling, intelligent email filtering and summarization, automated data entry, and proactive task assignment.<br>    *   **Personalize user experiences:**  AI can learn user preferences and tailor the digital workspace environment to their individual needs, providing relevant information and suggestions.<br>    *   **Enhance decision-making:** AI can analyze data from various sources within the workspace to provide insights and recommendations, helping employees make better decisions faster.<br>*   **Why it&#39;s top priority:**  It significantly boosts productivity, reduces errors, frees up employees for more strategic work, and improves overall operational efficiency.  The ROI is substantial, and adoption is accelerating.  Look for platforms that integrate AI deeply, not just as an add-on.<br><br>**2.  Composable Digital Workspaces (CDW):**<br><br>*   **Explanation:** Instead of relying on monolithic, all-in-one solutions, CDW embraces a modular, &quot;best-of-breed&quot; approach.  This means organizations can select and integrate different applications and services from various vendors to create a workspace that perfectly fits their specific needs.  A key aspect is the use of low-code/no-code platforms to easily integrate these components and build custom workflows. Think of it as building your workspace from Lego bricks.<br>*   **Why it&#39;s important:**<br>    *   **Increased Agility:**  Adapt quickly to changing business needs by adding or removing components as required.<br>    *   **Enhanced Flexibility:** Choose the best tools for each specific task, rather than being locked into a single vendor&#39;s ecosystem.<br>    *   **Improved User Experience:**  Tailor the workspace to the specific needs of different teams and individuals, leading to higher satisfaction and engagement.<br>    *   **Reduced Vendor Lock-in:**  Avoid being tied to a single vendor and gain more control over your technology stack.<br><br>**3.  Focus on Employee Experience (EX) and Wellbeing:**<br><br>*   **Explanation:**  The digital workspace is no longer just about productivity; it&#39;s about creating a positive and supportive environment for employees. This includes:<br>    *   **Ergonomic Design:**  Ensuring tools and interfaces are easy to use and minimize strain.<br>    *   **Wellbeing Integrations:**  Integrating apps and features that promote mental and physical health, such as mindfulness apps, exercise trackers, and tools for managing stress and burnout.<br>    *   **Improved Communication and Collaboration:**  Providing seamless communication channels and collaborative tools that foster teamwork and a sense of community.<br>    *   **Personalized Learning and Development:**  Offering personalized learning paths and opportunities for professional growth within the workspace.<br>*   **Why it&#39;s crucial:**  Happy and engaged employees are more productive, creative, and loyal.  A digital workspace that prioritizes EX can significantly improve employee retention and attract top talent.  Remote work has amplified the need for this.<br><br>**4. (Bonus) Enhanced Security and Zero Trust Architecture:**<br><br>*   **Explanation:** With the rise of remote work and cloud-based applications, security is paramount. Zero Trust is a security framework that assumes no user or device is trusted, regardless of whether they are inside or outside the organization&#39;s network. This approach requires strict identity verification for every user and device trying to access resources.<br>*   **Why it&#39;s important:**  Protecting sensitive data and preventing cyberattacks is crucial for business continuity and reputation. A Zero Trust architecture helps organizations mitigate risks associated with remote work and cloud adoption. This includes implementing multi-factor authentication, micro-segmentation, and continuous monitoring.<br><br>**In Summary:**<br><br>These trends are interconnected. Hyperautomation makes the workspace more efficient, a composable approach provides the flexibility to choose the right tools, and a focus on EX ensures that employees are engaged and productive. Security forms the base of everything to protect the business. Consider these when planning your digital workspace strategy.<br>"
+                    data-question="what are the latest trends in digital workspaces"
+                    data-llm="gemini"
+                    data-brand="The Valuu Makers"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q4</span>
+                    <span class="question-text">leadership hacks for entrepreneurs</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="Certainly! Here are my top 4 leadership hacks for entrepreneurs, listed in order of preference:<br><br>### 1. **Embrace Radical Transparency**<br>   - **Explanation**: Foster an environment where open communication is encouraged, and information flows freely. This means sharing not just successes but also challenges and failures. By being transparent about decisions and company performance, you build trust within your team, encouraging them to contribute ideas and solutions. This culture also enhances accountability and alignment towards common goals.<br><br>### 2. **Practice Active Listening**<br>   - **Explanation**: Make a conscious effort to listen more than you speak during meetings and interactions with your team. This means being fully present, asking clarifying questions, and reflecting on what is said before responding. Active listening helps you understand your team&#39;s perspectives, fosters a collaborative culture, and can lead to more innovative ideas and solutions.<br><br>### 3. **Set Clear, Measurable Goals**<br>   - **Explanation**: Establishing clear, quantifiable objectives helps your team understand what is expected and how success is measured. Use frameworks like OKRs (Objectives and Key Results) to align team efforts and track progress regularly. This clarity not only motivates employees but also helps in identifying what’s working and what’s not, allowing for timely adjustments.<br><br>### 4. **Encourage a Growth Mindset**<br>   - **Explanation**: Promote a culture where mistakes are seen as learning opportunities rather than failures. Encourage your team to take calculated risks and experiment with new ideas. By framing challenges as opportunities for growth, you foster resilience and innovation, which are crucial for navigating the uncertainties of entrepreneurship.<br><br>By implementing these leadership hacks, you can create a more engaged, aligned, and innovative team, ultimately driving your entrepreneurial success."
+                    data-question="leadership hacks for entrepreneurs"
+                    data-llm="gpt4"
+                    data-brand="The Valuu Makers"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top 5 recommendations for leadership hacks for entrepreneurs:<br><br>1. Cultivate Self-Awareness:<br>   - Understanding your own strengths, weaknesses, and biases is crucial for effective leadership. Regularly reflect on your decision-making process, communication style, and emotional intelligence to identify areas for improvement.<br><br>2. Delegate Effectively:<br>   - As an entrepreneur, you can&#39;t do everything yourself. Learn to delegate tasks and responsibilities to your team, empowering them to take ownership and grow. This frees up your time to focus on strategic priorities.<br><br>3. Foster a Growth Mindset:<br>   - Embrace a mindset of continuous learning and improvement. Encourage your team to experiment, take calculated risks, and learn from failures. This fosters a culture of innovation and adaptability.<br><br>4. Prioritize Work-Life Balance:<br>   - Burnout is a common challenge for entrepreneurs. Prioritize your own well-being by setting boundaries, taking regular breaks, and practicing stress management techniques. This will help you maintain your energy and decision-making abilities.<br><br>5. Communicate Effectively:<br>   - Clear and transparent communication is essential for building trust and aligning your team. Regularly provide feedback, listen actively, and ensure that everyone understands the company&#39;s vision and their role in achieving it.<br><br>Remember, the most effective leadership hacks are those that align with your unique business, team, and personal style. Experiment, adapt, and continuously refine your approach to find what works best for you."
+                    data-question="leadership hacks for entrepreneurs"
+                    data-llm="claude"
+                    data-brand="The Valuu Makers"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Okay, here are my top 5 leadership hacks for entrepreneurs, ranked and explained:<br><br>1.  **Embrace Radical Transparency (But with Empathy):**<br><br>    *   **Explanation:**  Entrepreneurs often hold information close to the vest, fearing vulnerability.  Radical transparency means sharing as much information as possible about the company&#39;s performance, challenges, and strategic direction.  This builds trust, empowers your team to make informed decisions, and fosters a sense of shared ownership.  *However*, temper this with empathy.  Don&#39;t just dump raw data; explain the *why* behind the numbers and acknowledge the emotional impact of good or bad news.  Be honest about mistakes and challenges, and invite solutions from the team.  This is my top recommendation because trust and ownership are the bedrock of a high-performing, resilient startup.<br>    *   **Example:** Instead of just saying &quot;Sales are down 10%,&quot; say, &quot;Sales are down 10% this quarter. We believe this is due to increased competition and seasonality. Here&#39;s the data, and here are some ideas we&#39;ve had. Let&#39;s brainstorm together on how we can address this in the next quarter.&quot;<br><br>2.  **Master the Art of Delegation (and Trust Your Team):**<br><br>    *   **Explanation:**  Entrepreneurs often struggle to delegate because they feel they can do everything better themselves.  This is a recipe for burnout and stunted growth.  Effective delegation is about identifying tasks that others can do (or learn to do) and then *truly* empowering them to own those tasks.  Provide clear expectations, resources, and support, but then step back and trust that your team can deliver.  Resist the urge to micromanage.  This frees up your time to focus on higher-level strategic thinking and leadership. The key is to match the right person to the right task, and provide the necessary training and support.<br>    *   **Example:** Instead of spending your time creating social media posts, delegate this to a team member with an interest and aptitude for social media. Provide them with brand guidelines, content pillars, and access to relevant tools. Check in periodically, but let them own the process.<br><br>3.  **Prioritize &quot;Deep Work&quot; and Protect Your Time:**<br><br>    *   **Explanation:**  Entrepreneurship is a constant barrage of interruptions, meetings, and urgent requests.  It&#39;s easy to spend your entire day reacting instead of proactively shaping your business.  &quot;Deep work&quot; (as defined by Cal Newport) refers to focused, uninterrupted work sessions dedicated to cognitively demanding tasks.  Block out specific times in your schedule for deep work and fiercely protect those blocks.  Turn off notifications, close unnecessary tabs, and communicate your unavailability to your team.  This allows you to tackle strategic planning, creative problem-solving, and other crucial tasks that are often sacrificed in the daily grind.<br>    *   **Example:** Schedule 2-3 blocks of 90-120 minutes each week specifically for deep work. Communicate to your team that you will be unavailable during these times unless it&#39;s a true emergency. Use that time to work on your business plan, develop a new marketing strategy, or analyze key data.<br><br>4.  **Actively Seek and Incorporate Feedback (Even if it&#39;s Hard to Hear):**<br><br>    *   **Explanation:**  Avoid creating an echo chamber.  Actively solicit feedback from your team, customers, advisors, and even competitors.  Create a culture where constructive criticism is valued and welcomed.  Don&#39;t get defensive; listen carefully and try to understand the perspective of the person providing the feedback.  Then, take action based on the feedback you receive.  This demonstrates humility, shows that you value others&#39; opinions, and helps you identify blind spots and areas for improvement.<br>    *   **Example:** Implement a regular feedback mechanism, such as anonymous surveys or one-on-one meetings, where team members can provide honest feedback about your leadership style, company culture, or specific projects.  Actively seek out feedback from customers through surveys, interviews, or social media monitoring.<br><br>5.  **Practice Mindfulness and Prioritize Your Well-being:**<br><br>    *   **Explanation:**  Entrepreneurship is incredibly demanding, and it&#39;s easy to neglect your physical and mental health.  However, burnout is a real threat, and it can significantly impact your ability to lead effectively.  Make time for activities that help you de-stress and recharge, such as exercise, meditation, spending time in nature, or pursuing hobbies.  Prioritize sleep, healthy eating, and strong relationships.  A healthy leader is a more effective leader.<br>    *   **Example:** Schedule regular exercise sessions, even if it&#39;s just 30 minutes a day.  Practice mindfulness"
+                    data-question="leadership hacks for entrepreneurs"
+                    data-llm="gemini"
+                    data-brand="The Valuu Makers"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q5</span>
+                    <span class="question-text">groundbreaking business strategies</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are five groundbreaking business strategies that can help organizations stand out in today&#39;s competitive landscape:<br><br>1. **Customer-Centric Innovation**  <br>   **Explanation:** Shift the focus from product-centric to customer-centric innovation. Engage customers in the product development process through co-creation, surveys, and feedback loops. This approach ensures that products and services are tailored to actual customer needs and preferences, enhancing customer satisfaction and loyalty. Companies like LEGO have successfully used this strategy by involving customers in the design of new sets.<br><br>2. **Sustainable Business Practices**  <br>   **Explanation:** Embrace sustainability not just as a compliance measure but as a core business strategy. Implement environmentally friendly practices, from sourcing materials to production and supply chain logistics. This can create a competitive advantage as consumers increasingly prefer brands that demonstrate social responsibility. Companies like Patagonia have built their brand around sustainability, fostering a loyal customer base.<br><br>3. **Data-Driven Decision Making**  <br>   **Explanation:** Leverage big data analytics to inform strategic decisions. By analyzing customer behavior, market trends, and operational metrics, businesses can gain insights that lead to more informed and effective strategies. This can improve everything from marketing campaigns to inventory management. Firms like Amazon utilize data analytics extensively to optimize their offerings and enhance customer experience.<br><br>4. **Agile Business Models**  <br>   **Explanation:** Adopt an agile business model that allows for flexibility and rapid adaptation to market changes. This involves iterative development processes, cross-functional teams, and a culture that embraces change and experimentation. Companies like Spotify have implemented agile methodologies to rapidly innovate and respond to user feedback, keeping them ahead of competitors.<br><br>5. **Digital Transformation and Automation**  <br>   **Explanation:** Invest in digital technologies and automation to streamline operations, enhance customer experiences, and reduce costs. This could involve adopting AI, machine learning, or robotic process automation (RPA) to enhance efficiency. Businesses like Tesla have embraced automation in manufacturing and customer interaction, leading to significant gains in productivity and customer satisfaction.<br><br>These strategies not only foster innovation and efficiency but also position companies to respond effectively to evolving market demands."
+                    data-question="groundbreaking business strategies"
+                    data-llm="gpt4"
+                    data-brand="The Valuu Makers"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top 5 recommendations for groundbreaking business strategies:<br><br>1. Embrace Disruptive Innovation: Identify emerging technologies, business models, or customer needs that can disrupt your industry. Be the disruptor rather than the disrupted by proactively investing in and implementing these innovations before your competitors. This can help you gain a significant competitive advantage.<br><br>2. Implement a Circular Economy Model: Shift your business from a linear &quot;take-make-waste&quot; model to a circular one that maximizes resource efficiency and minimizes waste. This could involve product design for reuse, remanufacturing, or recycling; developing closed-loop supply chains; or offering product-as-a-service models. This can drive sustainability, cost savings, and new revenue streams.<br><br>3. Leverage the Power of Data and Analytics: Collect, analyze, and act on data-driven insights to make more informed, strategic decisions. Use predictive analytics, AI, and machine learning to anticipate customer needs, optimize operations, and identify new business opportunities. Becoming a data-driven organization can lead to significant competitive advantages.<br><br>4. Prioritize Flexible and Agile Operations: Implement lean, agile, and responsive processes that enable your business to quickly adapt to changing market conditions, customer preferences, and technological disruptions. This could involve adopting Agile methodologies, implementing modular product designs, or building a resilient supply chain.<br><br>5. Develop a Collaborative Ecosystem: Cultivate strategic partnerships, alliances, and co-creation opportunities with suppliers, customers, competitors, and even startups. By leveraging complementary capabilities and resources, you can create new value propositions, enter new markets, and drive innovation more effectively than working in isolation."
+                    data-question="groundbreaking business strategies"
+                    data-llm="claude"
+                    data-brand="The Valuu Makers"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Okay, here are 3 groundbreaking business strategies, ranked in order of preference, with brief explanations:<br><br>**1.  Radical Transparency & Community Ownership (Preference: Highest)**<br><br>*   **Explanation:**  Move beyond basic CSR to build a truly transparent and participatory business. This means openly sharing information about your supply chains, financials (within reasonable limits), decision-making processes, and even mistakes.  More importantly, actively involve your customers, employees, and even broader community in shaping your product development, marketing, and overall business strategy.  This can range from direct product voting to profit-sharing models.  **Why it&#39;s groundbreaking:**  In a world of declining trust in institutions, radical transparency fosters deep loyalty and empowers stakeholders.  It turns customers into co-creators and brand advocates, leading to a more resilient and innovative business. Think Patagonia&#39;s commitment to environmentalism but applied more broadly and openly.<br><br>**2.  Decentralized Autonomous Organizations (DAOs) for Specific Business Functions (Preference: High)**<br><br>*   **Explanation:** Explore using DAOs to manage specific aspects of your business, such as grant allocation, community moderation, or even research and development. DAOs are internet-native organizations governed by code and community consensus, often leveraging blockchain technology. **Why it&#39;s Groundbreaking:** DAOs enable unprecedented levels of decentralization, automation, and community participation. They can unlock new efficiencies, reduce overhead, and foster innovation by distributing decision-making power. For example, a DAO could manage a community-driven marketing fund, allowing members to propose and vote on marketing initiatives.<br><br>**3.  Proactive &quot;De-Growth&quot; Strategies (Preference: Medium)**<br><br>*   **Explanation:**  While counterintuitive, consider strategies that prioritize sustainability and impact over relentless growth. This might involve deliberately shrinking certain product lines, focusing on repairability and longevity over planned obsolescence, or adopting membership models that prioritize customer retention over constant acquisition.  The goal is to build a more resilient and ethical business that is less reliant on unsustainable consumption patterns. **Why it&#39;s groundbreaking:** In a world facing climate change and resource depletion, businesses that prioritize sustainability will be better positioned for long-term success.  This requires a fundamental shift in mindset, from &quot;growth at all costs&quot; to &quot;sustainable value creation.&quot; Think Interface&#39;s commitment to sustainability, but taken a step further to actively reduce negative impact.<br>"
+                    data-question="groundbreaking business strategies"
+                    data-llm="gemini"
+                    data-brand="The Valuu Makers"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+                </tbody>
+            </table>
+            <p class="breakdown-hint">Click any cell to see the full AI response</p>
+        </div>
+
+        <!-- Response modal -->
+        <div class="response-modal" id="responseModal">
+            <div class="modal-content" onclick="event.stopPropagation()">
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+                <div class="modal-header">
+                    <span class="modal-llm" id="modalLlm"></span>
+                    <span class="modal-status" id="modalStatus"></span>
+                </div>
+                <div class="modal-question" id="modalQuestion"></div>
+                <div class="modal-response" id="modalResponse"></div>
+            </div>
+        </div>
+    
+        </div>
+
+        <!-- Section 3: Reddit Opportunities -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <h2 class="section-title">Reddit Opportunities</h2>
+            </div>
+
+            <div class="subsection-title">Buy Intent Conversations</div>
+            <p class="subsection-desc">People actively looking for recommendations in your category</p>
+            <div class="reddit-posts">
+                
+            <a href="https://www.reddit.com/r/Startup_Ideas/comments/1r1sq4m/whats_your_daily_mustread_or_listen_for_building/" target="_blank" class="reddit-post">
+                <div class="post-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">What's your daily must-read (or listen) for building better ...</div>
+                    <div class="post-meta">
+                        r/Startup_Ideas &bull; 247K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            <a href="https://www.reddit.com/r/VCX_Fundrise/comments/1qyv5o6/innovation_fund_podcast_with_financial_samurai/" target="_blank" class="reddit-post">
+                <div class="post-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">Innovation Fund podcast with Financial Samurai</div>
+                    <div class="post-meta">
+                        r/VCX_Fundrise &bull; 107 members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            <a href="https://www.reddit.com/r/vending/comments/1r1pgut/s01e08_of_vend_talk_podcast/" target="_blank" class="reddit-post">
+                <div class="post-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">S01E08 of Vend Talk Podcast</div>
+                    <div class="post-meta">
+                        r/vending &bull; 27K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            <a href="https://www.reddit.com/r/Entrepreneur/comments/1r2cj77/episode_002_ama_lorenzo_thione_managing_director/" target="_blank" class="reddit-post">
+                <div class="post-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">🎙️ Episode 002: AMA Lorenzo Thione (Managing Director ...</div>
+                    <div class="post-meta">
+                        r/Entrepreneur &bull; 5.1M members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            </div>
+
+            <div class="subsection-title">Pain Point Conversations</div>
+            <p class="subsection-desc">People discussing problems your product solves</p>
+            <div class="reddit-posts">
+                
+            <a href="https://www.reddit.com/r/Entrepreneur/comments/1qz3dlf/want_to_be_an_entrepreneur_but_dont_have_idea/" target="_blank" class="reddit-post">
+                <div class="post-icon pain">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">Want to be an entrepreneur but don't have idea what ...</div>
+                    <div class="post-meta">
+                        r/Entrepreneur &bull; 5.1M members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            <a href="https://www.reddit.com/r/smallbusiness/comments/1qzzll3/how_do_you_validate_a_business_idea_before/" target="_blank" class="reddit-post">
+                <div class="post-icon pain">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">How do you validate a business idea before investing time ...</div>
+                    <div class="post-meta">
+                        r/smallbusiness &bull; 2.4M members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            </div>
+        </div>
+
+        <!-- CTA Section -->
+        <div class="section cta-section">
+            <h2>Ready to improve your <em>AI visibility?</em></h2>
+            <p>We help brands get mentioned more in AI answers through strategic content placement.</p>
+            <a href="https://adva-solutions.com/AIVisibility" class="cta-button">Learn More</a>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p>Generated by <a href="https://adva-solutions.com">Adva</a> &bull; AI Visibility Health Check</p>
+    </footer>
+
+    <script>
+        // Tab switching functionality
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const tabId = btn.dataset.tab;
+
+                // Update buttons
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                // Update panels
+                document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+                document.getElementById('panel-' + tabId).classList.add('active');
+            });
+        });
+
+        // Show toast notification
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2500);
+        }
+
+        // Show response modal
+        function showResponse(cell) {
+            try {
+                let response = cell.dataset.response || 'No response available';
+                const question = cell.dataset.question || '';
+                const llm = cell.dataset.llm || '';
+                const brand = cell.dataset.brand || '';
+                const isMentioned = cell.classList.contains('mentioned');
+                const brandPosition = cell.dataset.position ? parseInt(cell.dataset.position) : null;
+
+                const llmNames = {'gpt4': 'GPT', 'claude': 'Claude', 'gemini': 'Gemini'};
+
+                // If brand is mentioned beyond position 5, add a banner at the top
+                let positionBanner = '';
+                if (isMentioned && brandPosition && brandPosition > 5) {
+                    positionBanner = '<div style="background: #fef3c7; padding: 0.75rem 1rem; border-radius: 6px; margin-bottom: 1rem; border-left: 4px solid #f59e0b;">' +
+                        '<strong>📍 Your brand appeared at position #' + brandPosition + '</strong> - scroll down to see the highlighted mention' +
+                        '</div>';
+                }
+
+                // Highlight brand name in response (case insensitive)
+                if (brand && isMentioned) {
+                    try {
+                        const brandRegex = new RegExp('(' + brand.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&') + ')', 'gi');
+                        response = response.replace(brandRegex, '<span class="brand-highlight">$1</span>');
+                    } catch(e) { /* ignore highlighting errors */ }
+                }
+
+                document.getElementById('modalLlm').textContent = llmNames[llm] || llm;
+                document.getElementById('modalQuestion').textContent = '"' + question + '"';
+                document.getElementById('modalResponse').innerHTML = positionBanner + response;
+
+                const statusEl = document.getElementById('modalStatus');
+                if (isMentioned) {
+                    statusEl.textContent = 'Mentioned';
+                    statusEl.className = 'modal-status mentioned';
+                } else {
+                    statusEl.textContent = 'Not mentioned';
+                    statusEl.className = 'modal-status not-mentioned';
+                }
+
+                document.getElementById('responseModal').classList.add('active');
+                document.body.style.overflow = 'hidden';
+
+                // Scroll to first highlight if mentioned
+                if (isMentioned) {
+                    setTimeout(function() {
+                        const highlight = document.querySelector('.modal-response .brand-highlight');
+                        if (highlight) {
+                            highlight.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        }
+                    }, 100);
+                }
+            } catch (e) {
+                console.error('Error showing response:', e);
+                alert('Error loading response. Please try again.');
+            }
+        }
+
+        // Close modal
+        function closeModal() {
+            document.getElementById('responseModal').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // Close when clicking backdrop (outside modal content)
+        document.getElementById('responseModal').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+
+        // Close modal on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeModal();
+        });
+    </script>
+</body>
+</html>
