@@ -1,0 +1,1370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Visibility Report - Valuu.ai | Adva</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #ffffff;
+            min-height: 100vh;
+            color: #374151;
+            line-height: 1.6;
+        }
+
+        /* Header */
+        .header {
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            font-size: 1.25rem;
+            color: #1f2937;
+            text-decoration: none;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .header-date {
+            color: #9ca3af;
+            font-size: 0.875rem;
+        }
+
+        /* Copy link button */
+        .copy-link-button {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: #f3f4f6;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            color: #374151;
+            font-size: 0.75rem;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .copy-link-button:hover {
+            background: #e5e7eb;
+        }
+
+        .copy-link-button svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        .pdf-button {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: #1f2937;
+            border: none;
+            border-radius: 6px;
+            color: #ffffff;
+            font-size: 0.75rem;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .pdf-button:hover {
+            background: #374151;
+        }
+
+        .pdf-button svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        /* Toast notification */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: #1f2937;
+            color: #ffffff;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            opacity: 0;
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        /* Container */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Page title */
+        .page-title {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .page-title .label {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: #9ca3af;
+            font-size: 0.75rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+        }
+
+        .page-title .label::before,
+        .page-title .label::after {
+            content: '';
+            width: 30px;
+            height: 1px;
+            background: #d1d5db;
+        }
+
+        .page-title h1 {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 2.5rem;
+            font-weight: 400;
+            color: #1f2937;
+            margin-bottom: 0.5rem;
+        }
+
+        .page-title .brand {
+            color: #6b7280;
+            font-size: 1.125rem;
+        }
+
+        /* Sections */
+        .section {
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #f3f4f6;
+        }
+
+        .section-icon {
+            width: 40px;
+            height: 40px;
+            background: #1f2937;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .section-icon svg {
+            width: 20px;
+            height: 20px;
+            color: #ffffff;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 1.375rem;
+            color: #1f2937;
+        }
+
+        /* Score Section */
+        .score-section {
+            text-align: center;
+            padding: 3rem 2rem;
+        }
+
+        .score-circle {
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            background: #fafafa;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            border: 4px solid #ef4444;
+        }
+
+        .score-value {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 3rem;
+            font-weight: 500;
+            color: #ef4444;
+        }
+
+        .score-label {
+            font-size: 0.8rem;
+            color: #9ca3af;
+        }
+
+        .score-description {
+            color: #6b7280;
+            margin-bottom: 2rem;
+            font-size: 1rem;
+        }
+
+        .score-description strong {
+            color: #1f2937;
+        }
+
+        .llm-breakdown {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .llm-stat {
+            text-align: center;
+            padding: 1rem 1.5rem;
+            background: #fafafa;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+            min-width: 100px;
+        }
+
+        .llm-name {
+            display: block;
+            color: #9ca3af;
+            font-size: 0.8rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .llm-score {
+            font-size: 1.125rem;
+            font-weight: 600;
+        }
+
+        .llm-score.success {
+            color: #22c55e;
+        }
+
+        .llm-score.warning {
+            color: #ef4444;
+        }
+
+        /* Competitor Table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 0.875rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid #f3f4f6;
+        }
+
+        th {
+            color: #9ca3af;
+            font-weight: 500;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        td {
+            color: #374151;
+        }
+
+        .mention-count {
+            background: #fef3c7;
+            color: #92400e;
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        /* Tabs for LLM responses */
+        .example-tabs {
+            margin-top: 1.5rem;
+        }
+
+        .tabs-header {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+            padding-bottom: 0;
+        }
+
+        .tab-btn {
+            padding: 0.75rem 1.25rem;
+            background: transparent;
+            border: none;
+            color: #6b7280;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            margin-bottom: -1px;
+            transition: all 0.2s;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .tab-btn:hover {
+            color: #1f2937;
+        }
+
+        .tab-btn.active {
+            color: #1f2937;
+            border-bottom-color: #1f2937;
+        }
+
+        .tab-panel {
+            display: none;
+            background: #fafafa;
+            border-radius: 8px;
+            padding: 1.25rem;
+        }
+
+        .tab-panel.active {
+            display: block;
+        }
+
+        .example-question {
+            color: #1f2937;
+            font-weight: 500;
+            font-size: 0.95rem;
+            margin-bottom: 0.75rem;
+        }
+
+        /* Question breakdown table */
+        .question-breakdown {
+            margin-top: 1rem;
+        }
+
+        .breakdown-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        .breakdown-table th {
+            padding: 0.75rem;
+            text-align: center;
+            background: #f9fafb;
+            border-bottom: 2px solid #e5e7eb;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .breakdown-table th:first-child {
+            text-align: left;
+            width: 50%;
+        }
+
+        .breakdown-table td {
+            padding: 0.75rem;
+            border-bottom: 1px solid #f3f4f6;
+            vertical-align: middle;
+        }
+
+        .question-cell {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+        }
+
+        .question-num {
+            background: #e5e7eb;
+            color: #374151;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        .question-text {
+            color: #374151;
+            line-height: 1.4;
+        }
+
+        .llm-cell {
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-radius: 4px;
+        }
+
+        .llm-cell:hover {
+            background: #f3f4f6;
+        }
+
+        .llm-cell.mentioned {
+            color: #16a34a;
+        }
+
+        .llm-cell.mentioned .status-icon {
+            font-size: 1.25rem;
+        }
+
+        .llm-cell.not-mentioned {
+            color: #dc2626;
+        }
+
+        .llm-cell.not-mentioned .status-icon {
+            font-size: 1.25rem;
+        }
+
+        .breakdown-hint {
+            color: #9ca3af;
+            font-size: 0.8rem;
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+        /* Response modal */
+        .response-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+        }
+
+        .response-modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: #ffffff;
+            border-radius: 12px;
+            max-width: 800px;
+            width: 100%;
+            max-height: 90vh;
+            overflow: auto;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #9ca3af;
+            cursor: pointer;
+            padding: 0.25rem 0.5rem;
+        }
+
+        .modal-close:hover {
+            color: #374151;
+        }
+
+        .modal-header {
+            padding: 1.5rem 1.5rem 0;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            position: relative;
+        }
+
+        .modal-llm {
+            font-weight: 600;
+            color: #1f2937;
+            font-size: 1.1rem;
+        }
+
+        .modal-status {
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .modal-status.mentioned {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .modal-status.not-mentioned {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .modal-question {
+            padding: 1rem 1.5rem;
+            color: #6b7280;
+            font-size: 0.9rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .modal-response {
+            padding: 1.5rem;
+            overflow-y: auto;
+            flex: 1;
+            color: #374151;
+            font-size: 0.9rem;
+            line-height: 1.8;
+            min-height: 300px;
+            max-height: 60vh;
+            background: #fafafa;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .modal-response::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .modal-response::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        .modal-response::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 4px;
+        }
+
+        .modal-response::-webkit-scrollbar-thumb:hover {
+            background: #a1a1a1;
+        }
+
+        /* Brand highlight */
+        .brand-highlight {
+            background: linear-gradient(120deg, #fef08a 0%, #fde047 100%);
+            padding: 0.1rem 0.3rem;
+            border-radius: 3px;
+            font-weight: 600;
+        }
+
+        .example-content {
+            color: #6b7280;
+            font-size: 0.875rem;
+            line-height: 1.7;
+            max-height: 400px;
+            overflow-y: auto;
+            margin-bottom: 0.75rem;
+            padding: 1rem;
+            background: #f9fafb;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .example-status {
+            padding: 0.5rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            display: inline-block;
+        }
+
+        .example-status.mentioned {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .example-status.not-mentioned {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        /* Reddit Posts */
+        .reddit-posts {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .reddit-post {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: #fafafa;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: all 0.2s;
+            border: 1px solid transparent;
+        }
+
+        .reddit-post:hover {
+            background: #f3f4f6;
+            border-color: #e5e7eb;
+        }
+
+        .post-icon {
+            width: 40px;
+            height: 40px;
+            background: #1f2937;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .post-icon.pain {
+            background: #fef3c7;
+        }
+
+        .post-icon.pain svg {
+            color: #92400e;
+        }
+
+        .post-icon svg {
+            width: 20px;
+            height: 20px;
+            color: #ffffff;
+        }
+
+        .post-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .post-title {
+            color: #1f2937;
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .post-meta {
+            color: #9ca3af;
+            font-size: 0.8rem;
+        }
+
+        .post-arrow {
+            color: #9ca3af;
+            flex-shrink: 0;
+        }
+
+        .post-arrow svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .subsection-title {
+            color: #1f2937;
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin: 1.5rem 0 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .subsection-title:first-of-type {
+            margin-top: 0;
+        }
+
+        .subsection-desc {
+            color: #9ca3af;
+            font-size: 0.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .no-data {
+            color: #9ca3af;
+            font-style: italic;
+            text-align: center;
+            padding: 1rem;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            color: #9ca3af;
+            font-size: 0.8rem;
+            padding: 2rem;
+            border-top: 1px solid #e5e7eb;
+            margin-top: 2rem;
+        }
+
+        .footer a {
+            color: #1f2937;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* CTA */
+        .cta-section {
+            text-align: center;
+            padding: 3rem 2rem;
+            background: #fafafa;
+        }
+
+        .cta-section h2 {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 1.75rem;
+            color: #1f2937;
+            margin-bottom: 0.75rem;
+        }
+
+        .cta-section p {
+            color: #6b7280;
+            margin-bottom: 1.5rem;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background: #1f2937;
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .cta-button:hover {
+            background: #111827;
+            transform: translateY(-1px);
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .page-title h1 {
+                font-size: 1.75rem;
+            }
+
+            .section {
+                padding: 1.5rem;
+            }
+
+            .score-circle {
+                width: 130px;
+                height: 130px;
+            }
+
+            .score-value {
+                font-size: 2.25rem;
+            }
+
+            .llm-breakdown {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .tabs-header {
+                flex-wrap: wrap;
+            }
+
+            .tab-btn {
+                padding: 0.5rem 1rem;
+                font-size: 0.8rem;
+            }
+
+            .breakdown-table th,
+            .breakdown-table td {
+                padding: 0.5rem;
+                font-size: 0.8rem;
+            }
+
+            .question-cell {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .modal-content {
+                max-height: 90vh;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <a href="https://adva-solutions.com/AIVisibility" class="logo">adva</a>
+        <div class="header-right">
+            <!-- PDF button hidden for now - backend still available at /report/d619cfac/pdf
+            <a href="/report/d619cfac/pdf" class="pdf-button" title="Download as PDF">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                Download PDF
+            </a>
+            -->
+            <button class="copy-link-button" onclick="navigator.clipboard.writeText('https://adva-solutions.github.io/ai-visibility-report/report_valuuai_d619cfac.html'); showToast('Link copied!');" title="Copy shareable link">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                </svg>
+                Copy Link
+            </button>
+            <span class="header-date">February 12, 2026</span>
+        </div>
+    </header>
+    <div class="toast" id="toast">Link copied to clipboard!</div>
+
+    <div class="container">
+        <div class="page-title">
+            <div class="label">AI Visibility Report</div>
+            <h1>Your Brand's <em>AI Presence</em></h1>
+            <p class="brand">Analysis for Valuu.ai</p>
+        </div>
+
+        <!-- Section 1: AI Visibility Score -->
+        <div class="section score-section">
+            <div class="score-circle">
+                <span class="score-value">0%</span>
+                <span class="score-label">0/15 mentions</span>
+            </div>
+            <p class="score-description">
+                Your brand appeared in <strong>0</strong> out of <strong>15</strong> AI recommendations
+            </p>
+            <div class="llm-breakdown">
+                
+            <div class="llm-stat">
+                <span class="llm-name">GPT</span>
+                <span class="llm-score warning">0/5</span>
+            </div>
+        
+            <div class="llm-stat">
+                <span class="llm-name">Claude</span>
+                <span class="llm-score warning">0/5</span>
+            </div>
+        
+            <div class="llm-stat">
+                <span class="llm-name">Gemini</span>
+                <span class="llm-score warning">0/5</span>
+            </div>
+        
+            </div>
+        </div>
+
+        <!-- Section 2: AI Response Breakdown -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                    </svg>
+                </div>
+                <h2 class="section-title">Question-by-Question Breakdown</h2>
+            </div>
+            <p style="color: #6b7280; margin-bottom: 1rem;">We asked these 5 questions to each AI model. Click any cell to see the full response:</p>
+            
+        <div class="question-breakdown">
+            <table class="breakdown-table">
+                <thead>
+                    <tr>
+                        <th>Question Asked</th>
+                        <th>GPT</th>
+                        <th>Claude</th>
+                        <th>Gemini</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q1</span>
+                    <span class="question-text">how to manage multiple digital transformation programmes</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="Managing multiple digital transformation programs can be complex and challenging. Here are my top recommendations to help ensure success:<br><br>### 1. **Establish a Centralized Governance Structure**<br>   - **Explanation:** Create a governance framework that provides oversight, decision-making authority, and accountability for all digital transformation initiatives. This structure should include a steering committee composed of key stakeholders from different departments. Regular meetings can help align priorities, share progress, and address challenges collaboratively.<br><br>### 2. **Prioritize Initiatives Based on Business Value**<br>   - **Explanation:** Use a structured approach to evaluate and prioritize each digital transformation program based on its potential business impact, feasibility, and alignment with strategic goals. This ensures that resources are allocated effectively and that high-value initiatives are prioritized, leading to quicker wins and stakeholder buy-in.<br><br>### 3. **Implement Agile Methodologies**<br>   - **Explanation:** Adopt agile methodologies to enhance flexibility and responsiveness in managing multiple programs. Agile allows teams to iterate quickly, respond to changing requirements, and integrate feedback from stakeholders throughout the process. This iterative approach can help reduce risks and improve overall project outcomes.<br><br>### 4. **Invest in Change Management and Communication**<br>   - **Explanation:** Effective change management is critical for the success of digital transformation programs. Develop a robust communication strategy to keep all stakeholders informed about the initiatives, progress, and the benefits of changes. Provide training and support to help employees adapt to new technologies and processes, fostering a culture of continuous improvement.<br><br>### 5. **Leverage Data and Analytics for Decision-Making**<br>   - **Explanation:** Utilize data analytics to monitor the performance of each digital transformation initiative. Establish key performance indicators (KPIs) to evaluate progress and outcomes. Data-driven insights can help identify areas for improvement, justify investments, and guide strategic adjustments across multiple programs, ensuring alignment with business objectives.<br><br>By implementing these recommendations, organizations can effectively manage multiple digital transformation programs, driving successful outcomes and maximizing the value of their investments."
+                    data-question="how to manage multiple digital transformation programmes"
+                    data-llm="gpt4"
+                    data-brand="Valuu.ai"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="When managing multiple digital transformation programs, here are my top 5 recommendations:<br><br>1. Establish a Centralized Program Management Office (PMO):<br>   - Create a centralized PMO to oversee and coordinate all digital transformation initiatives.<br>   - The PMO can ensure consistency in project management methodologies, resource allocation, and reporting across programs.<br>   - The PMO can also help prioritize and align the programs with the organization&#39;s overall digital strategy.<br><br>2. Implement a Portfolio Management Approach:<br>   - Adopt a portfolio management approach to manage the interdependencies and trade-offs between the various digital transformation programs.<br>   - Regularly review the portfolio to ensure that the programs are delivering the expected business value and align with the organization&#39;s strategic objectives.<br>   - Reallocate resources and adjust priorities as needed to optimize the overall portfolio performance.<br><br>3. Develop a Robust Change Management Strategy:<br>   - Recognize that digital transformation involves significant organizational change, and address it proactively.<br>   - Develop a comprehensive change management strategy that includes stakeholder engagement, communication plans, and employee training.<br>   - Ensure that the change management approach is consistent across all digital transformation programs to create a cohesive and coordinated effort.<br><br>4. Foster a Culture of Innovation and Experimentation:<br>   - Encourage a culture that embraces digital transformation and fosters innovation and experimentation.<br>   - Empower teams to try new approaches, learn from failures, and continuously improve the programs.<br>   - Recognize and celebrate successes to reinforce the importance of digital transformation within the organization.<br><br>5. Leverage Data-Driven Decision-Making:<br>   - Implement robust data collection and analysis processes to track the performance and progress of the digital transformation programs.<br>   - Use data-driven insights to make informed decisions, optimize program strategies, and measure the impact of the initiatives.<br>   - Regularly review and update the data-driven decision-making processes to ensure they remain relevant and effective.<br><br>By implementing these recommendations, you can effectively manage multiple digital transformation programs, ensure alignment with the organization&#39;s strategic goals, and drive successful digital transformation outcomes."
+                    data-question="how to manage multiple digital transformation programmes"
+                    data-llm="claude"
+                    data-brand="Valuu.ai"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Okay, here are my top 5 recommendations for managing multiple digital transformation programmes, ordered by preference, along with brief explanations:<br><br>**1.  Establish a Centralized Programme Management Office (PMO) or Transformation Office (TMO):**<br><br>*   **Explanation:** This is the **most crucial** element. A dedicated PMO or TMO acts as the single source of truth and coordination point for all digital transformation programmes.  It provides governance, sets standards, manages dependencies, tracks progress across all initiatives, and ensures alignment with the overall strategic vision.  Without central oversight, programmes will likely duplicate efforts, compete for resources, and potentially work against each other.  The PMO/TMO should have executive-level sponsorship and authority.<br><br>**2.  Prioritize and Sequence Programmes Based on Strategic Impact and Dependencies:**<br><br>*   **Explanation:**  Not all digital transformation programmes are created equal.  Use a robust scoring model to prioritize initiatives based on their potential impact on key business objectives (e.g., revenue growth, cost reduction, customer satisfaction) and their dependencies.  Sequence programmes logically, ensuring foundational projects are completed before dependent initiatives begin.  This prevents resource bottlenecks and wasted effort. This also means being brave enough to *delay* or *cancel* projects that don&#39;t align with the current strategic direction.<br><br>**3.  Implement a Standardized Programme Management Methodology and Toolset:**<br><br>*   **Explanation:**  Consistency is key.  Adopt a common programme management methodology (e.g., Agile, Waterfall, Hybrid) and a standardized set of tools for project planning, tracking, risk management, communication, and reporting across all programmes.  This ensures everyone is speaking the same language, using the same processes, and contributing to a unified view of progress.  This also facilitates easier comparison of progress and performance across different initiatives. Examples of tools include Jira, Asana, Microsoft Project, and specialized PMO software.<br><br>**4.  Focus on Effective Communication and Stakeholder Management:**<br><br>*   **Explanation:**  Digital transformation impacts everyone in the organization.  Develop a comprehensive communication plan that keeps all stakeholders informed about the progress, challenges, and benefits of each programme.  Actively manage stakeholder expectations, solicit feedback, and address concerns promptly.  Transparency and open communication build trust and support for the transformation initiatives. Regular updates to leadership, programme teams, and impacted business units are essential.<br><br>**5.  Implement a Robust Resource Management Process:**<br><br>*   **Explanation:** Multiple digital transformation programmes often compete for the same resources (e.g., skilled developers, data scientists, business analysts).  Establish a centralized resource management process to allocate resources effectively based on programme priorities and timelines.  This includes identifying skill gaps, providing training and development opportunities, and potentially hiring external consultants to augment internal teams.  A clear understanding of resource availability and utilization is crucial for avoiding delays and ensuring project success.<br>"
+                    data-question="how to manage multiple digital transformation programmes"
+                    data-llm="gemini"
+                    data-brand="Valuu.ai"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q2</span>
+                    <span class="question-text">software to track and measure benefits of digital initiatives</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="Sure! Here are my top recommendations for software to track and measure the benefits of digital initiatives, listed in order of preference:<br><br>1. **Tableau**<br>   - **Overview**: Tableau is a powerful data visualization tool that allows users to connect to various data sources and create interactive dashboards. <br>   - **Why Choose It**: Its ability to visualize data in real-time makes it easy to track the performance of digital initiatives. Users can create custom metrics and KPIs to measure success effectively. Tableau also supports collaboration and sharing, which is beneficial for teams working on digital projects.<br><br>2. **Google Analytics**<br>   - **Overview**: Google Analytics is a widely-used web analytics service that provides insights into website traffic and user behavior.<br>   - **Why Choose It**: It offers a wealth of data, including user engagement, conversion rates, and demographic information. Google Analytics is particularly useful for measuring the effectiveness of digital marketing campaigns and website performance, making it ideal for tracking the benefits of digital initiatives.<br><br>3. **Klipfolio**<br>   - **Overview**: Klipfolio is a cloud-based dashboard software that allows businesses to create real-time dashboards from various data sources.<br>   - **Why Choose It**: Klipfolio&#39;s flexibility in creating custom KPIs and visualizations makes it an excellent choice for organizations looking to track the impact of digital initiatives. Its integration capabilities with numerous data sources enable comprehensive tracking across different platforms.<br><br>4. **Smartsheet**<br>   - **Overview**: Smartsheet is a work management and automation platform that allows teams to plan, track, and manage projects collaboratively.<br>   - **Why Choose It**: Smartsheet is great for tracking the progress of digital initiatives through customizable dashboards, project timelines, and reporting features. It provides visibility into project statuses and helps measure the outcomes against predefined goals.<br><br>5. **Microsoft Power BI**<br>   - **Overview**: Power BI is a business analytics tool that provides interactive visualizations and business intelligence capabilities.<br>   - **Why Choose It**: With its ability to pull data from various sources and create sophisticated reports, Power BI is ideal for organizations seeking to analyze the impact of their digital initiatives. Its integration with Microsoft products and ease of use make it a strong choice for teams already using Microsoft services.<br><br>These tools provide a range of features that can help organizations effectively track and measure the benefits of their digital initiatives. The selection depends on your specific needs, such as the type of data you want to analyze, your team&#39;s familiarity with the software, and your budget."
+                    data-question="software to track and measure benefits of digital initiatives"
+                    data-llm="gpt4"
+                    data-brand="Valuu.ai"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top 5 recommendations for software to track and measure the benefits of digital initiatives, listed in order of preference:<br><br>1. Google Analytics:<br>   - Google Analytics is a widely-used, free web analytics tool that provides comprehensive data on website traffic, user behavior, and the performance of digital initiatives.<br>   - It offers detailed insights into metrics such as page views, unique visitors, bounce rates, conversion rates, and more, helping you understand the impact of your digital efforts.<br>   - Google Analytics integrates with various other Google products, making it a versatile tool for tracking and measuring the benefits of your digital initiatives.<br><br>2. Mixpanel:<br>   - Mixpanel is a powerful user analytics platform that focuses on tracking user behavior and engagement across digital products and services.<br>   - It provides advanced features for analyzing user journeys, identifying conversion funnels, and measuring the impact of specific features or campaigns.<br>   - Mixpanel&#39;s segmentation and cohort analysis capabilities make it a valuable tool for understanding the benefits of targeted digital initiatives.<br><br>3. Amplitude:<br>   - Amplitude is a product analytics platform that helps you understand user behavior and the impact of your digital initiatives.<br>   - It offers advanced features for event tracking, funnel analysis, and user segmentation, allowing you to identify the key drivers of user engagement and conversion.<br>   - Amplitude&#39;s dashboards and reporting capabilities make it easy to visualize and share insights with stakeholders.<br><br>4. Tableau:<br>   - Tableau is a data visualization and business intelligence tool that can be used to track and measure the benefits of digital initiatives.<br>   - It allows you to connect to various data sources, including web analytics platforms, and create interactive dashboards and reports.<br>   - Tableau&#39;s powerful data analysis and visualization capabilities can help you uncover insights and communicate the impact of your digital initiatives effectively.<br><br>5. Kissmetrics:<br>   - Kissmetrics is a customer-centric analytics platform that focuses on tracking user behavior and the customer journey.<br>   - It provides detailed insights into user acquisition, retention, and lifetime value, helping you understand the long-term benefits of your digital initiatives.<br>   - Kissmetrics&#39; cohort analysis and customer segmentation features can be particularly useful for measuring the impact of targeted digital initiatives.<br><br>These recommendations cover a range of web analytics, product analytics, and business intelligence tools that can be used to track and measure the benefits of your digital initiatives. The specific choice will depend on your organization&#39;s needs, the complexity of your digital ecosystem, and the level of data analysis and reporting required."
+                    data-question="software to track and measure benefits of digital initiatives"
+                    data-llm="claude"
+                    data-brand="Valuu.ai"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Okay, here are my top 3 recommendations for software to track and measure the benefits of digital initiatives, along with brief explanations, ordered by preference:<br><br>**1. Planview Enterprise One (Now Planview Enterprise Architecture):**<br><br>*   **Why it&#39;s preferred:** Planview offers a comprehensive Enterprise Architecture solution that goes beyond simple project tracking. It allows you to map your digital initiatives to business strategy, model the current and future state of your enterprise, and then track the realization of planned benefits. It excels in connecting the dots between technology investments and business outcomes.<br>*   **Key Benefits:**<br>    *   **Strategic Alignment:** Directly links digital initiatives to strategic goals, enabling you to prioritize projects based on their potential impact.<br>    *   **Benefit Realization Tracking:**  Provides robust tools for defining, tracking, and reporting on the benefits (financial, operational, strategic) expected from digital initiatives.<br>    *   **Portfolio Management:**  Allows you to manage your entire portfolio of digital initiatives, ensuring they are aligned with your overall strategy and that resources are allocated effectively.<br>    *   **Scenario Planning:** Enables you to model different investment scenarios and predict their potential impact on your business.<br>    *   **Integration:** Integrates with other project management and financial systems.<br>*   **Considerations:** Planview is an enterprise-level solution, so it&#39;s best suited for larger organizations with complex digital transformation efforts. Implementation can be more involved than with simpler tools. It&#39;s also a more expensive option compared to the others listed.<br><br>**2. Wrike:**<br><br>*   **Why it&#39;s a strong contender:** Wrike is a versatile project management and collaboration platform with strong capabilities for tracking progress and measuring results. While not specifically designed for benefit realization tracking, its flexibility allows you to create custom workflows and reporting to monitor the impact of digital initiatives.<br>*   **Key Benefits:**<br>    *   **Customizable:** Highly customizable workflows and dashboards allow you to track specific metrics and KPIs related to your digital initiatives.<br>    *   **Collaboration:**  Excellent collaboration features make it easy for teams to work together and share information.<br>    *   **Automation:** Automate repetitive tasks, such as data collection and reporting, to save time and improve accuracy.<br>    *   **Reporting:**  Generate custom reports to track progress and measure the impact of your digital initiatives.<br>    *   **Integration:** Integrates with a wide range of other tools, such as Salesforce, Google Workspace, and Microsoft Office 365.<br>*   **Considerations:** Requires more manual configuration to set up benefit tracking compared to Planview. Requires a bit more effort to initially configure to get the benefits you desire.<br><br>**3. Microsoft Project:**<br><br>*   **Why it&#39;s a solid choice (especially for existing Microsoft users):** Microsoft Project is a widely used project management tool that can be adapted to track the benefits of digital initiatives. It includes features for scheduling, resource management, and reporting, and can be integrated with other Microsoft products.<br>*   **Key Benefits:**<br>    *   **Familiar Interface:** Most people are already familiar with Microsoft products, making it easy to learn and use.<br>    *   **Resource Management:** Effectively manage resources and track their allocation to digital initiatives.<br>    *   **Reporting:** Generate reports to track progress and measure the impact of your digital initiatives.<br>    *   **Integration:** Integrates seamlessly with other Microsoft products, such as Excel, SharePoint, and Teams.<br>*   **Considerations:** Similar to Wrike, it requires more manual configuration to set up benefit tracking compared to specialized solutions. Reporting might be less visually appealing and require more manual manipulation.<br><br>**Important Considerations When Choosing:**<br><br>*   **Business Size and Complexity:**  Smaller businesses might find simpler tools like Wrike or Microsoft Project sufficient, while larger enterprises with complex digital transformations will benefit from a more comprehensive solution like Planview.<br>*   **Budget:**  Planview is generally the most expensive option, followed by Wrike, and then Microsoft Project.<br>*   **Integration Needs:**  Consider which other systems you need to integrate with and choose a tool that offers seamless integration.<br>*   **Ease of Use:**  Choose a tool that is easy to learn and use, so that your team can quickly adopt it.<br>*   **Specific Requirements:**  Consider your specific requirements for benefit realization tracking and choose a tool that meets those needs.<br><br>Before making a decision, I highly recommend trying out free trials or demos of the software to see which one best fits your needs and budget. Good luck!<br>"
+                    data-question="software to track and measure benefits of digital initiatives"
+                    data-llm="gemini"
+                    data-brand="Valuu.ai"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q3</span>
+                    <span class="question-text">tools for programme management and value realization</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top recommendations for tools focused on program management and value realization, along with brief explanations for each:<br><br>### 1. **Microsoft Project**<br>   - **Overview**: A powerful project management tool that offers comprehensive features for planning, scheduling, and tracking projects.<br>   - **Value Realization**: With its robust reporting and analytics capabilities, Microsoft Project allows program managers to assess project performance against objectives, ensuring that the expected value is being achieved. Its integration with other Microsoft tools enhances collaboration and data sharing.<br><br>### 2. **Jira**<br>   - **Overview**: Originally designed for software development, Jira has evolved into a versatile tool for managing projects across various fields.<br>   - **Value Realization**: Jira’s agile capabilities enable teams to plan, track, and manage projects efficiently. Its reporting tools help teams visualize progress and align outcomes with business goals, thus facilitating value realization through continuous improvement and iteration.<br><br>### 3. **Smartsheet**<br>   - **Overview**: A work management platform that combines the ease of a spreadsheet with powerful project management features.<br>   - **Value Realization**: Smartsheet provides real-time visibility into project status and resource allocation. Its automation features help teams streamline processes, thereby enhancing productivity and enabling quicker realization of project benefits.<br><br>### 4. **Trello**<br>   - **Overview**: A visual project management tool that uses boards, lists, and cards to organize tasks and projects.<br>   - **Value Realization**: Trello’s simplicity and visual layout make it easy for teams to manage workflows and track progress. While it may lack some advanced features of other tools, its ability to provide a clear overview of tasks helps ensure that projects stay aligned with strategic goals, thereby supporting value realization.<br><br>### 5. **Asana**<br>   - **Overview**: A flexible project management tool designed for teams to track their work and collaborate effectively.<br>   - **Value Realization**: Asana’s task management features, timelines, and reporting tools allow teams to monitor project progress and deliverables. By facilitating clear communication and alignment on objectives, Asana aids in ensuring that projects meet their intended value outcomes.<br><br>These tools cater to various organizational needs and can significantly enhance program management effectiveness while driving value realization."
+                    data-question="tools for programme management and value realization"
+                    data-llm="gpt4"
+                    data-brand="Valuu.ai"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Certainly! Here are my top 5 recommendations for tools for program management and value realization, in order of preference:<br><br>1. Microsoft Project:<br>   - Microsoft Project is a comprehensive project management software that provides a wide range of features for planning, scheduling, and tracking projects.<br>   - It offers advanced capabilities for resource management, cost tracking, and reporting, making it a powerful tool for program management.<br>   - Microsoft Project also integrates well with other Microsoft Office applications, allowing for seamless collaboration and data sharing.<br><br>2. Jira:<br>   - Jira is a popular agile project management tool that is widely used for software development and IT projects.<br>   - It provides a flexible and customizable platform for managing tasks, tracking issues, and collaborating with team members.<br>   - Jira&#39;s robust reporting and analytics features help organizations measure and realize the value of their projects.<br><br>3. Trello:<br>   - Trello is a simple and intuitive project management tool that uses a Kanban-style board to visualize the workflow.<br>   - It is particularly useful for managing smaller projects or tasks, as it offers a straightforward and user-friendly interface.<br>   - Trello&#39;s integration with various productivity apps and its ability to create custom workflows make it a valuable tool for value realization.<br><br>4. Asana:<br>   - Asana is a comprehensive work management platform that helps teams plan, organize, and track their projects.<br>   - It offers features such as task management, project planning, team collaboration, and progress tracking, making it a versatile tool for program management.<br>   - Asana&#39;s reporting and analytics capabilities can provide insights into the value and impact of your projects.<br><br>5. Planview:<br>   - Planview is an enterprise-level project and portfolio management (PPM) solution that caters to the needs of larger organizations.<br>   - It provides advanced features for resource management, financial planning, and strategic alignment, helping organizations optimize their investments and realize value.<br>   - Planview&#39;s integration with other enterprise systems and its robust reporting capabilities make it a powerful tool for program management and value realization.<br><br>These tools offer a range of features and functionalities that can help organizations effectively manage their programs and realize the value of their investments. The choice of tool will depend on the specific needs and requirements of your organization, as well as the complexity and scale of your projects."
+                    data-question="tools for programme management and value realization"
+                    data-llm="claude"
+                    data-brand="Valuu.ai"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Okay, here are my top 3 recommendations for program management and value realization tools, listed in order of preference, along with brief explanations:<br><br>**1.  Planview Enterprise One (formerly Changepoint):**<br><br>*   **Why it&#39;s Top Choice:** Planview is a comprehensive, enterprise-grade solution specifically designed for strategic portfolio management (SPM), which encompasses program management and value realization.  It excels at connecting strategy to execution, enabling organizations to prioritize investments, manage resources effectively, track progress, and, most importantly, measure the actual benefits and value delivered by programs.<br>*   **Key Strengths:**<br>    *   **Strategic Alignment:**  Links program objectives directly to business goals and KPIs.<br>    *   **Robust Value Realization:**  Offers features to define, track, and report on benefits, allowing organizations to demonstrate ROI.<br>    *   **Resource Management:**  Optimizes resource allocation across projects and programs.<br>    *   **Portfolio Management:**  Provides a holistic view of all initiatives, enabling informed decision-making.<br>    *   **Reporting and Analytics:**  Offers comprehensive reporting capabilities to track progress, identify risks, and demonstrate value.<br>*   **Considerations:**  It&#39;s a more expensive and complex solution, best suited for larger organizations with mature program management practices.  Implementation can take time and requires dedicated resources.  Training is essential.<br><br>**2.  Asana (with Portfolios and Goals):**<br><br>*   **Why it&#39;s a Strong Contender (and more accessible):** While Asana isn&#39;t solely a program management tool, its &quot;Portfolios&quot; and &quot;Goals&quot; features, combined with its core task management capabilities, provide a surprisingly effective way to manage programs and track value.  It&#39;s more user-friendly and accessible than Planview, making it a good choice for smaller to medium-sized organizations or teams that need a more agile and collaborative approach.<br>*   **Key Strengths:**<br>    *   **Task and Project Management:**  Excellent for breaking down programs into manageable tasks and projects.<br>    *   **Portfolios:**  Allows you to group related projects together to track overall program progress and resource allocation.<br>    *   **Goals:**  Enables you to define program objectives and link them to specific projects and tasks.  Crucially, you can track progress against these goals, providing a basic but functional value realization mechanism.<br>    *   **Collaboration:**  Excellent for team communication and collaboration.<br>    *   **Reporting:**  Provides basic reporting on project and program status.<br>    *   **Ease of Use:**  Relatively easy to learn and use, which encourages adoption.<br>*   **Considerations:**  Value realization is more manual. You&#39;ll need to set up your goals and metrics carefully and consistently track them. It lacks the depth of advanced analytics found in Planview.<br><br>**3.  Microsoft Project (with Power BI):**<br><br>*   **Why it&#39;s a Popular and Versatile Option:** Microsoft Project is a well-established project and program management tool.  When combined with Power BI for reporting and analytics, it can be used to track program progress, manage resources, and demonstrate value.<br>*   **Key Strengths:**<br>    *   **Project Scheduling:**  Robust project scheduling capabilities, including dependency management and critical path analysis.<br>    *   **Resource Management:**  Allows you to allocate resources to tasks and projects.<br>    *   **Integration with Microsoft Ecosystem:**  Seamlessly integrates with other Microsoft products, such as Teams, SharePoint, and Office 365.<br>    *   **Power BI Integration:**  Power BI can be used to create custom dashboards and reports to track program performance, benefits realization, and other key metrics.<br>*   **Considerations:**  Project itself can be a bit complex.  Requires Power BI expertise to create meaningful value realization dashboards.  The value realization aspects are not built-in and require custom configuration.<br><br>**Important Considerations When Choosing:**<br><br>*   **Organizational Size and Maturity:** Larger, more mature organizations typically benefit from enterprise-grade solutions like Planview. Smaller organizations or teams may find Asana or Microsoft Project sufficient.<br>*   **Budget:**  Planview is generally the most expensive, followed by Microsoft Project (especially when factoring in Power BI licensing and implementation), and then Asana.<br>*   **Complexity:**  Planview is the most complex, while Asana is the easiest to use.  Microsoft Project falls somewhere in the middle.<br>*   **Value Realization Needs:**  If you need robust, structured value realization capabilities, Planview is the best choice. Asana and Microsoft Project require more manual effort and customization.<br>*   **Integration Requirements:**  Consider how well the tool integrates with your existing systems and tools.<br><br>Before making a final"
+                    data-question="tools for programme management and value realization"
+                    data-llm="gemini"
+                    data-brand="Valuu.ai"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q4</span>
+                    <span class="question-text">AI-powered platform for enterprise digital transformation</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top recommendations for AI-powered platforms that facilitate enterprise digital transformation, listed in order of preference:<br><br>1. **Salesforce Einstein**<br>   - **Overview**: Salesforce Einstein is an AI layer integrated into the Salesforce platform, providing advanced analytics and machine learning capabilities. <br>   - **Why Recommended**: It helps businesses leverage customer data for personalized experiences, predictive analytics, and automation of sales and marketing processes. Its seamless integration with Salesforce CRM makes it a powerful choice for companies looking to enhance customer engagement and drive sales effectiveness.<br><br>2. **Microsoft Azure AI**<br>   - **Overview**: Azure AI offers a suite of AI services and tools that can be integrated into applications and workflows.<br>   - **Why Recommended**: With capabilities like natural language processing, machine learning, and computer vision, Azure AI supports a wide range of enterprise applications. Its scalability and flexibility make it suitable for organizations at any stage of digital transformation, enabling them to harness data for better decision-making and operational efficiency.<br><br>3. **IBM Watson**<br>   - **Overview**: IBM Watson provides a set of AI tools and services designed for enterprise applications, including natural language processing, data analysis, and machine learning.<br>   - **Why Recommended**: Watson is particularly noted for its ability to process and analyze vast amounts of unstructured data, making it ideal for industries like healthcare and finance. Its strong focus on data security and compliance also resonates well with enterprises that prioritize governance.<br><br>4. **SAP Business Technology Platform (BTP)**<br>   - **Overview**: SAP BTP combines database and data management, analytics, application development, and intelligent technologies.<br>   - **Why Recommended**: This platform allows businesses to connect and extend their existing SAP applications with AI capabilities. It supports organizations in building intelligent applications that drive process automation and data-driven insights, essential for comprehensive digital transformation.<br><br>5. **Google Cloud AI**<br>   - **Overview**: Google Cloud AI offers a range of machine learning and AI tools, including AutoML and pre-trained models for various applications.<br>   - **Why Recommended**: Google Cloud AI is known for its scalability and advanced algorithms, making it suitable for enterprises looking to implement AI-driven solutions quickly. Its integration with other Google Cloud services also enhances collaboration and data management, allowing businesses to innovate rapidly.<br><br>These platforms provide robust support for various aspects of digital transformation, from customer engagement to operational efficiency, making them strong candidates for enterprises looking to leverage AI technologies effectively."
+                    data-question="AI-powered platform for enterprise digital transformation"
+                    data-llm="gpt4"
+                    data-brand="Valuu.ai"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="When it comes to AI-powered platforms for enterprise digital transformation, here are my top 5 recommendations in order of preference:<br><br>1. Microsoft Azure: Microsoft Azure is a comprehensive cloud computing platform that offers a wide range of AI-powered services and tools to support enterprise digital transformation. Azure&#39;s AI and machine learning capabilities, including Azure Cognitive Services, Azure Machine Learning, and Azure Databricks, provide enterprises with the ability to build and deploy intelligent applications, automate processes, and gain valuable insights from their data.<br><br>2. Amazon Web Services (AWS): AWS is another leading cloud platform that offers a robust set of AI-powered services for enterprise digital transformation. AWS&#39;s AI and machine learning services, such as Amazon SageMaker, Amazon Comprehend, and Amazon Lex, enable enterprises to build and deploy intelligent applications, automate decision-making, and enhance customer experiences.<br><br>3. Google Cloud Platform (GCP): Google Cloud Platform is a powerful cloud computing platform that offers a range of AI-powered services and tools for enterprise digital transformation. GCP&#39;s AI and machine learning services, including Google Cloud AI Platform, Google Cloud Vision API, and Google Cloud Natural Language API, allow enterprises to leverage advanced AI capabilities to drive innovation and improve business outcomes.<br><br>4. IBM Watson: IBM Watson is an AI-powered platform that offers a comprehensive suite of services and tools for enterprise digital transformation. IBM Watson&#39;s AI and machine learning capabilities, including Watson Studio, Watson Machine Learning, and Watson Assistant, enable enterprises to build and deploy intelligent applications, automate workflows, and gain deeper insights from their data.<br><br>5. Salesforce Einstein: Salesforce Einstein is an AI-powered platform that is integrated into the Salesforce Customer 360 platform. Salesforce Einstein&#39;s AI and machine learning capabilities, such as Einstein Analytics, Einstein Bots, and Einstein Vision, enable enterprises to enhance customer experiences, automate sales and marketing processes, and gain valuable insights from their customer data.<br><br>These AI-powered platforms offer a range of capabilities, including predictive analytics, natural language processing, computer vision, and intelligent automation, that can help enterprises drive digital transformation and achieve their business goals."
+                    data-question="AI-powered platform for enterprise digital transformation"
+                    data-llm="claude"
+                    data-brand="Valuu.ai"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Okay, here are my top 3 recommendations for AI-powered platforms for enterprise digital transformation, along with brief explanations, ranked in order of preference.  I&#39;ve focused on platforms that offer broad capabilities and are well-regarded for their AI integrations.<br><br>**Important Note:**  The &quot;best&quot; platform *heavily* depends on the specific needs, existing infrastructure, budget, and technical expertise of your enterprise.  This list is a starting point.  You&#39;ll need to conduct thorough evaluations and potentially Proof-of-Concepts (POCs) to determine the right fit.<br><br>Here are my top 3 recommendations:<br><br>1.  **Microsoft Azure AI Platform:**<br><br>    *   **Why it&#39;s #1:**  Azure&#39;s strength lies in its comprehensive suite of AI services, tight integration with the broader Microsoft ecosystem (including Dynamics 365, Power Platform, and Office 365), and scalability.  It offers a wide range of pre-trained AI models, machine learning services (Azure Machine Learning), cognitive services (vision, speech, language), and the ability to build custom AI solutions.  The integration with data storage and analytics tools (Azure Synapse Analytics) is also a major advantage. It is best for enterprises that are already heavily invested in Microsoft tech.<br>    *   **Key AI Capabilities:**<br>        *   **Azure Machine Learning:** Build, train, and deploy ML models.<br>        *   **Cognitive Services:** Pre-built APIs for vision, speech, language, and decision-making.<br>        *   **Azure Bot Service:** Create intelligent virtual assistants.<br>        *   **Azure AI Search:** Enhance search capabilities with AI-powered indexing and querying.<br>    *   **Ideal for:** Enterprises with existing Microsoft infrastructure, those needing highly scalable and flexible AI solutions, and those looking for a comprehensive platform for data science and AI development.<br><br>2.  **Salesforce Einstein:**<br><br>    *   **Why it&#39;s #2:** If your enterprise is heavily invested in Salesforce CRM, Einstein is a natural choice.  It embeds AI directly into the Salesforce platform to enhance sales, service, marketing, and commerce processes.  Einstein provides predictive analytics, automated workflows, personalized recommendations, and intelligent insights, all within the familiar Salesforce environment. It shines in its ability to provide AI-driven insights and automation to your customer-facing operations.<br>    *   **Key AI Capabilities:**<br>        *   **Einstein Prediction Builder:**  Create custom predictions without code.<br>        *   **Einstein Discovery:**  Analyze data to uncover insights and recommendations.<br>        *   **Einstein Bots:**  Automate customer service interactions.<br>        *   **Einstein Voice:**  Use voice commands to interact with Salesforce.<br>    *   **Ideal for:**  Salesforce-centric organizations seeking to improve customer engagement, streamline sales processes, and gain data-driven insights from their CRM data.<br><br>3.  **Google Cloud AI Platform:**<br><br>    *   **Why it&#39;s #3:** Google Cloud AI Platform is powerful and well-suited for enterprises with large datasets and complex AI requirements.  It offers a robust set of tools and services for building, training, and deploying AI models, including TensorFlow (Google&#39;s open-source machine learning framework).  Google&#39;s pre-trained models (e.g., for vision, language) are also highly regarded. It is best for companies seeking cutting-edge AI capabilities and are comfortable with a more developer-centric approach.<br>    *   **Key AI Capabilities:**<br>        *   **Vertex AI:** Unified platform for ML development.<br>        *   **Cloud Vision API:**  Analyze images and videos.<br>        *   **Cloud Natural Language API:**  Understand and analyze text.<br>        *   **Dialogflow:** Build conversational AI interfaces.<br>    *   **Ideal for:** Enterprises with significant AI development expertise, those working with massive datasets, and those requiring advanced machine learning capabilities.<br><br>**Important Considerations Before making a decision:**<br><br>*   **Integration:**  How well does the platform integrate with your existing systems (CRM, ERP, data warehouses, etc.)?<br>*   **Skills:**  Do you have the in-house expertise to develop and maintain AI solutions on the platform, or will you need to hire or outsource?<br>*   **Cost:**  What are the licensing fees, usage costs, and infrastructure costs associated with the platform?<br>*   **Security and Compliance:**  Does the platform meet your security and compliance requirements?<br>*   **Scalability:**  Can the platform scale to meet your growing needs?<br><br>I strongly recommend scheduling demos and trials with each platform to get a better understanding of their capabilities and suitability for your specific enterprise requirements. Good luck!<br>"
+                    data-question="AI-powered platform for enterprise digital transformation"
+                    data-llm="gemini"
+                    data-brand="Valuu.ai"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q5</span>
+                    <span class="question-text">best practices for successful digital transformation</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="Certainly! Here are my top five recommendations for successful digital transformation, listed in order of preference:<br><br>### 1. **Develop a Clear Vision and Strategy**<br>   - **Explanation:** Establishing a clear vision and strategy is paramount. This involves understanding the organization&#39;s goals, identifying areas for improvement, and determining how digital technologies can drive those improvements. A well-defined strategy ensures alignment across all levels of the organization and helps in prioritizing initiatives that offer the most value.<br><br>### 2. **Foster a Culture of Innovation and Agility**<br>   - **Explanation:** Digital transformation requires a shift in mindset. Encouraging a culture that embraces innovation, continuous learning, and experimentation empowers employees to explore new ideas and solutions. Implementing agile methodologies can help teams adapt quickly to changing circumstances, making the organization more responsive to market demands.<br><br>### 3. **Invest in the Right Technology and Infrastructure**<br>   - **Explanation:** Selecting the right tools and technologies is crucial for enabling digital transformation. This includes investing in cloud computing, data analytics, artificial intelligence, and other emerging technologies that align with your strategic goals. Additionally, ensure that the necessary infrastructure is in place to support these technologies, including cybersecurity measures to protect digital assets.<br><br>### 4. **Engage and Train Employees**<br>   - **Explanation:** Employees are the backbone of any digital transformation initiative. Providing training and resources to help them adapt to new tools and processes is essential. Engaging employees in the transformation journey—not just as users but as contributors—can enhance buy-in and reduce resistance to change.<br><br>### 5. **Measure and Iterate**<br>   - **Explanation:** Establishing key performance indicators (KPIs) and regularly measuring progress is vital to the success of digital transformation. This data-driven approach allows organizations to assess the effectiveness of their initiatives, identify areas for improvement, and make informed decisions for future investments. Iteration ensures that the transformation process remains dynamic and responsive to feedback.<br><br>By following these recommendations, organizations can navigate the complexities of digital transformation more effectively and achieve sustainable success in their initiatives."
+                    data-question="best practices for successful digital transformation"
+                    data-llm="gpt4"
+                    data-brand="Valuu.ai"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Certainly! Here are my top 5 recommendations for successful digital transformation, in order of preference:<br><br>1. Establish a Clear Digital Transformation Strategy:<br>   - Develop a well-defined digital transformation strategy that aligns with your organization&#39;s overall business goals and objectives.<br>   - Clearly articulate the desired outcomes, timelines, and key performance indicators (KPIs) to measure the success of your digital transformation initiatives.<br>   - Ensure that the strategy is communicated effectively across the organization to create a shared understanding and buy-in.<br><br>2. Prioritize Employee Engagement and Upskilling:<br>   - Recognize that successful digital transformation requires a skilled and adaptable workforce.<br>   - Invest in employee training and development programs to equip your team with the necessary digital skills and mindset.<br>   - Foster a culture of continuous learning and encourage employees to embrace new technologies and ways of working.<br><br>3. Adopt a Flexible and Agile Approach:<br>   - Embrace an agile mindset and iterative approach to digital transformation.<br>   - Implement a flexible and adaptable framework that allows for quick experimentation, feedback, and course corrections.<br>   - Encourage a culture of innovation and risk-taking, where failures are seen as opportunities for learning and improvement.<br><br>4. Leverage Data-Driven Decision Making:<br>   - Implement robust data management and analytics capabilities to gather, analyze, and derive insights from your organization&#39;s data.<br>   - Use data-driven insights to inform your digital transformation initiatives, optimize processes, and make more informed decisions.<br>   - Ensure data security, privacy, and governance are addressed throughout the transformation journey.<br><br>5. Collaborate with External Partners:<br>   - Identify and partner with external technology providers, industry experts, and ecosystem partners to leverage their expertise and resources.<br>   - Collaborate with these partners to access cutting-edge technologies, best practices, and innovative solutions that can accelerate your digital transformation.<br>   - Maintain a flexible and open-minded approach to collaboration, as it can help you adapt to changing market conditions and emerging trends.<br><br>By focusing on these key recommendations, organizations can increase their chances of successful digital transformation, driving meaningful business outcomes and maintaining a competitive edge in the digital age."
+                    data-question="best practices for successful digital transformation"
+                    data-llm="claude"
+                    data-brand="Valuu.ai"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Okay, here are my top 3 recommendations for successful digital transformation, focusing on actionable advice and prioritizing impact:<br><br>**1.  Prioritize Customer Experience (CX) Above All Else:**<br><br>*   **Explanation:**  Digital transformation isn&#39;t about technology for technology&#39;s sake; it&#39;s about improving how you serve your customers and meet their evolving needs.  Start by deeply understanding your customer journeys (current and desired). Identify pain points, opportunities for personalization, and ways technology can streamline their interactions with your brand.  Focus on delivering value at every touchpoint.  A great technology implementation with a poor customer experience is a failed transformation.<br>*   **Why it&#39;s #1:**  Everything else stems from this.  If you don&#39;t have a clear picture of how you&#39;re improving the customer journey, you&#39;re likely wasting resources on the wrong initiatives.  This provides a guiding star for all other decisions.<br><br>**2.  Foster a Culture of Experimentation and Agility:**<br><br>*   **Explanation:** Digital transformation is an ongoing process, not a one-time event.  Embrace a &quot;test and learn&quot; mentality.  Implement small, focused projects (Minimum Viable Products or MVPs) to validate assumptions and gather feedback before committing to large-scale deployments.  Empower teams to make decisions quickly and iterate based on data.  This requires breaking down silos, encouraging collaboration, and providing a safe space to fail and learn.<br>*   **Why it&#39;s #2:**  The digital landscape is constantly changing.  A rigid, top-down approach will quickly become obsolete.  Agility allows you to adapt to new technologies, customer demands, and competitive pressures.<br><br>**3.  Secure Executive Sponsorship & Cross-Functional Alignment:**<br><br>*   **Explanation:**  Digital transformation requires buy-in and support from the highest levels of the organization.  Executive sponsors champion the vision, allocate resources, and remove roadblocks.  Equally important is alignment across all departments (IT, marketing, sales, operations, etc.).  Each department must understand its role in the transformation and work together seamlessly.  Establish clear communication channels and governance structures to ensure everyone is on the same page.<br>*   **Why it&#39;s #3:**  Without strong leadership and collaboration, digital transformation efforts will struggle to gain momentum and achieve their full potential.  Sponsorship provides legitimacy and resources, while alignment ensures a cohesive and efficient approach.<br><br>**Bonus Recommendation (Because it&#39;s critical): Invest in Data Literacy and Skills Development**<br><br>*   **Explanation:** Digital transformation generates vast amounts of data.  To leverage this data effectively, you need employees who can analyze it, interpret it, and use it to make informed decisions.  Invest in training programs to improve data literacy across the organization, not just within IT.  Also, identify and address any skills gaps in areas like cloud computing, cybersecurity, and data analytics.<br>*   **Why it&#39;s Important:** Data is the fuel for digital transformation. Without the skills to harness it, you&#39;ll be flying blind.<br><br>These recommendations are interconnected and should be considered holistically for a successful digital transformation journey. Good luck!<br>"
+                    data-question="best practices for successful digital transformation"
+                    data-llm="gemini"
+                    data-brand="Valuu.ai"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+                </tbody>
+            </table>
+            <p class="breakdown-hint">Click any cell to see the full AI response</p>
+        </div>
+
+        <!-- Response modal -->
+        <div class="response-modal" id="responseModal">
+            <div class="modal-content" onclick="event.stopPropagation()">
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+                <div class="modal-header">
+                    <span class="modal-llm" id="modalLlm"></span>
+                    <span class="modal-status" id="modalStatus"></span>
+                </div>
+                <div class="modal-question" id="modalQuestion"></div>
+                <div class="modal-response" id="modalResponse"></div>
+            </div>
+        </div>
+    
+        </div>
+
+        <!-- Section 3: Reddit Opportunities -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <h2 class="section-title">Reddit Opportunities</h2>
+            </div>
+
+            <div class="subsection-title">Buy Intent Conversations</div>
+            <p class="subsection-desc">People actively looking for recommendations in your category</p>
+            <div class="reddit-posts">
+                
+            <a href="https://www.reddit.com/r/PMCareers/comments/1r19aez/switching_to_project_management_at_30yo_am_i/" target="_blank" class="reddit-post">
+                <div class="post-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">Switching to Project Management at 30yo: Am I Making the ...</div>
+                    <div class="post-meta">
+                        r/PMCareers &bull; 36K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            <a href="https://www.reddit.com/r/UofT/comments/1qwx8q6/anyone_in_dem_digital_enterprise_management/" target="_blank" class="reddit-post">
+                <div class="post-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">Anyone in DEM (Digital Enterprise Management) program ...</div>
+                    <div class="post-meta">
+                        r/UofT &bull; 144K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            <a href="https://www.reddit.com/r/Indiajobs/comments/1r1r47w/hiring_for_program_director_digital/" target="_blank" class="reddit-post">
+                <div class="post-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">Digital Transformation (preferably healthcare) at WNS ...</div>
+                    <div class="post-meta">
+                        r/Indiajobs &bull; 30K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            <a href="https://www.reddit.com/r/SaaS/comments/1r2ozzv/21_leading_ai_integration_consulting_companies/" target="_blank" class="reddit-post">
+                <div class="post-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">21 Leading AI Integration Consulting Companies for Digital ...</div>
+                    <div class="post-meta">
+                        r/SaaS &bull; 563K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            </div>
+
+            <div class="subsection-title">Pain Point Conversations</div>
+            <p class="subsection-desc">People discussing problems your product solves</p>
+            <div class="reddit-posts">
+                
+            <a href="https://www.reddit.com/r/projectmanagement/comments/1qxrjc3/unpopular_opinions_about_it_project_management/" target="_blank" class="reddit-post">
+                <div class="post-icon pain">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">Unpopular opinions about IT project management</div>
+                    <div class="post-meta">
+                        r/projectmanagement &bull; 216K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            <a href="https://www.reddit.com/r/Cloud/comments/1qxeddm/endtoend_it_infra_modernization_a_complete_roadmap/" target="_blank" class="reddit-post">
+                <div class="post-icon pain">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">End-to-End IT Infra Modernization: A Complete RoadMap</div>
+                    <div class="post-meta">
+                        r/Cloud &bull; 38K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            </div>
+        </div>
+
+        <!-- CTA Section -->
+        <div class="section cta-section">
+            <h2>Ready to improve your <em>AI visibility?</em></h2>
+            <p>We help brands get mentioned more in AI answers through strategic content placement.</p>
+            <a href="https://adva-solutions.com/AIVisibility" class="cta-button">Learn More</a>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p>Generated by <a href="https://adva-solutions.com">Adva</a> &bull; AI Visibility Health Check</p>
+    </footer>
+
+    <script>
+        // Tab switching functionality
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const tabId = btn.dataset.tab;
+
+                // Update buttons
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                // Update panels
+                document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+                document.getElementById('panel-' + tabId).classList.add('active');
+            });
+        });
+
+        // Show toast notification
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2500);
+        }
+
+        // Show response modal
+        function showResponse(cell) {
+            try {
+                let response = cell.dataset.response || 'No response available';
+                const question = cell.dataset.question || '';
+                const llm = cell.dataset.llm || '';
+                const brand = cell.dataset.brand || '';
+                const isMentioned = cell.classList.contains('mentioned');
+                const brandPosition = cell.dataset.position ? parseInt(cell.dataset.position) : null;
+
+                const llmNames = {'gpt4': 'GPT', 'claude': 'Claude', 'gemini': 'Gemini'};
+
+                // If brand is mentioned beyond position 5, add a banner at the top
+                let positionBanner = '';
+                if (isMentioned && brandPosition && brandPosition > 5) {
+                    positionBanner = '<div style="background: #fef3c7; padding: 0.75rem 1rem; border-radius: 6px; margin-bottom: 1rem; border-left: 4px solid #f59e0b;">' +
+                        '<strong>📍 Your brand appeared at position #' + brandPosition + '</strong> - scroll down to see the highlighted mention' +
+                        '</div>';
+                }
+
+                // Highlight brand name in response (case insensitive)
+                if (brand && isMentioned) {
+                    try {
+                        const brandRegex = new RegExp('(' + brand.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&') + ')', 'gi');
+                        response = response.replace(brandRegex, '<span class="brand-highlight">$1</span>');
+                    } catch(e) { /* ignore highlighting errors */ }
+                }
+
+                document.getElementById('modalLlm').textContent = llmNames[llm] || llm;
+                document.getElementById('modalQuestion').textContent = '"' + question + '"';
+                document.getElementById('modalResponse').innerHTML = positionBanner + response;
+
+                const statusEl = document.getElementById('modalStatus');
+                if (isMentioned) {
+                    statusEl.textContent = 'Mentioned';
+                    statusEl.className = 'modal-status mentioned';
+                } else {
+                    statusEl.textContent = 'Not mentioned';
+                    statusEl.className = 'modal-status not-mentioned';
+                }
+
+                document.getElementById('responseModal').classList.add('active');
+                document.body.style.overflow = 'hidden';
+
+                // Scroll to first highlight if mentioned
+                if (isMentioned) {
+                    setTimeout(function() {
+                        const highlight = document.querySelector('.modal-response .brand-highlight');
+                        if (highlight) {
+                            highlight.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        }
+                    }, 100);
+                }
+            } catch (e) {
+                console.error('Error showing response:', e);
+                alert('Error loading response. Please try again.');
+            }
+        }
+
+        // Close modal
+        function closeModal() {
+            document.getElementById('responseModal').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // Close when clicking backdrop (outside modal content)
+        document.getElementById('responseModal').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+
+        // Close modal on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeModal();
+        });
+    </script>
+</body>
+</html>
