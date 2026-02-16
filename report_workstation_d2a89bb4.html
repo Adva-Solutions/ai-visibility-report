@@ -1,0 +1,1370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Visibility Report - Workstation | Adva</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #ffffff;
+            min-height: 100vh;
+            color: #374151;
+            line-height: 1.6;
+        }
+
+        /* Header */
+        .header {
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            font-size: 1.25rem;
+            color: #1f2937;
+            text-decoration: none;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .header-date {
+            color: #9ca3af;
+            font-size: 0.875rem;
+        }
+
+        /* Copy link button */
+        .copy-link-button {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: #f3f4f6;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            color: #374151;
+            font-size: 0.75rem;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .copy-link-button:hover {
+            background: #e5e7eb;
+        }
+
+        .copy-link-button svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        .pdf-button {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: #1f2937;
+            border: none;
+            border-radius: 6px;
+            color: #ffffff;
+            font-size: 0.75rem;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .pdf-button:hover {
+            background: #374151;
+        }
+
+        .pdf-button svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        /* Toast notification */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: #1f2937;
+            color: #ffffff;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            opacity: 0;
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        /* Container */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Page title */
+        .page-title {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .page-title .label {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: #9ca3af;
+            font-size: 0.75rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+        }
+
+        .page-title .label::before,
+        .page-title .label::after {
+            content: '';
+            width: 30px;
+            height: 1px;
+            background: #d1d5db;
+        }
+
+        .page-title h1 {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 2.5rem;
+            font-weight: 400;
+            color: #1f2937;
+            margin-bottom: 0.5rem;
+        }
+
+        .page-title .brand {
+            color: #6b7280;
+            font-size: 1.125rem;
+        }
+
+        /* Sections */
+        .section {
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #f3f4f6;
+        }
+
+        .section-icon {
+            width: 40px;
+            height: 40px;
+            background: #1f2937;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .section-icon svg {
+            width: 20px;
+            height: 20px;
+            color: #ffffff;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 1.375rem;
+            color: #1f2937;
+        }
+
+        /* Score Section */
+        .score-section {
+            text-align: center;
+            padding: 3rem 2rem;
+        }
+
+        .score-circle {
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            background: #fafafa;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            border: 4px solid #ef4444;
+        }
+
+        .score-value {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 3rem;
+            font-weight: 500;
+            color: #ef4444;
+        }
+
+        .score-label {
+            font-size: 0.8rem;
+            color: #9ca3af;
+        }
+
+        .score-description {
+            color: #6b7280;
+            margin-bottom: 2rem;
+            font-size: 1rem;
+        }
+
+        .score-description strong {
+            color: #1f2937;
+        }
+
+        .llm-breakdown {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .llm-stat {
+            text-align: center;
+            padding: 1rem 1.5rem;
+            background: #fafafa;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+            min-width: 100px;
+        }
+
+        .llm-name {
+            display: block;
+            color: #9ca3af;
+            font-size: 0.8rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .llm-score {
+            font-size: 1.125rem;
+            font-weight: 600;
+        }
+
+        .llm-score.success {
+            color: #22c55e;
+        }
+
+        .llm-score.warning {
+            color: #ef4444;
+        }
+
+        /* Competitor Table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 0.875rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid #f3f4f6;
+        }
+
+        th {
+            color: #9ca3af;
+            font-weight: 500;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        td {
+            color: #374151;
+        }
+
+        .mention-count {
+            background: #fef3c7;
+            color: #92400e;
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        /* Tabs for LLM responses */
+        .example-tabs {
+            margin-top: 1.5rem;
+        }
+
+        .tabs-header {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+            padding-bottom: 0;
+        }
+
+        .tab-btn {
+            padding: 0.75rem 1.25rem;
+            background: transparent;
+            border: none;
+            color: #6b7280;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            margin-bottom: -1px;
+            transition: all 0.2s;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .tab-btn:hover {
+            color: #1f2937;
+        }
+
+        .tab-btn.active {
+            color: #1f2937;
+            border-bottom-color: #1f2937;
+        }
+
+        .tab-panel {
+            display: none;
+            background: #fafafa;
+            border-radius: 8px;
+            padding: 1.25rem;
+        }
+
+        .tab-panel.active {
+            display: block;
+        }
+
+        .example-question {
+            color: #1f2937;
+            font-weight: 500;
+            font-size: 0.95rem;
+            margin-bottom: 0.75rem;
+        }
+
+        /* Question breakdown table */
+        .question-breakdown {
+            margin-top: 1rem;
+        }
+
+        .breakdown-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        .breakdown-table th {
+            padding: 0.75rem;
+            text-align: center;
+            background: #f9fafb;
+            border-bottom: 2px solid #e5e7eb;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .breakdown-table th:first-child {
+            text-align: left;
+            width: 50%;
+        }
+
+        .breakdown-table td {
+            padding: 0.75rem;
+            border-bottom: 1px solid #f3f4f6;
+            vertical-align: middle;
+        }
+
+        .question-cell {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+        }
+
+        .question-num {
+            background: #e5e7eb;
+            color: #374151;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        .question-text {
+            color: #374151;
+            line-height: 1.4;
+        }
+
+        .llm-cell {
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-radius: 4px;
+        }
+
+        .llm-cell:hover {
+            background: #f3f4f6;
+        }
+
+        .llm-cell.mentioned {
+            color: #16a34a;
+        }
+
+        .llm-cell.mentioned .status-icon {
+            font-size: 1.25rem;
+        }
+
+        .llm-cell.not-mentioned {
+            color: #dc2626;
+        }
+
+        .llm-cell.not-mentioned .status-icon {
+            font-size: 1.25rem;
+        }
+
+        .breakdown-hint {
+            color: #9ca3af;
+            font-size: 0.8rem;
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+        /* Response modal */
+        .response-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+        }
+
+        .response-modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: #ffffff;
+            border-radius: 12px;
+            max-width: 800px;
+            width: 100%;
+            max-height: 90vh;
+            overflow: auto;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #9ca3af;
+            cursor: pointer;
+            padding: 0.25rem 0.5rem;
+        }
+
+        .modal-close:hover {
+            color: #374151;
+        }
+
+        .modal-header {
+            padding: 1.5rem 1.5rem 0;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            position: relative;
+        }
+
+        .modal-llm {
+            font-weight: 600;
+            color: #1f2937;
+            font-size: 1.1rem;
+        }
+
+        .modal-status {
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .modal-status.mentioned {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .modal-status.not-mentioned {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .modal-question {
+            padding: 1rem 1.5rem;
+            color: #6b7280;
+            font-size: 0.9rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .modal-response {
+            padding: 1.5rem;
+            overflow-y: auto;
+            flex: 1;
+            color: #374151;
+            font-size: 0.9rem;
+            line-height: 1.8;
+            min-height: 300px;
+            max-height: 60vh;
+            background: #fafafa;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .modal-response::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .modal-response::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        .modal-response::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 4px;
+        }
+
+        .modal-response::-webkit-scrollbar-thumb:hover {
+            background: #a1a1a1;
+        }
+
+        /* Brand highlight */
+        .brand-highlight {
+            background: linear-gradient(120deg, #fef08a 0%, #fde047 100%);
+            padding: 0.1rem 0.3rem;
+            border-radius: 3px;
+            font-weight: 600;
+        }
+
+        .example-content {
+            color: #6b7280;
+            font-size: 0.875rem;
+            line-height: 1.7;
+            max-height: 400px;
+            overflow-y: auto;
+            margin-bottom: 0.75rem;
+            padding: 1rem;
+            background: #f9fafb;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .example-status {
+            padding: 0.5rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            display: inline-block;
+        }
+
+        .example-status.mentioned {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .example-status.not-mentioned {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        /* Reddit Posts */
+        .reddit-posts {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .reddit-post {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: #fafafa;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: all 0.2s;
+            border: 1px solid transparent;
+        }
+
+        .reddit-post:hover {
+            background: #f3f4f6;
+            border-color: #e5e7eb;
+        }
+
+        .post-icon {
+            width: 40px;
+            height: 40px;
+            background: #1f2937;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .post-icon.pain {
+            background: #fef3c7;
+        }
+
+        .post-icon.pain svg {
+            color: #92400e;
+        }
+
+        .post-icon svg {
+            width: 20px;
+            height: 20px;
+            color: #ffffff;
+        }
+
+        .post-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .post-title {
+            color: #1f2937;
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .post-meta {
+            color: #9ca3af;
+            font-size: 0.8rem;
+        }
+
+        .post-arrow {
+            color: #9ca3af;
+            flex-shrink: 0;
+        }
+
+        .post-arrow svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .subsection-title {
+            color: #1f2937;
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin: 1.5rem 0 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .subsection-title:first-of-type {
+            margin-top: 0;
+        }
+
+        .subsection-desc {
+            color: #9ca3af;
+            font-size: 0.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .no-data {
+            color: #9ca3af;
+            font-style: italic;
+            text-align: center;
+            padding: 1rem;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            color: #9ca3af;
+            font-size: 0.8rem;
+            padding: 2rem;
+            border-top: 1px solid #e5e7eb;
+            margin-top: 2rem;
+        }
+
+        .footer a {
+            color: #1f2937;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* CTA */
+        .cta-section {
+            text-align: center;
+            padding: 3rem 2rem;
+            background: #fafafa;
+        }
+
+        .cta-section h2 {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 1.75rem;
+            color: #1f2937;
+            margin-bottom: 0.75rem;
+        }
+
+        .cta-section p {
+            color: #6b7280;
+            margin-bottom: 1.5rem;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background: #1f2937;
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .cta-button:hover {
+            background: #111827;
+            transform: translateY(-1px);
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .page-title h1 {
+                font-size: 1.75rem;
+            }
+
+            .section {
+                padding: 1.5rem;
+            }
+
+            .score-circle {
+                width: 130px;
+                height: 130px;
+            }
+
+            .score-value {
+                font-size: 2.25rem;
+            }
+
+            .llm-breakdown {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .tabs-header {
+                flex-wrap: wrap;
+            }
+
+            .tab-btn {
+                padding: 0.5rem 1rem;
+                font-size: 0.8rem;
+            }
+
+            .breakdown-table th,
+            .breakdown-table td {
+                padding: 0.5rem;
+                font-size: 0.8rem;
+            }
+
+            .question-cell {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .modal-content {
+                max-height: 90vh;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <a href="https://adva-solutions.com/AIVisibility" class="logo">adva</a>
+        <div class="header-right">
+            <!-- PDF button hidden for now - backend still available at /report/d2a89bb4/pdf
+            <a href="/report/d2a89bb4/pdf" class="pdf-button" title="Download as PDF">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                Download PDF
+            </a>
+            -->
+            <button class="copy-link-button" onclick="navigator.clipboard.writeText('https://adva-solutions.github.io/ai-visibility-report/report_workstation_d2a89bb4.html'); showToast('Link copied!');" title="Copy shareable link">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                </svg>
+                Copy Link
+            </button>
+            <span class="header-date">February 16, 2026</span>
+        </div>
+    </header>
+    <div class="toast" id="toast">Link copied to clipboard!</div>
+
+    <div class="container">
+        <div class="page-title">
+            <div class="label">AI Visibility Report</div>
+            <h1>Your Brand's <em>AI Presence</em></h1>
+            <p class="brand">Analysis for Workstation</p>
+        </div>
+
+        <!-- Section 1: AI Visibility Score -->
+        <div class="section score-section">
+            <div class="score-circle">
+                <span class="score-value">0%</span>
+                <span class="score-label">0/15 mentions</span>
+            </div>
+            <p class="score-description">
+                Your brand appeared in <strong>0</strong> out of <strong>15</strong> AI recommendations
+            </p>
+            <div class="llm-breakdown">
+                
+            <div class="llm-stat">
+                <span class="llm-name">GPT</span>
+                <span class="llm-score warning">0/5</span>
+            </div>
+        
+            <div class="llm-stat">
+                <span class="llm-name">Claude</span>
+                <span class="llm-score warning">0/5</span>
+            </div>
+        
+            <div class="llm-stat">
+                <span class="llm-name">Gemini</span>
+                <span class="llm-score warning">0/5</span>
+            </div>
+        
+            </div>
+        </div>
+
+        <!-- Section 2: AI Response Breakdown -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                    </svg>
+                </div>
+                <h2 class="section-title">Question-by-Question Breakdown</h2>
+            </div>
+            <p style="color: #6b7280; margin-bottom: 1rem;">We asked these 5 questions to each AI model. Click any cell to see the full response:</p>
+            
+        <div class="question-breakdown">
+            <table class="breakdown-table">
+                <thead>
+                    <tr>
+                        <th>Question Asked</th>
+                        <th>GPT</th>
+                        <th>Claude</th>
+                        <th>Gemini</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q1</span>
+                    <span class="question-text">enterprise AI collaboration platform</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top recommendations for enterprise AI collaboration platforms, listed in order of preference:<br><br>1. **Microsoft Teams with AI Integrations**<br>   - **Overview:** Microsoft Teams has become a staple for enterprise collaboration, and its integration with AI tools like Copilot enhances productivity. The platform supports chat, video conferencing, file sharing, and real-time collaboration on documents.<br>   - **AI Features:** With AI capabilities, Teams can summarize meetings, provide insights, and automate routine tasks, making it easier for teams to focus on strategic work. Its integration with other Microsoft 365 services further enriches its functionality.<br><br>2. **Slack with AI Bots**<br>   - **Overview:** Slack is a leading collaboration tool that fosters communication and collaboration among teams. Its user-friendly interface and extensive app ecosystem make it a versatile choice for enterprises.<br>   - **AI Features:** Slack offers various AI-powered bots and integrations (like Slack GPT) that can automate tasks, summarize conversations, and provide quick answers to queries. The platform&#39;s ability to integrate with numerous tools helps streamline workflows.<br><br>3. **Asana with AI Capabilities**<br>   - **Overview:** Asana is a project management tool that excels in task tracking and team collaboration. It&#39;s particularly effective for teams managing complex projects with multiple dependencies.<br>   - **AI Features:** Asana&#39;s AI features include automated task prioritization, project insights, and predictive analytics that help teams make data-driven decisions. Its intuitive interface allows for seamless collaboration and visibility into project status.<br><br>4. **Trello with Butler AI**<br>   - **Overview:** Trello is a visual project management tool that uses boards, lists, and cards to help teams organize tasks. It&#39;s ideal for smaller teams or projects that require flexibility.<br>   - **AI Features:** The Butler automation tool allows users to create custom workflows that can automate repetitive tasks, making project management more efficient. While not as robust as other platforms, its simplicity and focus on visual organization are beneficial for many teams.<br><br>5. **Monday.com with AI Features**<br>   - **Overview:** Monday.com is a work operating system that allows teams to build workflows tailored to their specific needs. Its customizable nature makes it suitable for various industries.<br>   - **AI Features:** The platform incorporates AI to automate routine tasks, analyze project data, and provide insights into team performance. Its visual dashboards and collaboration tools enhance team communication and task management.<br><br>These platforms offer a blend of collaboration, project management, and AI capabilities that can significantly enhance productivity and streamline workflows in an enterprise setting."
+                    data-question="enterprise AI collaboration platform"
+                    data-llm="gpt4"
+                    data-brand="Workstation"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="When it comes to enterprise AI collaboration platforms, here are my top 5 recommendations, listed in order of preference:<br><br>1. Microsoft Azure Cognitive Services:<br>   - Microsoft&#39;s comprehensive suite of cloud-based AI services, including natural language processing, computer vision, and speech recognition.<br>   - Offers a range of pre-built models and APIs that can be easily integrated into enterprise applications.<br>   - Provides a scalable and secure platform for building and deploying AI-powered solutions.<br><br>2. Google Cloud AI Platform:<br>   - Google&#39;s cloud-based platform for building, deploying, and managing machine learning models.<br>   - Offers a range of AI and ML services, including natural language processing, image recognition, and predictive analytics.<br>   - Provides tools for data preparation, model training, and deployment, making it easier for enterprises to develop and integrate AI-powered applications.<br><br>3. Amazon Web Services (AWS) AI Services:<br>   - AWS&#39;s suite of AI and ML services, including Amazon SageMaker, Amazon Lex, and Amazon Rekognition.<br>   - Offers a wide range of pre-built AI models and services that can be easily integrated into enterprise applications.<br>   - Provides a scalable and secure platform for building and deploying AI-powered solutions.<br><br>4. IBM Watson Studio:<br>   - IBM&#39;s platform for building, training, and deploying AI models.<br>   - Offers a range of tools and services for data preparation, model training, and deployment, including support for popular machine learning frameworks like TensorFlow and PyTorch.<br>   - Provides a collaborative environment for teams to work together on AI projects.<br><br>5. Salesforce Einstein Platform:<br>   - Salesforce&#39;s AI-powered platform for building intelligent applications.<br>   - Offers a range of pre-built AI models and services that can be easily integrated into Salesforce applications.<br>   - Provides a low-code/no-code approach to building AI-powered solutions, making it accessible to a wider range of users.<br><br>When choosing an enterprise AI collaboration platform, it&#39;s important to consider factors such as the specific needs of your organization, the level of integration required with existing systems, the scalability and security of the platform, and the availability of pre-built AI models and services."
+                    data-question="enterprise AI collaboration platform"
+                    data-llm="claude"
+                    data-brand="Workstation"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Okay, here are my top 3 recommendations for enterprise AI collaboration platforms, ordered by preference, along with brief explanations:<br><br>**1.  Microsoft Teams with Copilot (and Azure AI Services Integration)**<br><br>*   **Why it&#39;s a top choice:** Microsoft Teams is already a dominant platform for many enterprises, making adoption easier.  Copilot extends Teams with powerful AI capabilities directly within the familiar workflow.  It can summarize meetings, generate drafts of messages, create action items, and more.  Crucially, you can leverage Azure AI Services like Azure OpenAI Service to build custom AI-powered features tailored to your specific business needs and integrate them into Teams. This offers both out-of-the-box AI features and the flexibility to create custom solutions.<br>*   **Key advantages:**  Seamless integration with existing Microsoft ecosystem, widespread adoption, enterprise-grade security and compliance, robust AI capabilities through Copilot, extensibility with Azure AI Services, and strong support resources.<br>*   **Considerations:**  Copilot requires an add-on license and may have a learning curve to fully utilize its features.  Custom AI solutions require development expertise. Azure AI Services incur usage-based costs.<br><br>**2. Slack with AI Apps and Integrations**<br><br>*   **Why it&#39;s a strong contender:** Slack is a popular choice for focused team communication and collaboration.  While Slack itself doesn&#39;t have a built-in AI suite as comprehensive as Copilot, its strength lies in its vast app ecosystem.  You can integrate numerous AI-powered apps for tasks like sentiment analysis, automated task management, natural language processing, and more.  Furthermore, Slack&#39;s API allows you to build custom AI integrations using platforms like Google Cloud AI or AWS AI.<br>*   **Key advantages:**  Excellent for focused team communication, a huge app ecosystem with readily available AI integrations, a flexible API for custom AI development, and strong integration capabilities with other enterprise tools.<br>*   **Considerations:**  AI capabilities are dependent on third-party apps and custom development.  Managing multiple apps can add complexity.  Security and compliance of third-party apps need careful evaluation.<br><br>**3. Google Workspace (with Gemini for Google Workspace)**<br><br>*   **Why it&#39;s worth considering:** Google Workspace is another widely adopted platform. Gemini for Google Workspace brings AI capabilities to apps like Gmail, Docs, Slides, and Sheets. It can help with writing, summarizing, generating ideas, and more.  Like Microsoft, Google offers AI platform tools (Vertex AI) for building custom AI solutions.<br>*   **Key advantages:** Tight integration within the Google Workspace ecosystem, AI features embedded in core productivity apps, potential for custom AI development using Vertex AI, and collaborative features for document creation and editing.<br>*   **Considerations:** Gemini for Google Workspace is a paid add-on.  Custom AI solutions require development expertise.  Vertex AI usage has its own pricing structure.<br><br>**Important Considerations When Choosing:**<br><br>*   **Your Existing Infrastructure:**  Prioritize platforms that integrate well with your current tools and systems.<br>*   **Your Specific Needs:**  Identify the specific AI-powered tasks you want to enable (e.g., automated meeting summaries, personalized recommendations, intelligent search).<br>*   **Your Budget:**  Consider the licensing costs for the platform itself, any add-on AI features, and the cost of custom AI development.<br>*   **Your Team&#39;s Technical Skills:**  Assess your team&#39;s ability to build and maintain custom AI solutions.<br>*   **Security and Compliance:**  Ensure the platform meets your organization&#39;s security and compliance requirements, especially when dealing with sensitive data.<br><br>Before making a decision, I highly recommend:<br><br>*   **Conducting Trials:**  Test out each platform with a representative group of users.<br>*   **Defining Clear Use Cases:**  Identify specific scenarios where AI can provide the most value.<br>*   **Consulting with Experts:**  Seek advice from AI consultants or vendors to help you choose the best platform for your needs.<br><br>Good luck with your search!<br>"
+                    data-question="enterprise AI collaboration platform"
+                    data-llm="gemini"
+                    data-brand="Workstation"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q2</span>
+                    <span class="question-text">secure AI integration for business</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="Integrating AI into business processes can greatly enhance efficiency, decision-making, and customer experience. However, ensuring security during this integration is paramount. Here are my top recommendations for secure AI integration for business:<br><br>### 1. **Data Encryption and Secure Data Handling**<br>   **Explanation:** Ensure that all sensitive data, both in transit and at rest, is encrypted using robust encryption standards. This includes customer information, proprietary business data, and any input/output of AI systems. Secure data handling policies should be in place, including access controls, to minimize the risk of data breaches.<br><br>### 2. **Robust Access Control and Identity Management**<br>   **Explanation:** Implement strong access control measures such as multi-factor authentication (MFA) and role-based access control (RBAC). This ensures that only authorized personnel can access AI models and data, reducing the risk of internal threats or unauthorized access that could compromise sensitive information.<br><br>### 3. **Regular Security Audits and Vulnerability Assessments**<br>   **Explanation:** Conduct regular security audits and vulnerability assessments of your AI systems and the underlying infrastructure. This helps identify potential security gaps and weaknesses before they can be exploited. Establish a routine for patch management and incorporate feedback from these assessments to continuously improve security measures.<br><br>### 4. **AI Model Monitoring and Anomaly Detection**<br>   **Explanation:** Implement monitoring systems to track the behavior of AI models in real-time. Use anomaly detection algorithms to identify unusual patterns or deviations in model performance, which may indicate security issues such as data poisoning or adversarial attacks. This proactive approach helps in early detection and mitigation of potential threats.<br><br>### 5. **Compliance with Regulations and Ethical Standards**<br>   **Explanation:** Ensure that your AI integration complies with relevant regulations (e.g., GDPR, CCPA) and ethical standards. This includes transparency in how AI systems operate, how data is used, and ensuring fairness in AI decision-making processes. Compliance not only reduces legal risks but also builds trust with customers and stakeholders.<br><br>By focusing on these areas, businesses can effectively integrate AI while maintaining a strong security posture, protecting both their data and their reputation."
+                    data-question="secure AI integration for business"
+                    data-llm="gpt4"
+                    data-brand="Workstation"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top 5 recommendations for secure AI integration for business, in order of preference:<br><br>1. Google Cloud AI Platform:<br>   - Google Cloud&#39;s AI Platform provides a secure, enterprise-grade environment for developing, deploying, and managing AI/ML models.<br>   - It offers robust security features like data encryption, access control, and audit logging to ensure the confidentiality and integrity of your AI systems.<br>   - The platform integrates seamlessly with other Google Cloud services, making it a comprehensive and scalable solution for businesses.<br><br>2. Microsoft Azure Cognitive Services:<br>   - Microsoft Azure Cognitive Services is a collection of AI-powered APIs that enable businesses to easily integrate intelligent capabilities into their applications.<br>   - The service offers various security and compliance features, such as data encryption, role-based access control, and compliance with industry standards like HIPAA and GDPR.<br>   - Azure Cognitive Services integrates well with other Microsoft products, providing a familiar and streamlined experience for businesses already using the Microsoft ecosystem.<br><br>3. Amazon Web Services (AWS) SageMaker:<br>   - AWS SageMaker is a fully managed machine learning service that helps businesses build, train, and deploy ML models securely.<br>   - It provides robust security features, including data encryption, network isolation, and IAM-based access control, to protect your AI systems and data.<br>   - SageMaker&#39;s integration with other AWS services, such as AWS Lambda and Amazon S3, allows for seamless and scalable AI/ML deployments.<br><br>4. IBM Watson Studio:<br>   - IBM Watson Studio is a comprehensive platform for developing, deploying, and managing AI/ML models in a secure and enterprise-ready environment.<br>   - It offers advanced security features, including data encryption, role-based access control, and integration with IBM&#39;s security and compliance offerings.<br>   - The platform&#39;s integration with other IBM Cloud services, such as IBM Cloud Pak for Data, makes it a suitable choice for businesses already invested in the IBM ecosystem.<br><br>5. Anthropic AI Platform:<br>   - Anthropic&#39;s AI platform provides a secure and scalable environment for developing and deploying AI/ML models.<br>   - It offers advanced security features, such as end-to-end encryption, secure model hosting, and robust access controls, to protect your AI systems and data.<br>   - Anthropic&#39;s platform is designed to be highly scalable and easy to integrate, making it a viable option for businesses of all sizes.<br><br>These recommendations cover leading cloud providers and specialized AI platforms, each offering robust security features and seamless integration capabilities to help businesses securely leverage AI/ML technologies. The choice will depend on your specific business requirements, existing technology stack, and preferred cloud provider."
+                    data-question="secure AI integration for business"
+                    data-llm="claude"
+                    data-brand="Workstation"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Okay, here are my top 3 recommendations for secure AI integration for business, prioritized based on a balance of security, functionality, and adoption ease, along with brief explanations:<br><br>**1.  Microsoft Azure AI with Azure Security Center & Purview:**<br><br>*   **Why It&#39;s Ranked #1:**  Microsoft Azure provides a comprehensive AI platform (Azure AI) with a strong emphasis on security and compliance.  Crucially, it integrates deeply with Azure Security Center (for threat detection and vulnerability management) and Azure Purview (for data governance and compliance). This means you can build AI solutions using pre-trained models, custom models, or Azure OpenAI Service, while benefiting from robust security controls at the infrastructure, data, and application levels.  Azure&#39;s compliance certifications (HIPAA, ISO 27001, etc.) are also a major advantage for regulated industries.  The integration with Purview is critical for ensuring data lineage, access control, and compliance with data privacy regulations like GDPR and CCPA, vital for responsible AI.<br>*   **Key Features:**  Azure AI Studio, Azure OpenAI Service, Azure Machine Learning, Azure Cognitive Services, Azure Security Center, Azure Purview, Role-Based Access Control (RBAC), Data Encryption, Logging & Auditing.<br>*   **Best For:** Businesses already invested in the Microsoft ecosystem, or those requiring strong compliance and governance features.  It&#39;s scalable for both small and large organizations.<br><br>**2. Google Cloud Platform (GCP) AI with Security Command Center & Data Loss Prevention (DLP):**<br><br>*   **Why It&#39;s Ranked #2:** GCP offers a powerful AI platform (Vertex AI) with excellent capabilities in machine learning and deep learning.  GCP&#39;s Security Command Center provides a centralized view of security and compliance across your GCP environment, including AI workloads.  GCP&#39;s Data Loss Prevention (DLP) service is crucial for sensitive data handling within AI applications, allowing you to identify and mask sensitive information to prevent leaks.  Like Azure, GCP offers comprehensive compliance certifications.<br>*   **Key Features:** Vertex AI, Cloud AI Platform, Cloud Vision API, Cloud Natural Language API, Security Command Center, Data Loss Prevention (DLP), Identity and Access Management (IAM), Key Management Service (KMS), Cloud Logging.<br>*   **Best For:**  Businesses with strong data science teams that need advanced machine learning capabilities, and those already leveraging other Google Cloud services. GCP&#39;s emphasis on innovation and open-source technologies makes it attractive to some.<br><br>**3. AWS AI/ML with AWS Security Hub & AWS Data Privacy Conformance:**<br><br>*   **Why It&#39;s Ranked #3:** AWS offers a broad range of AI and machine learning services (Amazon SageMaker, Amazon Rekognition, Amazon Comprehend, etc.).  AWS Security Hub provides a unified view of your security posture across AWS accounts and services, integrating findings from various AWS security services and partner solutions. AWS Data Privacy Conformance program helps customers demonstrate compliance with data privacy regulations.<br>*   **Key Features:** Amazon SageMaker, Amazon Rekognition, Amazon Comprehend, Amazon Lex, AWS Security Hub, AWS IAM, AWS KMS, AWS CloudTrail, AWS Data Privacy Conformance.<br>*   **Best For:**  Businesses already heavily invested in the AWS ecosystem.  AWS&#39;s mature infrastructure and vast array of services make it a reliable choice, although security often requires more manual configuration compared to Azure or GCP.<br><br>**Important Considerations for All Options:**<br><br>*   **Data Encryption:**  Implement encryption at rest and in transit for all data used in AI models.<br>*   **Access Control:** Use role-based access control (RBAC) to restrict access to data and AI resources based on the principle of least privilege.<br>*   **Data Governance:**  Establish clear data governance policies to ensure data quality, integrity, and compliance.  Use data lineage tracking to understand the origin and flow of data used in AI models.<br>*   **Model Security:**  Protect AI models from adversarial attacks (e.g., data poisoning, model evasion).<br>*   **Regular Audits:**  Conduct regular security audits to identify and address vulnerabilities.<br>*   **Vendor Lock-in:** Consider the potential for vendor lock-in when choosing a cloud provider.  Evaluate the portability of your AI models and data.<br>*   **Training:**  Ensure your team is properly trained on secure AI development practices.<br><br>These recommendations are starting points. The ideal solution will depend on your specific business needs, technical expertise, existing infrastructure, and budget. It&#39;s always best to conduct a thorough risk assessment and proof-of-concept before implementing any AI solution.<br>"
+                    data-question="secure AI integration for business"
+                    data-llm="gemini"
+                    data-brand="Workstation"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q3</span>
+                    <span class="question-text">AI governance and compliance for enterprises</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="Certainly! Here are my top recommendations for AI governance and compliance for enterprises:<br><br>1. **Establish a Governance Framework**  <br>   **Explanation:** Develop a clear governance framework that outlines roles, responsibilities, and processes for managing AI systems. This framework should include guidelines for ethical AI use, risk management, and compliance with relevant regulations. Define key performance indicators (KPIs) to monitor the effectiveness of AI initiatives and ensure they align with organizational values and legal requirements.<br><br>2. **Implement Robust Data Management Policies**  <br>   **Explanation:** Ensure that data used for training AI models is collected, stored, and processed in compliance with data protection regulations (e.g., GDPR, CCPA). Establish policies for data quality, privacy, and security, including data anonymization techniques and access controls. Regular audits and assessments of data practices can help maintain compliance and build trust with stakeholders.<br><br>3. **Conduct Regular Audits and Impact Assessments**  <br>   **Explanation:** Perform regular audits of AI systems to assess their performance, biases, and compliance with established governance frameworks. Impact assessments should evaluate the societal, ethical, and environmental implications of AI applications. This proactive approach helps identify potential risks and allows for timely adjustments to AI strategies and processes.<br><br>4. **Foster an Ethical AI Culture**  <br>   **Explanation:** Promote a culture of ethical AI use within the organization by providing training and resources for employees. Encourage discussions around ethical considerations and the societal impacts of AI technologies. Engaging stakeholders, including customers and the community, can help align AI initiatives with public expectations and ethical standards.<br><br>5. **Stay Informed on Regulatory Developments**  <br>   **Explanation:** Keep abreast of evolving AI regulations and compliance requirements at both national and international levels. Engage with industry associations and regulatory bodies to understand best practices and emerging trends in AI governance. Adapting to regulatory changes proactively can mitigate legal risks and enhance the organization&#39;s reputation as a responsible AI user.<br><br>By implementing these recommendations, enterprises can create a structured approach to AI governance and compliance, effectively managing risk while maximizing the benefits of AI technologies."
+                    data-question="AI governance and compliance for enterprises"
+                    data-llm="gpt4"
+                    data-brand="Workstation"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="When it comes to AI governance and compliance for enterprises, here are my top 5 recommendations:<br><br>1. Establish an AI Ethics Board:<br>   - This board should comprise a diverse group of stakeholders, including executives, legal experts, data scientists, and ethicists.<br>   - The board&#39;s primary responsibility is to develop and enforce ethical guidelines for the development, deployment, and use of AI systems within the organization.<br>   - They should ensure that AI systems align with the company&#39;s values, respect human rights, and mitigate potential risks or biases.<br><br>2. Implement a Comprehensive AI Governance Framework:<br>   - Develop a structured and documented process for managing the entire AI lifecycle, from data collection to model deployment and monitoring.<br>   - This framework should include policies, procedures, and controls to ensure compliance with relevant regulations, industry standards, and best practices.<br>   - It should also address data privacy, security, and transparency requirements to build trust and accountability.<br><br>3. Conduct Regular AI Risk Assessments:<br>   - Regularly evaluate the potential risks and impacts associated with the organization&#39;s AI systems, including legal, ethical, and reputational risks.<br>   - Identify and address any vulnerabilities or potential harms that may arise from the use of AI, such as algorithmic bias, privacy breaches, or unintended consequences.<br>   - Incorporate the findings from these assessments into the decision-making process for AI development and deployment.<br><br>4. Provide AI-Specific Training and Awareness:<br>   - Educate employees across the organization on the fundamentals of AI, its capabilities, and its limitations.<br>   - Ensure that teams involved in AI development and deployment understand their responsibilities and the importance of ethical and compliant practices.<br>   - Encourage a culture of transparency, accountability, and continuous learning around AI within the enterprise.<br><br>5. Engage with External Stakeholders and Regulatory Bodies:<br>   - Stay informed about the evolving landscape of AI regulations and industry standards, both locally and globally.<br>   - Actively participate in industry forums, regulatory dialogues, and collaborative initiatives to contribute to the development of AI governance frameworks.<br>   - Maintain open communication with relevant stakeholders, such as customers, partners, and policymakers, to address concerns and build trust in the organization&#39;s AI practices.<br><br>By implementing these recommendations, enterprises can establish a robust AI governance and compliance framework that helps them navigate the complex and rapidly evolving landscape of AI, mitigate risks, and build trust with their stakeholders."
+                    data-question="AI governance and compliance for enterprises"
+                    data-llm="claude"
+                    data-brand="Workstation"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Okay, here are my top recommendations for AI governance and compliance solutions for enterprises, ordered by preference and with brief explanations:<br><br>**Top Recommendations for AI Governance and Compliance (Enterprise Focus):**<br><br>1.  **Credo AI:**<br><br>    *   **Explanation:** Credo AI stands out for its comprehensive approach, focusing on building trust and transparency in AI systems throughout their lifecycle. It integrates with existing MLOps pipelines and provides tools for risk assessment, policy enforcement, model validation, and impact monitoring. A key strength is its structured &quot;AI Governance Scorecard&quot; which provides a clear, auditable record of compliance against various regulations and ethical guidelines.  It&#39;s robust for larger organizations with complex AI deployments and a need for detailed governance. They focus on action, not just reporting.<br>    *   **Why it&#39;s preferred:** Strong focus on actionability, integration with the MLOps lifecycle, and a structured approach to governance that aligns with regulatory requirements.  It&#39;s an end-to-end solution.<br><br>2.  **Arthur AI:**<br><br>    *   **Explanation:** Arthur AI provides a platform for monitoring AI models in production, detecting bias, and explaining model behavior. While it doesn&#39;t offer the same breadth of governance features as Credo AI, its strength lies in its deep observability and explainability capabilities. It helps ensure that models are performing as expected, free from unintended biases, and compliant with fairness regulations. It helps to give you insights into &quot;why&quot; certain things are happening.<br>    *   **Why it&#39;s preferred:** Excellent for organizations that are already deploying AI models and need robust monitoring and explainability to ensure compliance and ethical behavior.  It&#39;s particularly valuable in regulated industries.<br><br>3.  **Fiddler AI:**<br><br>    *   **Explanation:** Fiddler AI focuses on AI explainability, fairness, and performance monitoring. It helps organizations understand how their models are making decisions, identify and mitigate bias, and ensure models are performing as expected in production. While it doesn&#39;t cover the full spectrum of AI governance, it&#39;s a strong tool for addressing compliance requirements related to transparency and fairness.<br>    *   **Why it&#39;s preferred:**  Well-regarded for its user-friendly interface and strong focus on explainability. Good for organizations wanting to understand &quot;why&quot; their AI is behaving the way it is.<br><br>4.  **TruEra:**<br><br>    *   **Explanation:** TruEra offers a platform for AI explainability, model evaluation, and monitoring.  It helps organizations understand and debug their models, identify potential biases, and ensure models are performing reliably.  It&#39;s particularly useful for addressing compliance requirements related to model transparency and fairness.<br>    *   **Why it&#39;s preferred:**  Provides tools for both development and production stages of the AI lifecycle. It&#39;s a good choice for organizations looking for a comprehensive solution that covers both explainability and model monitoring.<br><br>5.  **AI Verify (Open Source - Singapore Gov):**<br><br>    *   **Explanation:** If you have a smaller budget, or are looking to start out with something more foundational, this is something to examine. It is an open-source AI governance testing framework developed by the Singapore government. It provides a standardized set of tests and checks to assess the ethical and responsible use of AI systems. While it requires more technical expertise to implement and maintain, it offers a free and customizable solution for organizations seeking to align with international AI governance principles.  It&#39;s a good starting point for building a customized governance framework.<br>    *   **Why it&#39;s preferred:** Open source and customizable, making it a cost-effective option for organizations with strong technical capabilities. It provides a solid foundation for building a bespoke AI governance framework.<br><br>**Important Considerations when Choosing:**<br><br>*   **Your organization&#39;s needs:**  Consider the complexity of your AI deployments, the regulatory landscape you operate in, and your existing MLOps infrastructure.<br>*   **Integration:**  Ensure the solution integrates well with your existing tools and workflows.<br>*   **Scalability:**  Choose a solution that can scale as your AI deployments grow.<br>*   **Ease of use:**  Select a platform that is easy to use and understand for both technical and non-technical stakeholders.<br>*   **Budget:**  Consider the cost of the solution, including licensing fees, implementation costs, and ongoing maintenance.<br><br>I highly recommend scheduling demos with each of these vendors to see which platform best fits your specific requirements. Good luck!<br>"
+                    data-question="AI governance and compliance for enterprises"
+                    data-llm="gemini"
+                    data-brand="Workstation"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q4</span>
+                    <span class="question-text">multi-model AI platform for the enterprise</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top recommendations for multi-model AI platforms suitable for enterprise use, listed in order of preference:<br><br>1. **Google Cloud AI Platform**<br>   - **Overview**: Google Cloud AI Platform provides a comprehensive suite of tools for building, deploying, and managing machine learning models. It supports a wide range of frameworks, including TensorFlow, PyTorch, and Scikit-learn.<br>   - **Key Features**: The platform offers AutoML capabilities, pre-built models, and integration with BigQuery for data analysis. It also includes tools for model training, versioning, and deployment, making it ideal for enterprises looking to scale their AI efforts.<br><br>2. **Microsoft Azure Machine Learning**<br>   - **Overview**: Azure Machine Learning is a robust platform that allows enterprises to build, train, and deploy machine learning models. It supports various frameworks and languages, making it versatile for different use cases.<br>   - **Key Features**: Azure ML provides an intuitive drag-and-drop interface for building models, along with automated machine learning capabilities. It integrates well with other Azure services, enabling seamless data management and model deployment.<br><br>3. **IBM Watson Studio**<br>   - **Overview**: IBM Watson Studio is an AI and data science platform designed for enterprise use, offering tools for data preparation, model development, and deployment across multiple environments.<br>   - **Key Features**: It supports a variety of programming languages and frameworks, includes collaborative features for data scientists and business users, and offers advanced capabilities for model governance and compliance, making it suitable for industries with strict regulatory requirements.<br><br>4. **Hugging Face Hub**<br>   - **Overview**: Hugging Face Hub is a platform focused on natural language processing (NLP) and transformer models, but it has expanded to include a variety of models for different tasks, such as computer vision and audio processing.<br>   - **Key Features**: It provides a user-friendly interface for accessing and deploying state-of-the-art models, along with extensive documentation and community support. Its model hub allows enterprises to leverage pre-trained models and fine-tune them for specific applications.<br><br>5. **Amazon SageMaker**<br>   - **Overview**: Amazon SageMaker is a fully managed service that provides tools for building, training, and deploying machine learning models quickly and efficiently. It supports a range of frameworks and allows for custom model development.<br>   - **Key Features**: SageMaker includes built-in algorithms, model tuning, and deployment options, along with integration with other AWS services for data storage and retrieval. Its scalability and flexibility make it a great choice for enterprises looking to leverage AWS infrastructure.<br><br>These platforms provide a mix of features, ease of use, scalability, and support for multiple AI models, making them suitable for enterprises looking to implement AI solutions effectively."
+                    data-question="multi-model AI platform for the enterprise"
+                    data-llm="gpt4"
+                    data-brand="Workstation"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="When it comes to multi-model AI platforms for the enterprise, here are my top 5 recommendations, listed in order of preference:<br><br>1. **Google Cloud AI Platform**: This platform offers a comprehensive suite of AI and machine learning services, including pre-trained models, custom model training, and deployment capabilities. It supports a wide range of AI models, including natural language processing, computer vision, and structured data analysis. The platform also integrates with other Google Cloud services, making it a seamless choice for enterprises already using the Google Cloud ecosystem.<br><br>2. **Microsoft Azure Cognitive Services**: Microsoft&#39;s Azure Cognitive Services provide a range of pre-built AI models and APIs that can be easily integrated into enterprise applications. The platform supports multiple AI models, including language understanding, computer vision, and speech recognition. Azure Cognitive Services also offers advanced features like custom model training and deployment, making it a powerful choice for enterprises.<br><br>3. **Amazon Web Services (AWS) SageMaker**: AWS SageMaker is a comprehensive machine learning platform that enables enterprises to build, train, and deploy AI models at scale. It supports a wide range of AI models and integrates with other AWS services, providing a robust and scalable solution for enterprises.<br><br>4. **IBM Watson Studio**: IBM Watson Studio is a comprehensive AI platform that offers a range of AI and machine learning services, including data preparation, model building, and deployment. The platform supports multiple AI models and integrates with other IBM Watson services, making it a compelling choice for enterprises with a focus on enterprise-grade AI solutions.<br><br>5. **Databricks Unified Data Analytics Platform**: Databricks&#39; Unified Data Analytics Platform is a cloud-based platform that provides a comprehensive solution for data engineering, machine learning, and AI. While it may not have the same breadth of pre-built AI models as some of the other platforms, it offers a highly scalable and flexible environment for building and deploying custom AI models, making it a strong choice for enterprises with advanced AI requirements.<br><br>When evaluating these multi-model AI platforms, consider factors such as your enterprise&#39;s existing technology stack, the specific AI use cases you need to address, the level of support and documentation available, and the overall cost and scalability of the platform. Additionally, it&#39;s essential to assess the platform&#39;s ability to integrate with your existing data sources and business processes, as well as its compliance and security features."
+                    data-question="multi-model AI platform for the enterprise"
+                    data-llm="claude"
+                    data-brand="Workstation"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Okay, here are my top 3 recommendations for multi-model AI platforms for the enterprise, ordered by preference, along with brief explanations:<br><br>**1. Google Cloud Vertex AI**<br><br>*   **Why it&#39;s top pick:** Vertex AI offers a comprehensive and mature platform with a strong focus on enterprise needs.  It excels in model management, deployment, and monitoring.  It&#39;s tightly integrated with Google&#39;s extensive AI/ML research and offers access to a wide array of pre-trained models (including Google&#39;s own powerful models like Gemini in the future) and tools for building custom models. Its Auto ML feature is also highly regarded for its ease of use and ability to quickly train models without extensive coding.  The scalable infrastructure and robust security features are crucial for enterprise deployments.  Google also has a strong commitment to responsible AI.<br><br>*   **Key Strengths:**<br>    *   **Comprehensive Ecosystem:** Covers the entire ML lifecycle, from data preparation to model deployment and monitoring.<br>    *   **Scalability and Reliability:** Built on Google Cloud&#39;s robust infrastructure.<br>    *   **Integration:** Seamless integration with other Google Cloud services (BigQuery, Dataflow, etc.).<br>    *   **AutoML:**  Simplifies model building for users with less ML expertise.<br>    *   **Model Garden:** Access to a vast collection of pre-trained models and community models.<br>    *   **Strong Model Management:** Versioning, deployment strategies, and monitoring capabilities are excellent.<br><br>*   **Considerations:**  The cost can be a factor, and the platform can feel complex for beginners.  Vendor lock-in is a potential concern, as with any cloud platform.<br><br>**2. Microsoft Azure AI Platform**<br><br>*   **Why it&#39;s second:** Azure AI Platform is a strong contender, particularly for organizations already heavily invested in the Microsoft ecosystem.  It provides a rich set of tools and services for building, deploying, and managing AI models. It integrates well with other Azure services like Azure Data Lake Storage, Azure Synapse Analytics, and Power BI.  The platform supports a wide range of open-source frameworks and languages (Python, R, etc.).  Azure Machine Learning Studio provides a user-friendly interface for building and experimenting with models.  It also offers strong security and compliance features for enterprise environments.<br><br>*   **Key Strengths:**<br>    *   **Microsoft Ecosystem Integration:** Seamless integration with other Azure services and Microsoft products (Office 365, Dynamics 365).<br>    *   **Azure Machine Learning Studio:** A user-friendly visual interface for model building.<br>    *   **Open-Source Support:** Supports a wide range of open-source frameworks and languages.<br>    *   **Enterprise-Grade Security and Compliance:** Meets stringent enterprise requirements.<br>    *   **Responsible AI tools:**  Includes tools to help build and deploy AI responsibly.<br><br>*   **Considerations:**  Similar to Google Cloud, cost can be a concern. The platform can be complex, and some users find the documentation overwhelming.<br><br>**3. Amazon SageMaker**<br><br>*   **Why it&#39;s third:** SageMaker is a powerful and versatile platform that offers a wide range of services for building, training, and deploying machine learning models.  It provides a modular approach, allowing users to choose the specific services they need.  It supports a variety of machine learning frameworks and languages.  SageMaker Studio provides an integrated development environment (IDE) for building and experimenting with models.  It also offers features for model monitoring, explainability, and security.  Its strength lies in its flexibility and granular control over the ML pipeline.<br><br>*   **Key Strengths:**<br>    *   **Modular Architecture:** Allows users to select only the services they need.<br>    *   **Wide Range of Services:**  Covers the entire ML lifecycle.<br>    *   **SageMaker Studio:** Integrated development environment for model building.<br>    *   **Flexibility and Control:**  Provides granular control over the ML pipeline.<br>    *   **Integration with other AWS services:** integrates well with S3, EC2 and other AWS services.<br><br>*   **Considerations:**  The modularity can also be a drawback, as it requires more expertise to configure and manage the platform.  The sheer number of options can be overwhelming.  Cost management can be challenging due to the pay-as-you-go pricing model.<br><br>**Important Considerations When Choosing:**<br><br>*   **Existing Infrastructure:**  Consider your existing cloud infrastructure and choose a platform that integrates well with it.<br>*   **Team Expertise:**  Evaluate your team&#39;s skills and choose a platform that aligns with their expertise.<br>*   **Budget:**  Compare the pricing models of different platforms and choose one that fits your budget.<br>*   **Use Cases:**  Identify your"
+                    data-question="multi-model AI platform for the enterprise"
+                    data-llm="gemini"
+                    data-brand="Workstation"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q5</span>
+                    <span class="question-text">AI collaboration tools for data-driven teams</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top recommendations for AI collaboration tools tailored for data-driven teams, listed in order of preference:<br><br>1. **Slack with AI Integrations**  <br>   **Overview**: Slack is a widely-used communication platform that can be enhanced with various AI integrations, such as chatbots and analytics tools.  <br>   **Why It&#39;s Recommended**: Slack facilitates real-time collaboration and has a vast ecosystem of integrations that allow data teams to connect their data tools, share insights, and automate workflows. AI bots can help summarize discussions, pull relevant data from databases, and even assist in decision-making processes.<br><br>2. **Microsoft Teams with Power BI**  <br>   **Overview**: Microsoft Teams is a robust collaboration platform that integrates seamlessly with Power BI, Microsoft’s data visualization tool.  <br>   **Why It&#39;s Recommended**: Teams allows for effective communication and file sharing while enabling users to present and discuss data visualizations directly within the chat. The integration with Power BI means data-driven teams can easily share insights, collaborate on reports, and make data-informed decisions in a centralized environment.<br><br>3. **Notion with AI Features**  <br>   **Overview**: Notion is an all-in-one workspace that supports note-taking, project management, and collaboration, now enhanced with AI features for content generation and organization.  <br>   **Why It&#39;s Recommended**: Data teams can use Notion to document processes, share insights, and manage projects collaboratively while leveraging AI for drafting reports and summarizing meetings. Its flexibility allows for easy customization to fit the team&#39;s workflow.<br><br>4. **Airtable**  <br>   **Overview**: Airtable is a cloud-based project management tool that combines the simplicity of a spreadsheet with the power of a database.  <br>   **Why It&#39;s Recommended**: It allows data-driven teams to manage and track projects, collect data, and collaborate effectively. Airtable&#39;s AI features can aid in automating data entry, generating reports, and visualizing project progress, making it an excellent choice for teams that require organization and flexibility.<br><br>5. **Tableau with Slack Integration**  <br>   **Overview**: Tableau is a leading data visualization tool that helps teams analyze and visualize data effectively.  <br>   **Why It&#39;s Recommended**: Its integration with Slack allows teams to share visualizations and insights directly in their communication channels, facilitating quick discussions and decisions based on data. The ability to collaborate on data visualizations in real-time makes it a strong tool for data-driven environments.<br><br>These tools prioritize collaboration, data sharing, and the integration of AI features to enhance productivity and decision-making for data-driven teams."
+                    data-question="AI collaboration tools for data-driven teams"
+                    data-llm="gpt4"
+                    data-brand="Workstation"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top 5 recommendations for AI collaboration tools for data-driven teams, in order of preference:<br><br>1. Dataiku: Dataiku is an end-to-end data science and machine learning platform that enables collaborative, cross-functional teams to build and deploy AI solutions. It offers a user-friendly interface, powerful data preparation and modeling capabilities, and seamless integration with various data sources and cloud platforms.<br><br>2. Alteryx: Alteryx is a self-service data analytics platform that allows teams to prepare, blend, and analyze data without the need for extensive coding. It features a drag-and-drop interface, a wide range of analytical tools, and strong collaboration features, making it ideal for data-driven teams.<br><br>3. Tableau: Tableau is a leading data visualization and business intelligence tool that enables teams to explore, analyze, and share data insights. Its intuitive interface, advanced analytical capabilities, and robust collaboration features make it a popular choice for data-driven teams.<br><br>4. Qlik Sense: Qlik Sense is a comprehensive data analytics platform that supports self-service data exploration, visualization, and collaboration. It offers a user-friendly interface, advanced analytics, and integration with various data sources, making it a versatile choice for data-driven teams.<br><br>5. Domino Data Lab: Domino Data Lab is a collaborative data science platform that enables teams to develop, deploy, and monitor machine learning models. It provides a centralized workspace for data scientists, integrates with various tools and cloud platforms, and facilitates team-based collaboration.<br><br>These AI collaboration tools offer a range of features and capabilities that can help data-driven teams work more efficiently, gain deeper insights, and drive better decision-making. The specific choice will depend on the team&#39;s needs, the complexity of the data, and the desired level of customization and integration."
+                    data-question="AI collaboration tools for data-driven teams"
+                    data-llm="claude"
+                    data-brand="Workstation"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Okay, here are my top 3 recommendations for AI collaboration tools for data-driven teams, in order of preference.  These prioritize tools that directly enhance data analysis, insights sharing, and collaborative decision-making based on data.<br><br>**1.  Hex (My Top Recommendation)**<br><br>*   **Explanation:** Hex is a collaborative data workspace built for data science and analytics teams. It&#39;s a powerful notebook environment that goes beyond traditional notebooks by allowing you to build interactive data apps, share insights visually, and collaborate on complex analyses in real-time.<br>*   **Why it&#39;s great for collaboration:**<br>    *   **Interactive Data Apps:** Easily turn your analyses into interactive dashboards and reports that stakeholders can explore and understand, facilitating data-driven discussions.<br>    *   **Real-time Collaboration:** Multiple users can work on the same Hex project simultaneously, seeing each other&#39;s changes and leaving comments.<br>    *   **SQL, Python, and R Support:** Supports the most commonly used languages for data analysis, allowing teams to work with the tools they&#39;re most comfortable with.<br>    *   **Version Control:** Tracks changes to your code and data, making it easy to revert to previous versions and understand the evolution of your analyses.<br>    *   **Integrated Data Connections:** Connects to a wide range of data sources, including databases, cloud storage, and APIs.<br>*   **AI features:** Hex integrates with large language models for code generation and writing documentation.<br><br>**2.  ThoughtSpot**<br><br>*   **Explanation:** ThoughtSpot is a search and AI-driven analytics platform.  It allows users to ask questions of their data in natural language, and the AI engine generates visualizations and insights in response.<br>*   **Why it&#39;s great for collaboration:**<br>    *   **Natural Language Search:** Empowers non-technical users to explore data and find answers without relying on data analysts.<br>    *   **Liveboards:** Create interactive dashboards that can be shared with colleagues and stakeholders, fostering collaborative data exploration.<br>    *   **SpotIQ:** ThoughtSpot&#39;s AI engine automatically identifies anomalies and trends in your data, helping teams quickly uncover important insights.<br>    *   **Embedded Analytics:** Integrate ThoughtSpot&#39;s analytics capabilities into your existing applications and workflows, making data more accessible to a wider audience.<br>    *   **Data Governance:** Robust data governance features ensure that data is secure and consistent across the organization.<br>*   **AI features:** ThoughtSpot leverages AI for natural language processing, anomaly detection, and automated insights generation.<br><br>**3.  Deepnote**<br><br>*   **Explanation:** Deepnote is a collaborative data science notebook that focuses on real-time collaboration and seamless integration with modern data tools.  It&#39;s a strong alternative to traditional Jupyter notebooks.<br>*   **Why it&#39;s great for collaboration:**<br>    *   **Real-time Collaboration:** Multiple users can edit the same notebook simultaneously, with synchronized cursors and real-time updates.<br>    *   **Comments and Discussions:**  Integrated commenting allows for in-context discussions and feedback on code, visualizations, and analyses.<br>    *   **Version Control:** Tracks changes to your code and notebooks, making it easy to revert to previous versions and understand the evolution of your work.<br>    *   **Integrations:** Connects to a wide range of data sources and tools, including databases, cloud storage, and version control systems.<br>    *   **Task Management:** Assign tasks and track progress within the notebook environment.<br>*   **AI features:** Deepnote has integrated AI code completion and generation.<br><br>**Considerations When Choosing:**<br><br>*   **Team Size and Technical Skill:**  Hex and Deepnote are well-suited for teams with strong data science skills. ThoughtSpot is a good option for organizations that want to empower non-technical users with data access.<br>*   **Data Complexity:** If you&#39;re working with complex data models and require advanced analytics capabilities, Hex or ThoughtSpot may be a better fit.<br>*   **Budget:**  Pricing varies depending on the vendor and the features you need.  Be sure to compare pricing plans carefully.<br>*   **Integration with Existing Tools:**  Ensure that the tool you choose integrates well with your existing data infrastructure and workflows.  Almost all of these tools offer free trials, so test them out.<br><br>I hope this helps!  Good luck finding the perfect AI collaboration tool for your data-driven team. Let me know if you have any other questions.<br>"
+                    data-question="AI collaboration tools for data-driven teams"
+                    data-llm="gemini"
+                    data-brand="Workstation"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+                </tbody>
+            </table>
+            <p class="breakdown-hint">Click any cell to see the full AI response</p>
+        </div>
+
+        <!-- Response modal -->
+        <div class="response-modal" id="responseModal">
+            <div class="modal-content" onclick="event.stopPropagation()">
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+                <div class="modal-header">
+                    <span class="modal-llm" id="modalLlm"></span>
+                    <span class="modal-status" id="modalStatus"></span>
+                </div>
+                <div class="modal-question" id="modalQuestion"></div>
+                <div class="modal-response" id="modalResponse"></div>
+            </div>
+        </div>
+    
+        </div>
+
+        <!-- Section 3: Reddit Opportunities -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <h2 class="section-title">Reddit Opportunities</h2>
+            </div>
+
+            <div class="subsection-title">Buy Intent Conversations</div>
+            <p class="subsection-desc">People actively looking for recommendations in your category</p>
+            <div class="reddit-posts">
+                
+            <a href="https://www.reddit.com/r/buildinpublic/comments/1r2p6ji/how_agentic_ai_can_reshape_traditional_enterprise/" target="_blank" class="reddit-post">
+                <div class="post-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">How Agentic AI Can Reshape Traditional Enterprise ...</div>
+                    <div class="post-meta">
+                        r/buildinpublic &bull; 60K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            <a href="https://www.reddit.com/r/freelancing/comments/1r0ywzk/building_free_ai_tool_for_small_and_medium/" target="_blank" class="reddit-post">
+                <div class="post-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">Building Free AI Tool for Small and Medium Businesses</div>
+                    <div class="post-meta">
+                        r/freelancing &bull; 72K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            <a href="https://www.reddit.com/r/SaaS/comments/1r02zt6/looking_for_city_regional_partners_to_collaborate/" target="_blank" class="reddit-post">
+                <div class="post-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">Looking for city / regional partners to collaborate on ...</div>
+                    <div class="post-meta">
+                        r/SaaS &bull; 567K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            <a href="https://www.reddit.com/r/AI_Agents/comments/1r17hbx/from_prototype_to_production_how_to_build_ai/" target="_blank" class="reddit-post">
+                <div class="post-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">How to Build AI Agents That Actually Think : r/AI_Agents</div>
+                    <div class="post-meta">
+                        r/AI_Agents &bull; 294K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            </div>
+
+            <div class="subsection-title">Pain Point Conversations</div>
+            <p class="subsection-desc">People discussing problems your product solves</p>
+            <div class="reddit-posts">
+                
+            <a href="https://www.reddit.com/r/NextGenAITool/comments/1r33fj7/25_ai_security_risks_defenses_for_enterprises/" target="_blank" class="reddit-post">
+                <div class="post-icon pain">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">25 AI Security Risks & Defenses for Enterprises</div>
+                    <div class="post-meta">
+                        r/NextGenAITool &bull; 20K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            <a href="https://www.reddit.com/r/ControlProblem/comments/1r36anu/gartner_just_dropped_a_whole_new_category_called/" target="_blank" class="reddit-post">
+                <div class="post-icon pain">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">Gartner just dropped a whole new category called AI usage ...</div>
+                    <div class="post-meta">
+                        r/ControlProblem &bull; 46K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            </div>
+        </div>
+
+        <!-- CTA Section -->
+        <div class="section cta-section">
+            <h2>Ready to improve your <em>AI visibility?</em></h2>
+            <p>We help brands get mentioned more in AI answers through strategic content placement.</p>
+            <a href="https://adva-solutions.com/AIVisibility" class="cta-button">Learn More</a>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p>Generated by <a href="https://adva-solutions.com">Adva</a> &bull; AI Visibility Health Check</p>
+    </footer>
+
+    <script>
+        // Tab switching functionality
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const tabId = btn.dataset.tab;
+
+                // Update buttons
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                // Update panels
+                document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+                document.getElementById('panel-' + tabId).classList.add('active');
+            });
+        });
+
+        // Show toast notification
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2500);
+        }
+
+        // Show response modal
+        function showResponse(cell) {
+            try {
+                let response = cell.dataset.response || 'No response available';
+                const question = cell.dataset.question || '';
+                const llm = cell.dataset.llm || '';
+                const brand = cell.dataset.brand || '';
+                const isMentioned = cell.classList.contains('mentioned');
+                const brandPosition = cell.dataset.position ? parseInt(cell.dataset.position) : null;
+
+                const llmNames = {'gpt4': 'GPT', 'claude': 'Claude', 'gemini': 'Gemini'};
+
+                // If brand is mentioned beyond position 5, add a banner at the top
+                let positionBanner = '';
+                if (isMentioned && brandPosition && brandPosition > 5) {
+                    positionBanner = '<div style="background: #fef3c7; padding: 0.75rem 1rem; border-radius: 6px; margin-bottom: 1rem; border-left: 4px solid #f59e0b;">' +
+                        '<strong>📍 Your brand appeared at position #' + brandPosition + '</strong> - scroll down to see the highlighted mention' +
+                        '</div>';
+                }
+
+                // Highlight brand name in response (case insensitive)
+                if (brand && isMentioned) {
+                    try {
+                        const brandRegex = new RegExp('(' + brand.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&') + ')', 'gi');
+                        response = response.replace(brandRegex, '<span class="brand-highlight">$1</span>');
+                    } catch(e) { /* ignore highlighting errors */ }
+                }
+
+                document.getElementById('modalLlm').textContent = llmNames[llm] || llm;
+                document.getElementById('modalQuestion').textContent = '"' + question + '"';
+                document.getElementById('modalResponse').innerHTML = positionBanner + response;
+
+                const statusEl = document.getElementById('modalStatus');
+                if (isMentioned) {
+                    statusEl.textContent = 'Mentioned';
+                    statusEl.className = 'modal-status mentioned';
+                } else {
+                    statusEl.textContent = 'Not mentioned';
+                    statusEl.className = 'modal-status not-mentioned';
+                }
+
+                document.getElementById('responseModal').classList.add('active');
+                document.body.style.overflow = 'hidden';
+
+                // Scroll to first highlight if mentioned
+                if (isMentioned) {
+                    setTimeout(function() {
+                        const highlight = document.querySelector('.modal-response .brand-highlight');
+                        if (highlight) {
+                            highlight.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        }
+                    }, 100);
+                }
+            } catch (e) {
+                console.error('Error showing response:', e);
+                alert('Error loading response. Please try again.');
+            }
+        }
+
+        // Close modal
+        function closeModal() {
+            document.getElementById('responseModal').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // Close when clicking backdrop (outside modal content)
+        document.getElementById('responseModal').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+
+        // Close modal on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeModal();
+        });
+    </script>
+</body>
+</html>
