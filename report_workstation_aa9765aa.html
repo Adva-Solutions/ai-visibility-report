@@ -1,0 +1,1370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Visibility Report - Workstation | Adva</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #ffffff;
+            min-height: 100vh;
+            color: #374151;
+            line-height: 1.6;
+        }
+
+        /* Header */
+        .header {
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            font-size: 1.25rem;
+            color: #1f2937;
+            text-decoration: none;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .header-date {
+            color: #9ca3af;
+            font-size: 0.875rem;
+        }
+
+        /* Copy link button */
+        .copy-link-button {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: #f3f4f6;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            color: #374151;
+            font-size: 0.75rem;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .copy-link-button:hover {
+            background: #e5e7eb;
+        }
+
+        .copy-link-button svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        .pdf-button {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: #1f2937;
+            border: none;
+            border-radius: 6px;
+            color: #ffffff;
+            font-size: 0.75rem;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .pdf-button:hover {
+            background: #374151;
+        }
+
+        .pdf-button svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        /* Toast notification */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: #1f2937;
+            color: #ffffff;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            opacity: 0;
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        /* Container */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Page title */
+        .page-title {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .page-title .label {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: #9ca3af;
+            font-size: 0.75rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+        }
+
+        .page-title .label::before,
+        .page-title .label::after {
+            content: '';
+            width: 30px;
+            height: 1px;
+            background: #d1d5db;
+        }
+
+        .page-title h1 {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 2.5rem;
+            font-weight: 400;
+            color: #1f2937;
+            margin-bottom: 0.5rem;
+        }
+
+        .page-title .brand {
+            color: #6b7280;
+            font-size: 1.125rem;
+        }
+
+        /* Sections */
+        .section {
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #f3f4f6;
+        }
+
+        .section-icon {
+            width: 40px;
+            height: 40px;
+            background: #1f2937;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .section-icon svg {
+            width: 20px;
+            height: 20px;
+            color: #ffffff;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 1.375rem;
+            color: #1f2937;
+        }
+
+        /* Score Section */
+        .score-section {
+            text-align: center;
+            padding: 3rem 2rem;
+        }
+
+        .score-circle {
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            background: #fafafa;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            border: 4px solid #ef4444;
+        }
+
+        .score-value {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 3rem;
+            font-weight: 500;
+            color: #ef4444;
+        }
+
+        .score-label {
+            font-size: 0.8rem;
+            color: #9ca3af;
+        }
+
+        .score-description {
+            color: #6b7280;
+            margin-bottom: 2rem;
+            font-size: 1rem;
+        }
+
+        .score-description strong {
+            color: #1f2937;
+        }
+
+        .llm-breakdown {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .llm-stat {
+            text-align: center;
+            padding: 1rem 1.5rem;
+            background: #fafafa;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+            min-width: 100px;
+        }
+
+        .llm-name {
+            display: block;
+            color: #9ca3af;
+            font-size: 0.8rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .llm-score {
+            font-size: 1.125rem;
+            font-weight: 600;
+        }
+
+        .llm-score.success {
+            color: #22c55e;
+        }
+
+        .llm-score.warning {
+            color: #ef4444;
+        }
+
+        /* Competitor Table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 0.875rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid #f3f4f6;
+        }
+
+        th {
+            color: #9ca3af;
+            font-weight: 500;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        td {
+            color: #374151;
+        }
+
+        .mention-count {
+            background: #fef3c7;
+            color: #92400e;
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        /* Tabs for LLM responses */
+        .example-tabs {
+            margin-top: 1.5rem;
+        }
+
+        .tabs-header {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+            padding-bottom: 0;
+        }
+
+        .tab-btn {
+            padding: 0.75rem 1.25rem;
+            background: transparent;
+            border: none;
+            color: #6b7280;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            margin-bottom: -1px;
+            transition: all 0.2s;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .tab-btn:hover {
+            color: #1f2937;
+        }
+
+        .tab-btn.active {
+            color: #1f2937;
+            border-bottom-color: #1f2937;
+        }
+
+        .tab-panel {
+            display: none;
+            background: #fafafa;
+            border-radius: 8px;
+            padding: 1.25rem;
+        }
+
+        .tab-panel.active {
+            display: block;
+        }
+
+        .example-question {
+            color: #1f2937;
+            font-weight: 500;
+            font-size: 0.95rem;
+            margin-bottom: 0.75rem;
+        }
+
+        /* Question breakdown table */
+        .question-breakdown {
+            margin-top: 1rem;
+        }
+
+        .breakdown-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        .breakdown-table th {
+            padding: 0.75rem;
+            text-align: center;
+            background: #f9fafb;
+            border-bottom: 2px solid #e5e7eb;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .breakdown-table th:first-child {
+            text-align: left;
+            width: 50%;
+        }
+
+        .breakdown-table td {
+            padding: 0.75rem;
+            border-bottom: 1px solid #f3f4f6;
+            vertical-align: middle;
+        }
+
+        .question-cell {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+        }
+
+        .question-num {
+            background: #e5e7eb;
+            color: #374151;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        .question-text {
+            color: #374151;
+            line-height: 1.4;
+        }
+
+        .llm-cell {
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-radius: 4px;
+        }
+
+        .llm-cell:hover {
+            background: #f3f4f6;
+        }
+
+        .llm-cell.mentioned {
+            color: #16a34a;
+        }
+
+        .llm-cell.mentioned .status-icon {
+            font-size: 1.25rem;
+        }
+
+        .llm-cell.not-mentioned {
+            color: #dc2626;
+        }
+
+        .llm-cell.not-mentioned .status-icon {
+            font-size: 1.25rem;
+        }
+
+        .breakdown-hint {
+            color: #9ca3af;
+            font-size: 0.8rem;
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+        /* Response modal */
+        .response-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+        }
+
+        .response-modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: #ffffff;
+            border-radius: 12px;
+            max-width: 800px;
+            width: 100%;
+            max-height: 90vh;
+            overflow: auto;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #9ca3af;
+            cursor: pointer;
+            padding: 0.25rem 0.5rem;
+        }
+
+        .modal-close:hover {
+            color: #374151;
+        }
+
+        .modal-header {
+            padding: 1.5rem 1.5rem 0;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            position: relative;
+        }
+
+        .modal-llm {
+            font-weight: 600;
+            color: #1f2937;
+            font-size: 1.1rem;
+        }
+
+        .modal-status {
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .modal-status.mentioned {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .modal-status.not-mentioned {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .modal-question {
+            padding: 1rem 1.5rem;
+            color: #6b7280;
+            font-size: 0.9rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .modal-response {
+            padding: 1.5rem;
+            overflow-y: auto;
+            flex: 1;
+            color: #374151;
+            font-size: 0.9rem;
+            line-height: 1.8;
+            min-height: 300px;
+            max-height: 60vh;
+            background: #fafafa;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .modal-response::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .modal-response::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        .modal-response::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 4px;
+        }
+
+        .modal-response::-webkit-scrollbar-thumb:hover {
+            background: #a1a1a1;
+        }
+
+        /* Brand highlight */
+        .brand-highlight {
+            background: linear-gradient(120deg, #fef08a 0%, #fde047 100%);
+            padding: 0.1rem 0.3rem;
+            border-radius: 3px;
+            font-weight: 600;
+        }
+
+        .example-content {
+            color: #6b7280;
+            font-size: 0.875rem;
+            line-height: 1.7;
+            max-height: 400px;
+            overflow-y: auto;
+            margin-bottom: 0.75rem;
+            padding: 1rem;
+            background: #f9fafb;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .example-status {
+            padding: 0.5rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            display: inline-block;
+        }
+
+        .example-status.mentioned {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .example-status.not-mentioned {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        /* Reddit Posts */
+        .reddit-posts {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .reddit-post {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: #fafafa;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: all 0.2s;
+            border: 1px solid transparent;
+        }
+
+        .reddit-post:hover {
+            background: #f3f4f6;
+            border-color: #e5e7eb;
+        }
+
+        .post-icon {
+            width: 40px;
+            height: 40px;
+            background: #1f2937;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .post-icon.pain {
+            background: #fef3c7;
+        }
+
+        .post-icon.pain svg {
+            color: #92400e;
+        }
+
+        .post-icon svg {
+            width: 20px;
+            height: 20px;
+            color: #ffffff;
+        }
+
+        .post-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .post-title {
+            color: #1f2937;
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .post-meta {
+            color: #9ca3af;
+            font-size: 0.8rem;
+        }
+
+        .post-arrow {
+            color: #9ca3af;
+            flex-shrink: 0;
+        }
+
+        .post-arrow svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .subsection-title {
+            color: #1f2937;
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin: 1.5rem 0 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .subsection-title:first-of-type {
+            margin-top: 0;
+        }
+
+        .subsection-desc {
+            color: #9ca3af;
+            font-size: 0.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .no-data {
+            color: #9ca3af;
+            font-style: italic;
+            text-align: center;
+            padding: 1rem;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            color: #9ca3af;
+            font-size: 0.8rem;
+            padding: 2rem;
+            border-top: 1px solid #e5e7eb;
+            margin-top: 2rem;
+        }
+
+        .footer a {
+            color: #1f2937;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* CTA */
+        .cta-section {
+            text-align: center;
+            padding: 3rem 2rem;
+            background: #fafafa;
+        }
+
+        .cta-section h2 {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 1.75rem;
+            color: #1f2937;
+            margin-bottom: 0.75rem;
+        }
+
+        .cta-section p {
+            color: #6b7280;
+            margin-bottom: 1.5rem;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background: #1f2937;
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .cta-button:hover {
+            background: #111827;
+            transform: translateY(-1px);
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .page-title h1 {
+                font-size: 1.75rem;
+            }
+
+            .section {
+                padding: 1.5rem;
+            }
+
+            .score-circle {
+                width: 130px;
+                height: 130px;
+            }
+
+            .score-value {
+                font-size: 2.25rem;
+            }
+
+            .llm-breakdown {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .tabs-header {
+                flex-wrap: wrap;
+            }
+
+            .tab-btn {
+                padding: 0.5rem 1rem;
+                font-size: 0.8rem;
+            }
+
+            .breakdown-table th,
+            .breakdown-table td {
+                padding: 0.5rem;
+                font-size: 0.8rem;
+            }
+
+            .question-cell {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .modal-content {
+                max-height: 90vh;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <a href="https://adva-solutions.com/AIVisibility" class="logo">adva</a>
+        <div class="header-right">
+            <!-- PDF button hidden for now - backend still available at /report/aa9765aa/pdf
+            <a href="/report/aa9765aa/pdf" class="pdf-button" title="Download as PDF">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                Download PDF
+            </a>
+            -->
+            <button class="copy-link-button" onclick="navigator.clipboard.writeText('https://adva-solutions.github.io/ai-visibility-report/report_workstation_aa9765aa.html'); showToast('Link copied!');" title="Copy shareable link">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                </svg>
+                Copy Link
+            </button>
+            <span class="header-date">February 16, 2026</span>
+        </div>
+    </header>
+    <div class="toast" id="toast">Link copied to clipboard!</div>
+
+    <div class="container">
+        <div class="page-title">
+            <div class="label">AI Visibility Report</div>
+            <h1>Your Brand's <em>AI Presence</em></h1>
+            <p class="brand">Analysis for Workstation</p>
+        </div>
+
+        <!-- Section 1: AI Visibility Score -->
+        <div class="section score-section">
+            <div class="score-circle">
+                <span class="score-value">0%</span>
+                <span class="score-label">0/15 mentions</span>
+            </div>
+            <p class="score-description">
+                Your brand appeared in <strong>0</strong> out of <strong>15</strong> AI recommendations
+            </p>
+            <div class="llm-breakdown">
+                
+            <div class="llm-stat">
+                <span class="llm-name">GPT</span>
+                <span class="llm-score warning">0/5</span>
+            </div>
+        
+            <div class="llm-stat">
+                <span class="llm-name">Claude</span>
+                <span class="llm-score warning">0/5</span>
+            </div>
+        
+            <div class="llm-stat">
+                <span class="llm-name">Gemini</span>
+                <span class="llm-score warning">0/5</span>
+            </div>
+        
+            </div>
+        </div>
+
+        <!-- Section 2: AI Response Breakdown -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                    </svg>
+                </div>
+                <h2 class="section-title">Question-by-Question Breakdown</h2>
+            </div>
+            <p style="color: #6b7280; margin-bottom: 1rem;">We asked these 5 questions to each AI model. Click any cell to see the full response:</p>
+            
+        <div class="question-breakdown">
+            <table class="breakdown-table">
+                <thead>
+                    <tr>
+                        <th>Question Asked</th>
+                        <th>GPT</th>
+                        <th>Claude</th>
+                        <th>Gemini</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q1</span>
+                    <span class="question-text">Enterprise AI collaboration platform for secure internal use</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top recommendations for enterprise AI collaboration platforms that are suitable for secure internal use:<br><br>1. **Microsoft Teams with Azure AI**<br>   - **Overview**: Microsoft Teams is a widely adopted collaboration platform that integrates seamlessly with other Microsoft 365 services. With the addition of Azure AI capabilities, it offers robust tools for enhancing productivity and collaboration.<br>   - **Security**: Microsoft places a strong emphasis on security and compliance, with features like data encryption, multi-factor authentication, and compliance with major standards (GDPR, HIPAA).<br>   - **AI Features**: Teams provides AI-driven features like meeting transcription, real-time translation, and intelligent chatbots that can assist in various tasks, making collaboration more efficient.<br><br>2. **Slack with Workflow Builder and AI Integrations**<br>   - **Overview**: Slack is a popular messaging platform designed for team collaboration. Its Workflow Builder allows teams to automate routine tasks and integrate AI tools for enhanced productivity.<br>   - **Security**: Slack offers enterprise-grade security features, including data encryption, enterprise mobility management integrations, and comprehensive compliance certifications.<br>   - **AI Features**: With integrations to AI tools, such as Slackbot and third-party applications, teams can leverage AI for automating responses and streamlining workflows.<br><br>3. **Atlassian Confluence with AI Enhancements**<br>   - **Overview**: Confluence is a collaboration tool designed for documentation and project management within teams. It allows users to create, share, and collaborate on content.<br>   - **Security**: Atlassian provides robust security features, including granular permissions, secure cloud hosting, and compliance with various data protection regulations.<br>   - **AI Features**: Recent enhancements include AI-driven content suggestions and search capabilities, helping teams find relevant information quickly and improve collaboration.<br><br>4. **Miro with AI-Powered Collaboration Tools**<br>   - **Overview**: Miro is an online collaborative whiteboard platform that is ideal for brainstorming and project planning. It allows teams to visualize ideas and workflows in real time.<br>   - **Security**: Miro prioritizes security with features like data encryption, SSO, and compliance with GDPR and other standards.<br>   - **AI Features**: Miro incorporates AI tools for visual collaboration, including smart templates and AI-driven suggestions for board layouts and content organization.<br><br>5. **Monday.com with Automation and AI Integrations**<br>   - **Overview**: Monday.com is a work operating system that allows teams to manage projects, tasks, and workflows collaboratively. Its customizable interface suits various industries.<br>   - **Security**: The platform offers robust security features, including data encryption, compliance with GDPR, and user permissions management.<br>   - **AI Features**: Monday.com includes automation features and integrates with various AI tools to enhance task management and streamline communication among team members.<br><br>These platforms are not only secure but also equipped with AI capabilities that can significantly enhance collaboration and productivity within enterprise environments."
+                    data-question="Enterprise AI collaboration platform for secure internal use"
+                    data-llm="gpt4"
+                    data-brand="Workstation"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="When it comes to enterprise AI collaboration platforms for secure internal use, here are my top 5 recommendations:<br><br>1. Microsoft Azure Cognitive Services:<br>   - Microsoft Azure Cognitive Services is a comprehensive suite of AI-powered APIs that can be easily integrated into your enterprise applications.<br>   - It offers a wide range of cognitive capabilities, including natural language processing, computer vision, and speech recognition, all within a secure and scalable cloud environment.<br>   - Azure Cognitive Services provides robust security features, including role-based access control, data encryption, and compliance with industry standards like HIPAA and GDPR.<br><br>2. IBM Watson Studio:<br>   - IBM Watson Studio is a powerful AI and machine learning platform that enables enterprise-wide collaboration and model development.<br>   - It provides a secure, centralized environment for data scientists, developers, and business users to work together on AI projects.<br>   - Watson Studio offers advanced security features, such as data encryption, access controls, and integration with enterprise identity management systems.<br><br>3. Google Cloud AI Platform:<br>   - Google Cloud AI Platform is a comprehensive suite of tools and services for building, deploying, and managing AI applications.<br>   - It offers a secure and scalable environment for AI collaboration, with features like model versioning, experiment tracking, and team-based access controls.<br>   - Google Cloud AI Platform is built on Google&#39;s robust cloud infrastructure, ensuring high availability and enterprise-grade security.<br><br>4. Amazon SageMaker:<br>   - Amazon SageMaker is a fully managed machine learning service that makes it easy to build, train, and deploy AI models.<br>   - It provides a secure and collaborative environment for AI development, with features like notebook instances, data processing, and model hosting.<br>   - SageMaker integrates with other AWS services, such as AWS Identity and Access Management (IAM) and AWS Key Management Service (KMS), for comprehensive security and compliance.<br><br>5. Databricks Unified Analytics Platform:<br>   - Databricks Unified Analytics Platform is a cloud-based platform that enables enterprise-wide collaboration and data engineering for AI and machine learning.<br>   - It offers a secure and scalable environment for data scientists, engineers, and business users to work together on AI projects.<br>   - Databricks provides robust security features, including role-based access controls, data encryption, and integration with enterprise identity management systems.<br><br>These are my top 5 recommendations for enterprise AI collaboration platforms for secure internal use. Each platform offers a unique set of features and capabilities, so it&#39;s essential to evaluate your specific requirements and choose the one that best fits your organization&#39;s needs."
+                    data-question="Enterprise AI collaboration platform for secure internal use"
+                    data-llm="claude"
+                    data-brand="Workstation"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Okay, here are 3 specific enterprise AI collaboration platforms for secure internal use, ordered by my preference based on factors like security features, integration capabilities, and overall functionality. Keep in mind that the &quot;best&quot; choice depends heavily on your specific needs, budget, and existing infrastructure.  I am also assuming you have a larger enterprise in mind, as smaller companies may not need such robust solutions.<br><br>**Top 3 Enterprise AI Collaboration Platforms (Ordered by Preference):**<br><br>1.  **Microsoft Teams Premium (with Azure OpenAI Service Integration):**<br><br>    *   **Explanation:** While Teams itself isn&#39;t inherently an AI platform, the Premium version, combined with Azure OpenAI Service integration, unlocks powerful AI-driven collaboration features.  **Security is a major strength here**, leveraging Microsoft&#39;s robust enterprise-grade security, compliance, and data residency policies.  Azure OpenAI allows you to train and deploy custom AI models securely within your Azure environment, keeping your data within your control.  Features include intelligent meeting summaries, AI-powered translation, real-time transcription, and enhanced search capabilities.  The integration with the broader Microsoft 365 ecosystem is seamless, making it a natural fit for organizations already using Microsoft products.  Customization options for AI models are also a plus.<br>    *   **Why it&#39;s Preferred:** Strong security, tight integration with existing Microsoft environment, customizable AI models, and a familiar user interface.<br><br>2.  **Hugging Face Enterprise Hub:**<br><br>    *   **Explanation:** Hugging Face is a prominent name in the open-source AI community. Their Enterprise Hub offers a secure and collaborative platform for developing, sharing, and deploying AI models within your organization. It provides features like model versioning, access control, and a private model hub where your team can collaborate on projects. **Security is achieved through role-based access control, encryption, and the option for on-premise deployment.** Hugging Face is particularly strong for organizations heavily invested in machine learning and natural language processing, as it provides access to a vast library of pre-trained models and tools.<br>    *   **Why it&#39;s a Good Choice:** Excellent for organizations focused on AI model development, strong community support, flexible deployment options, and robust collaboration features tailored for AI workflows.<br><br>3.  **Google Workspace with Gemini for Google Workspace Enterprise:**<br><br>    *   **Explanation:** Similar to Microsoft Teams, Google Workspace benefits greatly from its AI integration. Gemini for Google Workspace Enterprise adds advanced AI capabilities across the entire suite, including Gmail, Docs, Sheets, and Slides.  **Google Workspace&#39;s enterprise security features are comprehensive**, including data loss prevention (DLP), encryption, and access controls. AI features include smart compose, smart reply, grammar suggestions in documents, and AI-powered meeting summaries in Meet. While customization of AI models isn&#39;t as deep as Azure OpenAI, the ease of use and integration within the Google ecosystem make it a compelling option.  Gemini also provides powerful search and discovery features.<br>    *   **Why it&#39;s a Viable Option:** Strong security, easy to use, well-integrated with the Google ecosystem, and offers a wide range of AI-powered productivity features.<br><br>**Important Considerations Before Making a Decision:**<br><br>*   **Security Requirements:** Carefully evaluate each platform&#39;s security features and compliance certifications to ensure they meet your organization&#39;s specific requirements. Consider factors like data residency, encryption, access control, and vulnerability management.<br>*   **Integration Needs:** Assess how well each platform integrates with your existing IT infrastructure and applications.<br>*   **AI Model Customization:** If you need to train and deploy custom AI models, choose a platform that offers robust model development and deployment tools, such as Azure OpenAI or Hugging Face.<br>*   **User Training and Adoption:** Consider the learning curve for your users and the availability of training resources. A platform that is easy to use and provides adequate support will be more likely to be adopted successfully.<br>*   **Cost:** Compare the pricing models of each platform and factor in the cost of implementation, training, and ongoing maintenance.<br>*   **Pilot Program:** Before making a final decision, consider conducting a pilot program with a small group of users to evaluate the platform&#39;s functionality, security, and usability.<br><br>I strongly recommend scheduling demos and trials with each of these platforms to get a better understanding of their capabilities and how they can meet your specific needs.  Good luck!<br>"
+                    data-question="Enterprise AI collaboration platform for secure internal use"
+                    data-llm="gemini"
+                    data-brand="Workstation"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q2</span>
+                    <span class="question-text">AI tools for data-driven businesses with compliance requirements</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top recommendations for AI tools tailored for data-driven businesses with compliance requirements:<br><br>1. **DataRobot**<br>   - **Overview**: DataRobot is an automated machine learning platform that enables businesses to build, deploy, and manage AI models efficiently. <br>   - **Compliance Features**: It includes features for data governance, model transparency, and audit trails, which are crucial for compliance with regulations like GDPR and HIPAA. Additionally, DataRobot offers tools for monitoring model performance and compliance over time.<br><br>2. **Alteryx**<br>   - **Overview**: Alteryx is a data analytics platform that allows users to blend data from various sources and perform advanced analytics, including predictive modeling and machine learning.<br>   - **Compliance Features**: Alteryx provides robust data governance capabilities, ensuring that data handling processes comply with regulations. It includes features for data lineage, which helps track data usage and transformations, making compliance audits easier.<br><br>3. **IBM Watson Studio**<br>   - **Overview**: IBM Watson Studio is a comprehensive suite of tools for data scientists, application developers, and subject matter experts to collaboratively and easily work with data.<br>   - **Compliance Features**: Watson Studio emphasizes security and compliance, offering features like data encryption, access controls, and compliance with industry standards (e.g., GDPR, HIPAA). It also supports the implementation of ethical AI practices, which is increasingly important for regulatory compliance.<br><br>4. **Microsoft Azure Machine Learning**<br>   - **Overview**: Azure ML is a cloud-based service that enables data scientists to build, train, and deploy machine learning models at scale.<br>   - **Compliance Features**: Azure ML adheres to strict compliance standards, including ISO 27001 and GDPR, and provides built-in security measures. It also incorporates features for monitoring and managing compliance throughout the model lifecycle.<br><br>5. **Tableau**<br>   - **Overview**: Tableau is a leading data visualization tool that allows businesses to create interactive and shareable dashboards.<br>   - **Compliance Features**: With strong data security features, Tableau ensures that data is handled according to compliance standards. It includes options for role-based access control and data governance features that facilitate compliance with regulations.<br><br>These tools are designed to help data-driven businesses leverage AI while ensuring adherence to necessary compliance regulations. They provide a mix of automation, governance, and analytical capabilities that are essential for maintaining data integrity and regulatory compliance."
+                    data-question="AI tools for data-driven businesses with compliance requirements"
+                    data-llm="gpt4"
+                    data-brand="Workstation"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="When it comes to AI tools for data-driven businesses with compliance requirements, here are my top 5 recommendations:<br><br>1. Dataiku:<br>   - Dataiku is a comprehensive AI and machine learning platform that helps businesses of all sizes build and deploy data products.<br>   - It offers a wide range of features, including data preparation, model building, deployment, and monitoring, all while adhering to strict data governance and compliance standards.<br>   - Dataiku&#39;s robust security and compliance features, such as role-based access control, data lineage tracking, and audit logs, make it a great choice for businesses with strict regulatory requirements.<br><br>2. Kube Flow:<br>   - Kubeflow is an open-source machine learning (ML) platform that runs on Kubernetes, a popular container orchestration system.<br>   - It provides a set of tools and components for building and deploying production-ready machine learning workflows, with a focus on scalability, security, and compliance.<br>   - Kubeflow&#39;s integration with Kubernetes allows for easy deployment and management of ML models in a secure and compliant environment, making it suitable for businesses with strict regulatory requirements.<br><br>3. Amazon SageMaker:<br>   - Amazon SageMaker is a fully managed machine learning service provided by AWS, offering a wide range of features for building, training, and deploying ML models.<br>   - It includes built-in support for data security and compliance, such as encryption, access control, and audit logging, making it a suitable choice for businesses operating in regulated industries.<br>   - SageMaker&#39;s integration with other AWS services, such as AWS Glue and AWS Batch, provides a comprehensive data processing and model deployment pipeline, further enhancing its compliance capabilities.<br><br>4. Microsoft Azure Machine Learning:<br>   - Microsoft Azure Machine Learning is a cloud-based platform that provides a suite of tools and services for building, training, and deploying machine learning models.<br>   - It offers robust security and compliance features, including data encryption, role-based access control, and compliance with various industry standards (e.g., HIPAA, GDPR, ISO).<br>   - Azure Machine Learning&#39;s integration with other Azure services, such as Azure Active Directory and Azure Key Vault, allows for seamless data governance and compliance management.<br><br>5. H2O.ai:<br>   - H2O.ai is an open-source machine learning and artificial intelligence platform that provides a range of tools and frameworks for data scientists and developers.<br>   - It offers enterprise-grade security and compliance features, including role-based access control, data encryption, and audit logging, making it suitable for businesses with strict regulatory requirements.<br>   - H2O.ai&#39;s ability to integrate with various data sources and its support for a wide range of use cases, from predictive analytics to computer vision, make it a versatile choice for data-driven businesses.<br><br>These AI tools offer robust security, compliance, and governance features that are essential for businesses operating in regulated industries or with strict data requirements. The specific choice will depend on the size of the organization, the complexity of the use cases, and the preferred deployment model (on-premises, cloud, or hybrid)."
+                    data-question="AI tools for data-driven businesses with compliance requirements"
+                    data-llm="claude"
+                    data-brand="Workstation"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Okay, here are my top 3 recommendations for AI tools suitable for data-driven businesses with compliance requirements, listed in order of preference, along with brief explanations:<br><br>**1.  Dataiku (for comprehensive data science platform with governance):**<br><br>*   **Why it&#39;s great:** Dataiku is a comprehensive Data Science and Machine Learning platform designed for both technical and citizen data scientists. Its collaborative nature allows different teams within a business to work together on data projects, which is crucial for ensuring consistency and compliance.<br>*   **Compliance Features:**<br>    *   **Data lineage tracking:**  Tracks the origin and movement of data, essential for audit trails and understanding how data is used in AI models.<br>    *   **Governance & Explainability:** Provides tools for understanding model behavior (explainability), monitoring model performance, and managing data access controls, which are critical for compliance with regulations like GDPR, CCPA, and industry-specific requirements.<br>    *   **Collaboration and Auditing:**  Offers a centralized platform for data science projects, enabling better collaboration and easier auditing of model development and deployment processes.<br>*   **Ideal for:**  Large organizations with complex data science needs and stringent compliance requirements across various departments.<br><br>**2.  Microsoft Azure AI (for scalable cloud-based AI with robust security):**<br><br>*   **Why it&#39;s great:**  Leveraging the power of the Azure cloud, Azure AI provides a wide array of AI services, from pre-trained models (like computer vision and natural language processing) to the ability to build and deploy custom AI solutions. Its integration with other Azure services (like Azure Purview for data governance) makes it a strong choice for companies already invested in the Microsoft ecosystem.<br>*   **Compliance Features:**<br>    *   **Azure Purview Integration:** Integrates with Azure Purview for data discovery, classification, and lineage tracking, enabling a comprehensive view of your data estate and facilitating compliance.<br>    *   **Security and Compliance Certifications:** Azure has numerous industry-specific compliance certifications (e.g., HIPAA, FedRAMP) that extend to its AI services.<br>    *   **Role-Based Access Control (RBAC):** Granular control over who can access data and AI models, ensuring data security and compliance with access control regulations.<br>    *   **Responsible AI Dashboard:** Offers tools for evaluating model fairness, explainability, error analysis, and privacy, helping to build trustworthy and compliant AI systems.<br>*   **Ideal for:**  Businesses already using Azure or looking for a scalable, secure, and compliant cloud-based AI solution.<br><br>**3.  AWS AI Services (for a broad range of AI functionalities and compliance capabilities):**<br><br>*   **Why it&#39;s great:** AWS offers a comprehensive suite of AI and ML services, from pre-trained models (like Amazon Rekognition and Amazon Comprehend) to platforms for building and training custom models (like Amazon SageMaker). It&#39;s a popular choice due to its scalability, flexibility, and mature ecosystem.<br>*   **Compliance Features:**<br>    *   **AWS CloudTrail & AWS Config:**  These services provide audit trails and configuration management, enabling you to track changes to your AI infrastructure and ensure compliance with security policies.<br>    *   **Amazon SageMaker Clarify:**  A tool for detecting bias in ML models and explaining model predictions, helping to build fair and transparent AI systems.<br>    *   **AWS Security Hub:** Provides a comprehensive view of your security posture across your AWS environment, including your AI and ML workloads.<br>    *   **Compliance Certifications:** AWS holds numerous compliance certifications (e.g., HIPAA, SOC, PCI DSS) that extend to its AI services.<br>*   **Ideal for:**  Companies already heavily invested in the AWS ecosystem or looking for a broad range of AI capabilities with robust security and compliance features.<br><br>**Important Considerations When Choosing:**<br><br>*   **Specific Compliance Requirements:**  Carefully evaluate your industry&#39;s and region&#39;s compliance regulations (e.g., GDPR, CCPA, HIPAA, FedRAMP) and ensure the chosen AI tool offers features to meet those requirements.<br>*   **Data Governance Policies:**  Implement robust data governance policies that define data quality standards, access controls, and data lifecycle management practices.<br>*   **Model Explainability and Fairness:**  Prioritize AI tools that provide features for understanding model behavior (explainability) and detecting/mitigating bias (fairness).<br>*   **Team Expertise:**  Consider the skill sets of your data science and IT teams when selecting an AI tool. Choose a platform that aligns with their expertise and provides adequate training resources.<br>*   **Budget:**  AI platforms can vary significantly in price.  Evaluate the total cost of ownership, including licensing fees, infrastructure costs, and training expenses.<br><br>I hope these recommendations are helpful!"
+                    data-question="AI tools for data-driven businesses with compliance requirements"
+                    data-llm="gemini"
+                    data-brand="Workstation"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q3</span>
+                    <span class="question-text">Flexible AI platform to connect to multiple language models</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top recommendations for flexible AI platforms that can connect to multiple language models:<br><br>1. **Hugging Face Transformers**  <br>   Hugging Face is a leading platform in the AI community for natural language processing. Their Transformers library provides a vast collection of pre-trained language models, including BERT, GPT-2, and T5, among others. The platform supports fine-tuning models and provides a user-friendly API for integration with various applications. Its community-driven approach ensures regular updates and a wealth of resources, including tutorials and documentation.<br><br>2. **LangChain**  <br>   LangChain is designed specifically for building applications with language models. It offers an easy way to connect to various language models and APIs, allowing developers to create complex workflows. With features like prompt management, memory management, and chaining of multiple models, LangChain is ideal for building sophisticated applications that require flexibility and modularity.<br><br>3. **OpenAI API**  <br>   The OpenAI API provides access to powerful language models like GPT-3 and GPT-4. It offers a straightforward RESTful interface and is well-documented, making it easy to integrate into applications. While it primarily focuses on OpenAI&#39;s models, its versatility allows for various use cases, and it can be combined with other tools and platforms to enhance functionality.<br><br>4. **Rasa**  <br>   Rasa is an open-source framework for building conversational AI. While it primarily focuses on chatbots, it can integrate with various language models for natural language understanding and generation. Rasa allows developers to customize their models and workflows, making it flexible for different applications. Its strong community support and extensive documentation make it a solid choice for those looking to create conversational agents.<br><br>5. **Google Cloud AI Platform**  <br>   Google Cloud AI Platform offers a robust set of tools for machine learning and AI, including access to advanced language models. It provides a flexible environment for deploying and managing models, as well as integration with other Google Cloud services. The platform supports various frameworks and libraries, making it a great option for organizations looking to leverage Google’s infrastructure for scalable AI applications.<br><br>These platforms provide a range of features and capabilities to support various use cases, whether you&#39;re developing chatbots, integrating AI into applications, or building complicated workflows with multiple language models."
+                    data-question="Flexible AI platform to connect to multiple language models"
+                    data-llm="gpt4"
+                    data-brand="Workstation"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top 5 recommendations for flexible AI platforms that can connect to multiple language models, listed in order of preference:<br><br>1. Anthropic&#39;s Claude: Anthropic&#39;s Claude is a highly capable and versatile AI platform that can seamlessly integrate with a wide range of language models, including GPT-3, GPT-J, and Anthropic&#39;s own AI models. Claude offers a user-friendly interface, robust security features, and the ability to fine-tune models for specific use cases. It&#39;s particularly well-suited for building complex AI applications that require the integration of multiple language models.<br><br>2. Hugging Face Transformers: Hugging Face Transformers is an open-source library that provides a unified interface for accessing a vast collection of pre-trained language models, including BERT, GPT-2, and T5, among others. It&#39;s a highly flexible platform that allows developers to easily fine-tune and deploy these models for a variety of natural language processing tasks. The Hugging Face ecosystem also includes tools for model deployment, fine-tuning, and integration with other frameworks.<br><br>3. Microsoft Cognitive Services: Microsoft Cognitive Services is a suite of cloud-based AI services that include language models such as LUIS (Language Understanding) and Text Analytics. This platform offers a range of APIs and SDKs that allow developers to easily integrate these language models into their applications, with support for multiple programming languages and platforms.<br><br>4. Google Cloud Natural Language API: Google Cloud Natural Language API is a cloud-based service that provides access to a variety of pre-trained language models, including sentiment analysis, entity recognition, and syntax analysis. This platform offers a straightforward integration process and can be easily scaled to meet the needs of large-scale AI applications.<br><br>5. Amazon Comprehend: Amazon Comprehend is a natural language processing service from AWS that can be used to analyze text data and extract insights, such as sentiment, key phrases, and entities. While it may not offer the same level of flexibility as some of the other platforms, it can be a good choice for developers who are already using other AWS services and are looking for a seamless integration experience.<br><br>These platforms offer a range of features and capabilities, and the best choice will depend on your specific requirements, the language models you need to work with, and the level of customization and integration you require. It&#39;s recommended to evaluate each platform based on your project&#39;s needs and constraints to determine the most suitable option."
+                    data-question="Flexible AI platform to connect to multiple language models"
+                    data-llm="claude"
+                    data-brand="Workstation"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Okay, here are my top 3 recommendations for flexible AI platforms that allow you to connect to multiple language models, listed in order of preference, along with brief explanations:<br><br>**1.  LangChain**<br><br>*   **Why it&#39;s great:** LangChain isn&#39;t a platform in the traditional sense, but rather a framework.  This is its strength. It offers unparalleled flexibility and control.  It&#39;s designed specifically for building applications powered by LLMs.  It provides components for working with different LLMs (OpenAI, Cohere, Hugging Face, etc.), data sources, and tools. Its modular design lets you create complex chains of operations, including prompting strategies, memory management, and agentic capabilities.  It&#39;s open-source and has a massive community, so support and resources are abundant. Langchain is becoming the standard.<br>*   **Key Features:**<br>    *   **LLM Integration:**  Supports a huge range of LLMs, both hosted and open-source.<br>    *   **Chains:** Allows you to string together LLMs and other components into complex workflows.<br>    *   **Agents:** Enables LLMs to interact with their environment using tools.<br>    *   **Memory:**  Provides mechanisms for LLMs to remember past interactions.<br>    *   **Document Loaders:** Integrates with various data sources (web pages, PDFs, databases).<br>*   **Ideal for:** Developers who need maximum control and customization and are comfortable with coding.  It&#39;s a good choice if you want to build sophisticated AI applications with unique requirements.<br>*   **Caveats:**  Requires a steeper learning curve than some other options.  It&#39;s code-centric.<br><br>**2.  Vellum**<br><br>*   **Why it&#39;s great:** Vellum is a platform specifically built for testing, deploying, and monitoring LLMs. It allows you to connect to multiple language models in a single platform and A/B test different models, prompts, and parameters to optimize performance. Vellum focuses on the productionization process, allowing you to monitor and improve your LLM applications over time.<br>*   **Key Features:**<br>    *   **LLM Integrations:** Supports integrations with OpenAI, Anthropic, Cohere, Google, and open-source models.<br>    *   **Versioning:** Allows you to version prompts, models, and parameters for reproducibility and experimentation.<br>    *   **Observability:** Provides metrics and dashboards to monitor LLM performance in production.<br>    *   **A/B Testing:** Enables you to compare different models and prompts to optimize results.<br>*   **Ideal for:** Teams looking to deploy LLM applications into production environments and continuously improve their performance.<br>*   **Caveats:**  More focused on the deployment and monitoring aspect than the creative exploration side.  Pricing might be a factor for smaller projects.<br><br>**3.  Haystack (Deepset)**<br><br>*   **Why it&#39;s great:** Haystack is an open-source framework (similar to LangChain) specifically designed for building search and question-answering systems using LLMs.  While its focus is narrower than LangChain, it&#39;s exceptionally good at its core purpose.  It integrates well with various LLMs and provides components for document retrieval, ranking, and question answering.<br>*   **Key Features:**<br>    *   **Document Stores:**  Connects to various document storage solutions (e.g., Elasticsearch, FAISS).<br>    *   **Retrievers:**  Implements different retrieval methods (e.g., dense retrieval, sparse retrieval).<br>    *   **Readers:**  Uses LLMs to extract answers from retrieved documents.<br>    *   **Pipelines:**  Allows you to create custom pipelines for search and question answering.<br>*   **Ideal for:** Developers building search engines, knowledge bases, or question-answering systems.<br>*   **Caveats:**  More specialized than LangChain.  If you&#39;re not building a search/QA system, it might be overkill.<br><br>**4.  (Bonus) PromptFlow (Microsoft)**<br><br>*   **Why it&#39;s great:** PromptFlow is a development tool designed to streamline the end-to-end development cycle of LLM-based AI applications, from ideation, testing, to deployment, and monitoring. It has built-in evaluation tools that help with experimenting and optimizing your flows. It integrates well with Azure AI Studio and other Microsoft products.<br>*   **Key Features:**<br>    *   **Visual Flow Designer:** Provides a visual interface for creating and managing flows.<br>    *   **LLM Integrations:** Supports Azure OpenAI Service and other Azure AI services.<br>    *   **Evaluation Tools:** Offers built-in evaluation metrics for measuring the performance of flows.<br>    *   **Deployment:** Allows you"
+                    data-question="Flexible AI platform to connect to multiple language models"
+                    data-llm="gemini"
+                    data-brand="Workstation"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q4</span>
+                    <span class="question-text">Collaborative AI workspace with knowledge management features</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top recommendations for collaborative AI workspaces with robust knowledge management features, listed in order of preference:<br><br>1. **Notion**  <br>   Notion is an all-in-one workspace that combines note-taking, project management, and knowledge management. Its flexibility allows teams to create databases, wikis, and to-do lists seamlessly. The collaborative features, such as comments, mentions, and real-time editing, make it easy for teams to work together. Additionally, Notion’s integration capabilities with other tools enhance its functionality, allowing for a more customized experience.<br><br>2. **Microsoft Teams with OneNote**  <br>   Microsoft Teams provides a comprehensive collaboration platform that integrates communication, file sharing, and project management. Coupled with OneNote, a powerful note-taking and knowledge management tool, it allows teams to organize information in a structured way. Teams can create shared notebooks, collaborate in real-time, and access a library of documents easily. The integration with Microsoft 365 apps enhances productivity and offers a familiar interface for many users.<br><br>3. **Confluence by Atlassian**  <br>   Confluence is a collaboration tool designed specifically for teams to create, share, and manage content. It’s particularly strong in knowledge management, allowing users to build documentation, organize project plans, and maintain wikis. With features like page templates, collaborative editing, and integration with other Atlassian products (like Jira), it’s a great choice for software development teams or any collaborative environment that values structured documentation.<br><br>4. **Google Workspace (formerly G Suite)**  <br>   Google Workspace includes a suite of tools such as Google Docs, Sheets, and Drive, which facilitate real-time collaboration and document management. Google Docs allows multiple users to edit documents simultaneously, while Google Drive serves as a centralized repository for all files. The integrated search functionality and shared drives enhance knowledge management, making it easy to find and access relevant information.<br><br>5. **Slack with Knowledge Management Integrations**  <br>   While primarily a communication tool, Slack can be enhanced with various integrations that support knowledge management, such as Google Drive, Confluence, and Notion. Channels can be organized around specific projects or topics, and file sharing is straightforward. Slack&#39;s search functionality allows users to quickly find past conversations and shared documents, making it a valuable tool for collaborative work and knowledge retention.<br><br>These platforms offer varying features and capabilities, so the best choice will depend on your specific needs, team size, and existing tool integrations."
+                    data-question="Collaborative AI workspace with knowledge management features"
+                    data-llm="gpt4"
+                    data-brand="Workstation"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top 5 recommendations for collaborative AI workspaces with knowledge management features, in order of preference:<br><br>1. Notion (www.notion.so):<br>   - Notion is a highly versatile and feature-rich workspace that combines notes, wikis, databases, and collaboration tools into a single platform.<br>   - It offers powerful knowledge management capabilities, including the ability to create and organize content, share and collaborate on projects, and integrate with various third-party tools.<br>   - Notion&#39;s AI-powered features, such as the ability to generate content and automate workflows, make it a compelling choice for collaborative AI-driven workspaces.<br><br>2. Confluence (www.atlassian.com/software/confluence):<br>   - Confluence is a comprehensive collaboration and knowledge management tool, particularly well-suited for enterprise-level teams and organizations.<br>   - It provides a structured and intuitive way to create, share, and manage knowledge, with features like page versioning, content templates, and advanced search capabilities.<br>   - Confluence&#39;s integration with other Atlassian products, such as Jira, makes it a powerful choice for teams that require a tightly integrated suite of collaboration tools.<br><br>3. Microsoft 365 (www.microsoft.com/en-us/microsoft-365):<br>   - Microsoft 365 is a suite of productivity and collaboration tools, including SharePoint, OneDrive, and Microsoft Teams, which can be leveraged for knowledge management.<br>   - The platform offers a wide range of features, such as document management, team collaboration, and AI-powered content creation and analysis.<br>   - Microsoft 365&#39;s extensive integration with other Microsoft products and services, as well as its enterprise-level security and compliance features, make it a robust choice for collaborative AI workspaces.<br><br>4. Google Workspace (workspace.google.com):<br>   - Google Workspace (formerly G Suite) is a cloud-based suite of productivity and collaboration tools, including Google Drive, Google Docs, and Google Sheets.<br>   - It provides a user-friendly and intuitive interface for creating, sharing, and managing knowledge, with features like real-time collaboration, version control, and AI-powered document suggestions.<br>   - Google Workspace&#39;s seamless integration with other Google services, such as Google Search and Google Assistant, can enhance the knowledge management capabilities of a collaborative AI workspace.<br><br>5. Coda (www.coda.io):<br>   - Coda is a unique and highly flexible document-based workspace that combines the features of a document, spreadsheet, and database into a single platform.<br>   - It offers powerful knowledge management capabilities, including the ability to create and structure content, build custom apps and workflows, and integrate with various third-party tools.<br>   - Coda&#39;s AI-powered features, such as the ability to generate content and automate tasks, make it a compelling choice for collaborative AI-driven workspaces.<br><br>These recommendations cover a range of collaborative AI workspaces with robust knowledge management features, each with its own strengths and unique capabilities. The choice will depend on your specific requirements, team size, and integration needs."
+                    data-question="Collaborative AI workspace with knowledge management features"
+                    data-llm="claude"
+                    data-brand="Workstation"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Okay, here are my top 3 recommendations for collaborative AI workspaces that integrate knowledge management features, ranked in order of preference, based on versatility, power, and ease of use:<br><br>**1. Notion AI**<br><br>*   **Explanation:** Notion has evolved into a robust, all-in-one workspace, and its AI integration, Notion AI, takes it to the next level. It&#39;s not just about generating text; it&#39;s about enhancing the entire workflow within Notion.<br>    *   **Why it&#39;s great for collaboration & Knowledge Management:** Notion&#39;s core strength lies in its database functionality, making it perfect for organizing and managing knowledge. You can create interconnected databases for documentation, projects, meeting notes, and more. Notion AI can then assist with:<br>        *   **Summarization:** Quickly condense lengthy documents and meeting transcripts.<br>        *   **Content Generation:**  Draft blog posts, outlines, emails, and other content based on the knowledge stored in your databases.<br>        *   **Translation:** Translate content between languages, ideal for international teams.<br>        *   **Extraction:** Extract key information from documents and automatically populate database fields.<br>        *   **Q&A:** Ask questions about your knowledge base and get answers powered by AI.<br>    *   **Collaboration Features:** Real-time collaboration, commenting, version history, and granular permissions make it easy for teams to work together.<br>    *   **Why it&#39;s the top pick:**  It&#39;s highly customizable, user-friendly, and integrates seamlessly with existing Notion workflows. It&#39;s a strong solution for teams looking to centralize their knowledge and leverage AI to improve productivity.<br>    *   **Downsides:** Can be overwhelming at first due to its flexibility. Requires some initial setup to structure your knowledge base effectively.  Notion AI is a paid add-on to the core Notion subscription.<br><br>**2. Coda AI**<br><br>*   **Explanation:** Coda is a document-centric workspace that combines the flexibility of documents with the power of databases. Coda AI is deeply integrated into this framework.<br>    *   **Why it&#39;s great for collaboration & Knowledge Management:**  Coda allows you to build custom &quot;docs&quot; that function like mini-applications. This makes it ideal for creating structured knowledge bases, project trackers, and other collaborative tools. Coda AI features:<br>        *   **AI Assistant:** Provides a chat-based interface for interacting with your Coda docs and leveraging AI to answer questions, generate content, and automate tasks.<br>        *   **AI Tables:**  Automatically analyze and enrich data in your tables, such as extracting key information, categorizing items, and generating insights.<br>        *   **AI Formulas:** Use AI-powered formulas to perform complex calculations and manipulate data.<br>    *   **Collaboration Features:** Real-time collaboration, commenting, version history, and role-based permissions ensure smooth teamwork.<br>    *   **Why it&#39;s a strong contender:** Coda&#39;s approach to building custom &quot;docs&quot; is very powerful for creating tailored knowledge management solutions. The AI integration is well-integrated.<br>    *   **Downsides:**  Can have a steeper learning curve than Notion. Pricing can be complex depending on usage.<br><br>**3. Microsoft Copilot (with Microsoft 365)**<br><br>*   **Explanation:** Microsoft Copilot is Microsoft&#39;s AI assistant, deeply integrated across the Microsoft 365 suite (Word, Excel, PowerPoint, Teams, etc.).<br>    *   **Why it&#39;s great for collaboration & Knowledge Management:** If your organization is already heavily invested in Microsoft 365, Copilot offers a compelling way to enhance collaboration and knowledge management.<br>        *   **Contextual Assistance:** Copilot understands the context of your work within each Microsoft 365 application.  For example, in Word, it can help you write, edit, and summarize documents. In Teams, it can summarize meetings and provide action items.<br>        *   **Knowledge Retrieval:**  Copilot can access and retrieve information from across your Microsoft 365 environment, including emails, documents, and presentations.<br>        *   **Content Generation:**  Create presentations from documents, generate email drafts, and more.<br>    *   **Collaboration Features:**  Leverages the robust collaboration features of Microsoft 365, such as real-time co-authoring, commenting, and Teams integration.<br>    *   **Why it&#39;s appealing:** Seamless integration with existing Microsoft workflows, strong security and compliance features.<br>    *   **Downsides:** Requires a Microsoft 365 subscription and a Copilot license (which can be expensive). Primarily focused on enhancing productivity within the Microsoft ecosystem, rather than being a standalone knowledge management platform.  Less flexible in terms of creating custom knowledge bases compared to Notion and"
+                    data-question="Collaborative AI workspace with knowledge management features"
+                    data-llm="gemini"
+                    data-brand="Workstation"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q5</span>
+                    <span class="question-text">AI platform to measure model performance and data lineage</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top recommendations for AI platforms that measure model performance and provide data lineage:<br><br>1. **Weights & Biases (WandB)**  <br>   Weights & Biases is a popular platform for machine learning experiment tracking, model performance visualization, and collaboration. It allows users to log metrics, visualize model performance in real-time, and track datasets, hyperparameters, and model versions. Its data lineage capabilities help in understanding the relationship between datasets and model performance, making it easier to trace back to the origin of results.<br><br>2. **MLflow**  <br>   MLflow is an open-source platform that provides tools for managing the machine learning lifecycle, including experimentation, reproducibility, and deployment. It offers model tracking, allowing you to log performance metrics, parameters, and artifacts related to model training. MLflow’s integration with various data sources ensures good data lineage tracking, making it easier to trace back the impact of specific datasets on model outcomes.<br><br>3. **Seldon**  <br>   Seldon is an open-source platform focused on deploying machine learning models. It provides robust tools for monitoring model performance in production environments, including metrics visualization and drift detection. Seldon’s data lineage capabilities help users understand how data changes affect model predictions, enabling better decision-making and compliance with data governance standards.<br><br>4. **DataRobot**  <br>   DataRobot is an enterprise AI platform that automates many aspects of the machine learning lifecycle, including model building, evaluation, and deployment. It provides detailed insights into model performance and incorporates data lineage features that allow users to trace back how data transformations and preprocessing steps affect model results. This transparency is crucial for organizations aiming for compliance and auditability.<br><br>5. **Neptune.ai**  <br>   Neptune.ai is a metadata store for MLOps that helps manage experiments and track model performance. It allows users to log and visualize metrics, compare different runs, and manage datasets used in experiments. While it focuses primarily on experiment tracking, it also provides features that assist with data lineage, helping teams understand the flow of data through their models.<br><br>These platforms vary in their specific strengths, so the best choice may depend on your organization&#39;s particular needs and existing tech stack."
+                    data-question="AI platform to measure model performance and data lineage"
+                    data-llm="gpt4"
+                    data-brand="Workstation"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="When it comes to AI platforms that can measure model performance and provide data lineage, here are my top 5 recommendations, listed in order of preference:<br><br>1. **MLflow**: MLflow is an open-source platform for managing the end-to-end machine learning lifecycle, including experimentation, reproducibility, deployment, and a central model registry. It provides robust model performance tracking and data lineage capabilities, allowing you to track and compare the performance of different model versions, as well as the data sources and transformations used to train them.<br><br>2. **Weights & Biases (W&B)**: Weights & Biases is a popular platform for tracking and visualizing machine learning experiments. It offers comprehensive model performance monitoring, including metrics, visualizations, and comparisons across different runs. W&B also provides data versioning and lineage features, making it easier to understand the provenance of your data and models.<br><br>3. **DVC (Data Version Control)**: DVC is an open-source tool for data and model versioning, enabling you to track data lineage and model performance over time. It integrates well with Git and supports various cloud storage solutions, making it a flexible choice for managing your machine learning pipeline.<br><br>4. **Datmo**: Datmo is an open-source platform that focuses on managing the entire machine learning lifecycle, including experiment tracking, model versioning, and deployment. It provides robust data lineage capabilities, allowing you to trace the provenance of your data and models.<br><br>5. **Kubeflow Pipelines**: Kubeflow Pipelines is a component of the Kubeflow ecosystem, a popular open-source platform for running machine learning workloads on Kubernetes. Kubeflow Pipelines offers a comprehensive solution for managing the end-to-end ML lifecycle, including experiment tracking, model management, and data lineage.<br><br>These platforms offer a range of features and capabilities, and the best choice for your organization will depend on your specific requirements, the size and complexity of your machine learning projects, and your existing infrastructure and tooling. It&#39;s worth evaluating each platform&#39;s features, ease of use, community support, and integration with your existing workflows to determine the most suitable option for your needs."
+                    data-question="AI platform to measure model performance and data lineage"
+                    data-llm="claude"
+                    data-brand="Workstation"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Okay, here are my top 3-5 recommendations for AI platforms that measure model performance and data lineage, ordered by preference, along with brief explanations:<br><br>**1.  Weights & Biases (W&B)**<br><br>*   **Preference:**  Highest<br>*   **Explanation:** W&B is a robust and widely popular platform for MLOps.  It excels at tracking experiments, visualizing model performance, and providing a solid foundation for data lineage.  It has a great UI.<br>    *   **Model Performance:** Comprehensive metrics logging, customizable dashboards, hyperparameter optimization tracking, experiment comparison, and model versioning.  You can track metrics across training runs and deployments.<br>    *   **Data Lineage:**  W&B Artifacts allow you to track datasets, models, and other components as they move through your pipeline.  You can see which data was used to train which model, and trace the dependencies between different versions.  This is crucial for reproducibility and debugging.<br>    *   **Key Benefits:**  Strong community support, excellent integrations with popular ML frameworks (TensorFlow, PyTorch, scikit-learn), active development, flexible and scalable.<br>    *   **Considerations:** Can be slightly complex to set up initially, pricing can be a factor for large teams or high usage.<br><br>**2.  Arize AI**<br><br>*   **Preference:** High<br>*   **Explanation:** Arize AI is specifically built for model performance monitoring and observability in production. It shines at identifying and diagnosing issues in real-time.<br>    *   **Model Performance:** Focuses heavily on production monitoring.  Detects performance degradation, data drift, concept drift, and bias.  Provides explainability tools to understand why models are making certain predictions.<br>    *   **Data Lineage:** Provides visibility into the data flowing into your models and how it impacts performance. Helps trace issues back to their root cause by connecting data quality issues to model outcomes.<br>    *   **Key Benefits:** Excellent for production environments, strong focus on drift detection and explainability, proactive alerting.<br>    *   **Considerations:**  More specialized than W&B; less emphasis on experiment tracking and hyperparameter optimization.  Pricing can be a significant factor, especially for high-volume deployments.<br><br>**3.  MLflow**<br><br>*   **Preference:** Medium<br>*   **Explanation:** MLflow is an open-source platform for managing the ML lifecycle.  It&#39;s a good option if you prefer an open-source solution and want more control over your infrastructure.<br>    *   **Model Performance:**  Experiment tracking, metric logging, model versioning, and deployment management.  MLflow Tracking is particularly useful for recording parameters, metrics, and artifacts during training.<br>    *   **Data Lineage:** MLflow can track the source code, data, and parameters used to create a model.  MLflow Artifacts can be used to store and version datasets, but the lineage capabilities are not as comprehensive as W&B or Arize.<br>    *   **Key Benefits:** Open-source, flexible, integrates well with various ML frameworks, good for smaller teams or projects.<br>    *   **Considerations:** Requires more self-management (you need to host and maintain the infrastructure), data lineage features are not as mature as commercial offerings.<br><br>**4. Dataiku**<br><br>*   **Preference:** Medium<br>*   **Explanation:** A more end-to-end platform that encompasses the entire data science pipeline, from data preparation to model deployment and monitoring.<br>    *   **Model Performance:** Tracks model performance metrics in production, allows for A/B testing and champion/challenger deployments, and provides visual dashboards for monitoring.<br>    *   **Data Lineage:** Has strong data lineage capabilities, visually mapping the flow of data from source to output, making it easy to trace the origins of data and identify potential issues.<br>    *   **Key Benefits:** Comprehensive platform, good for collaboration, strong data governance features, visual interface.<br>    *   **Considerations:** Can be complex to learn and set up, more expensive than some alternatives, and may be overkill if you only need model monitoring and data lineage.<br><br>**Important Considerations When Choosing:**<br><br>*   **Your Team&#39;s Expertise:**  Do you have a dedicated MLOps team or are your data scientists managing everything?  Self-managed open-source solutions require more expertise.<br>*   **Your Budget:** Commercial platforms come with varying pricing models.  Consider your usage and the features you need.<br>*   **Your Infrastructure:**  Are you running on-premise, in the cloud (AWS, Azure, GCP), or a hybrid environment?  Choose a platform that integrates well with your existing infrastructure.<br>*   **Your Specific Needs:**  Do you need deep explainability, proactive"
+                    data-question="AI platform to measure model performance and data lineage"
+                    data-llm="gemini"
+                    data-brand="Workstation"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+                </tbody>
+            </table>
+            <p class="breakdown-hint">Click any cell to see the full AI response</p>
+        </div>
+
+        <!-- Response modal -->
+        <div class="response-modal" id="responseModal">
+            <div class="modal-content" onclick="event.stopPropagation()">
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+                <div class="modal-header">
+                    <span class="modal-llm" id="modalLlm"></span>
+                    <span class="modal-status" id="modalStatus"></span>
+                </div>
+                <div class="modal-question" id="modalQuestion"></div>
+                <div class="modal-response" id="modalResponse"></div>
+            </div>
+        </div>
+    
+        </div>
+
+        <!-- Section 3: Reddit Opportunities -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <h2 class="section-title">Reddit Opportunities</h2>
+            </div>
+
+            <div class="subsection-title">Buy Intent Conversations</div>
+            <p class="subsection-desc">People actively looking for recommendations in your category</p>
+            <div class="reddit-posts">
+                
+            <a href="https://www.reddit.com/r/AI_Agents/comments/1r17hbx/from_prototype_to_production_how_to_build_ai/" target="_blank" class="reddit-post">
+                <div class="post-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">How to Build AI Agents That Actually Think : r/AI_Agents</div>
+                    <div class="post-meta">
+                        r/AI_Agents &bull; 294K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            <a href="https://www.reddit.com/r/GithubCopilot/comments/1r0rh1a/confused_on_when_to_use_the_ghcp_sdk_or_azure_ai/" target="_blank" class="reddit-post">
+                <div class="post-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">Confused on when to use the GHCP SDK or Azure AI ...</div>
+                    <div class="post-meta">
+                        r/GithubCopilot &bull; 50K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            <a href="https://www.reddit.com/r/software/comments/1r3nyf1/11_demanding_companies_to_hire_ai_developers/" target="_blank" class="reddit-post">
+                <div class="post-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">11 Demanding Companies to Hire AI Developers : r/software</div>
+                    <div class="post-meta">
+                        r/software &bull; 337K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            <a href="https://www.reddit.com/r/AI_Agents/comments/1r1yfkr/best_agentic_framework_for_production/" target="_blank" class="reddit-post">
+                <div class="post-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">Best Agentic Framework for Production : r/AI_Agents</div>
+                    <div class="post-meta">
+                        r/AI_Agents &bull; 294K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            </div>
+
+            <div class="subsection-title">Pain Point Conversations</div>
+            <p class="subsection-desc">People discussing problems your product solves</p>
+            <div class="reddit-posts">
+                
+            <a href="https://www.reddit.com/r/ArtificialInteligence/comments/1r5g888/i_saw_first_hand_why_salesforce_and_other/" target="_blank" class="reddit-post">
+                <div class="post-icon pain">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">I saw first hand why Salesforce and other enterprise IT ...</div>
+                    <div class="post-meta">
+                        r/ArtificialInteligence &bull; 1.7M members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            <a href="https://www.reddit.com/r/Entrepreneurs/comments/1r5zjir/how_do_you_vet_an_enterprise_ai_consulting_firm/" target="_blank" class="reddit-post">
+                <div class="post-icon pain">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">How do you vet an enterprise AI consulting firm before ...</div>
+                    <div class="post-meta">
+                        r/Entrepreneurs &bull; 114K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            </div>
+        </div>
+
+        <!-- CTA Section -->
+        <div class="section cta-section">
+            <h2>Ready to improve your <em>AI visibility?</em></h2>
+            <p>We help brands get mentioned more in AI answers through strategic content placement.</p>
+            <a href="https://adva-solutions.com/AIVisibility" class="cta-button">Learn More</a>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p>Generated by <a href="https://adva-solutions.com">Adva</a> &bull; AI Visibility Health Check</p>
+    </footer>
+
+    <script>
+        // Tab switching functionality
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const tabId = btn.dataset.tab;
+
+                // Update buttons
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                // Update panels
+                document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+                document.getElementById('panel-' + tabId).classList.add('active');
+            });
+        });
+
+        // Show toast notification
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2500);
+        }
+
+        // Show response modal
+        function showResponse(cell) {
+            try {
+                let response = cell.dataset.response || 'No response available';
+                const question = cell.dataset.question || '';
+                const llm = cell.dataset.llm || '';
+                const brand = cell.dataset.brand || '';
+                const isMentioned = cell.classList.contains('mentioned');
+                const brandPosition = cell.dataset.position ? parseInt(cell.dataset.position) : null;
+
+                const llmNames = {'gpt4': 'GPT', 'claude': 'Claude', 'gemini': 'Gemini'};
+
+                // If brand is mentioned beyond position 5, add a banner at the top
+                let positionBanner = '';
+                if (isMentioned && brandPosition && brandPosition > 5) {
+                    positionBanner = '<div style="background: #fef3c7; padding: 0.75rem 1rem; border-radius: 6px; margin-bottom: 1rem; border-left: 4px solid #f59e0b;">' +
+                        '<strong>📍 Your brand appeared at position #' + brandPosition + '</strong> - scroll down to see the highlighted mention' +
+                        '</div>';
+                }
+
+                // Highlight brand name in response (case insensitive)
+                if (brand && isMentioned) {
+                    try {
+                        const brandRegex = new RegExp('(' + brand.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&') + ')', 'gi');
+                        response = response.replace(brandRegex, '<span class="brand-highlight">$1</span>');
+                    } catch(e) { /* ignore highlighting errors */ }
+                }
+
+                document.getElementById('modalLlm').textContent = llmNames[llm] || llm;
+                document.getElementById('modalQuestion').textContent = '"' + question + '"';
+                document.getElementById('modalResponse').innerHTML = positionBanner + response;
+
+                const statusEl = document.getElementById('modalStatus');
+                if (isMentioned) {
+                    statusEl.textContent = 'Mentioned';
+                    statusEl.className = 'modal-status mentioned';
+                } else {
+                    statusEl.textContent = 'Not mentioned';
+                    statusEl.className = 'modal-status not-mentioned';
+                }
+
+                document.getElementById('responseModal').classList.add('active');
+                document.body.style.overflow = 'hidden';
+
+                // Scroll to first highlight if mentioned
+                if (isMentioned) {
+                    setTimeout(function() {
+                        const highlight = document.querySelector('.modal-response .brand-highlight');
+                        if (highlight) {
+                            highlight.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        }
+                    }, 100);
+                }
+            } catch (e) {
+                console.error('Error showing response:', e);
+                alert('Error loading response. Please try again.');
+            }
+        }
+
+        // Close modal
+        function closeModal() {
+            document.getElementById('responseModal').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // Close when clicking backdrop (outside modal content)
+        document.getElementById('responseModal').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+
+        // Close modal on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeModal();
+        });
+    </script>
+</body>
+</html>
