@@ -1,0 +1,1159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Las Ruinas — February 2026 Report</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
+<style>
+  :root {
+    --purple-deep: #2d1b69;
+    --purple-mid: #5b3fa0;
+    --purple-light: #7c5cbf;
+    --purple-soft: #a78bfa;
+    --purple-faint: #ede9fe;
+    --purple-wash: #f5f3ff;
+    --text-primary: #1e1b4b;
+    --text-body: #374151;
+    --text-muted: #6b7280;
+    --border: #e5e7eb;
+    --bg-card: #fafafa;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: #ffffff;
+    min-height: 100vh;
+    color: var(--text-body);
+    line-height: 1.6;
+  }
+
+  /* Header bar */
+  .header {
+    padding: 1.5rem 2rem;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--purple-wash);
+  }
+  .logo {
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 1.25rem;
+    color: var(--purple-deep);
+    text-decoration: none;
+  }
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .header-date {
+    color: #9ca3af;
+    font-size: 0.875rem;
+  }
+  .copy-link-button {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: #f3f4f6;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    color: #374151;
+    font-size: 0.75rem;
+    font-family: 'Inter', sans-serif;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .copy-link-button:hover { background: #e5e7eb; }
+  .copy-link-button svg { width: 14px; height: 14px; }
+
+  /* Toast */
+  .toast {
+    position: fixed;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background: #1f2937;
+    color: #ffffff;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    opacity: 0;
+    transition: all 0.3s;
+    z-index: 1000;
+  }
+  .toast.show {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+  }
+
+  /* Container */
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem;
+  }
+
+  /* Page title with concentric ripple rings */
+  .page-title-wrapper {
+    position: relative;
+    overflow: hidden;
+    background: #ffffff;
+    padding: 5rem 2rem 4rem;
+    margin-bottom: 2rem;
+  }
+
+  /* Concentric circle rings container — positioned center-right */
+  .ripple-rings {
+    position: absolute;
+    top: 50%;
+    right: 15%;
+    transform: translateY(-50%);
+    width: 0;
+    height: 0;
+    pointer-events: none;
+  }
+  .ripple-ring {
+    position: absolute;
+    border-radius: 50%;
+    border: 1px solid rgba(120, 100, 160, 0.12);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  .ripple-ring:nth-child(1)  { width: 60px;  height: 60px;  }
+  .ripple-ring:nth-child(2)  { width: 120px; height: 120px; }
+  .ripple-ring:nth-child(3)  { width: 180px; height: 180px; }
+  .ripple-ring:nth-child(4)  { width: 240px; height: 240px; }
+  .ripple-ring:nth-child(5)  { width: 300px; height: 300px; }
+  .ripple-ring:nth-child(6)  { width: 360px; height: 360px; }
+  .ripple-ring:nth-child(7)  { width: 420px; height: 420px; }
+  .ripple-ring:nth-child(8)  { width: 480px; height: 480px; }
+  .ripple-ring:nth-child(9)  { width: 540px; height: 540px; }
+  .ripple-ring:nth-child(10) { width: 600px; height: 600px; }
+
+  /* Soft blue-purple glow at center of rings */
+  .ripple-glow {
+    position: absolute;
+    top: 50%;
+    right: 15%;
+    transform: translate(50%, -50%);
+    width: 220px;
+    height: 220px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(139, 110, 230, 0.25) 0%, rgba(120, 130, 255, 0.12) 40%, transparent 70%);
+    pointer-events: none;
+    filter: blur(30px);
+  }
+
+  .page-title {
+    text-align: left;
+    position: relative;
+    z-index: 1;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 2rem;
+  }
+  .page-title .label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+  }
+  .page-title .label::before {
+    content: '';
+    width: 30px;
+    height: 1px;
+    background: var(--purple-soft);
+  }
+  .page-title h1 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 2.5rem;
+    font-weight: 500;
+    color: var(--purple-deep);
+    margin-bottom: 0.5rem;
+  }
+  .page-title .brand-name {
+    color: var(--text-body);
+    font-size: 1.125rem;
+  }
+  .page-title .period {
+    color: var(--text-muted);
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+  }
+
+  /* Sections — bordered cards */
+  .section {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 2rem;
+    margin-bottom: 1.5rem;
+  }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #f3f4f6;
+  }
+  .section-icon {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, var(--purple-deep), var(--purple-mid));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .section-icon svg {
+    width: 20px;
+    height: 20px;
+    color: #ffffff;
+  }
+  .section-title {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 1.375rem;
+    color: var(--text-primary);
+  }
+
+  /* Metric Cards */
+  .metrics {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 12px;
+    margin-bottom: 1.5rem;
+  }
+  .metric-card {
+    text-align: center;
+    padding: 1.25rem 1rem;
+    background: #fafafa;
+    border-radius: 8px;
+    border: 1px solid #e5e7eb;
+  }
+  .metric-card .value {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 2rem;
+    font-weight: 600;
+    color: var(--purple-deep);
+    line-height: 1.2;
+  }
+  .metric-card .label {
+    font-size: 0.7rem;
+    color: #9ca3af;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-top: 4px;
+  }
+
+  /* Executive Summary */
+  .exec-list { list-style: none; padding: 0; }
+  .exec-list li {
+    padding: 0.875rem 1.25rem;
+    border-left: 3px solid var(--purple-mid);
+    background: var(--purple-wash);
+    margin-bottom: 0.5rem;
+    border-radius: 0 8px 8px 0;
+    font-size: 0.9rem;
+    color: #374151;
+  }
+
+  /* Sub-headings inside sections */
+  .sub-heading {
+    color: #1f2937;
+    font-size: 0.9rem;
+    font-weight: 500;
+    margin: 1.5rem 0 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  /* Tables */
+  .report-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+  }
+  .report-table th {
+    padding: 0.875rem 1rem;
+    text-align: left;
+    border-bottom: 1px solid #e5e7eb;
+    color: #9ca3af;
+    font-weight: 500;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .report-table td {
+    padding: 0.875rem 1rem;
+    border-bottom: 1px solid #f3f4f6;
+    color: #374151;
+    vertical-align: top;
+  }
+  .report-table tr:last-child td { border-bottom: none; }
+  .report-table a {
+    color: var(--purple-mid);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  .report-table a:hover { color: var(--purple-deep); }
+
+  /* Charts */
+  .charts-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 1.5rem;
+  }
+  .chart-box {
+    background: #fafafa;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 1.25rem;
+  }
+  .chart-box h4 {
+    font-size: 0.7rem;
+    color: #9ca3af;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 1rem;
+  }
+  .chart-box canvas { max-height: 220px; }
+
+  /* Show more button */
+  .show-more-btn {
+    display: block;
+    margin: 1rem auto 0;
+    padding: 0.625rem 1.5rem;
+    background: var(--purple-wash);
+    border: 1px solid var(--purple-soft);
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    font-family: 'Inter', sans-serif;
+    color: var(--purple-mid);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .show-more-btn:hover {
+    background: var(--purple-faint);
+    border-color: var(--purple-mid);
+  }
+
+  /* Item lists */
+  .item-list { list-style: none; padding: 0; }
+  .item-list li {
+    padding: 0.625rem 0;
+    border-bottom: 1px solid #f3f4f6;
+    font-size: 0.875rem;
+    color: #374151;
+  }
+  .item-list li:last-child { border-bottom: none; }
+
+  /* Blog post cards */
+  .blog-posts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 12px;
+    margin-top: 0.75rem;
+  }
+  .blog-post-card {
+    background: #fafafa;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 1.125rem 1.25rem;
+  }
+  .blog-post-title {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #1f2937;
+    margin-bottom: 0.5rem;
+  }
+  .blog-post-link {
+    font-size: 0.75rem;
+    color: #6b7280;
+    text-decoration: none;
+  }
+  .blog-post-link:hover { text-decoration: underline; }
+
+  /* AI Mention Cards */
+  .mention-card {
+    background: #fafafa;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 1.25rem;
+  }
+  .mention-card .platform {
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: #6b7280;
+    margin-bottom: 0.5rem;
+  }
+  .mention-card .count {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 2.5rem;
+    font-weight: 600;
+    color: var(--purple-deep);
+    line-height: 1.1;
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+  }
+  .mention-card .change {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 500;
+  }
+  .change-positive { color: #16a34a; }
+  .change-negative { color: #dc2626; }
+  .mention-card .subtitle {
+    font-size: 0.75rem;
+    color: #9ca3af;
+    margin-top: 4px;
+  }
+
+  .geo-detail-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-top: 0.75rem;
+    margin-bottom: 1.5rem;
+  }
+  .mention-cards-col {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .geo-chart-col {
+    display: flex;
+    flex-direction: column;
+  }
+  .geo-chart-col canvas { flex: 1; max-height: 240px; }
+
+  /* Sentiment */
+  .sentiment-badge {
+    display: inline-block;
+    padding: 0.375rem 1rem;
+    border-radius: 50px;
+    font-size: 0.8rem;
+    font-weight: 500;
+  }
+  .sentiment-positive, .sentiment-mostly-positive { background: #dcfce7; color: #166534; }
+  .sentiment-neutral { background: #f3f4f6; color: #6b7280; }
+  .sentiment-mixed { background: #fef3c7; color: #92400e; }
+  .sentiment-negative { background: #fee2e2; color: #dc2626; }
+  .sentiment-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 0.75rem;
+  }
+  .sentiment-detail { font-size: 0.8rem; color: #9ca3af; }
+  .sentiment-notes {
+    margin-top: 0.75rem;
+    font-size: 0.875rem;
+    color: #374151;
+    padding: 1rem 1.25rem;
+    background: #fafafa;
+    border-radius: 8px;
+    border-left: 3px solid var(--purple-mid);
+  }
+
+  /* Query chips */
+  .query-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+  }
+  .query-chip {
+    background: #fafafa;
+    border: 1px solid #e5e7eb;
+    padding: 0.5rem 1rem;
+    border-radius: 50px;
+    font-size: 0.8rem;
+    color: #374151;
+    font-style: italic;
+  }
+
+  /* Notes list */
+  .notes-list {
+    list-style: none;
+    padding: 0;
+    margin-top: 0.75rem;
+  }
+  .notes-list li {
+    padding: 0.625rem 1.25rem;
+    border-left: 3px solid var(--purple-mid);
+    background: #fafafa;
+    margin-bottom: 0.5rem;
+    border-radius: 0 8px 8px 0;
+    font-size: 0.875rem;
+    color: #374151;
+  }
+
+  /* Divider */
+  .divider {
+    height: 1px;
+    background: #e5e7eb;
+    margin: 2rem 0;
+  }
+
+  /* Footer */
+  .footer {
+    text-align: center;
+    color: #9ca3af;
+    font-size: 0.8rem;
+    padding: 2rem;
+    border-top: 1px solid #e5e7eb;
+    margin-top: 2rem;
+  }
+  .footer a {
+    color: var(--purple-mid);
+    text-decoration: none;
+  }
+  .footer a:hover { text-decoration: underline; }
+
+  /* Responsive */
+  @media (max-width: 640px) {
+    .container { padding: 1rem; }
+    .page-title h1 { font-size: 1.75rem; }
+    .page-title { padding: 0 1rem; }
+    .ripple-rings { right: 5%; }
+    .ripple-glow { right: 5%; }
+    .section { padding: 1.5rem; }
+    .metrics { grid-template-columns: 1fr 1fr; }
+    .charts-row { grid-template-columns: 1fr; }
+    .geo-detail-row { grid-template-columns: 1fr; }
+    .report-table { font-size: 0.8rem; }
+    .report-table th, .report-table td { padding: 0.5rem 0.375rem; }
+    .header { padding: 1rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Header Bar -->
+<header class="header">
+  <a href="https://advasolutions.com" class="logo">adva</a>
+  <div class="header-right">
+    <button class="copy-link-button" onclick="navigator.clipboard.writeText(window.location.href);showToast();" title="Copy shareable link">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+      </svg>
+      Copy Link
+    </button>
+    <span class="header-date">February 18, 2026 at 2:13 PM</span>
+  </div>
+</header>
+<div class="toast" id="toast">Link copied to clipboard!</div>
+
+<div class="container">
+
+  </div><!-- close container temporarily -->
+
+  <!-- Page Title with concentric ripple rings -->
+  <div class="page-title-wrapper">
+    <div class="ripple-glow"></div>
+    <div class="ripple-rings">
+      <div class="ripple-ring"></div>
+      <div class="ripple-ring"></div>
+      <div class="ripple-ring"></div>
+      <div class="ripple-ring"></div>
+      <div class="ripple-ring"></div>
+      <div class="ripple-ring"></div>
+      <div class="ripple-ring"></div>
+      <div class="ripple-ring"></div>
+      <div class="ripple-ring"></div>
+      <div class="ripple-ring"></div>
+    </div>
+    <div class="page-title">
+      <div class="label">Monthly Performance Report</div>
+      <h1>February 2026</h1>
+      <p class="brand-name">Las Ruinas</p>
+    </div>
+  </div>
+
+  <div class="container"><!-- reopen container -->
+
+  <!-- Executive Summary -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+        </svg>
+      </div>
+      <h2 class="section-title">Executive Summary</h2>
+    </div>
+    <ul class="exec-list">
+      <li>Published 43 Reddit comments across 10 subreddits.</li>
+      <li>Top content tag: Buy Intent (41 mentions).</li>
+      <li>Reddit posts received 880 estimated impressions and 22 upvotes.</li>
+      <li>SEO generated 872 clicks from organic search.</li>
+      <li>AI Visibility Score: 23%.</li>
+      <li>Mentioned in 169 AI responses across ChatGPT, Perplexity &amp; Gemini.</li>
+      <li>Overall AI sentiment: Positive.</li>
+    </ul>
+  </div>
+
+  <!-- Reddit Marketing -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z" />
+        </svg>
+      </div>
+      <h2 class="section-title">Reddit Marketing</h2>
+    </div>
+
+    <div class="metrics">
+      <div class="metric-card">
+        <div class="value">43</div>
+        <div class="label">Comments Posted</div>
+      </div>
+      <div class="metric-card">
+        <div class="value">10</div>
+        <div class="label">Subreddits</div>
+      </div>
+    </div>
+
+    <div class="sub-heading">Engagement & Reach</div>
+    <div class="metrics">
+      <div class="metric-card">
+        <div class="value">880</div>
+        <div class="label">Est. Impressions</div>
+      </div>
+      <div class="metric-card">
+        <div class="value">22</div>
+        <div class="label">Total Upvotes</div>
+      </div>
+      <div class="metric-card">
+        <div class="value">24</div>
+        <div class="label">Comments Verified</div>
+      </div>
+    </div>
+
+    <div class="sub-heading">Intent Breakdown</div>
+    <div class="metrics">
+      <div class="metric-card">
+        <div class="value">22</div>
+        <div class="label">Buy Intent</div>
+      </div>
+      <div class="metric-card">
+        <div class="value">2</div>
+        <div class="label">Pain Point</div>
+      </div>
+    </div>
+
+    <div class="charts-row">
+      <div class="chart-box">
+        <h4>Tag Breakdown</h4>
+        <canvas id="tagChart"></canvas>
+      </div>
+      <div class="chart-box">
+        <h4>Subreddit Distribution</h4>
+        <canvas id="subredditChart"></canvas>
+      </div>
+    </div>
+
+    <div class="sub-heading">Recent Comments</div>
+    <table class="report-table" id="redditTable">
+      <thead><tr><th>Date</th><th>Subreddit</th><th>Post Title</th><th>Tags</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>2026-02-11</td>
+          <td>PuertoRicoTravel</td>
+          <td><a href="https://www.reddit.com/r/PuertoRicoTravel/comments/1r1gc17/female_solo_traveller_here_looking_for/" target="_blank">Female Solo traveller here - looking for recommendations and travel buddies</a></td>
+          <td>Buy Intent, Pain Point</td>
+        </tr>
+        <tr>
+          <td>2026-02-11</td>
+          <td>PuertoRicoTravel</td>
+          <td><a href="https://www.reddit.com/r/PuertoRicoTravel/comments/1r1gf6k/solo_female_trip/" target="_blank">Solo female trip</a></td>
+          <td>Buy Intent, Pain Point</td>
+        </tr>
+        <tr>
+          <td>2026-02-11</td>
+          <td>Caribbean</td>
+          <td><a href="https://www.reddit.com/r/Caribbean/comments/1r1fwia/birthday_trip_location_advice_florida_keys_puerto/" target="_blank">Birthday trip location advice. Florida keys, Puerto Rico, or ??</a></td>
+          <td>Buy Intent, Pain Point</td>
+        </tr>
+        <tr>
+          <td>2026-02-11</td>
+          <td>PuertoRicoTravel</td>
+          <td><a href="https://www.reddit.com/r/PuertoRicoTravel/comments/1r1co0o/traveling_to_san_juan/" target="_blank">Traveling to San Juan</a></td>
+          <td>Buy Intent, Pain Point</td>
+        </tr>
+        <tr>
+          <td>2026-02-12</td>
+          <td>vegan</td>
+          <td><a href="https://www.reddit.com/r/vegan/comments/1r25nai/vegan_travel_in_puerto_rico_what_spots_am_i/" target="_blank">Vegan travel in Puerto Rico — what spots am I missing?</a></td>
+          <td>Buy Intent, Pain Point</td>
+        </tr>
+        <tr class="reddit-hidden-row" style="display:none;">
+          <td>2026-02-12</td>
+          <td>PuertoRicoTravel</td>
+          <td><a href="https://www.reddit.com/r/PuertoRicoTravel/comments/1r254lh/visiting_next_month_whats_the_best_way_i_can/" target="_blank">Visiting next month! What’s the best way I can support the local economy?</a></td>
+          <td>Buy Intent, Pain Point</td>
+        </tr>
+        <tr class="reddit-hidden-row" style="display:none;">
+          <td>2026-02-12</td>
+          <td>PuertoRicoTravel</td>
+          <td><a href="https://www.reddit.com/r/PuertoRicoTravel/comments/1r25bbt/condado_vanderbilt_vs_la_concha_vs_stellaris/" target="_blank">Condado Vanderbilt vs La Concha vs Stellaris?</a></td>
+          <td>Buy Intent</td>
+        </tr>
+        <tr class="reddit-hidden-row" style="display:none;">
+          <td>2026-02-14</td>
+          <td>PuertoRicoTravel</td>
+          <td><a href="https://www.reddit.com/r/PuertoRicoTravel/comments/1r460l1/first_ever_trip_to_puerto_rico/" target="_blank">First ever trip to Puerto Rico</a></td>
+          <td>Buy Intent, Pain Point</td>
+        </tr>
+        <tr class="reddit-hidden-row" style="display:none;">
+          <td>2026-02-14</td>
+          <td>PuertoRicoTravel</td>
+          <td><a href="https://www.reddit.com/r/PuertoRicoTravel/comments/1r3v1w4/bachelorette_pr/" target="_blank">Bachelorette PR</a></td>
+          <td>Buy Intent, Pain Point</td>
+        </tr>
+        <tr class="reddit-hidden-row" style="display:none;">
+          <td>2026-02-16</td>
+          <td>Cruise</td>
+          <td><a href="https://www.reddit.com/r/Cruise/comments/1r5d75w/cruise_options_leaving_from_san_juan/" target="_blank">Cruise options leaving from San Juan</a></td>
+          <td>Buy Intent, Pain Point</td>
+        </tr>
+        <tr class="reddit-hidden-row" style="display:none;">
+          <td>2026-02-16</td>
+          <td>blacktravel</td>
+          <td><a href="https://www.reddit.com/r/blacktravel/comments/1r5jf7d/how_is_puerto_rico/" target="_blank">How is Puerto Rico? 🇵🇷</a></td>
+          <td>Buy Intent, Pain Point</td>
+        </tr>
+        <tr class="reddit-hidden-row" style="display:none;">
+          <td>2026-02-16</td>
+          <td>SanJuan</td>
+          <td><a href="https://www.reddit.com/r/SanJuan/comments/1r5smdi/im_going_on_a_solo_trip_in_the_isla_verse_area/" target="_blank">I’m going on a solo trip in the Isla Verse area this month- solo ideas/ tips please.</a></td>
+          <td>Buy Intent, Pain Point</td>
+        </tr>
+        <tr class="reddit-hidden-row" style="display:none;">
+          <td>2026-02-17</td>
+          <td>Cruise</td>
+          <td><a href="https://www.reddit.com/r/Cruise/comments/1r5d75w/cruise_options_leaving_from_san_juan/" target="_blank">Cruise options leaving from San Juan</a></td>
+          <td>Buy Intent</td>
+        </tr>
+        <tr class="reddit-hidden-row" style="display:none;">
+          <td>2026-02-17</td>
+          <td>blacktravel</td>
+          <td><a href="https://www.reddit.com/r/blacktravel/comments/1r5jf7d/how_is_puerto_rico/" target="_blank">How is Puerto Rico? :flag-pr:</a></td>
+          <td>Buy Intent</td>
+        </tr>
+        <tr class="reddit-hidden-row" style="display:none;">
+          <td>2026-02-17</td>
+          <td>SanJuan</td>
+          <td><a href="https://www.reddit.com/r/SanJuan/comments/1r5smdi/im_going_on_a_solo_trip_in_the_isla_verse_area/" target="_blank">I’m going on a solo trip in the Isla Verse area this month- solo ideas/ tips please.</a></td>
+          <td>Buy Intent</td>
+        </tr>
+        <tr class="reddit-hidden-row" style="display:none;">
+          <td>2026-02-17</td>
+          <td>PuertoRicoTravel</td>
+          <td><a href="https://www.reddit.com/r/PuertoRicoTravel/comments/1r460l1/first_ever_trip_to_puerto_rico/" target="_blank">First ever trip to Puerto Rico</a></td>
+          <td>Buy Intent</td>
+        </tr>
+        <tr class="reddit-hidden-row" style="display:none;">
+          <td>2026-02-17</td>
+          <td>PuertoRicoTravel</td>
+          <td><a href="https://www.reddit.com/r/PuertoRicoTravel/comments/1r3v1w4/bachelorette_pr/" target="_blank">Bachelorette PR</a></td>
+          <td>Buy Intent</td>
+        </tr>
+        <tr class="reddit-hidden-row" style="display:none;">
+          <td>2026-02-17</td>
+          <td>vegan</td>
+          <td><a href="https://www.reddit.com/r/vegan/comments/1r25nai/vegan_travel_in_puerto_rico_what_spots_am_i/" target="_blank">Vegan travel in Puerto Rico — what spots am I missing?</a></td>
+          <td>Buy Intent</td>
+        </tr>
+        <tr class="reddit-hidden-row" style="display:none;">
+          <td>2026-02-17</td>
+          <td>PuertoRicoTravel</td>
+          <td><a href="https://www.reddit.com/r/PuertoRicoTravel/comments/1r254lh/visiting_next_month_whats_the_best_way_i_can/" target="_blank">Visiting next month! What’s the best way I can support the local economy?</a></td>
+          <td>Buy Intent</td>
+        </tr>
+        <tr class="reddit-hidden-row" style="display:none;">
+          <td>2026-02-17</td>
+          <td>PuertoRicoTravel</td>
+          <td><a href="https://www.reddit.com/r/PuertoRicoTravel/comments/1r25bbt/condado_vanderbilt_vs_la_concha_vs_stellaris/" target="_blank">Condado Vanderbilt vs La Concha vs Stellaris?</a></td>
+          <td>Buy Intent</td>
+        </tr>
+        <tr class="reddit-hidden-row" style="display:none;">
+          <td>2026-02-17</td>
+          <td>PuertoRicoTravel</td>
+          <td><a href="https://www.reddit.com/r/PuertoRicoTravel/comments/1r1gc17/female_solo_traveller_here_looking_for/" target="_blank">Female Solo traveller here - looking for recommendations and travel buddies</a></td>
+          <td>Buy Intent</td>
+        </tr>
+        <tr class="reddit-hidden-row" style="display:none;">
+          <td>2026-02-17</td>
+          <td>PuertoRicoTravel</td>
+          <td><a href="https://www.reddit.com/r/PuertoRicoTravel/comments/1r1gf6k/solo_female_trip/" target="_blank">Solo female trip</a></td>
+          <td>Buy Intent</td>
+        </tr>
+        <tr class="reddit-hidden-row" style="display:none;">
+          <td>2026-02-17</td>
+          <td>Caribbean</td>
+          <td><a href="https://www.reddit.com/r/Caribbean/comments/1r1fwia/birthday_trip_location_advice_florida_keys_puerto/" target="_blank">Birthday trip location advice. Florida keys, Puerto Rico, or ??</a></td>
+          <td>Buy Intent</td>
+        </tr>
+        <tr class="reddit-hidden-row" style="display:none;">
+          <td>2026-02-17</td>
+          <td>PuertoRicoTravel</td>
+          <td><a href="https://www.reddit.com/r/PuertoRicoTravel/comments/1r1co0o/traveling_to_san_juan/" target="_blank">Traveling to San Juan</a></td>
+          <td>Buy Intent</td>
+        </tr>
+        <tr class="reddit-hidden-row" style="display:none;">
+          <td>2026-02-17</td>
+          <td>PuertoRicoTravel</td>
+          <td><a href="https://www.reddit.com/r/PuertoRicoTravel/comments/1r098mz/solo_travel_advice/" target="_blank">Solo travel advice</a></td>
+          <td>Buy Intent</td>
+        </tr>
+        <tr class="reddit-hidden-row" style="display:none;">
+          <td>2026-02-17</td>
+          <td>PuertoRicoTravel</td>
+          <td><a href="https://www.reddit.com/r/PuertoRicoTravel/comments/1qzwan6/visiting_in_march/" target="_blank">Visiting in March! :black_heart:</a></td>
+          <td>Buy Intent</td>
+        </tr>
+        <tr class="reddit-hidden-row" style="display:none;">
+          <td>2026-02-17</td>
+          <td>PuertoRicoTravel</td>
+          <td><a href="https://www.reddit.com/r/PuertoRicoTravel/comments/1r0pjre/limited_mobility_trip_ideas/" target="_blank">Limited Mobility Trip Ideas</a></td>
+          <td>Pain Point</td>
+        </tr>
+        <tr class="reddit-hidden-row" style="display:none;">
+          <td>2026-02-17</td>
+          <td>gaytravel</td>
+          <td><a href="https://www.reddit.com/r/gaytravel/comments/1qzfagr/anyone_going_to_san_juan_bear_weekend/" target="_blank">Anyone Going to San Juan Bear weekend ?</a></td>
+          <td>Buy Intent</td>
+        </tr>
+        <tr class="reddit-hidden-row" style="display:none;">
+          <td>2026-02-17</td>
+          <td>PuertoRicoTravel</td>
+          <td><a href="https://www.reddit.com/r/PuertoRicoTravel/comments/1qzhwho/going_in_two_weekslate_to_planninghelp/" target="_blank">Going in two weeks/late to planning…help!</a></td>
+          <td>Buy Intent</td>
+        </tr>
+        <tr class="reddit-hidden-row" style="display:none;">
+          <td>2026-02-17</td>
+          <td>SanJuan</td>
+          <td><a href="https://www.reddit.com/r/SanJuan/comments/1qzh599/is_this_area_safe_for_tourist/" target="_blank">Is this area safe for tourist</a></td>
+          <td>Buy Intent</td>
+        </tr>
+        <tr class="reddit-hidden-row" style="display:none;">
+          <td>2026-02-17</td>
+          <td>PuertoRicoTravel</td>
+          <td><a href="https://www.reddit.com/r/PuertoRicoTravel/comments/1qzl586/good_travel_plan/" target="_blank">Good travel plan ?</a></td>
+          <td>Buy Intent</td>
+        </tr>
+        <tr class="reddit-hidden-row" style="display:none;">
+          <td>2026-02-17</td>
+          <td>PuertoRicoTravel</td>
+          <td><a href="https://www.reddit.com/r/PuertoRicoTravel/comments/1qygqik/bachelorette/" target="_blank">Bachelorette</a></td>
+          <td>Buy Intent</td>
+        </tr>
+        <tr class="reddit-hidden-row" style="display:none;">
+          <td>2026-02-17</td>
+          <td>PuertoRicoTravel</td>
+          <td><a href="https://www.reddit.com/r/PuertoRicoTravel/comments/1qybycv/first_time_visiting/" target="_blank">First Time Visiting</a></td>
+          <td>Buy Intent</td>
+        </tr>
+        <tr class="reddit-hidden-row" style="display:none;">
+          <td>2026-02-17</td>
+          <td>PuertoRicoTravel</td>
+          <td><a href="https://www.reddit.com/r/PuertoRicoTravel/comments/1qyq51r/vegan_friendly_restaurants/" target="_blank">Vegan Friendly Restaurants</a></td>
+          <td>Buy Intent</td>
+        </tr>
+        <tr class="reddit-hidden-row" style="display:none;">
+          <td>2026-02-17</td>
+          <td>chubbytravel</td>
+          <td><a href="https://www.reddit.com/r/chubbytravel/comments/1qyfjsx/san_juan_puerto_rico_recommendations/" target="_blank">San Juan, Puerto Rico recommendations</a></td>
+          <td>Buy Intent</td>
+        </tr>
+        <tr class="reddit-hidden-row" style="display:none;">
+          <td>2026-02-17</td>
+          <td>Spanish</td>
+          <td><a href="https://www.reddit.com/r/Spanish/comments/1qypfrw/spanish_speaking_country_to_visit_from_ny/" target="_blank">Spanish speaking country to visit from NY</a></td>
+          <td>Buy Intent</td>
+        </tr>
+        <tr class="reddit-hidden-row" style="display:none;">
+          <td>2026-02-17</td>
+          <td>PuertoRicoTravel</td>
+          <td><a href="https://www.reddit.com/r/PuertoRicoTravel/comments/1qyg9tv/first_time_advice/" target="_blank">First time (advice)</a></td>
+          <td>Buy Intent</td>
+        </tr>
+        <tr class="reddit-hidden-row" style="display:none;">
+          <td>2026-02-17</td>
+          <td>chubbytravel</td>
+          <td><a href="https://www.reddit.com/r/chubbytravel/comments/1qyv54z/june_anniversary_trip_with_infant_bermuda_puerto/" target="_blank">June Anniversary Trip with Infant (Bermuda, Puerto Rico?)</a></td>
+          <td>Buy Intent</td>
+        </tr>
+        <tr class="reddit-hidden-row" style="display:none;">
+          <td>2026-02-17</td>
+          <td>PuertoRicoTravel</td>
+          <td><a href="https://www.reddit.com/r/PuertoRicoTravel/comments/1qykq2z/restaurants_good_with_dietary_restrictions/" target="_blank">Restaurants good with dietary restrictions?</a></td>
+          <td>Pain Point</td>
+        </tr>
+        <tr class="reddit-hidden-row" style="display:none;">
+          <td>2026-02-17</td>
+          <td>PuertoRicoTravel</td>
+          <td><a href="https://www.reddit.com/r/PuertoRicoTravel/comments/1qxkr0m/tips_and_places_to_see/" target="_blank">Tips and places to see.</a></td>
+          <td>Buy Intent</td>
+        </tr>
+        <tr class="reddit-hidden-row" style="display:none;">
+          <td>2026-02-17</td>
+          <td>PuertoRicoTravel</td>
+          <td><a href="https://www.reddit.com/r/PuertoRicoTravel/comments/1qxxjdt/third_time_to_puerto_rico_but_this_time_solo_tips/" target="_blank">Third time to Puerto Rico, but this time, SOLO! Tips wanted for a successful mental reset.</a></td>
+          <td>Buy Intent</td>
+        </tr>
+        <tr class="reddit-hidden-row" style="display:none;">
+          <td>2026-02-18</td>
+          <td>chubbytravel</td>
+          <td><a href="https://www.reddit.com/r/chubbytravel/comments/1r761d6/solo_female_32_looking_for_a_childfree_nonfamily/" target="_blank">Solo Female 32 looking for a childfree / non-family friendly vacation</a></td>
+          <td>Buy Intent, Pain Point</td>
+        </tr>
+        <tr class="reddit-hidden-row" style="display:none;">
+          <td>2026-02-18</td>
+          <td>VirginVoyages</td>
+          <td><a href="https://www.reddit.com/r/VirginVoyages/comments/1r7fzk6/first_timers_southern_caribbean_cruise_21_feb/" target="_blank">First timers - Southern Caribbean Cruise 21 Feb</a></td>
+          <td>Buy Intent</td>
+        </tr>
+      </tbody>
+    </table>
+    <button class="show-more-btn" id="showMoreReddit" onclick="document.querySelectorAll('.reddit-hidden-row').forEach(r=>r.style.display='');this.style.display='none';">
+      Show all 43 comments
+    </button>
+  </div>
+
+  <!-- SEO Performance -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+        </svg>
+      </div>
+      <h2 class="section-title">SEO Performance</h2>
+    </div>
+
+    <div class="metrics">
+      <div class="metric-card">
+        <div class="value">872</div>
+        <div class="label">Clicks</div>
+      </div>
+      <div class="metric-card">
+        <div class="value">86.6K</div>
+        <div class="label">Impressions</div>
+      </div>
+      <div class="metric-card">
+        <div class="value">81%</div>
+        <div class="label">Site Health</div>
+      </div>
+      <div class="metric-card">
+        <div class="value">3</div>
+        <div class="label">Backlinks</div>
+      </div>
+    </div>
+
+
+    <div class="sub-heading" style="margin-top:1.5rem;">Content Published</div>
+    <div class="blog-posts-grid">
+      <div class="blog-post-card">
+        <div class="blog-post-title">Rejuvenate Your Senses At Puerto Ricos Premier Bathhouse</div>
+        <a href="https://www.lasruinas.com/rejuvenate-your-senses-at-puerto-ricos-premier-bathhouse" target="_blank" class="blog-post-link">View Article &rarr;</a>
+      </div>
+      <div class="blog-post-card">
+        <div class="blog-post-title">Luxury Wellness At Las Ruinas Your New Sanctuary In Puerto Rico</div>
+        <a href="https://www.lasruinas.com/luxury-wellness-at-las-ruinas-your-new-sanctuary-in-puerto-rico" target="_blank" class="blog-post-link">View Article &rarr;</a>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- GEO / AI Visibility -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+        </svg>
+      </div>
+      <h2 class="section-title">GEO / AI Visibility</h2>
+    </div>
+
+    <div class="metrics">
+      <div class="metric-card">
+        <div class="value">169</div>
+        <div class="label">Total AI Mentions</div>
+      </div>
+      <div class="metric-card">
+        <div class="value">30</div>
+        <div class="label">Prompts Tracked</div>
+      </div>
+      <div class="metric-card">
+        <div class="value">17</div>
+        <div class="label">AI-Driven Sessions</div>
+      </div>
+      <div class="metric-card">
+        <div class="value">23%</div>
+        <div class="label">Visibility Score</div>
+      </div>
+      <div class="metric-card">
+        <div class="value">2</div>
+        <div class="label">Reports Generated</div>
+      </div>
+    </div>
+
+    <div class="sub-heading">Mentions by Platform</div>
+    <div class="geo-detail-row">
+      <div class="mention-cards-col">
+        <div class="mention-card">
+          <div class="platform">ChatGPT</div>
+          <div class="count">
+            86
+            <span class="change change-positive">+25%</span>
+          </div>
+          <div class="subtitle">mentions</div>
+        </div>
+        <div class="mention-card">
+          <div class="platform">Perplexity</div>
+          <div class="count">
+            51
+            <span class="change change-positive">+50%</span>
+          </div>
+          <div class="subtitle">mentions</div>
+        </div>
+        <div class="mention-card">
+          <div class="platform">Gemini</div>
+          <div class="count">
+            32
+            <span class="change change-positive">+14%</span>
+          </div>
+          <div class="subtitle">mentions</div>
+        </div>
+      </div>
+      <div class="chart-box geo-chart-col">
+        <h4>Mentions Distribution</h4>
+        <canvas id="geoMentionChart"></canvas>
+      </div>
+    </div>
+
+    <div class="sub-heading">Sentiment Analysis</div>
+    <div class="sentiment-row">
+      <span class="sentiment-badge sentiment-positive">Positive</span>
+      <span class="sentiment-detail">Based on 30 tracked prompts</span>
+    </div>
+
+    <div class="sub-heading" style="margin-top:1.5rem;">Content Published</div>
+    <div class="blog-posts-grid">
+      <div class="blog-post-card">
+        <div class="blog-post-title">Rejuvenate In Paradise Choosing Your Ideal San Juan Spa Getaway</div>
+        <a href="https://www.lasruinas.com/blog/rejuvenate-in-paradise-choosing-your-ideal-san-juan-spa-getaway" target="_blank" class="blog-post-link">View article &rarr;</a>
+      </div>
+      <div class="blog-post-card">
+        <div class="blog-post-title">Find Your Bliss Thermal Bathing And Cold Plunge Pools In Puerto Rico</div>
+        <a href="https://www.lasruinas.com/blog/find-your-bliss-thermal-bathing-and-cold-plunge-pools-in-puerto-rico" target="_blank" class="blog-post-link">View article &rarr;</a>
+      </div>
+    </div>
+
+
+  </div>
+
+</div>
+
+<!-- Footer -->
+<div class="footer">
+  Prepared by <a href="https://advasolutions.com">adva</a> &middot; February 18, 2026 at 2:13 PM
+</div>
+
+<!-- Toast Script -->
+<script>
+function showToast() {
+  const t = document.getElementById('toast');
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2000);
+}
+</script>
+
+<!-- Charts -->
+<script>
+  const geoLabels = ["ChatGPT","Perplexity","Gemini"];
+  const geoValues = [86,51,32];
+  const geoColors = ['#2d1b69', '#5b3fa0', '#a78bfa'];
+
+  if (geoLabels.length > 0) {
+    new Chart(document.getElementById('geoMentionChart'), {
+      type: 'bar',
+      data: {
+        labels: geoLabels,
+        datasets: [{
+          data: geoValues,
+          backgroundColor: geoColors.slice(0, geoLabels.length),
+          borderRadius: 6
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          y: { beginAtZero: true, ticks: { font: { size: 11, family: 'Inter' } }, grid: { color: '#f3f4f6' } },
+          x: { ticks: { font: { size: 12, family: 'Inter', weight: '500' } }, grid: { display: false } }
+        }
+      }
+    });
+  }
+</script>
+
+<script>
+  const tagData = {"Buy Intent":41,"Pain Point":14};
+  const subredditData = {"PuertoRicoTravel":26,"Caribbean":2,"vegan":2,"Cruise":2,"blacktravel":2,"SanJuan":3,"gaytravel":1,"chubbytravel":3,"Spanish":1,"VirginVoyages":1};
+  const chartColors = ['#2d1b69','#5b3fa0','#7c5cbf','#a78bfa','#c4b5fd','#ddd6fe','#4c1d95','#6d28d9'];
+
+  if (Object.keys(tagData).length > 0) {
+    new Chart(document.getElementById('tagChart'), {
+      type: 'doughnut',
+      data: {
+        labels: Object.keys(tagData),
+        datasets: [{ data: Object.values(tagData), backgroundColor: chartColors.slice(0, Object.keys(tagData).length), borderWidth: 0 }]
+      },
+      options: { responsive: true, plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, padding: 8, font: { size: 11, family: 'Inter' } } } } }
+    });
+  }
+
+  if (Object.keys(subredditData).length > 0) {
+    new Chart(document.getElementById('subredditChart'), {
+      type: 'bar',
+      data: {
+        labels: Object.keys(subredditData),
+        datasets: [{ data: Object.values(subredditData), backgroundColor: '#5b3fa0', borderRadius: 6 }]
+      },
+      options: {
+        responsive: true,
+        plugins: { legend: { display: false } },
+        scales: { y: { beginAtZero: true, ticks: { stepSize: 1, font: { size: 11, family: 'Inter' } } }, x: { ticks: { font: { size: 11, family: 'Inter' } } } }
+      }
+    });
+  }
+</script>
+
+</body>
+</html>
