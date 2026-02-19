@@ -1,0 +1,1427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Visibility Report - Lavish Laser Medspa | Adva</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #ffffff;
+            min-height: 100vh;
+            color: #374151;
+            line-height: 1.6;
+        }
+
+        /* Header */
+        .header {
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            font-size: 1.25rem;
+            color: #1f2937;
+            text-decoration: none;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .header-date {
+            color: #9ca3af;
+            font-size: 0.875rem;
+        }
+
+        /* Copy link button */
+        .copy-link-button {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: #f3f4f6;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            color: #374151;
+            font-size: 0.75rem;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .copy-link-button:hover {
+            background: #e5e7eb;
+        }
+
+        .copy-link-button svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        .pdf-button {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: #1f2937;
+            border: none;
+            border-radius: 6px;
+            color: #ffffff;
+            font-size: 0.75rem;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .pdf-button:hover {
+            background: #374151;
+        }
+
+        .pdf-button svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        /* Toast notification */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: #1f2937;
+            color: #ffffff;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            opacity: 0;
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        /* Container */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Page title */
+        .page-title {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .page-title .label {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: #9ca3af;
+            font-size: 0.75rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+        }
+
+        .page-title .label::before,
+        .page-title .label::after {
+            content: '';
+            width: 30px;
+            height: 1px;
+            background: #d1d5db;
+        }
+
+        .page-title h1 {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 2.5rem;
+            font-weight: 400;
+            color: #1f2937;
+            margin-bottom: 0.5rem;
+        }
+
+        .page-title .brand {
+            color: #6b7280;
+            font-size: 1.125rem;
+        }
+
+        /* Sections */
+        .section {
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #f3f4f6;
+        }
+
+        .section-icon {
+            width: 40px;
+            height: 40px;
+            background: #1f2937;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .section-icon svg {
+            width: 20px;
+            height: 20px;
+            color: #ffffff;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 1.375rem;
+            color: #1f2937;
+        }
+
+        /* Score Section */
+        .score-section {
+            text-align: center;
+            padding: 3rem 2rem;
+        }
+
+        .score-circle {
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            background: #fafafa;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            border: 4px solid #ef4444;
+        }
+
+        .score-value {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 3rem;
+            font-weight: 500;
+            color: #ef4444;
+        }
+
+        .score-label {
+            font-size: 0.8rem;
+            color: #9ca3af;
+        }
+
+        .score-description {
+            color: #6b7280;
+            margin-bottom: 2rem;
+            font-size: 1rem;
+        }
+
+        .score-description strong {
+            color: #1f2937;
+        }
+
+        .llm-breakdown {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .llm-stat {
+            text-align: center;
+            padding: 1rem 1.5rem;
+            background: #fafafa;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+            min-width: 100px;
+        }
+
+        .llm-name {
+            display: block;
+            color: #9ca3af;
+            font-size: 0.8rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .llm-score {
+            font-size: 1.125rem;
+            font-weight: 600;
+        }
+
+        .llm-score.success {
+            color: #22c55e;
+        }
+
+        .llm-score.warning {
+            color: #ef4444;
+        }
+
+        /* Competitor Table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 0.875rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid #f3f4f6;
+        }
+
+        th {
+            color: #9ca3af;
+            font-weight: 500;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        td {
+            color: #374151;
+        }
+
+        .mention-count {
+            background: #fef3c7;
+            color: #92400e;
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        /* Tabs for LLM responses */
+        .example-tabs {
+            margin-top: 1.5rem;
+        }
+
+        .tabs-header {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+            padding-bottom: 0;
+        }
+
+        .tab-btn {
+            padding: 0.75rem 1.25rem;
+            background: transparent;
+            border: none;
+            color: #6b7280;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            margin-bottom: -1px;
+            transition: all 0.2s;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .tab-btn:hover {
+            color: #1f2937;
+        }
+
+        .tab-btn.active {
+            color: #1f2937;
+            border-bottom-color: #1f2937;
+        }
+
+        .tab-panel {
+            display: none;
+            background: #fafafa;
+            border-radius: 8px;
+            padding: 1.25rem;
+        }
+
+        .tab-panel.active {
+            display: block;
+        }
+
+        .example-question {
+            color: #1f2937;
+            font-weight: 500;
+            font-size: 0.95rem;
+            margin-bottom: 0.75rem;
+        }
+
+        /* Question breakdown table */
+        .question-breakdown {
+            margin-top: 1rem;
+        }
+
+        .breakdown-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        .breakdown-table th {
+            padding: 0.75rem;
+            text-align: center;
+            background: #f9fafb;
+            border-bottom: 2px solid #e5e7eb;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .breakdown-table th:first-child {
+            text-align: left;
+            width: 50%;
+        }
+
+        .breakdown-table td {
+            padding: 0.75rem;
+            border-bottom: 1px solid #f3f4f6;
+            vertical-align: middle;
+        }
+
+        .question-cell {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+        }
+
+        .question-num {
+            background: #e5e7eb;
+            color: #374151;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        .question-text {
+            color: #374151;
+            line-height: 1.4;
+        }
+
+        .llm-cell {
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-radius: 4px;
+        }
+
+        .llm-cell:hover {
+            background: #f3f4f6;
+        }
+
+        .llm-cell.mentioned {
+            color: #16a34a;
+        }
+
+        .llm-cell.mentioned .status-icon {
+            font-size: 1.25rem;
+        }
+
+        .llm-cell.not-mentioned {
+            color: #dc2626;
+        }
+
+        .llm-cell.not-mentioned .status-icon {
+            font-size: 1.25rem;
+        }
+
+        .breakdown-hint {
+            color: #9ca3af;
+            font-size: 0.8rem;
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+        /* Response modal */
+        .response-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+        }
+
+        .response-modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: #ffffff;
+            border-radius: 12px;
+            max-width: 800px;
+            width: 100%;
+            max-height: 90vh;
+            overflow: auto;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #9ca3af;
+            cursor: pointer;
+            padding: 0.25rem 0.5rem;
+        }
+
+        .modal-close:hover {
+            color: #374151;
+        }
+
+        .modal-header {
+            padding: 1.5rem 1.5rem 0;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            position: relative;
+        }
+
+        .modal-llm {
+            font-weight: 600;
+            color: #1f2937;
+            font-size: 1.1rem;
+        }
+
+        .modal-status {
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .modal-status.mentioned {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .modal-status.not-mentioned {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .modal-question {
+            padding: 1rem 1.5rem;
+            color: #6b7280;
+            font-size: 0.9rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .modal-response {
+            padding: 1.5rem;
+            overflow-y: auto;
+            flex: 1;
+            color: #374151;
+            font-size: 0.9rem;
+            line-height: 1.8;
+            min-height: 300px;
+            max-height: 60vh;
+            background: #fafafa;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .modal-response::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .modal-response::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        .modal-response::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 4px;
+        }
+
+        .modal-response::-webkit-scrollbar-thumb:hover {
+            background: #a1a1a1;
+        }
+
+        /* Brand highlight */
+        .brand-highlight {
+            background: linear-gradient(120deg, #fef08a 0%, #fde047 100%);
+            padding: 0.1rem 0.3rem;
+            border-radius: 3px;
+            font-weight: 600;
+        }
+
+        .example-content {
+            color: #6b7280;
+            font-size: 0.875rem;
+            line-height: 1.7;
+            max-height: 400px;
+            overflow-y: auto;
+            margin-bottom: 0.75rem;
+            padding: 1rem;
+            background: #f9fafb;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .example-status {
+            padding: 0.5rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            display: inline-block;
+        }
+
+        .example-status.mentioned {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .example-status.not-mentioned {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        /* Reddit Posts */
+        .reddit-posts {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .reddit-post {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: #fafafa;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: all 0.2s;
+            border: 1px solid transparent;
+        }
+
+        .reddit-post:hover {
+            background: #f3f4f6;
+            border-color: #e5e7eb;
+        }
+
+        .post-icon {
+            width: 40px;
+            height: 40px;
+            background: #1f2937;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .post-icon.pain {
+            background: #fef3c7;
+        }
+
+        .post-icon.pain svg {
+            color: #92400e;
+        }
+
+        .post-icon svg {
+            width: 20px;
+            height: 20px;
+            color: #ffffff;
+        }
+
+        .post-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .post-title {
+            color: #1f2937;
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .post-meta {
+            color: #9ca3af;
+            font-size: 0.8rem;
+        }
+
+        .post-arrow {
+            color: #9ca3af;
+            flex-shrink: 0;
+        }
+
+        .post-arrow svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .subsection-title {
+            color: #1f2937;
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin: 1.5rem 0 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .subsection-title:first-of-type {
+            margin-top: 0;
+        }
+
+        .subsection-desc {
+            color: #9ca3af;
+            font-size: 0.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .no-data {
+            color: #9ca3af;
+            font-style: italic;
+            text-align: center;
+            padding: 1rem;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            color: #9ca3af;
+            font-size: 0.8rem;
+            padding: 2rem;
+            border-top: 1px solid #e5e7eb;
+            margin-top: 2rem;
+        }
+
+        .footer a {
+            color: #1f2937;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* CTA */
+        .cta-section {
+            text-align: center;
+            padding: 3rem 2rem;
+            background: #fafafa;
+        }
+
+        .cta-section h2 {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 1.75rem;
+            color: #1f2937;
+            margin-bottom: 0.75rem;
+        }
+
+        .cta-section p {
+            color: #6b7280;
+            margin-bottom: 1.5rem;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background: #1f2937;
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .cta-button:hover {
+            background: #111827;
+            transform: translateY(-1px);
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .page-title h1 {
+                font-size: 1.75rem;
+            }
+
+            .section {
+                padding: 1.5rem;
+            }
+
+            .score-circle {
+                width: 130px;
+                height: 130px;
+            }
+
+            .score-value {
+                font-size: 2.25rem;
+            }
+
+            .llm-breakdown {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .tabs-header {
+                flex-wrap: wrap;
+            }
+
+            .tab-btn {
+                padding: 0.5rem 1rem;
+                font-size: 0.8rem;
+            }
+
+            .breakdown-table th,
+            .breakdown-table td {
+                padding: 0.5rem;
+                font-size: 0.8rem;
+            }
+
+            .question-cell {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .modal-content {
+                max-height: 90vh;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <a href="https://adva-solutions.com/AIVisibility" class="logo">adva</a>
+        <div class="header-right">
+            <!-- PDF button hidden for now - backend still available at /report/47efefc0/pdf
+            <a href="/report/47efefc0/pdf" class="pdf-button" title="Download as PDF">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                Download PDF
+            </a>
+            -->
+            <button class="copy-link-button" onclick="navigator.clipboard.writeText('https://adva-solutions.github.io/ai-visibility-report/report_lavish-laser-medspa_47efefc0.html'); showToast('Link copied!');" title="Copy shareable link">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                </svg>
+                Copy Link
+            </button>
+            <span class="header-date">February 19, 2026</span>
+        </div>
+    </header>
+    <div class="toast" id="toast">Link copied to clipboard!</div>
+
+    <div class="container">
+        <div class="page-title">
+            <div class="label">AI Visibility Report</div>
+            <h1>Your Brand's <em>AI Presence</em></h1>
+            <p class="brand">Analysis for Lavish Laser Medspa</p>
+        </div>
+
+        <!-- Section 1: AI Visibility Score -->
+        <div class="section score-section">
+            <div class="score-circle">
+                <span class="score-value">0%</span>
+                <span class="score-label">0/15 mentions</span>
+            </div>
+            <p class="score-description">
+                Your brand appeared in <strong>0</strong> out of <strong>15</strong> AI recommendations
+            </p>
+            <div class="llm-breakdown">
+                
+            <div class="llm-stat">
+                <span class="llm-name">GPT</span>
+                <span class="llm-score warning">0/5</span>
+            </div>
+        
+            <div class="llm-stat">
+                <span class="llm-name">Claude</span>
+                <span class="llm-score warning">0/5</span>
+            </div>
+        
+            <div class="llm-stat">
+                <span class="llm-name">Gemini</span>
+                <span class="llm-score warning">0/5</span>
+            </div>
+        
+            </div>
+        </div>
+
+        <!-- Section 2: AI Response Breakdown -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                    </svg>
+                </div>
+                <h2 class="section-title">Question-by-Question Breakdown</h2>
+            </div>
+            <p style="color: #6b7280; margin-bottom: 1rem;">We asked these 5 questions to each AI model. Click any cell to see the full response:</p>
+            
+        <div class="question-breakdown">
+            <table class="breakdown-table">
+                <thead>
+                    <tr>
+                        <th>Question Asked</th>
+                        <th>GPT</th>
+                        <th>Claude</th>
+                        <th>Gemini</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q1</span>
+                    <span class="question-text">best non-invasive facelift miami</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="If you&#39;re considering non-invasive facelift options in Miami, here are some top recommendations based on their popularity, effectiveness, and patient reviews:<br><br>1. **Ultherapy**  <br>   Ultherapy is a non-invasive ultrasound treatment that stimulates collagen production by delivering focused ultrasound energy to the deeper layers of the skin. It&#39;s particularly effective for tightening and lifting sagging skin on the face, neck, and décolletage. Many patients appreciate its natural-looking results and the fact that there is no downtime involved.<br><br>2. **Sofwave**  <br>   Sofwave uses Synchronous Ultrasound Parallel Beam Technology (SUPERB™) to promote collagen and elastin production. It targets fine lines and wrinkles while lifting and tightening the skin. This treatment is known for being quick, often taking less than an hour, and provides noticeable results without the need for recovery time.<br><br>3. **Radiofrequency Microneedling (e.g., Secret RF)**  <br>   This treatment combines microneedling with radiofrequency energy to stimulate collagen and improve skin texture and elasticity. It&#39;s effective for tightening loose skin and reducing wrinkles. The procedure is minimally invasive with little downtime, making it a popular choice for those seeking rejuvenation without surgery.<br><br>4. **IPL (Intense Pulsed Light) Therapy**  <br>   While primarily known for addressing pigmentation, redness, and sun damage, IPL can also enhance overall skin texture and tone, making it a great adjunct to a non-invasive facelift. It promotes collagen production and can help achieve a more youthful appearance. Sessions are quick and require minimal downtime.<br><br>5. **Thread Lifts**  <br>   While technically a minimally invasive procedure, thread lifts involve the insertion of dissolvable threads to lift and tighten the skin. This method provides immediate results and stimulates collagen production over time. It&#39;s a great option for those seeking a subtle lift without going under the knife.<br><br>When considering any cosmetic procedure, it&#39;s essential to consult with a qualified and experienced practitioner to discuss your goals and determine the best treatment for your needs."
+                    data-question="best non-invasive facelift miami"
+                    data-llm="gpt4"
+                    data-brand="Lavish Laser Medspa"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top 5 recommendations for the best non-invasive facelifts in Miami:<br><br>1. Ultherapy by Ulthera: This FDA-approved ultrasound technology uses focused ultrasound energy to lift and tighten the skin on the face, neck, and brow. It stimulates the body&#39;s natural collagen production for gradual, natural-looking results.<br><br>2. Thermage CPT by Solta Medical: This radiofrequency treatment heats the deeper layers of the skin to tighten and smooth the face, neck, and body. It can improve skin laxity, texture, and contours without surgery.<br><br>3. Laser Skin Tightening by Sciton: Using Sciton&#39;s advanced laser technology, this treatment delivers controlled energy to the skin to stimulate collagen production and tighten the face and neck. It can address sagging, wrinkles, and uneven texture.<br><br>4. Morpheus8 by InMode: This innovative radiofrequency microneedling device combines fractional RF energy and microneedling to remodel and contour the face, neck, and body. It can improve skin tone, texture, and tightness.<br><br>5. PDO Thread Lift by Silhouette Lift: This minimally invasive procedure uses dissolvable sutures to lift and tighten the skin on the face and neck. It can provide a subtle, natural-looking lift without the need for surgery.<br><br>These non-invasive facelift options in Miami offer effective, long-lasting results without the downtime and risks associated with traditional surgical facelifts. It&#39;s best to consult with a board-certified plastic surgeon or dermatologist to determine the most suitable treatment for your specific needs and goals."
+                    data-question="best non-invasive facelift miami"
+                    data-llm="claude"
+                    data-brand="Lavish Laser Medspa"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Okay, here are 3 non-invasive facelift treatments that are popular in Miami, considering effectiveness, availability, and reputation.  It&#39;s extremely important to note that results vary significantly from person to person, and a consultation with a qualified provider in Miami is crucial to determine the best option for your specific needs and skin type. This is not a substitute for professional medical advice.<br><br>**Top Recommendations for Non-Invasive Facelifts in Miami (in order of preference):**<br><br>1.  **Ultherapy:**<br><br>    *   **Explanation:** Ultherapy uses focused ultrasound energy to stimulate collagen and elastin production deep within the skin&#39;s layers. This leads to a gradual lifting and tightening effect over 2-3 months, with continued improvement for up to 6 months. It&#39;s FDA-cleared for lifting the brow, chin, neck, and décolletage. Because it bypasses the surface of the skin, there is no downtime.<br>    *   **Why it&#39;s good in Miami:** Ultherapy is a well-known and respected treatment, so it is widely available at reputable clinics in Miami, meaning you have options when choosing a provider. Look for providers who have a significant number of Ultherapy treatments under their belt.<br>    *   **Considerations:** It can be somewhat uncomfortable (some providers offer numbing creams or pain management options). It is also not suitable for everyone, especially those with significant skin laxity. Best for mild to moderate skin laxity.<br><br>2.  **Morpheus8:**<br><br>    *   **Explanation:** Morpheus8 combines microneedling with radiofrequency (RF) energy. The microneedles create tiny punctures in the skin, while the RF energy heats the deeper layers, stimulating collagen and elastin production and tightening the skin. It can address fine lines, wrinkles, skin laxity, and even acne scars.<br>    *   **Why it&#39;s good in Miami:** Morpheus8 is a popular choice in Miami for it&#39;s versatility and ability to address multiple concerns. It&#39;s a good option for those who want skin tightening and resurfacing.<br>    *   **Considerations:** There is some downtime involved (redness, swelling, and possible pinpoint bleeding for a few days). Some people may need multiple sessions for optimal results.<br><br>3.  **Thread Lift (PDO or Silhouette InstaLift):**<br><br>    *   **Explanation:** Thread lifts involve inserting dissolvable threads under the skin to lift and support sagging tissues. The threads also stimulate collagen production. Silhouette InstaLift uses threads with cones that provide a more significant lifting effect, while PDO threads are often used for more subtle tightening.<br>    *   **Why it&#39;s good in Miami:** Thread lifts offer a more immediate lifting effect compared to energy-based treatments. They can be a good option for those who want to see some results sooner.<br>    *   **Considerations:** The results are not permanent (typically lasting 1-2 years). There is a risk of complications, such as thread migration, dimpling, or infection, so it&#39;s crucial to choose a highly experienced provider.<br><br>**Important Considerations for Choosing a Provider in Miami:**<br><br>*   **Board Certification:**  Ensure the doctor is board-certified in dermatology or plastic surgery.<br>*   **Experience:** Ask how many procedures of the specific treatment they have performed.<br>*   **Before & After Photos:** Review before and after photos of their patients to get an idea of their results and aesthetic style.<br>*   **Consultation:** Schedule a consultation to discuss your goals, assess your skin, and determine the best treatment plan for you. Be wary of providers who push you into a particular treatment without a thorough evaluation.<br>*   **Reviews and Reputation:** Check online reviews and ask for referrals from friends or family.<br><br>**Disclaimer:**  This information is for general knowledge and informational purposes only, and does not constitute medical advice. It is essential to consult with a qualified healthcare professional for any health concerns or before making any decisions related to your health or treatment.  The effectiveness of these treatments can vary widely, and the results are not guaranteed.<br>"
+                    data-question="best non-invasive facelift miami"
+                    data-llm="gemini"
+                    data-brand="Lavish Laser Medspa"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q2</span>
+                    <span class="question-text">hydrafacial treatment near me</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="I don’t have access to real-time data or your specific location, but I can guide you on how to find the best HydraFacial treatments near you, as well as suggest what to look for in a good provider. Here’s how you can proceed:<br><br>### Recommendations for Finding HydraFacial Treatments:<br><br>1. **Local Spas and Skincare Clinics:**<br>   - **What to Look For:** Research local spas or skincare clinics that specialize in facials and skin treatments. Look for those that have certified estheticians with good reviews specifically for HydraFacial treatments.<br>   - **Why:** Professional spas often have the latest technology and products, ensuring a high-quality experience.<br><br>2. **Dermatology Offices:**<br>   - **What to Look For:** Many dermatologists offer HydraFacial treatments as part of their skincare services. Check if there are any dermatology clinics nearby that provide aesthetic services.<br>   - **Why:** Treatments performed by medical professionals can offer added assurance regarding safety and effectiveness.<br><br>3. **Beauty Salons with Aesthetic Services:**<br>   - **What to Look For:** Some beauty salons have expanded their services to include aesthetic treatments like HydraFacials. Look for those with licensed aestheticians.<br>   - **Why:** These locations often have competitive pricing and may offer packages for multiple sessions.<br><br>4. **Online Platforms:**<br>   - **What to Look For:** Websites like Yelp, Google Reviews, or even specific beauty treatment platforms like Glowday or Booksy can give you insights into customer experiences and ratings.<br>   - **Why:** You can read reviews and compare different providers based on real customer feedback.<br><br>5. **Social Media Recommendations:**<br>   - **What to Look For:** Check local beauty and wellness groups on platforms like Facebook or Instagram for recommendations. Influencers often share their experiences, which can lead you to reputable providers.<br>   - **Why:** Social media can provide visual proof of results and the atmosphere of the treatment space.<br><br>### General Tips:<br>- **Consultation:** Consider scheduling a consultation before committing to a treatment. This allows you to ask questions and gauge the professionalism of the staff.<br>- **Reviews:** Look for reviews that mention the specific HydraFacial experience, results, and customer service.<br>- **Hygiene and Safety:** Ensure that the clinic follows good hygiene practices and uses sanitized equipment.<br><br>By using these recommendations and tips, you should be able to find a suitable HydraFacial provider in your area."
+                    data-question="hydrafacial treatment near me"
+                    data-llm="gpt4"
+                    data-brand="Lavish Laser Medspa"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top 5 recommendations for HydraFacial treatments near you, listed in order of preference:<br><br>1. Skin Rejuvenation Clinic - This highly-rated clinic is known for its experienced and skilled aestheticians who provide exceptional HydraFacial treatments. They use the latest technology and tailor each service to the individual&#39;s skin needs.<br><br>2. Luminous Skin Spa - With a focus on results-driven skincare, Luminous Skin Spa offers a luxurious HydraFacial experience. Their knowledgeable staff will work with you to address your specific skin concerns.<br><br>3. Glow Dermatology - This medical spa is led by board-certified dermatologists who oversee all HydraFacial treatments. They have a reputation for delivering transformative results using the latest skincare innovations.<br><br>4. Radiant Beauty Bar - Offering a relaxing and rejuvenating atmosphere, Radiant Beauty Bar provides HydraFacial treatments tailored to each client&#39;s needs. Their estheticians are highly trained and committed to client satisfaction.<br><br>5. Oasis Skin Solutions - This clinic specializes in advanced skin treatments, including the HydraFacial. They use high-quality products and techniques to deliver a personalized and effective skincare experience.<br><br>The key factors that set these recommendations apart are the expertise and experience of the staff, the use of state-of-the-art technology, a focus on customized treatments, and consistently positive client reviews."
+                    data-question="hydrafacial treatment near me"
+                    data-llm="claude"
+                    data-brand="Lavish Laser Medspa"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Okay, to give you the best recommendations for Hydrafacial treatments near you, I need your **location (city, state, or zip code)**.  Once I have that, I can search for reputable providers and give you more specific and helpful options.<br><br>However, in the meantime, here are some *general* recommendations and things to consider when choosing a HydraFacial provider, which you can then use to research options near you.  I&#39;ll list them in order of what I consider most important:<br><br>**Before I get to the list, keep in mind these general tips:**<br><br>*   **Read Reviews:** Check Google Reviews, Yelp, and RealSelf. Pay attention to recurring themes - are people consistently happy with the results, the cleanliness of the facility, and the professionalism of the staff?<br>*   **Check Credentials:**  While HydraFacial treatments are often performed by estheticians, it&#39;s always a good idea to see if a medical doctor (dermatologist or plastic surgeon) is affiliated with the practice. This provides an extra layer of oversight and assurance.<br>*   **Look for Certified Providers:** HydraFacial&#39;s website often has a &quot;Find a Provider&quot; tool.  Use this to see if any certified providers are listed in your area.  Certification suggests they&#39;ve undergone specific training.<br>*   **Consultation is Key:**  A good provider will offer a consultation *before* the treatment. This allows them to assess your skin, discuss your concerns, and explain the procedure in detail.  Avoid places that push you directly into the treatment without a proper consultation.<br>*   **Hygiene and Cleanliness:**  The treatment room should be spotless.  Make sure the equipment looks well-maintained and that the provider uses sterile techniques.<br><br>**General Recommendations (Once I have your location, I can refine these):**<br><br>1.  **Med Spas with Dermatologist or Plastic Surgeon Oversight:** These are generally my top recommendation because they often have higher standards for training, hygiene, and safety. The presence of a medical professional ensures that any potential complications can be addressed promptly. Look for phrases like &quot;Medical Spa supervised by a board-certified dermatologist&quot; or &quot;Plastic Surgery Center with advanced esthetics services.&quot; *Why:* Combines cosmetic treatments with medical expertise.<br><br>2.  **Established Dermatology Clinics Offering HydraFacial:** Dermatology clinics are primarily focused on skin health, and adding HydraFacial to their service menu is often a sign they see its benefits. They have the medical knowledge to assess your skin concerns thoroughly and recommend the best course of treatment. *Why:* Focus on skin health with medical expertise.<br><br>3.  **Reputable Day Spas with Consistently High Ratings & Certified Technicians:** If a day spa has overwhelmingly positive reviews specifically mentioning the HydraFacial treatment and the skill of the estheticians, it&#39;s worth considering. Make sure they are certified by Hydrafacial. *Why:* Can be a good option if the reviews are excellent and the technicians are highly trained.<br><br>4.  **Dedicated HydraFacial Clinics (If Available):** In some areas, you might find clinics that specialize solely in HydraFacial treatments. These places often have a high volume of clients and experienced technicians. *Why:* Specialization can lead to expertise.<br><br>5.  **Avoid Deeply Discounted Deals (Especially on Groupon):** While a discount might seem appealing, drastically reduced prices can sometimes indicate lower quality products, less experienced technicians, or compromised hygiene standards. Be wary of deals that seem too good to be true. *Why:* Quality and safety are paramount.<br><br>**To help me give you specific recommendations, please provide your location!**<br>"
+                    data-question="hydrafacial treatment near me"
+                    data-llm="gemini"
+                    data-brand="Lavish Laser Medspa"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q3</span>
+                    <span class="question-text">laser hair removal miami cost</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top recommendations for laser hair removal in Miami, along with brief explanations for each:<br><br>1. **Miami Skin Institute**<br>   - **Overview**: Miami Skin Institute is known for its advanced technology and experienced staff. They offer a range of laser hair removal services tailored to various skin types.<br>   - **Cost**: Prices typically range from $100 to $400 per session, depending on the area being treated.<br>   - **Why Choose**: Their focus on skin health and personalized treatment plans ensures effective results while prioritizing client comfort and safety.<br><br>2. **The Laser Center of Miami**<br>   - **Overview**: This center specializes in laser treatments, including hair removal, and uses state-of-the-art equipment. They offer a variety of packages and financing options.<br>   - **Cost**: Sessions usually range from $75 to $350, depending on the size of the treatment area.<br>   - **Why Choose**: They have a reputation for excellent customer service and provide free consultations, allowing clients to understand the process and costs upfront.<br><br>3. **Pavia Medical Aesthetics**<br>   - **Overview**: Pavia Medical Aesthetics combines medical expertise with aesthetic treatments. Their laser hair removal services are performed by certified professionals using the latest technology.<br>   - **Cost**: Prices range from $150 to $450 per session, depending on the area being treated.<br>   - **Why Choose**: The clinic&#39;s focus on both cosmetic and health-oriented treatments provides a holistic approach, ensuring high-quality care and effective results.<br><br>4. **LaserAway**<br>   - **Overview**: LaserAway is a nationally recognized chain known for its comprehensive laser hair removal services. They have a location in Miami that offers a range of treatment options.<br>   - **Cost**: Prices start around $199 for smaller areas and can go up to $600 for larger areas, with package deals available.<br>   - **Why Choose**: Their experienced staff and commitment to customer satisfaction make it a popular choice for many clients seeking laser hair removal.<br><br>5. **Skinney Medspa**<br>   - **Overview**: Skinney Medspa is a popular destination for various aesthetic treatments, including laser hair removal. They utilize advanced laser technology and offer customized treatment plans.<br>   - **Cost**: Sessions typically range from $100 to $400, depending on the treatment area.<br>   - **Why Choose**: Known for their modern facilities and highly trained staff, Skinney Medspa focuses on delivering a comfortable experience and effective results.<br><br>When considering laser hair removal, it’s essential to consult with the clinic to discuss your specific needs, skin type, and any concerns you may have. Most places offer free consultations, which can help you make an informed decision."
+                    data-question="laser hair removal miami cost"
+                    data-llm="gpt4"
+                    data-brand="Lavish Laser Medspa"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top 5 recommendations for laser hair removal in Miami, ranked in order of preference:<br><br>1. Miami Skin & Laser Center:<br>This center is known for its experienced and skilled medical professionals, state-of-the-art laser technology, and excellent customer service. They offer competitive pricing and frequently have promotions and package deals.<br><br>2. Laser Smooth Company:<br>With multiple locations in the Miami area, Laser Smooth Company is a trusted provider of laser hair removal. They use the latest laser technology and have a team of certified technicians. Their prices are reasonable, and they often have discounts for new clients.<br><br>3. Miami Laser and Skin Clinic:<br>This clinic specializes in laser hair removal and has a reputation for delivering consistent and effective results. They use advanced laser systems and have a focus on patient comfort and safety.<br><br>4. Skin Renewal Center:<br>Skin Renewal Center is a well-established medical spa that offers high-quality laser hair removal services. They have experienced providers and a track record of satisfied clients.<br><br>5. SoMi Laser Spa:<br>Located in the heart of South Miami, SoMi Laser Spa is a popular choice for laser hair removal. They use advanced laser technology and have a team of trained professionals who prioritize patient care.<br><br>It&#39;s important to note that the cost of laser hair removal in Miami can vary depending on the area being treated, the number of sessions required, and the specific provider. It&#39;s recommended to schedule a consultation with your preferred provider to get a personalized quote and understand the treatment plan."
+                    data-question="laser hair removal miami cost"
+                    data-llm="claude"
+                    data-brand="Lavish Laser Medspa"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Okay, here are 3 top recommendations for laser hair removal in Miami, based on reputation, pricing, technology, and patient reviews.  Note that pricing can vary depending on the area being treated and the number of sessions purchased.  It&#39;s *crucial* to schedule consultations with each to get a personalized quote and assess their suitability for *your* skin type and hair color.<br><br>**Important Considerations Before Booking:**<br><br>*   **Skin Type & Hair Color:**  Laser hair removal works best on dark hair and light skin.  If you have dark skin, ensure the clinic uses a laser specifically designed for darker skin tones (e.g., Nd:YAG).  If you have light hair, laser hair removal may be less effective.<br>*   **Laser Technology:**  Different lasers are better suited for different skin types.  Ask about the specific laser(s) used.  Popular and effective lasers include Alexandrite, Diode, and Nd:YAG.<br>*   **Technician Experience:**  Laser hair removal can be dangerous if not performed correctly.  Ensure the technician is licensed and experienced.<br>*   **Consultation:** Always schedule a consultation to discuss your goals, assess your skin type, and get a personalized treatment plan and quote.<br><br>**Top Recommendations (in order of preference):**<br><br>1.  **Miami Center for Dermatology:**<br>    *   **Why:** Consistently high ratings, board-certified dermatologists oversee treatments, and they offer a range of lasers to suit different skin types (including those designed for darker skin). They generally have a very professional and safe environment. While potentially more expensive than some smaller clinics, the expertise and safety are worth the investment for many.<br>    *   **Factors to Consider:** Expect higher prices compared to less medically-focused spas. Schedule consultations, as they are likely to recommend a package based on your specific needs.<br>    *   **Technology:** They are likely to use a variety of lasers, including those suitable for darker skin tones. Enquire during your consultation.<br><br>2.  **LaserAway:**<br>    *   **Why:** LaserAway is a national chain with a strong reputation and a focus solely on laser hair removal and other aesthetic laser treatments. This specialization often translates to experienced technicians and up-to-date technology. They are known for their competitive pricing and package deals.<br>    *   **Factors to Consider:** As a chain, the experience can vary slightly by location.  Read reviews specific to the Miami location you&#39;re considering. They tend to have aggressive sales tactics, so be prepared to say &quot;no&quot; if you&#39;re not ready to commit.<br>    *   **Technology:** They use a variety of lasers, including Candela GentleMax Pro, which is a popular and effective choice.<br><br>3.  **Ideal Image:**<br>    *   **Why:**  Similar to LaserAway, Ideal Image is a national chain specializing in laser hair removal and other aesthetic treatments. They offer free consultations and often have attractive financing options.  They are a good option if you&#39;re looking for a more budget-friendly choice with multiple locations.<br>    *   **Factors to Consider:**  Again, the experience can vary by location.  Read reviews carefully.  Their pricing model can be confusing, so be sure to understand the full cost before committing.<br>    *   **Technology:**  They use a variety of lasers, including GentleMax Pro and Cynosure Elite.<br><br>**Important Notes:**<br><br>*   **Consultation is Key:**  *Always* schedule a consultation to get a personalized quote and ensure the clinic is a good fit for you.<br>*   **Read Reviews:**  Check online reviews on Google, Yelp, and RealSelf to get a sense of other patients&#39; experiences.<br>*   **Ask About Pain Management:**  Laser hair removal can be uncomfortable.  Ask about pain management options, such as topical numbing cream.<br>*   **Beware of Deals That Seem Too Good to Be True:**  Extremely low prices may indicate inexperienced technicians or outdated technology. Research and compare prices carefully.<br><br>I hope this helps you find the best laser hair removal option in Miami! Good luck!<br>"
+                    data-question="laser hair removal miami cost"
+                    data-llm="gemini"
+                    data-brand="Lavish Laser Medspa"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q4</span>
+                    <span class="question-text">body contouring treatments miami</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="Certainly! Here are my top recommendations for body contouring treatments in Miami, along with brief explanations for each:<br><br>1. **CoolSculpting (Cryolipolysis)**  <br>   **Overview:** This non-invasive treatment freezes and eliminates fat cells in targeted areas, such as the abdomen, thighs, and love handles.  <br>   **Why it’s recommended:** CoolSculpting is FDA-cleared, requires no downtime, and provides gradual results over a few months, making it a popular choice for those seeking a non-surgical option.<br><br>2. **SculpSure**  <br>   **Overview:** SculpSure uses laser technology to target and destroy fat cells without harming the surrounding tissue. It typically takes around 25 minutes per treatment area.  <br>   **Why it’s recommended:** It’s a quick, non-invasive procedure that offers noticeable results in as little as six weeks, with minimal discomfort and no downtime.<br><br>3. **Liposuction**  <br>   **Overview:** This surgical procedure involves the removal of fat through suction, allowing for precise contouring of the body. It can be done on various areas, including the abdomen, thighs, and arms.  <br>   **Why it’s recommended:** Liposuction is ideal for individuals looking for significant fat removal and more dramatic results. While it requires recovery time, the results can be lasting and impressive.<br><br>4. **Ultrasound-Assisted Liposuction (UAL)**  <br>   **Overview:** This technique uses ultrasound energy to liquefy fat cells before removal, making the procedure less traumatic and easier for the surgeon.  <br>   **Why it’s recommended:** UAL can provide smoother results in areas that are difficult to contour and may have a shorter recovery time compared to traditional liposuction.<br><br>5. **Emsculpt**  <br>   **Overview:** This non-invasive treatment uses high-intensity focused electromagnetic (HIFEM) technology to stimulate muscle contractions, effectively building muscle and burning fat.  <br>   **Why it’s recommended:** Emsculpt is unique because it targets muscle growth while simultaneously reducing fat, ideal for those looking to enhance their physique without surgery.<br><br>When considering any treatment, it&#39;s crucial to consult with a qualified professional to assess your individual needs and goals."
+                    data-question="body contouring treatments miami"
+                    data-llm="gpt4"
+                    data-brand="Lavish Laser Medspa"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top 5 recommendations for body contouring treatments in Miami, listed in order of preference:<br><br>1. CoolSculpting: This non-surgical fat reduction treatment uses controlled cooling to target and eliminate stubborn fat cells. It&#39;s particularly effective for areas like the abdomen, love handles, and thighs. CoolSculpting is a popular choice as it&#39;s non-invasive and has minimal downtime.<br><br>2. Liposuction: This surgical body contouring procedure physically removes excess fat from targeted areas, providing more dramatic results compared to non-invasive options. Liposuction can be a good choice for individuals with significant pockets of fat that are resistant to diet and exercise.<br><br>3. Laser Lipolysis (i.e., SmartLipo): This minimally-invasive procedure uses laser technology to liquefy and remove fat. It&#39;s less invasive than traditional liposuction and can result in tighter skin. Laser lipolysis is a good option for those who want more significant fat reduction with shorter recovery times.<br><br>4. Radiofrequency (RF) Body Contouring: Treatments like Vanquish or Exilis use RF energy to heat and destroy fat cells. This non-surgical approach can be effective for targeting larger areas like the abdomen or thighs. It&#39;s a good choice for those looking for a non-invasive option.<br><br>5. Ultrasound-Assisted Liposuction: Also known as VASER Lipo, this technique uses ultrasound waves to break up fat prior to removal. It can provide more precise body contouring results compared to traditional liposuction, especially in fibrous areas.<br><br>When selecting a body contouring treatment, it&#39;s important to consult with a board-certified plastic surgeon or dermatologist in Miami to determine the best option based on your specific goals and concerns."
+                    data-question="body contouring treatments miami"
+                    data-llm="claude"
+                    data-brand="Lavish Laser Medspa"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Okay, here are some of the top body contouring treatments available in Miami, ranked based on common factors like effectiveness, popularity, and availability of experienced providers.  It&#39;s crucial to remember that the &quot;best&quot; treatment depends entirely on your individual body type, goals, and budget. **Always consult with a qualified and experienced professional for a personalized assessment before making any decisions.**<br><br>**Important Disclaimer:** *I am an AI and cannot provide medical advice. This information is for general knowledge and should not be interpreted as a substitute for professional medical consultation. The effectiveness of these treatments can vary, and results are not guaranteed.  Potential risks and side effects exist for all procedures.  It&#39;s crucial to discuss these with a qualified healthcare provider.*<br><br>Here are my top recommendations, assuming you&#39;re looking for non-surgical or minimally invasive options:<br><br>1.  **CoolSculpting (Cryolipolysis):**<br>    *   **Explanation:** CoolSculpting freezes and eliminates fat cells in targeted areas. It&#39;s non-invasive, with no downtime. It&#39;s FDA-cleared and has a good track record for reducing localized fat deposits.<br>    *   **Why it&#39;s excellent:** Well-established technology, relatively comfortable, and effective for stubborn fat pockets that don&#39;t respond to diet and exercise.<br>    *   **Things to consider:** Requires multiple sessions, results take several weeks to manifest, not suitable for significant weight loss, and potential for paradoxical adipose hyperplasia (rare but possible).<br>    *   **Miami Recommendation:** Look for clinics with certified CoolSculpting specialists and good reviews.<br><br>2.  **Emsculpt NEO:**<br>    *   **Explanation:** Emsculpt NEO uses a combination of radiofrequency (RF) and high-intensity focused electromagnetic (HIFEM) energies. The RF heats the muscles, preparing them for the intense contractions caused by HIFEM, which builds muscle and burns fat.<br>    *   **Why it&#39;s excellent:** It is a non-invasive procedure that reduces fat and builds muscles simultaneously. It is relatively quick and requires no downtime.<br>    *   **Things to consider:** It is not suitable for people with metal implants or pacemakers. It requires multiple sessions, and results take several weeks to manifest. It may cause muscle soreness.<br>    *   **Miami Recommendation:** Look for clinics with certified Emsculpt NEO specialists and good reviews.<br><br>3.  **SculpSure (Laser Lipolysis):**<br>    *   **Explanation:** SculpSure uses laser energy to heat and destroy fat cells. The body then naturally eliminates the treated cells over time.<br>    *   **Why it&#39;s excellent:** Non-invasive, relatively short treatment times, and can treat multiple areas simultaneously.<br>    *   **Things to consider:** Requires multiple sessions, results take several weeks to manifest, may experience mild discomfort during the procedure.<br>    *   **Miami Recommendation:** Look for clinics with experienced SculpSure providers and before-and-after photos of their work.<br><br>4.  **Radiofrequency (RF) Skin Tightening (e.g., Thermage, Morpheus8):**<br>    *   **Explanation:** RF treatments use radiofrequency energy to heat the deeper layers of the skin, stimulating collagen production and tightening the skin. While not directly removing fat, they can improve the appearance of areas where skin laxity is a concern after fat reduction. Morpheus8 also incorporates microneedling for enhanced results.<br>    *   **Why it&#39;s excellent:** Improves skin texture and tightness, can be used on various body areas, and is relatively non-invasive.<br>    *   **Things to consider:** Requires multiple sessions, results are gradual, may experience some redness or swelling, and best for mild to moderate skin laxity.<br>    *   **Miami Recommendation:** Look for reputable clinics with experienced dermatologists or plastic surgeons offering RF skin tightening.<br><br>5.  **BodyTite:**<br>    *   **Explanation:** BodyTite is a minimally invasive procedure that uses radiofrequency-assisted lipolysis (RFAL) to melt fat and tighten skin simultaneously. It requires small incisions.<br>    *   **Why it&#39;s excellent:** It is more effective for skin tightening than non-invasive radiofrequency treatments.<br>    *   **Things to consider:** It is more invasive than most options on this list and requires some downtime.<br>    *   **Miami Recommendation:** Look for board-certified plastic surgeons with extensive experience performing BodyTite.<br><br>**Before you proceed, here&#39;s a checklist:**<br><br>*   **Consultation:** Schedule consultations with at least 2-3 qualified professionals in Miami.<br>*   **Realistic Expectations:** Understand the limitations of each treatment and what kind of results you can realistically expect.<br>*   **Cost:** Get a clear understanding of the total cost,"
+                    data-question="body contouring treatments miami"
+                    data-llm="gemini"
+                    data-brand="Lavish Laser Medspa"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q5</span>
+                    <span class="question-text">medical spa services miami</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top recommendations for medical spa services in Miami, each known for their quality treatments and professional expertise:<br><br>1. **The Miami Institute for Age Management and Interventional Aesthetics**<br>   - **Overview:** This facility is renowned for its comprehensive approach to anti-aging and aesthetic treatments. They offer a wide range of services including injectables (Botox, fillers), laser treatments, and skin rejuvenation therapies.<br>   - **Why Recommend:** The Miami Institute stands out due to its experienced team of medical professionals and personalized treatment plans tailored to individual skin types and concerns.<br><br>2. **Skin Paradise**<br>   - **Overview:** Skin Paradise specializes in advanced skincare treatments, including facials, chemical peels, and microneedling. They also provide a variety of injectables and body contouring services.<br>   - **Why Recommend:** Known for its relaxing atmosphere and attentive staff, Skin Paradise focuses on both aesthetic outcomes and overall client experience, making it a great choice for those looking for pampering along with effective treatments.<br><br>3. **The Aesthetic Center at Miami Plastic Surgery**<br>   - **Overview:** This center offers a full suite of medical spa services, including skin tightening, laser treatments, and cosmetic injectables. They are also linked to a reputable plastic surgery practice, allowing for comprehensive aesthetic care.<br>   - **Why Recommend:** The Aesthetic Center is well-regarded for its safety standards and the expertise of its medical professionals, which provides clients with peace of mind while undergoing treatments.<br><br>4. **Elysian Aesthetics**<br>   - **Overview:** Elysian Aesthetics provides a mix of aesthetic and wellness services, including specialized skincare treatments, injectables, and holistic wellness options.<br>   - **Why Recommend:** Their unique blend of traditional aesthetic services with a focus on overall wellness makes them a great option for clients looking to enhance their beauty while also prioritizing health.<br><br>5. **Beverly Hills Rejuvenation Center**<br>   - **Overview:** This med spa offers a range of services from hormone therapy to aesthetic treatments like Botox, fillers, and laser hair removal.<br>   - **Why Recommend:** Known for their innovative approach and cutting-edge technology, the Beverly Hills Rejuvenation Center is ideal for clients interested in both aesthetic improvements and health optimization.<br><br>When considering a medical spa, always ensure to check for certifications, read reviews, and consult with professionals to find the best fit for your needs."
+                    data-question="medical spa services miami"
+                    data-llm="gpt4"
+                    data-brand="Lavish Laser Medspa"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top 5 recommendations for medical spa services in Miami, listed in order of preference:<br><br>1. Brickell Cosmetic Center: This highly acclaimed medical spa is known for its state-of-the-art facilities, skilled medical professionals, and wide range of advanced treatments. They specialize in non-invasive procedures like laser treatments, injectables, and body contouring, all delivered with a personalized and attentive approach.<br><br>2. Miami Skin Institute: Led by renowned dermatologists, this medical spa offers a comprehensive suite of aesthetic services, including customized facials, chemical peels, microneedling, and cutting-edge laser treatments. They prioritize personalized care and utilize the latest technologies to achieve exceptional results.<br><br>3. Spa Villagio: This luxurious medical spa located in the heart of Coral Gables combines medical expertise with a serene, spa-like ambiance. They excel in rejuvenating treatments like HydraFacial, IPL photofacials, and body contouring procedures, all performed by highly trained professionals.<br><br>4. Aesthetic & Wellness Center: Specializing in non-surgical aesthetic enhancements, this medical spa is known for its advanced techniques and personalized approach. They offer a wide range of services, including injectables, laser treatments, and body sculpting procedures, all tailored to each client&#39;s unique needs.<br><br>5. The Laser & Skin Center: This state-of-the-art medical spa is led by a team of board-certified physicians and experienced aestheticians. They excel in laser treatments, such as laser hair removal, skin resurfacing, and tattoo removal, as well as other non-invasive procedures like chemical peels and microneedling."
+                    data-question="medical spa services miami"
+                    data-llm="claude"
+                    data-brand="Lavish Laser Medspa"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Okay, here are 3 medical spa recommendations in Miami, listed in order of preference, along with brief explanations:<br><br>1.  **Emena Spa:** This is a high-end medical spa that offers a wide range of services, including facials, injectables, body contouring, and laser treatments. They are known for their experienced staff, luxurious atmosphere, and personalized approach. They use cutting-edge technology and high-quality products to deliver effective results.<br><br>2.  **Miami Skin & Vein:** Dr. Jose Almeida is a highly regarded physician in the field of dermatology and vein care. This clinic focuses on medical-grade skincare and treatments, offering a comprehensive approach to skin health. They&#39;re known for their expertise in treating vascular conditions and providing advanced aesthetic procedures.<br><br>3.  **Skincare by Dr. B:** Located in the heart of Miami, Skincare by Dr. B offers a wide range of medical spa services. Dr. B is a board-certified physician with over 20 years of experience. Their services include Botox, fillers, laser treatments, and more.<br><br>**Important Considerations:**<br><br>*   **Consultation is Key:** Always schedule a consultation before receiving any treatment. This allows you to discuss your goals, concerns, and medical history with a qualified professional who can recommend the best course of action.<br>*   **Check Credentials:** Verify the credentials and experience of the practitioners performing the treatments. Ensure they are licensed and have a proven track record of success.<br>*   **Read Reviews:** Look for online reviews from other patients to get an idea of their experiences with the spa and its staff.<br>*   **Budget:** Medical spa services can be expensive, so be sure to inquire about pricing and payment options upfront.<br><br>I hope this helps you find the perfect medical spa in Miami!<br>"
+                    data-question="medical spa services miami"
+                    data-llm="gemini"
+                    data-brand="Lavish Laser Medspa"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+                </tbody>
+            </table>
+            <p class="breakdown-hint">Click any cell to see the full AI response</p>
+        </div>
+
+        <!-- Response modal -->
+        <div class="response-modal" id="responseModal">
+            <div class="modal-content" onclick="event.stopPropagation()">
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+                <div class="modal-header">
+                    <span class="modal-llm" id="modalLlm"></span>
+                    <span class="modal-status" id="modalStatus"></span>
+                </div>
+                <div class="modal-question" id="modalQuestion"></div>
+                <div class="modal-response" id="modalResponse"></div>
+            </div>
+        </div>
+    
+        </div>
+
+        <!-- Section 3: Reddit Opportunities -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <h2 class="section-title">Reddit Opportunities</h2>
+            </div>
+
+            <div class="subsection-title">Buy Intent Conversations</div>
+            <p class="subsection-desc">People actively looking for recommendations in your category</p>
+            <div class="reddit-posts">
+                
+            <a href="https://www.reddit.com/r/Miami/comments/1ohezvu/can_anyone_recommend_a_good_med_spa/" target="_blank" class="reddit-post">
+                <div class="post-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">Can anyone recommend a good med spa?</div>
+                    <div class="post-meta">
+                        r/Miami &bull; 298K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            <a href="https://www.reddit.com/r/Miami/comments/1qy2bq4/best_med_spa_for_lip_filler_in_miami/" target="_blank" class="reddit-post">
+                <div class="post-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">Best med spa for lip filler in Miami?</div>
+                    <div class="post-meta">
+                        r/Miami &bull; 298K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            <a href="https://www.reddit.com/r/Miami/comments/1qdqo5m/can_anyone_recommend_amazing_doctors_for_mini/" target="_blank" class="reddit-post">
+                <div class="post-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">Can anyone recommend amazing doctors for mini facelifts?</div>
+                    <div class="post-meta">
+                        r/Miami &bull; 298K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            <a href="https://www.reddit.com/r/PlasticSurgery/comments/1jzq1xu/best_place_for_fillersbotox_in_miami/" target="_blank" class="reddit-post">
+                <div class="post-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">Best place for fillers/botox in miami?</div>
+                    <div class="post-meta">
+                        r/PlasticSurgery &bull; 344K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            <a href="https://www.reddit.com/r/LaserHairRemoval/comments/1l2ahl8/laser_hair_recommendations/" target="_blank" class="reddit-post">
+                <div class="post-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">Laser Hair Recommendations</div>
+                    <div class="post-meta">
+                        r/LaserHairRemoval &bull; 55K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            <a href="https://www.reddit.com/r/SouthFlorida/comments/1l5mphh/med_spasestheticians_for_facials_or_skin/" target="_blank" class="reddit-post">
+                <div class="post-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">Med spas/esthetician's for facials or skin treatments</div>
+                    <div class="post-meta">
+                        r/SouthFlorida &bull; 80K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            </div>
+
+            <div class="subsection-title">Pain Point Conversations</div>
+            <p class="subsection-desc">People discussing problems your product solves</p>
+            <div class="reddit-posts">
+                
+            <a href="https://www.reddit.com/r/PlasticSurgery/comments/1m15lwe/cheap_facelift_in_miami/" target="_blank" class="reddit-post">
+                <div class="post-icon pain">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">Cheap Facelift in Miami</div>
+                    <div class="post-meta">
+                        r/PlasticSurgery &bull; 344K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            <a href="https://www.reddit.com/r/miamibeach/comments/1qd6nvh/botox_facial_deals_in_miami_beach_how_do_people/" target="_blank" class="reddit-post">
+                <div class="post-icon pain">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">Botox / facial deals in Miami Beach - how do people find legit deals?</div>
+                    <div class="post-meta">
+                        r/miamibeach &bull; 6K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            <a href="https://www.reddit.com/r/Miami/comments/1hwait0/affordable_botox_places_that_are_good_willing_to/" target="_blank" class="reddit-post">
+                <div class="post-icon pain">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">Affordable Botox places that are good? Willing to drive!</div>
+                    <div class="post-meta">
+                        r/Miami &bull; 298K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            </div>
+        </div>
+
+        <!-- CTA Section -->
+        <div class="section cta-section">
+            <h2>Ready to improve your <em>AI visibility?</em></h2>
+            <p>We help brands get mentioned more in AI answers through strategic content placement.</p>
+            <a href="https://adva-solutions.com/AIVisibility" class="cta-button">Learn More</a>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p>Generated by <a href="https://adva-solutions.com">Adva</a> &bull; AI Visibility Health Check</p>
+    </footer>
+
+    <script>
+        // Tab switching functionality
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const tabId = btn.dataset.tab;
+
+                // Update buttons
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                // Update panels
+                document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+                document.getElementById('panel-' + tabId).classList.add('active');
+            });
+        });
+
+        // Show toast notification
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2500);
+        }
+
+        // Show response modal
+        function showResponse(cell) {
+            try {
+                let response = cell.dataset.response || 'No response available';
+                const question = cell.dataset.question || '';
+                const llm = cell.dataset.llm || '';
+                const brand = cell.dataset.brand || '';
+                const isMentioned = cell.classList.contains('mentioned');
+                const brandPosition = cell.dataset.position ? parseInt(cell.dataset.position) : null;
+
+                const llmNames = {'gpt4': 'GPT', 'claude': 'Claude', 'gemini': 'Gemini'};
+
+                // If brand is mentioned beyond position 5, add a banner at the top
+                let positionBanner = '';
+                if (isMentioned && brandPosition && brandPosition > 5) {
+                    positionBanner = '<div style="background: #fef3c7; padding: 0.75rem 1rem; border-radius: 6px; margin-bottom: 1rem; border-left: 4px solid #f59e0b;">' +
+                        '<strong>📍 Your brand appeared at position #' + brandPosition + '</strong> - scroll down to see the highlighted mention' +
+                        '</div>';
+                }
+
+                // Highlight brand name in response (case insensitive)
+                if (brand && isMentioned) {
+                    try {
+                        const brandRegex = new RegExp('(' + brand.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&') + ')', 'gi');
+                        response = response.replace(brandRegex, '<span class="brand-highlight">$1</span>');
+                    } catch(e) { /* ignore highlighting errors */ }
+                }
+
+                document.getElementById('modalLlm').textContent = llmNames[llm] || llm;
+                document.getElementById('modalQuestion').textContent = '"' + question + '"';
+                document.getElementById('modalResponse').innerHTML = positionBanner + response;
+
+                const statusEl = document.getElementById('modalStatus');
+                if (isMentioned) {
+                    statusEl.textContent = 'Mentioned';
+                    statusEl.className = 'modal-status mentioned';
+                } else {
+                    statusEl.textContent = 'Not mentioned';
+                    statusEl.className = 'modal-status not-mentioned';
+                }
+
+                document.getElementById('responseModal').classList.add('active');
+                document.body.style.overflow = 'hidden';
+
+                // Scroll to first highlight if mentioned
+                if (isMentioned) {
+                    setTimeout(function() {
+                        const highlight = document.querySelector('.modal-response .brand-highlight');
+                        if (highlight) {
+                            highlight.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        }
+                    }, 100);
+                }
+            } catch (e) {
+                console.error('Error showing response:', e);
+                alert('Error loading response. Please try again.');
+            }
+        }
+
+        // Close modal
+        function closeModal() {
+            document.getElementById('responseModal').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // Close when clicking backdrop (outside modal content)
+        document.getElementById('responseModal').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+
+        // Close modal on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeModal();
+        });
+    </script>
+</body>
+</html>
