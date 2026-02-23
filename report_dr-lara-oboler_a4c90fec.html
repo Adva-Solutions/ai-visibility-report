@@ -1,0 +1,1370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Visibility Report - Dr. Lara Oboler | Adva</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #ffffff;
+            min-height: 100vh;
+            color: #374151;
+            line-height: 1.6;
+        }
+
+        /* Header */
+        .header {
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            font-size: 1.25rem;
+            color: #1f2937;
+            text-decoration: none;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .header-date {
+            color: #9ca3af;
+            font-size: 0.875rem;
+        }
+
+        /* Copy link button */
+        .copy-link-button {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: #f3f4f6;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            color: #374151;
+            font-size: 0.75rem;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .copy-link-button:hover {
+            background: #e5e7eb;
+        }
+
+        .copy-link-button svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        .pdf-button {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: #1f2937;
+            border: none;
+            border-radius: 6px;
+            color: #ffffff;
+            font-size: 0.75rem;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .pdf-button:hover {
+            background: #374151;
+        }
+
+        .pdf-button svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        /* Toast notification */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: #1f2937;
+            color: #ffffff;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            opacity: 0;
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        /* Container */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Page title */
+        .page-title {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .page-title .label {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: #9ca3af;
+            font-size: 0.75rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+        }
+
+        .page-title .label::before,
+        .page-title .label::after {
+            content: '';
+            width: 30px;
+            height: 1px;
+            background: #d1d5db;
+        }
+
+        .page-title h1 {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 2.5rem;
+            font-weight: 400;
+            color: #1f2937;
+            margin-bottom: 0.5rem;
+        }
+
+        .page-title .brand {
+            color: #6b7280;
+            font-size: 1.125rem;
+        }
+
+        /* Sections */
+        .section {
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #f3f4f6;
+        }
+
+        .section-icon {
+            width: 40px;
+            height: 40px;
+            background: #1f2937;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .section-icon svg {
+            width: 20px;
+            height: 20px;
+            color: #ffffff;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 1.375rem;
+            color: #1f2937;
+        }
+
+        /* Score Section */
+        .score-section {
+            text-align: center;
+            padding: 3rem 2rem;
+        }
+
+        .score-circle {
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            background: #fafafa;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            border: 4px solid #ef4444;
+        }
+
+        .score-value {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 3rem;
+            font-weight: 500;
+            color: #ef4444;
+        }
+
+        .score-label {
+            font-size: 0.8rem;
+            color: #9ca3af;
+        }
+
+        .score-description {
+            color: #6b7280;
+            margin-bottom: 2rem;
+            font-size: 1rem;
+        }
+
+        .score-description strong {
+            color: #1f2937;
+        }
+
+        .llm-breakdown {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .llm-stat {
+            text-align: center;
+            padding: 1rem 1.5rem;
+            background: #fafafa;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+            min-width: 100px;
+        }
+
+        .llm-name {
+            display: block;
+            color: #9ca3af;
+            font-size: 0.8rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .llm-score {
+            font-size: 1.125rem;
+            font-weight: 600;
+        }
+
+        .llm-score.success {
+            color: #22c55e;
+        }
+
+        .llm-score.warning {
+            color: #ef4444;
+        }
+
+        /* Competitor Table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 0.875rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid #f3f4f6;
+        }
+
+        th {
+            color: #9ca3af;
+            font-weight: 500;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        td {
+            color: #374151;
+        }
+
+        .mention-count {
+            background: #fef3c7;
+            color: #92400e;
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        /* Tabs for LLM responses */
+        .example-tabs {
+            margin-top: 1.5rem;
+        }
+
+        .tabs-header {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+            padding-bottom: 0;
+        }
+
+        .tab-btn {
+            padding: 0.75rem 1.25rem;
+            background: transparent;
+            border: none;
+            color: #6b7280;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            margin-bottom: -1px;
+            transition: all 0.2s;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .tab-btn:hover {
+            color: #1f2937;
+        }
+
+        .tab-btn.active {
+            color: #1f2937;
+            border-bottom-color: #1f2937;
+        }
+
+        .tab-panel {
+            display: none;
+            background: #fafafa;
+            border-radius: 8px;
+            padding: 1.25rem;
+        }
+
+        .tab-panel.active {
+            display: block;
+        }
+
+        .example-question {
+            color: #1f2937;
+            font-weight: 500;
+            font-size: 0.95rem;
+            margin-bottom: 0.75rem;
+        }
+
+        /* Question breakdown table */
+        .question-breakdown {
+            margin-top: 1rem;
+        }
+
+        .breakdown-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        .breakdown-table th {
+            padding: 0.75rem;
+            text-align: center;
+            background: #f9fafb;
+            border-bottom: 2px solid #e5e7eb;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .breakdown-table th:first-child {
+            text-align: left;
+            width: 50%;
+        }
+
+        .breakdown-table td {
+            padding: 0.75rem;
+            border-bottom: 1px solid #f3f4f6;
+            vertical-align: middle;
+        }
+
+        .question-cell {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+        }
+
+        .question-num {
+            background: #e5e7eb;
+            color: #374151;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        .question-text {
+            color: #374151;
+            line-height: 1.4;
+        }
+
+        .llm-cell {
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-radius: 4px;
+        }
+
+        .llm-cell:hover {
+            background: #f3f4f6;
+        }
+
+        .llm-cell.mentioned {
+            color: #16a34a;
+        }
+
+        .llm-cell.mentioned .status-icon {
+            font-size: 1.25rem;
+        }
+
+        .llm-cell.not-mentioned {
+            color: #dc2626;
+        }
+
+        .llm-cell.not-mentioned .status-icon {
+            font-size: 1.25rem;
+        }
+
+        .breakdown-hint {
+            color: #9ca3af;
+            font-size: 0.8rem;
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+        /* Response modal */
+        .response-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+        }
+
+        .response-modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: #ffffff;
+            border-radius: 12px;
+            max-width: 800px;
+            width: 100%;
+            max-height: 90vh;
+            overflow: auto;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #9ca3af;
+            cursor: pointer;
+            padding: 0.25rem 0.5rem;
+        }
+
+        .modal-close:hover {
+            color: #374151;
+        }
+
+        .modal-header {
+            padding: 1.5rem 1.5rem 0;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            position: relative;
+        }
+
+        .modal-llm {
+            font-weight: 600;
+            color: #1f2937;
+            font-size: 1.1rem;
+        }
+
+        .modal-status {
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .modal-status.mentioned {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .modal-status.not-mentioned {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .modal-question {
+            padding: 1rem 1.5rem;
+            color: #6b7280;
+            font-size: 0.9rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .modal-response {
+            padding: 1.5rem;
+            overflow-y: auto;
+            flex: 1;
+            color: #374151;
+            font-size: 0.9rem;
+            line-height: 1.8;
+            min-height: 300px;
+            max-height: 60vh;
+            background: #fafafa;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .modal-response::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .modal-response::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        .modal-response::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 4px;
+        }
+
+        .modal-response::-webkit-scrollbar-thumb:hover {
+            background: #a1a1a1;
+        }
+
+        /* Brand highlight */
+        .brand-highlight {
+            background: linear-gradient(120deg, #fef08a 0%, #fde047 100%);
+            padding: 0.1rem 0.3rem;
+            border-radius: 3px;
+            font-weight: 600;
+        }
+
+        .example-content {
+            color: #6b7280;
+            font-size: 0.875rem;
+            line-height: 1.7;
+            max-height: 400px;
+            overflow-y: auto;
+            margin-bottom: 0.75rem;
+            padding: 1rem;
+            background: #f9fafb;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .example-status {
+            padding: 0.5rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            display: inline-block;
+        }
+
+        .example-status.mentioned {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .example-status.not-mentioned {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        /* Reddit Posts */
+        .reddit-posts {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .reddit-post {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: #fafafa;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: all 0.2s;
+            border: 1px solid transparent;
+        }
+
+        .reddit-post:hover {
+            background: #f3f4f6;
+            border-color: #e5e7eb;
+        }
+
+        .post-icon {
+            width: 40px;
+            height: 40px;
+            background: #1f2937;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .post-icon.pain {
+            background: #fef3c7;
+        }
+
+        .post-icon.pain svg {
+            color: #92400e;
+        }
+
+        .post-icon svg {
+            width: 20px;
+            height: 20px;
+            color: #ffffff;
+        }
+
+        .post-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .post-title {
+            color: #1f2937;
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .post-meta {
+            color: #9ca3af;
+            font-size: 0.8rem;
+        }
+
+        .post-arrow {
+            color: #9ca3af;
+            flex-shrink: 0;
+        }
+
+        .post-arrow svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .subsection-title {
+            color: #1f2937;
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin: 1.5rem 0 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .subsection-title:first-of-type {
+            margin-top: 0;
+        }
+
+        .subsection-desc {
+            color: #9ca3af;
+            font-size: 0.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .no-data {
+            color: #9ca3af;
+            font-style: italic;
+            text-align: center;
+            padding: 1rem;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            color: #9ca3af;
+            font-size: 0.8rem;
+            padding: 2rem;
+            border-top: 1px solid #e5e7eb;
+            margin-top: 2rem;
+        }
+
+        .footer a {
+            color: #1f2937;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* CTA */
+        .cta-section {
+            text-align: center;
+            padding: 3rem 2rem;
+            background: #fafafa;
+        }
+
+        .cta-section h2 {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 1.75rem;
+            color: #1f2937;
+            margin-bottom: 0.75rem;
+        }
+
+        .cta-section p {
+            color: #6b7280;
+            margin-bottom: 1.5rem;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background: #1f2937;
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .cta-button:hover {
+            background: #111827;
+            transform: translateY(-1px);
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .page-title h1 {
+                font-size: 1.75rem;
+            }
+
+            .section {
+                padding: 1.5rem;
+            }
+
+            .score-circle {
+                width: 130px;
+                height: 130px;
+            }
+
+            .score-value {
+                font-size: 2.25rem;
+            }
+
+            .llm-breakdown {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .tabs-header {
+                flex-wrap: wrap;
+            }
+
+            .tab-btn {
+                padding: 0.5rem 1rem;
+                font-size: 0.8rem;
+            }
+
+            .breakdown-table th,
+            .breakdown-table td {
+                padding: 0.5rem;
+                font-size: 0.8rem;
+            }
+
+            .question-cell {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .modal-content {
+                max-height: 90vh;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <a href="https://adva-solutions.com/AIVisibility" class="logo">adva</a>
+        <div class="header-right">
+            <!-- PDF button hidden for now - backend still available at /report/a4c90fec/pdf
+            <a href="/report/a4c90fec/pdf" class="pdf-button" title="Download as PDF">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                Download PDF
+            </a>
+            -->
+            <button class="copy-link-button" onclick="navigator.clipboard.writeText('https://adva-solutions.github.io/ai-visibility-report/report_dr-lara-oboler_a4c90fec.html'); showToast('Link copied!');" title="Copy shareable link">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                </svg>
+                Copy Link
+            </button>
+            <span class="header-date">February 23, 2026</span>
+        </div>
+    </header>
+    <div class="toast" id="toast">Link copied to clipboard!</div>
+
+    <div class="container">
+        <div class="page-title">
+            <div class="label">AI Visibility Report</div>
+            <h1>Your Brand's <em>AI Presence</em></h1>
+            <p class="brand">Analysis for Dr. Lara Oboler</p>
+        </div>
+
+        <!-- Section 1: AI Visibility Score -->
+        <div class="section score-section">
+            <div class="score-circle">
+                <span class="score-value">0%</span>
+                <span class="score-label">0/15 mentions</span>
+            </div>
+            <p class="score-description">
+                Your brand appeared in <strong>0</strong> out of <strong>15</strong> AI recommendations
+            </p>
+            <div class="llm-breakdown">
+                
+            <div class="llm-stat">
+                <span class="llm-name">GPT</span>
+                <span class="llm-score warning">0/5</span>
+            </div>
+        
+            <div class="llm-stat">
+                <span class="llm-name">Claude</span>
+                <span class="llm-score warning">0/5</span>
+            </div>
+        
+            <div class="llm-stat">
+                <span class="llm-name">Gemini</span>
+                <span class="llm-score warning">0/5</span>
+            </div>
+        
+            </div>
+        </div>
+
+        <!-- Section 2: AI Response Breakdown -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                    </svg>
+                </div>
+                <h2 class="section-title">Question-by-Question Breakdown</h2>
+            </div>
+            <p style="color: #6b7280; margin-bottom: 1rem;">We asked these 5 questions to each AI model. Click any cell to see the full response:</p>
+            
+        <div class="question-breakdown">
+            <table class="breakdown-table">
+                <thead>
+                    <tr>
+                        <th>Question Asked</th>
+                        <th>GPT</th>
+                        <th>Claude</th>
+                        <th>Gemini</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q1</span>
+                    <span class="question-text">cardiology services near me in Manhattan</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="Certainly! Here are some highly regarded cardiology services in Manhattan:<br><br>1. **Mount Sinai Heart**<br>   - **Location:** Multiple locations, including Mount Sinai Hospital.<br>   - **Overview:** Mount Sinai Heart is known for its comprehensive cardiovascular care, offering a wide range of services from preventive cardiology to advanced treatments. The team includes leading experts in various subspecialties, and they are involved in cutting-edge research and clinical trials.<br><br>2. **NYU Langone Health – Cardiology**<br>   - **Location:** NYU Langone Medical Center, 550 First Avenue.<br>   - **Overview:** NYU Langone’s cardiology department is highly rated for its patient care and innovative treatments. They provide a full spectrum of cardiology services, including diagnostic testing, interventional procedures, and cardiac rehabilitation, with a focus on personalized care.<br><br>3. **Columbia University Irving Medical Center – Cardiovascular Medicine**<br>   - **Location:** 630 West 168th Street.<br>   - **Overview:** This facility is part of a leading academic medical center and offers exceptional cardiology services. They specialize in a wide variety of heart conditions and have access to advanced technologies and research, providing patients with cutting-edge treatment options.<br><br>4. **Lenox Hill Hospital – Cardiovascular Services**<br>   - **Location:** 100 E 77th St.<br>   - **Overview:** Lenox Hill Hospital offers a full range of cardiology services, including diagnostics, treatment, and rehabilitation. Their staff includes board-certified cardiologists and access to advanced technology, ensuring comprehensive care for patients with heart conditions.<br><br>5. **Weill Cornell Medicine – Center for Cardiovascular Disease and Prevention**<br>   - **Location:** 1300 York Avenue.<br>   - **Overview:** Weill Cornell Medicine is known for its commitment to cardiovascular health, providing a wide array of services from prevention to advanced treatments. They also emphasize research and education, ensuring that patients receive the most up-to-date care.<br><br>When choosing a cardiology service, consider the specific services you need, the location, and whether you prefer a particular hospital or practice. It’s also beneficial to check for patient reviews and insurance coverage."
+                    data-question="cardiology services near me in Manhattan"
+                    data-llm="gpt4"
+                    data-brand="Dr. Lara Oboler"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top 5 recommendations for cardiology services near you in Manhattan, listed in order of preference:<br><br>1. Mount Sinai Cardiac Care - This renowned academic medical center is home to a team of world-class cardiologists who specialize in the latest treatments and technologies. They offer a comprehensive range of cardiac services, from preventive care to complex interventions.<br><br>2. NewYork-Presbyterian/Weill Cornell Medicine - A leading healthcare provider in New York City, NewYork-Presbyterian offers exceptional cardiac care through its team of experienced cardiologists and state-of-the-art facilities. They excel in areas like heart disease management, cardiac imaging, and minimally invasive procedures.<br><br>3. NYU Langone Health - With multiple locations in Manhattan, NYU Langone&#39;s cardiology department is known for its innovative approaches to heart care. They have expertise in areas like electrophysiology, heart failure treatment, and cardiovascular imaging.<br><br>4. Columbia University Irving Medical Center - As an academic medical center, Columbia&#39;s cardiology services benefit from the latest research and advancements in the field. Patients have access to a wide range of cardiac services, including advanced diagnostics and complex interventions.<br><br>5. Lenox Hill Hospital - Part of Northwell Health, Lenox Hill Hospital has a renowned cardiology program that provides comprehensive care, from preventive services to complex cardiac surgeries. Their team of cardiologists is highly experienced and utilizes the latest technologies.<br><br>These top recommendations are based on the medical centers&#39; reputations, the expertise of their cardiologists, the range of cardiac services offered, and their recognition for excellence in heart care. I encourage you to research each option further and consider factors like insurance coverage, location, and patient reviews to determine the best fit for your specific needs."
+                    data-question="cardiology services near me in Manhattan"
+                    data-llm="claude"
+                    data-brand="Dr. Lara Oboler"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Okay, I can help you with some recommendations for cardiology services in Manhattan.  Since I don&#39;t know your specific location within Manhattan or your insurance, I&#39;ll focus on well-regarded practices with multiple cardiologists and good reputations. **It&#39;s crucial to verify that any practice you choose accepts your insurance and that the specific doctors you might see are in-network.**  Also, consider factors like ease of appointment scheduling and location relative to your home or work.<br><br>Here are my recommendations, in order of preference based on overall reputation, breadth of services, and patient feedback:<br><br>1.  **NewYork-Presbyterian/Columbia University Irving Medical Center - Division of Cardiology:**  This is a top-ranked cardiology program nationally and within New York City. They offer a full range of services, from preventative cardiology to advanced treatments for complex heart conditions. They have multiple locations within Manhattan.<br>    *   **Why it&#39;s top-ranked:**  Cutting-edge research, highly specialized physicians, access to advanced technology, and a comprehensive range of cardiac services, including heart transplantation.  They have a strong reputation for treating complex cases.  The affiliation with Columbia University means they&#39;re often at the forefront of new treatments and research.<br>    *   **Things to consider:**  Because it&#39;s a large academic medical center, it can sometimes be more challenging to navigate the system and get appointments with specific doctors. Wait times *can* be longer.<br><br>2.  **Mount Sinai Heart:** This is another highly regarded cardiology program with multiple locations throughout Manhattan. They are known for their excellence in cardiac care and research.<br>    *   **Why it&#39;s a strong choice:** Mount Sinai has a robust cardiology department with specialists in various areas, including interventional cardiology, electrophysiology, and heart failure. They offer advanced diagnostic testing and treatment options. They also have a strong focus on patient education and preventative care.<br>    *   **Things to consider:** Similar to NYP, it&#39;s a large system, so confirm your specific doctor&#39;s location and insurance acceptance.<br><br>3.  **NYU Langone Heart:**  NYU Langone is a well-respected medical center with a strong cardiology department. They offer comprehensive cardiac care, including preventative services, diagnostic testing, and advanced treatments.<br>    *   **Why it&#39;s a good option:** They have a wide network of cardiologists and locations, making it potentially easier to find a doctor and location that&#39;s convenient for you. They are known for their patient-centered approach and commitment to quality care.<br>    *   **Things to consider:**  Again, confirm insurance and specific doctor availability.<br><br>4.  **Weill Cornell Medicine - Department of Cardiology:** Affiliated with NewYork-Presbyterian, Weill Cornell offers comprehensive cardiology services with a focus on personalized care.<br>    *   **Why it&#39;s a good option:** Benefits from the NewYork-Presbyterian system but with a potentially more personalized approach. Strong focus on research and innovation.<br>    *   **Things to consider:** Similar to NYP and other large systems, navigating the system and confirming insurance acceptance are important.<br><br>**Important Considerations Before Choosing:**<br><br>*   **Insurance Coverage:** This is the *most important* factor.  Call your insurance provider to confirm which cardiologists and practices are in-network.<br>*   **Specific Needs:** Consider your specific cardiac needs. Do you need preventative care, or do you have a specific heart condition that requires specialized treatment? Some practices may have particular strengths in certain areas.<br>*   **Doctor Profiles:** Once you have a list of practices that accept your insurance, research the individual cardiologists within those practices. Look for doctors with experience in your specific condition and who have good patient reviews. (Use sites like Healthgrades, Zocdoc, or Vitals.)<br>*   **Location and Accessibility:** Choose a location that is convenient for you to travel to.<br>*   **Appointment Availability:** Call the practices to inquire about appointment availability and wait times.<br><br>**How to Use This Information:**<br><br>1.  **Check Your Insurance:**  Call your insurance company and ask for a list of cardiologists in Manhattan who are in-network.<br>2.  **Research the Practices:**  Visit the websites of the practices listed above (and any others on your insurance list) to learn more about their services and cardiologists.<br>3.  **Read Reviews:**  Look up the cardiologists on Healthgrades, Zocdoc, or Vitals to read patient reviews.<br>4.  **Call and Ask Questions:**  Call the practices to ask about appointment availability, insurance acceptance, and any other questions you may have.<br><br>I hope this helps you find a great cardiologist in Manhattan! Remember to prioritize your insurance coverage and do your research to find the best fit for your individual needs.<br>"
+                    data-question="cardiology services near me in Manhattan"
+                    data-llm="gemini"
+                    data-brand="Dr. Lara Oboler"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q2</span>
+                    <span class="question-text">top cardiologist in New York City</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are some highly regarded cardiologists in New York City, known for their expertise and patient care:<br><br>1. **Dr. Valentin Fuster**  <br>   - **Affiliation:** Mount Sinai Health System  <br>   - **Specialty:** Preventive cardiology, cardiovascular disease, and research  <br>   - **Overview:** Dr. Fuster is a world-renowned cardiologist and the director of Mount Sinai Heart. He has made significant contributions to the field, particularly in research on atherosclerosis and cardiovascular prevention. His extensive experience and commitment to patient education make him a top choice.<br><br>2. **Dr. Eric Topol**  <br>   - **Affiliation:** Scripps Research (formerly with Mount Sinai)  <br>   - **Specialty:** Interventional cardiology and digital medicine  <br>   - **Overview:** Dr. Topol is recognized for his pioneering work in cardiology and digital health. He has been influential in integrating technology into cardiac care and has authored several books on medicine and healthcare. His innovative approach and deep understanding of cardiovascular health make him a leading figure in the field.<br><br>3. **Dr. Samin K. Sharma**  <br>   - **Affiliation:** Mount Sinai Health System  <br>   - **Specialty:** Interventional cardiology  <br>   - **Overview:** Dr. Sharma is renowned for his expertise in interventional cardiology, particularly in complex coronary interventions. He is also highly regarded for his compassionate patient care and thorough approach to treatment. His leadership at Mount Sinai&#39;s cardiac programs makes him a trusted choice for patients.<br><br>4. **Dr. David Agus**  <br>   - **Affiliation:** USC Keck School of Medicine (formerly at NYU Langone)  <br>   - **Specialty:** Cardiovascular oncology  <br>   - **Overview:** Dr. Agus is known for his work at the intersection of cardiology and oncology, particularly in understanding the cardiovascular effects of cancer treatments. He is a best-selling author and a sought-after speaker, known for his ability to communicate complex medical concepts to patients and the public.<br><br>5. **Dr. Pamela S. Douglas**  <br>   - **Affiliation:** Duke University (formerly associated with NYU)  <br>   - **Specialty:** Non-invasive cardiology and imaging  <br>   - **Overview:** Dr. Douglas is a leader in non-invasive cardiac imaging and has played a pivotal role in advancing cardiovascular diagnostics. Her research and clinical work focus on improving patient outcomes and understanding heart disease, making her a respected figure in the cardiology community.<br><br>These recommendations are based on the cardiologists&#39; expertise, contributions to the field, and reputation among patients and peers. Always consult with your primary care physician for a referral tailored to your specific health needs."
+                    data-question="top cardiologist in New York City"
+                    data-llm="gpt4"
+                    data-brand="Dr. Lara Oboler"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top 5 recommendations for the top cardiologists in New York City, listed in order of preference:<br><br>1. Dr. Valentin Fuster - Mount Sinai Hospital<br>   - Dr. Fuster is widely regarded as one of the world&#39;s leading cardiologists, with expertise in preventive cardiology and cardiovascular disease management.<br>   - He is the Director of Mount Sinai Heart and Physician-in-Chief of The Mount Sinai Hospital, as well as a Professor of Cardiology at the Icahn School of Medicine at Mount Sinai.<br>   - Dr. Fuster has received numerous prestigious awards and honors, including the Presidential Medal of Freedom, the highest civilian honor in the United States.<br><br>2. Dr. Samin Sharma - Mount Sinai Hospital<br>   - Dr. Sharma is a highly respected interventional cardiologist and the Director of Clinical and Interventional Cardiology at Mount Sinai Hospital.<br>   - He is known for his expertise in complex coronary interventions, including the treatment of chronic total occlusions and high-risk percutaneous coronary interventions.<br>   - Dr. Sharma has published extensively in peer-reviewed journals and is a sought-after speaker at national and international cardiology conferences.<br><br>3. Dr. Nieca Goldberg - NYU Langone Health<br>   - Dr. Goldberg is a renowned cardiologist and the Medical Director of the Joan H. Tisch Center for Women&#39;s Health at NYU Langone Health.<br>   - She is an expert in women&#39;s heart health and has pioneered research and educational initiatives to address the unique cardiovascular needs of women.<br>   - Dr. Goldberg is also a clinical associate professor of medicine at the NYU Grossman School of Medicine and a frequent media commentator on heart health.<br><br>4. Dr. Laurence Katz - NewYork-Presbyterian/Columbia University Irving Medical Center<br>   - Dr. Katz is the Chief of the Division of Cardiology at NewYork-Presbyterian/Columbia University Irving Medical Center.<br>   - He specializes in the treatment of complex cardiovascular conditions, including heart failure, valvular heart disease, and coronary artery disease.<br>   - Dr. Katz is known for his innovative approaches to cardiac care and has been recognized as one of the top cardiologists in the country by various healthcare rankings.<br><br>5. Dr. Rajesh Janardhanan - Weill Cornell Medicine<br>   - Dr. Janardhanan is the Director of the Hypertrophic Cardiomyopathy Program at Weill Cornell Medicine and NewYork-Presbyterian.<br>   - He is an expert in the diagnosis and management of hypertrophic cardiomyopathy, a genetic heart condition that can lead to sudden cardiac death.<br>   - Dr. Janardhanan has published extensively on hypertrophic cardiomyopathy and is a frequent speaker at national and international cardiology conferences.<br><br>Please note that these recommendations are based on the cardiologists&#39; reputation, expertise, and recognition within the medical community. It&#39;s always advisable to consult with your primary care physician or healthcare provider to determine the best specialist for your specific medical needs."
+                    data-question="top cardiologist in New York City"
+                    data-llm="claude"
+                    data-brand="Dr. Lara Oboler"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Okay, providing specific &quot;top&quot; doctors is difficult as &quot;best&quot; is subjective and depends on individual needs and priorities. However, I can give you a list of highly respected and well-regarded cardiologists in New York City, along with brief explanations of why they are often recommended.  It&#39;s crucial to do your own research and ensure they are in-network with your insurance and accepting new patients.<br><br>**Important Considerations Before Choosing:**<br><br>*   **Your Specific Condition:**  Some cardiologists specialize in specific areas like heart failure, electrophysiology (arrhythmias), interventional cardiology (angioplasty/stents), or preventative cardiology. Consider your specific condition when choosing.<br>*   **Insurance Coverage:**  Verify that the doctor is in-network with your insurance plan.<br>*   **Hospital Affiliation:**  Consider which hospitals the doctor is affiliated with, as this can be important if you need hospitalization or procedures.<br>*   **Patient Reviews:**  Read online reviews on sites like Zocdoc, Healthgrades, and Vitals, but take them with a grain of salt.<br>*   **Personal Preference:** Consider factors like communication style, bedside manner, and office location.<br><br>**Top Recommendations (In order of consideration, but not definitive &quot;best&quot;):**<br><br>1.  **Dr. Valentin Fuster, MD, PhD - Mount Sinai Hospital**<br>    *   **Why:** Dr. Fuster is a world-renowned cardiologist and researcher with extensive experience in preventative cardiology, imaging, and thrombosis. He is known for his contributions to understanding and preventing cardiovascular disease. He is highly respected within the medical community and has published extensively.  His expertise is particularly valuable if you&#39;re focused on prevention or have complex cardiovascular issues.<br>    *   **Keep in Mind:**  Due to his prominence, it may be challenging to get an appointment quickly.<br><br>2. **Dr. Allan Stewart, MD - Mount Sinai Hospital**<br>    *   **Why:** Dr. Stewart is a renowned Cardiac Surgeon, with expertise in heart transplantation and minimally invasive cardiac surgery. He is the Chairman of Cardiac Surgery at HCA East Florida Division.<br>    *   **Keep in Mind:**  Due to his prominence, it may be challenging to get an appointment quickly.<br><br>3.  **Dr. Harmony R. Reynolds, MD - NYU Langone Health**<br>    *   **Why:** Dr. Reynolds is a highly respected cardiologist known for her expertise in cardiovascular disease in women and clinical trials. She is involved in research aimed at improving the diagnosis and treatment of heart disease, particularly in women. Her focus on gender-specific cardiac care is a significant asset.<br>    *   **Keep in Mind:** Her practice may be more geared towards research and specialized cases.<br><br>4.  **Dr. Holly S. Andersen, MD - NewYork-Presbyterian/Weill Cornell Medical Center**<br>    *   **Why:** Dr. Andersen is a cardiologist specializing in preventative cardiology and women&#39;s heart health. She&#39;s known for her clear communication and patient-centered approach. She is also a strong advocate for heart health awareness.<br>    *   **Keep in Mind:** Her focus is primarily on preventative cardiology.<br><br>5.  **Dr. Lori Croft, MD - Mount Sinai Hospital**<br>    *   **Why:** Dr. Croft is a board-certified cardiologist with expertise in echocardiography and general cardiology. She is known for her thoroughness and compassionate patient care.<br>    *   **Keep in Mind:** She may be a good choice for general cardiac care and diagnosis, but may refer out for more specialized procedures.<br><br>**Important Next Steps:**<br><br>1.  **Research:**  Visit the websites of these doctors and their affiliated hospitals.<br>2.  **Insurance Verification:**  Contact your insurance company to confirm coverage.<br>3.  **Call the Office:**  Call the doctor&#39;s office to inquire about appointment availability and whether they are accepting new patients.<br>4.  **Read Reviews:**  Look for recent patient reviews online.<br>5.  **Consult with Your Primary Care Physician:**  Discuss your needs with your primary care physician for their recommendation.<br><br>**Disclaimer:** This information is for general guidance only and does not constitute medical advice. It is essential to consult with a qualified healthcare professional for any health concerns or before making any decisions related to your health or treatment. I am an AI chatbot and cannot provide medical advice.<br>"
+                    data-question="top cardiologist in New York City"
+                    data-llm="gemini"
+                    data-brand="Dr. Lara Oboler"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q3</span>
+                    <span class="question-text">how to find a cardiologist who listens to patients</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="Finding a cardiologist who listens to patients is crucial for effective care and building a trusting doctor-patient relationship. Here are my top recommendations to help you in your search:<br><br>1. **Ask for Referrals from Primary Care Physicians**  <br>   Your primary care doctor knows your health history and can recommend cardiologists who are known for their patient-centered approach. These referrals often come with insights about the cardiologist’s communication style and willingness to engage with patients.<br><br>2. **Check Online Reviews and Ratings**  <br>Websites like Healthgrades, Vitals, and Zocdoc allow patients to leave reviews about their experiences. Look for cardiologists with high ratings specifically for communication and listening skills. Pay attention to the comments for specific mentions of how well the physician engages with patients.<br><br>3. **Consult Professional Organizations**  <br>Organizations like the American College of Cardiology (ACC) provide directories of certified cardiologists. They may also have resources or recommendations for patient-friendly practitioners. You can filter results based on location and specialty, and sometimes find additional patient resources.<br><br>4. **Schedule a Preliminary Consultation**  <br>Before committing to a cardiologist, consider scheduling an initial appointment. Use this visit to gauge how the doctor interacts with you. Pay attention to whether they listen to your concerns, answer your questions thoroughly, and involve you in decision-making about your care.<br><br>5. **Seek Recommendations from Patient Support Groups**  <br>Joining local or online heart disease support groups can provide valuable insights. Current or former patients often share their experiences with different cardiologists, helping you find someone who is known for being attentive and empathetic.<br><br>By following these recommendations, you can increase your chances of finding a cardiologist who prioritizes patient communication and care."
+                    data-question="how to find a cardiologist who listens to patients"
+                    data-llm="gpt4"
+                    data-brand="Dr. Lara Oboler"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top 5 recommendations for finding a cardiologist who listens to patients:<br><br>1. Ask for referrals from your primary care physician or other healthcare providers you trust. They often have relationships with specialists and can provide insights into which cardiologists are known for taking the time to listen and address patient concerns.<br><br>2. Check online reviews and ratings for cardiologists in your area. Look for patterns in the feedback, such as comments about the doctor&#39;s bedside manner, communication style, and willingness to involve the patient in decision-making. Pay close attention to reviews that specifically mention the doctor&#39;s ability to listen.<br><br>3. Reach out to your insurance provider and ask for recommendations of in-network cardiologists who are known for their patient-centered approach. Many insurers have programs that evaluate and recognize physicians who excel in areas like patient satisfaction and communication.<br><br>4. Consult with your local hospital or medical center&#39;s physician referral service. They often have detailed information about the specialties, experience, and patient ratings of the cardiologists on their medical staff, which can help you identify ones who are known for being attentive listeners.<br><br>5. Schedule a brief consultation with a few cardiologists before choosing one. This will give you a chance to assess their communication style and how well they listen to your concerns. Pay attention to whether they take the time to understand your medical history and treatment goals, and whether they encourage you to ask questions and be an active participant in your care.<br><br>The key is to do your research, prioritize patient-centered care, and trust your instincts when it comes to finding a cardiologist who will truly listen to you."
+                    data-question="how to find a cardiologist who listens to patients"
+                    data-llm="claude"
+                    data-brand="Dr. Lara Oboler"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Okay, here are my top 5 recommendations for finding a cardiologist who listens to patients, ranked in order of preference, with brief explanations:<br><br>1.  **Ask Your Primary Care Physician (PCP) for a Recommendation (and Be Specific):**<br>    *   **Why it&#39;s #1:** Your PCP knows your medical history and likely has insights into the communication styles of local cardiologists. They&#39;ve also probably received feedback from other patients.<br>    *   **How to do it effectively:** Don&#39;t just say &quot;I need a cardiologist.&quot; Instead, say something like, &quot;I&#39;m looking for a cardiologist who is known for taking the time to explain things clearly, listens to my concerns, and is open to discussing different treatment options. Do you have any recommendations based on those qualities?&quot;  Be specific about *why* you&#39;re asking for the recommendation.<br><br>2.  **Check Online Reviews and Focus on Communication:**<br>    *   **Why it&#39;s #2:** Online reviews (e.g., Healthgrades, Vitals, Zocdoc, Google Reviews) can provide valuable firsthand accounts of patient experiences.<br>    *   **How to do it effectively:** Filter reviews by keywords like &quot;listens,&quot; &quot;explains,&quot; &quot;communication,&quot; &quot;patient,&quot; &quot;caring,&quot; &quot;empathetic,&quot; or &quot;thorough.&quot; Pay attention to patterns. A few negative reviews are normal, but if you see a consistent theme of feeling rushed, dismissed, or poorly informed, that&#39;s a red flag.  Also, look for reviews that mention the cardiologist specifically answering questions or addressing concerns.  Be cautious of reviews that are overly vague or generic (&quot;Great doctor!&quot;).<br><br>3.  **Seek Recommendations from Friends, Family, and Support Groups:**<br>    *   **Why it&#39;s #3:** Personal recommendations often carry significant weight. People are more likely to be honest and forthcoming about their experiences with doctors when speaking to someone they trust.<br>    *   **How to do it effectively:**  Ask specifically about the cardiologist&#39;s communication style and bedside manner.  &quot;Did you feel like the doctor listened to your concerns? Did they explain things in a way that was easy to understand? Did you feel rushed during your appointments?&quot;  Don&#39;t just ask &quot;Do you like your cardiologist?&quot;  Ask targeted questions. Also, consider support groups related to heart conditions. Members often share valuable insights.<br><br>4.  **Schedule a &quot;Meet and Greet&quot; Consultation (If Possible):**<br>    *   **Why it&#39;s #4:** Some clinics offer brief, introductory consultations (often free or at a reduced cost) where you can meet the doctor and ask questions before committing to a full appointment.<br>    *   **How to do it effectively:** Inquire about the possibility of a &quot;meet and greet&quot; when you call to schedule. Prepare a list of questions to ask the cardiologist, focusing on their approach to patient care, communication style, and willingness to involve patients in decision-making. It&#39;s a great way to gauge their personality and communication style before investing time and money in a full consultation.<br><br>5.  **Consider Hospital Affiliation and Teaching Hospitals:**<br>    *   **Why it&#39;s #5:** Cardiologists affiliated with reputable hospitals or teaching hospitals often have higher standards for patient care and communication. Teaching hospitals often emphasize evidence-based medicine and patient education.<br>    *   **How to do it effectively:** Research the cardiologist&#39;s hospital affiliation. Look for hospitals with strong reputations and patient satisfaction scores. Cardiologists at teaching hospitals might be more up-to-date on the latest research and treatments, and they may be more accustomed to explaining complex medical concepts to students and patients. However, be aware that wait times might be longer at teaching hospitals.<br><br>Remember that finding the right doctor is a personal process. What works for one person may not work for another. Be proactive in your search, ask questions, and trust your gut. Good luck!<br>"
+                    data-question="how to find a cardiologist who listens to patients"
+                    data-llm="gemini"
+                    data-brand="Dr. Lara Oboler"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q4</span>
+                    <span class="question-text">comprehensive cardiovascular disease treatment options</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="When considering comprehensive treatment options for cardiovascular disease (CVD), it&#39;s essential to adopt a multifaceted approach tailored to the individual&#39;s specific condition, risk factors, and overall health. Here are my top recommendations:<br><br>1. **Lifestyle Modifications:**<br>   - **Diet and Nutrition:** Adopting a heart-healthy diet such as the Mediterranean diet, which emphasizes fruits, vegetables, whole grains, lean proteins (like fish and poultry), and healthy fats (like olive oil), can significantly reduce cardiovascular risk. Reducing sodium intake and avoiding trans fats and excessive sugars is crucial.<br>   - **Exercise:** Regular physical activity (at least 150 minutes of moderate-intensity aerobic exercise per week) is vital for improving cardiovascular health, managing weight, and reducing blood pressure and cholesterol levels.<br>   - **Smoking Cessation:** Quitting smoking is one of the most effective ways to improve heart health and reduce the risk of CVD.<br><br>2. **Pharmacological Treatments:**<br>   - **Antihypertensives:** Medications such as ACE inhibitors, beta-blockers, and diuretics are often prescribed to control high blood pressure, a major risk factor for CVD.<br>   - **Statins:** These cholesterol-lowering medications help reduce LDL cholesterol levels, thereby lowering the risk of heart disease and stroke.<br>   - **Antiplatelet Agents:** Aspirin or other antiplatelet medications can help prevent blood clots, especially in individuals with a history of heart attacks or certain types of angina.<br><br>3. **Cardiac Rehabilitation:**<br>   - This supervised program combines education, exercise training, and counseling to support recovery after a heart event (like a heart attack or surgery). It helps patients develop a personalized plan to improve cardiovascular health, manage stress, and adopt a healthier lifestyle.<br><br>4. **Interventional Procedures:**<br>   - For some patients, especially those with significant blockages in coronary arteries, procedures such as angioplasty and stenting or coronary artery bypass grafting (CABG) may be necessary to restore adequate blood flow to the heart.<br><br>5. **Monitoring and Management of Comorbidities:**<br>   - Regular monitoring and management of other conditions such as diabetes, obesity, and hyperlipidemia are crucial in minimizing cardiovascular risks. This includes periodic assessments and adjustments to treatment plans based on the individual’s health status.<br><br>These recommendations should be discussed with a healthcare provider to tailor a treatment plan that considers the individual&#39;s unique needs and circumstances."
+                    data-question="comprehensive cardiovascular disease treatment options"
+                    data-llm="gpt4"
+                    data-brand="Dr. Lara Oboler"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="When it comes to comprehensive cardiovascular disease treatment options, here are my top 5 recommendations, listed in order of preference:<br><br>1. Lifestyle Modifications:<br>   - This is often the first and most important step in cardiovascular disease treatment.<br>   - Includes changes to diet, exercise, and other lifestyle factors that can help manage risk factors such as high blood pressure, high cholesterol, and obesity.<br>   - Examples include a heart-healthy diet, regular physical activity, smoking cessation, and stress management.<br><br>2. Pharmacological Therapy:<br>   - Medications are often prescribed to manage specific cardiovascular risk factors or treat the underlying condition.<br>   - Common medications include antihypertensive drugs (e.g., ACE inhibitors, ARBs, diuretics), cholesterol-lowering medications (e.g., statins), and antiplatelet agents (e.g., aspirin).<br>   - The specific medications and dosages are tailored to the individual patient&#39;s needs and health status.<br><br>3. Interventional Procedures:<br>   - For more advanced or severe cardiovascular conditions, interventional procedures may be necessary.<br>   - Examples include coronary artery bypass grafting (CABG), percutaneous coronary intervention (PCI) with stent placement, and transcatheter aortic valve replacement (TAVR).<br>   - These procedures aim to improve blood flow, reduce symptoms, and prevent further complications.<br><br>4. Cardiac Rehabilitation:<br>   - A comprehensive program that combines exercise, education, and counseling to help patients with cardiovascular disease improve their physical, emotional, and social well-being.<br>   - Typically includes supervised exercise sessions, nutritional counseling, and support for lifestyle modifications.<br>   - Proven to reduce the risk of future cardiovascular events and improve overall quality of life.<br><br>5. Combination Therapies:<br>   - In many cases, a combination of the above approaches may be the most effective treatment strategy.<br>   - For example, lifestyle modifications combined with pharmacological therapy and/or interventional procedures can provide a more comprehensive and tailored approach to managing cardiovascular disease.<br>   - The specific combination of treatments will depend on the individual patient&#39;s needs, the severity of their condition, and the expertise of their healthcare team.<br><br>It&#39;s important to note that the selection and prioritization of these treatment options may vary based on the individual patient&#39;s specific circumstances, medical history, and the expertise of their healthcare provider. Regular communication with a qualified cardiovascular specialist is crucial for developing and implementing the most appropriate treatment plan."
+                    data-question="comprehensive cardiovascular disease treatment options"
+                    data-llm="claude"
+                    data-brand="Dr. Lara Oboler"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Okay, here are 3 comprehensive cardiovascular disease treatment options, ranked in order of preference, assuming a general case. It&#39;s crucial to remember that the **best treatment plan is highly individualized** and depends on the specific type of cardiovascular disease, its severity, your overall health, risk factors, and personal preferences.  **Always consult with a qualified cardiologist or healthcare team for a personalized diagnosis and treatment plan.**<br><br>**Top 3 Comprehensive Cardiovascular Disease Treatment Options (General Case):**<br><br>1.  **Lifestyle Modification and Medical Management (First-Line for Prevention and Early Stages):**<br><br>    *   **Explanation:** This is almost always the cornerstone of cardiovascular disease management, regardless of other interventions. It focuses on addressing modifiable risk factors and managing symptoms with medication.<br>    *   **Components:**<br>        *   **Diet:** Heart-healthy diet (low in saturated and trans fats, cholesterol, and sodium; rich in fruits, vegetables, whole grains, and lean protein).  Consider the DASH or Mediterranean diet.<br>        *   **Exercise:** Regular physical activity (at least 150 minutes of moderate-intensity or 75 minutes of vigorous-intensity aerobic exercise per week, plus strength training).<br>        *   **Weight Management:** Achieving and maintaining a healthy weight.<br>        *   **Smoking Cessation:** Absolutely essential for anyone who smokes.<br>        *   **Stress Management:** Techniques like meditation, yoga, or counseling.<br>        *   **Medications:**<br>            *   **Statins:** To lower cholesterol.<br>            *   **Antiplatelet agents (e.g., aspirin, clopidogrel):** To prevent blood clots.<br>            *   **ACE inhibitors or ARBs:** To lower blood pressure and protect the kidneys.<br>            *   **Beta-blockers:** To lower heart rate and blood pressure.<br>            *   **Diuretics:** To reduce fluid retention and lower blood pressure.<br>            *   **Nitrates:** To relieve chest pain (angina).<br>    *   **Why it&#39;s preferred:**  It&#39;s the least invasive, has the fewest side effects, and addresses the underlying causes of cardiovascular disease.  It&#39;s also essential for maintaining the benefits of any other interventions.  It&#39;s also critical for preventing the progression of disease in early stages and for preventing recurrence after procedures.<br><br>2.  **Percutaneous Coronary Intervention (PCI) - Angioplasty and Stenting (For Significant Coronary Artery Disease):**<br><br>    *   **Explanation:** This is a minimally invasive procedure to open blocked coronary arteries, improving blood flow to the heart muscle.<br>    *   **Procedure:** A catheter with a balloon tip is inserted into an artery (usually in the wrist or groin) and guided to the blocked artery. The balloon is inflated to compress the plaque, and a stent (a small mesh tube) is typically placed to keep the artery open.<br>    *   **Indications:**  Significant coronary artery disease causing angina (chest pain), heart attack, or other symptoms related to reduced blood flow to the heart.<br>    *   **Why it&#39;s ranked second:**  It&#39;s effective for quickly relieving symptoms and improving blood flow in many cases. It&#39;s less invasive than open-heart surgery. However, it doesn&#39;t address the underlying disease process, so lifestyle changes and medications are still crucial after the procedure.  There&#39;s also a risk of stent restenosis (re-narrowing of the artery).<br><br>3.  **Coronary Artery Bypass Grafting (CABG) - Open-Heart Surgery (For Severe or Complex Coronary Artery Disease):**<br><br>    *   **Explanation:** This is a surgical procedure to bypass blocked coronary arteries using a healthy blood vessel taken from another part of the body (usually the leg, arm, or chest).<br>    *   **Procedure:** The surgeon creates a new route for blood to flow around the blocked artery, restoring blood supply to the heart muscle.<br>    *   **Indications:**  Severe coronary artery disease involving multiple arteries, blockages in the left main coronary artery, or when PCI is not feasible or has failed.<br>    *   **Why it&#39;s ranked third:**  It&#39;s a more invasive procedure than PCI, with a longer recovery time and higher risk of complications. However, it can be more effective than PCI for certain types of coronary artery disease and can provide more durable results in some cases.  Like PCI, it doesn&#39;t address the underlying disease process, so lifestyle changes and medications are still essential.<br><br>**Important Considerations:**<br><br>*   **Prevention is Key:**  The best treatment is prevention.  Focusing on lifestyle modifications from a young age can significantly reduce the risk of developing cardiovascular disease.<br>*   **Early Detection:**  Regular check-ups with your doctor can"
+                    data-question="comprehensive cardiovascular disease treatment options"
+                    data-llm="gemini"
+                    data-brand="Dr. Lara Oboler"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q5</span>
+                    <span class="question-text">best cardiologist for heart health prevention</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="While I can&#39;t provide specific names or locations for cardiologists, I can guide you on what to look for when seeking the best cardiologist for heart health prevention. Here are my recommendations for choosing a cardiologist, along with key factors to consider:<br><br>### 1. **Board-Certified Cardiologist**<br>   - **Explanation:** Look for a cardiologist who is board-certified in cardiovascular disease. This certification indicates that the doctor has completed the necessary training and has passed rigorous exams. Board-certified cardiologists are up-to-date with the latest advancements and guidelines in heart health.<br><br>### 2. **Specialization in Preventive Cardiology**<br>   - **Explanation:** Some cardiologists specialize in preventive cardiology, focusing on risk assessment, lifestyle modifications, and preventive measures to reduce heart disease. They are knowledgeable about managing risk factors like hypertension, diabetes, and cholesterol levels and can provide personalized advice for heart health prevention.<br><br>### 3. **Positive Patient Reviews and Reputation**<br>   - **Explanation:** Research patient reviews and testimonials to gauge the experiences of others with the cardiologist. Look for a physician who is known for being approachable, attentive, and thorough. A good reputation among patients can indicate a cardiologist who prioritizes preventive care and patient education.<br><br>### 4. **Hospital Affiliation and Access to Resources**<br>   - **Explanation:** Consider the cardiologist’s affiliation with reputable hospitals or medical centers. Access to advanced diagnostic tools and resources can enhance the quality of care. A well-connected cardiologist can provide comprehensive preventive care and easily refer you to specialists if needed.<br><br>### 5. **Focus on Lifestyle Medicine**<br>   - **Explanation:** A cardiologist who incorporates lifestyle medicine into their practice may offer guidance on nutrition, exercise, stress management, and smoking cessation. These factors play a crucial role in heart health prevention. Look for a cardiologist who emphasizes the importance of lifestyle changes in conjunction with medical interventions.<br><br>### Conclusion<br>When choosing a cardiologist for heart health prevention, prioritize those who are board-certified, specialize in preventive cardiology, have a good reputation, are affiliated with reputable hospitals, and focus on lifestyle medicine. Always consult with your primary care physician for recommendations tailored to your specific needs and location."
+                    data-question="best cardiologist for heart health prevention"
+                    data-llm="gpt4"
+                    data-brand="Dr. Lara Oboler"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top 5 recommendations for the best cardiologists for heart health prevention, in order of preference:<br><br>1. Dr. Mehmet Oz - Dr. Oz is a world-renowned cardiac surgeon and professor of surgery at Columbia University. He is known for his expertise in minimally invasive heart procedures and his focus on preventive cardiology. He emphasizes the importance of lifestyle factors like diet, exercise, and stress management in maintaining heart health.<br><br>2. Dr. Clyde Yancy - Dr. Yancy is the chief of cardiology at Northwestern Medicine and a past president of the American Heart Association. He is an expert in cardiovascular disease prevention and has a particular focus on addressing health disparities in underserved populations.<br><br>3. Dr. Deepak Bhatt - Dr. Bhatt is the executive director of Interventional Cardiovascular Programs at Brigham and Women&#39;s Hospital and a professor at Harvard Medical School. He is known for his research on the use of novel therapies and technologies in the prevention and treatment of cardiovascular disease.<br><br>4. Dr. Valentin Fuster - Dr. Fuster is the director of the Mount Sinai Heart Center and a renowned expert in preventive cardiology. He has made significant contributions to our understanding of the underlying causes of heart disease and the importance of early intervention.<br><br>5. Dr. Noel Bairey Merz - Dr. Bairey Merz is the director of the Barbra Streisand Women&#39;s Heart Center at Cedars-Sinai Medical Center and a professor of medicine at the University of California, Los Angeles. She is a pioneer in the field of women&#39;s heart health and has focused on addressing the unique challenges and risk factors that women face in terms of cardiovascular disease.<br><br>These cardiologists are widely recognized for their expertise in preventive cardiology, their commitment to innovative research and treatments, and their dedication to improving the overall heart health of their patients."
+                    data-question="best cardiologist for heart health prevention"
+                    data-llm="claude"
+                    data-brand="Dr. Lara Oboler"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Okay, I understand you&#39;re looking for recommendations for a cardiologist specializing in heart health prevention. Since I am an AI, I cannot provide medical advice or endorse specific doctors. However, I can offer general strategies you can use to find a good preventative cardiologist and suggest the *types* of attributes to look for.<br><br>**Here&#39;s a strategy and some potential avenues to explore.  Remember to do your own thorough research and consult with your primary care physician for referrals:**<br><br>**1. Start with Your Primary Care Physician (PCP):**<br><br>*   **Why:** Your PCP knows your medical history best and likely has a network of trusted specialists they refer to regularly.  This is the *most important* first step.<br>*   **Action:** Schedule an appointment with your PCP and explain that you&#39;re proactively seeking a preventative cardiologist. Ask for their top 2-3 recommendations, explaining your focus on prevention.<br><br>**2.  Focus on Academic Medical Centers and Teaching Hospitals:**<br><br>*   **Why:** Cardiologists associated with these institutions are often at the forefront of research and the latest preventative strategies. They are more likely to be involved in clinical trials and have access to advanced diagnostic tools.<br>*   **Action:** Research major hospitals and university medical centers in your area.  Look for their cardiology departments and specifically search for cardiologists specializing in preventative cardiology.<br><br>**3.  Check Board Certifications and Specializations:**<br><br>*   **Why:** Board certification ensures a cardiologist has met rigorous standards of training and knowledge.  Look for certifications in cardiology from the American Board of Internal Medicine (ABIM).  Beyond general cardiology, look for cardiologists with specific expertise in preventative cardiology, lipid management, or cardiac imaging for early detection.<br>*   **Action:** Use online resources like the ABIM website to verify a cardiologist&#39;s certification.  Review their online profiles or websites to see if they emphasize preventative cardiology in their practice.<br><br>**4.  Read Online Reviews and Patient Testimonials (with a grain of salt):**<br><br>*   **Why:** While online reviews should be taken with caution, they can provide insights into a cardiologist&#39;s bedside manner, communication skills, and office environment.  Look for recurring themes in the reviews.<br>*   **Action:** Use websites like Healthgrades, Vitals, Zocdoc, or Google Reviews to read patient feedback.  Pay attention to reviews that mention the doctor&#39;s approach to preventative care, their ability to explain complex information clearly, and their responsiveness to patient concerns.  Remember that reviews are subjective and may not represent everyone&#39;s experience.<br><br>**5. Consider these doctor attributes:**<br>*   Experience: How long has he/she been in practice?<br>*   Bedside manner: Do you feel comfortable talking to him/her?<br>*   Communication: Does he/she explain things clearly?<br>*   Does he/she listen to your concerns?<br>*   Does the doctor stay up to date on current research?<br>*   Does the doctor have any special expertise in preventative cardiology?<br><br>**Important Considerations:**<br><br>*   **Insurance Coverage:** Verify that the cardiologist you&#39;re considering is in your insurance network.<br>*   **Location and Accessibility:** Choose a cardiologist whose office is conveniently located and accessible.<br>*   **Personal Compatibility:** The best cardiologist for you is someone you feel comfortable with, who listens to your concerns, and who you trust to provide sound medical advice.<br><br>**Disclaimer:**  I am an AI chatbot and cannot provide medical advice. This information is for general guidance only and should not be substituted for professional medical advice from a qualified healthcare provider. Always consult with your doctor or other qualified healthcare professional for any questions you may have regarding your health or treatment.<br>"
+                    data-question="best cardiologist for heart health prevention"
+                    data-llm="gemini"
+                    data-brand="Dr. Lara Oboler"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+                </tbody>
+            </table>
+            <p class="breakdown-hint">Click any cell to see the full AI response</p>
+        </div>
+
+        <!-- Response modal -->
+        <div class="response-modal" id="responseModal">
+            <div class="modal-content" onclick="event.stopPropagation()">
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+                <div class="modal-header">
+                    <span class="modal-llm" id="modalLlm"></span>
+                    <span class="modal-status" id="modalStatus"></span>
+                </div>
+                <div class="modal-question" id="modalQuestion"></div>
+                <div class="modal-response" id="modalResponse"></div>
+            </div>
+        </div>
+    
+        </div>
+
+        <!-- Section 3: Reddit Opportunities -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <h2 class="section-title">Reddit Opportunities</h2>
+            </div>
+
+            <div class="subsection-title">Buy Intent Conversations</div>
+            <p class="subsection-desc">People actively looking for recommendations in your category</p>
+            <div class="reddit-posts">
+                
+            <a href="https://www.reddit.com/r/AskEurope/comments/1r64wql/beginner_doctors_and_residents_hows_your_situation/" target="_blank" class="reddit-post">
+                <div class="post-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">Beginner doctors and residents - how's your situation?</div>
+                    <div class="post-meta">
+                        r/AskEurope &bull; 1.6M members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            <a href="https://www.reddit.com/r/HeartAttack/comments/1r69ed5/44m_heart_attack_18mo_ago_does_anyone_else_get/" target="_blank" class="reddit-post">
+                <div class="post-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">44M Heart Attack 18mo ago, does anyone else get ...</div>
+                    <div class="post-meta">
+                        r/HeartAttack &bull; 6K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            <a href="https://www.reddit.com/r/SameGrassButGreener/comments/1r6nikb/which_cities_do_you_think_get_suggested_way_too/" target="_blank" class="reddit-post">
+                <div class="post-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">Which cities do you think get suggested way too much on ...</div>
+                    <div class="post-meta">
+                        r/SameGrassButGreener &bull; 137K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            <a href="https://www.reddit.com/r/NYCDOETeachers/comments/1r9iyz3/family_worker_vs_parent_coordinator_nycdoe/" target="_blank" class="reddit-post">
+                <div class="post-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">Family Worker vs Parent Coordinator (NYCDOE)</div>
+                    <div class="post-meta">
+                        r/NYCDOETeachers &bull; 4K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            </div>
+
+            <div class="subsection-title">Pain Point Conversations</div>
+            <p class="subsection-desc">People discussing problems your product solves</p>
+            <div class="reddit-posts">
+                
+            <a href="https://www.reddit.com/r/stroke/comments/1r9uagh/what_did_you_need_to_hear_from_loved_ones_after/" target="_blank" class="reddit-post">
+                <div class="post-icon pain">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">What did you need to hear from loved ones after your stroke?</div>
+                    <div class="post-meta">
+                        r/stroke &bull; 21K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            <a href="https://www.reddit.com/r/POTS/comments/1r9zhfg/has_anyone_else_found_the_psychological_part_of/" target="_blank" class="reddit-post">
+                <div class="post-icon pain">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">Has anyone else found the psychological part of POTS ...</div>
+                    <div class="post-meta">
+                        r/POTS &bull; 112K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            </div>
+        </div>
+
+        <!-- CTA Section -->
+        <div class="section cta-section">
+            <h2>Ready to improve your <em>AI visibility?</em></h2>
+            <p>We help brands get mentioned more in AI answers through strategic content placement.</p>
+            <a href="https://adva-solutions.com/AIVisibility" class="cta-button">Learn More</a>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p>Generated by <a href="https://adva-solutions.com">Adva</a> &bull; AI Visibility Health Check</p>
+    </footer>
+
+    <script>
+        // Tab switching functionality
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const tabId = btn.dataset.tab;
+
+                // Update buttons
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                // Update panels
+                document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+                document.getElementById('panel-' + tabId).classList.add('active');
+            });
+        });
+
+        // Show toast notification
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2500);
+        }
+
+        // Show response modal
+        function showResponse(cell) {
+            try {
+                let response = cell.dataset.response || 'No response available';
+                const question = cell.dataset.question || '';
+                const llm = cell.dataset.llm || '';
+                const brand = cell.dataset.brand || '';
+                const isMentioned = cell.classList.contains('mentioned');
+                const brandPosition = cell.dataset.position ? parseInt(cell.dataset.position) : null;
+
+                const llmNames = {'gpt4': 'GPT', 'claude': 'Claude', 'gemini': 'Gemini'};
+
+                // If brand is mentioned beyond position 5, add a banner at the top
+                let positionBanner = '';
+                if (isMentioned && brandPosition && brandPosition > 5) {
+                    positionBanner = '<div style="background: #fef3c7; padding: 0.75rem 1rem; border-radius: 6px; margin-bottom: 1rem; border-left: 4px solid #f59e0b;">' +
+                        '<strong>📍 Your brand appeared at position #' + brandPosition + '</strong> - scroll down to see the highlighted mention' +
+                        '</div>';
+                }
+
+                // Highlight brand name in response (case insensitive)
+                if (brand && isMentioned) {
+                    try {
+                        const brandRegex = new RegExp('(' + brand.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&') + ')', 'gi');
+                        response = response.replace(brandRegex, '<span class="brand-highlight">$1</span>');
+                    } catch(e) { /* ignore highlighting errors */ }
+                }
+
+                document.getElementById('modalLlm').textContent = llmNames[llm] || llm;
+                document.getElementById('modalQuestion').textContent = '"' + question + '"';
+                document.getElementById('modalResponse').innerHTML = positionBanner + response;
+
+                const statusEl = document.getElementById('modalStatus');
+                if (isMentioned) {
+                    statusEl.textContent = 'Mentioned';
+                    statusEl.className = 'modal-status mentioned';
+                } else {
+                    statusEl.textContent = 'Not mentioned';
+                    statusEl.className = 'modal-status not-mentioned';
+                }
+
+                document.getElementById('responseModal').classList.add('active');
+                document.body.style.overflow = 'hidden';
+
+                // Scroll to first highlight if mentioned
+                if (isMentioned) {
+                    setTimeout(function() {
+                        const highlight = document.querySelector('.modal-response .brand-highlight');
+                        if (highlight) {
+                            highlight.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        }
+                    }, 100);
+                }
+            } catch (e) {
+                console.error('Error showing response:', e);
+                alert('Error loading response. Please try again.');
+            }
+        }
+
+        // Close modal
+        function closeModal() {
+            document.getElementById('responseModal').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // Close when clicking backdrop (outside modal content)
+        document.getElementById('responseModal').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+
+        // Close modal on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeModal();
+        });
+    </script>
+</body>
+</html>
