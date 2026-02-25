@@ -1,0 +1,1370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Visibility Report - Bahamii | Adva</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #ffffff;
+            min-height: 100vh;
+            color: #374151;
+            line-height: 1.6;
+        }
+
+        /* Header */
+        .header {
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            font-size: 1.25rem;
+            color: #1f2937;
+            text-decoration: none;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .header-date {
+            color: #9ca3af;
+            font-size: 0.875rem;
+        }
+
+        /* Copy link button */
+        .copy-link-button {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: #f3f4f6;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            color: #374151;
+            font-size: 0.75rem;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .copy-link-button:hover {
+            background: #e5e7eb;
+        }
+
+        .copy-link-button svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        .pdf-button {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: #1f2937;
+            border: none;
+            border-radius: 6px;
+            color: #ffffff;
+            font-size: 0.75rem;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .pdf-button:hover {
+            background: #374151;
+        }
+
+        .pdf-button svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        /* Toast notification */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: #1f2937;
+            color: #ffffff;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            opacity: 0;
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        /* Container */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Page title */
+        .page-title {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .page-title .label {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: #9ca3af;
+            font-size: 0.75rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+        }
+
+        .page-title .label::before,
+        .page-title .label::after {
+            content: '';
+            width: 30px;
+            height: 1px;
+            background: #d1d5db;
+        }
+
+        .page-title h1 {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 2.5rem;
+            font-weight: 400;
+            color: #1f2937;
+            margin-bottom: 0.5rem;
+        }
+
+        .page-title .brand {
+            color: #6b7280;
+            font-size: 1.125rem;
+        }
+
+        /* Sections */
+        .section {
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #f3f4f6;
+        }
+
+        .section-icon {
+            width: 40px;
+            height: 40px;
+            background: #1f2937;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .section-icon svg {
+            width: 20px;
+            height: 20px;
+            color: #ffffff;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 1.375rem;
+            color: #1f2937;
+        }
+
+        /* Score Section */
+        .score-section {
+            text-align: center;
+            padding: 3rem 2rem;
+        }
+
+        .score-circle {
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            background: #fafafa;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            border: 4px solid #ef4444;
+        }
+
+        .score-value {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 3rem;
+            font-weight: 500;
+            color: #ef4444;
+        }
+
+        .score-label {
+            font-size: 0.8rem;
+            color: #9ca3af;
+        }
+
+        .score-description {
+            color: #6b7280;
+            margin-bottom: 2rem;
+            font-size: 1rem;
+        }
+
+        .score-description strong {
+            color: #1f2937;
+        }
+
+        .llm-breakdown {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .llm-stat {
+            text-align: center;
+            padding: 1rem 1.5rem;
+            background: #fafafa;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+            min-width: 100px;
+        }
+
+        .llm-name {
+            display: block;
+            color: #9ca3af;
+            font-size: 0.8rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .llm-score {
+            font-size: 1.125rem;
+            font-weight: 600;
+        }
+
+        .llm-score.success {
+            color: #22c55e;
+        }
+
+        .llm-score.warning {
+            color: #ef4444;
+        }
+
+        /* Competitor Table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 0.875rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid #f3f4f6;
+        }
+
+        th {
+            color: #9ca3af;
+            font-weight: 500;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        td {
+            color: #374151;
+        }
+
+        .mention-count {
+            background: #fef3c7;
+            color: #92400e;
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        /* Tabs for LLM responses */
+        .example-tabs {
+            margin-top: 1.5rem;
+        }
+
+        .tabs-header {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+            padding-bottom: 0;
+        }
+
+        .tab-btn {
+            padding: 0.75rem 1.25rem;
+            background: transparent;
+            border: none;
+            color: #6b7280;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            margin-bottom: -1px;
+            transition: all 0.2s;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .tab-btn:hover {
+            color: #1f2937;
+        }
+
+        .tab-btn.active {
+            color: #1f2937;
+            border-bottom-color: #1f2937;
+        }
+
+        .tab-panel {
+            display: none;
+            background: #fafafa;
+            border-radius: 8px;
+            padding: 1.25rem;
+        }
+
+        .tab-panel.active {
+            display: block;
+        }
+
+        .example-question {
+            color: #1f2937;
+            font-weight: 500;
+            font-size: 0.95rem;
+            margin-bottom: 0.75rem;
+        }
+
+        /* Question breakdown table */
+        .question-breakdown {
+            margin-top: 1rem;
+        }
+
+        .breakdown-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        .breakdown-table th {
+            padding: 0.75rem;
+            text-align: center;
+            background: #f9fafb;
+            border-bottom: 2px solid #e5e7eb;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .breakdown-table th:first-child {
+            text-align: left;
+            width: 50%;
+        }
+
+        .breakdown-table td {
+            padding: 0.75rem;
+            border-bottom: 1px solid #f3f4f6;
+            vertical-align: middle;
+        }
+
+        .question-cell {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+        }
+
+        .question-num {
+            background: #e5e7eb;
+            color: #374151;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        .question-text {
+            color: #374151;
+            line-height: 1.4;
+        }
+
+        .llm-cell {
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-radius: 4px;
+        }
+
+        .llm-cell:hover {
+            background: #f3f4f6;
+        }
+
+        .llm-cell.mentioned {
+            color: #16a34a;
+        }
+
+        .llm-cell.mentioned .status-icon {
+            font-size: 1.25rem;
+        }
+
+        .llm-cell.not-mentioned {
+            color: #dc2626;
+        }
+
+        .llm-cell.not-mentioned .status-icon {
+            font-size: 1.25rem;
+        }
+
+        .breakdown-hint {
+            color: #9ca3af;
+            font-size: 0.8rem;
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+        /* Response modal */
+        .response-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+        }
+
+        .response-modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: #ffffff;
+            border-radius: 12px;
+            max-width: 800px;
+            width: 100%;
+            max-height: 90vh;
+            overflow: auto;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #9ca3af;
+            cursor: pointer;
+            padding: 0.25rem 0.5rem;
+        }
+
+        .modal-close:hover {
+            color: #374151;
+        }
+
+        .modal-header {
+            padding: 1.5rem 1.5rem 0;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            position: relative;
+        }
+
+        .modal-llm {
+            font-weight: 600;
+            color: #1f2937;
+            font-size: 1.1rem;
+        }
+
+        .modal-status {
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .modal-status.mentioned {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .modal-status.not-mentioned {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .modal-question {
+            padding: 1rem 1.5rem;
+            color: #6b7280;
+            font-size: 0.9rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .modal-response {
+            padding: 1.5rem;
+            overflow-y: auto;
+            flex: 1;
+            color: #374151;
+            font-size: 0.9rem;
+            line-height: 1.8;
+            min-height: 300px;
+            max-height: 60vh;
+            background: #fafafa;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .modal-response::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .modal-response::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        .modal-response::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 4px;
+        }
+
+        .modal-response::-webkit-scrollbar-thumb:hover {
+            background: #a1a1a1;
+        }
+
+        /* Brand highlight */
+        .brand-highlight {
+            background: linear-gradient(120deg, #fef08a 0%, #fde047 100%);
+            padding: 0.1rem 0.3rem;
+            border-radius: 3px;
+            font-weight: 600;
+        }
+
+        .example-content {
+            color: #6b7280;
+            font-size: 0.875rem;
+            line-height: 1.7;
+            max-height: 400px;
+            overflow-y: auto;
+            margin-bottom: 0.75rem;
+            padding: 1rem;
+            background: #f9fafb;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .example-status {
+            padding: 0.5rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            display: inline-block;
+        }
+
+        .example-status.mentioned {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .example-status.not-mentioned {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        /* Reddit Posts */
+        .reddit-posts {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .reddit-post {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: #fafafa;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: all 0.2s;
+            border: 1px solid transparent;
+        }
+
+        .reddit-post:hover {
+            background: #f3f4f6;
+            border-color: #e5e7eb;
+        }
+
+        .post-icon {
+            width: 40px;
+            height: 40px;
+            background: #1f2937;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .post-icon.pain {
+            background: #fef3c7;
+        }
+
+        .post-icon.pain svg {
+            color: #92400e;
+        }
+
+        .post-icon svg {
+            width: 20px;
+            height: 20px;
+            color: #ffffff;
+        }
+
+        .post-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .post-title {
+            color: #1f2937;
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .post-meta {
+            color: #9ca3af;
+            font-size: 0.8rem;
+        }
+
+        .post-arrow {
+            color: #9ca3af;
+            flex-shrink: 0;
+        }
+
+        .post-arrow svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .subsection-title {
+            color: #1f2937;
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin: 1.5rem 0 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .subsection-title:first-of-type {
+            margin-top: 0;
+        }
+
+        .subsection-desc {
+            color: #9ca3af;
+            font-size: 0.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .no-data {
+            color: #9ca3af;
+            font-style: italic;
+            text-align: center;
+            padding: 1rem;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            color: #9ca3af;
+            font-size: 0.8rem;
+            padding: 2rem;
+            border-top: 1px solid #e5e7eb;
+            margin-top: 2rem;
+        }
+
+        .footer a {
+            color: #1f2937;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* CTA */
+        .cta-section {
+            text-align: center;
+            padding: 3rem 2rem;
+            background: #fafafa;
+        }
+
+        .cta-section h2 {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 1.75rem;
+            color: #1f2937;
+            margin-bottom: 0.75rem;
+        }
+
+        .cta-section p {
+            color: #6b7280;
+            margin-bottom: 1.5rem;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background: #1f2937;
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .cta-button:hover {
+            background: #111827;
+            transform: translateY(-1px);
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .page-title h1 {
+                font-size: 1.75rem;
+            }
+
+            .section {
+                padding: 1.5rem;
+            }
+
+            .score-circle {
+                width: 130px;
+                height: 130px;
+            }
+
+            .score-value {
+                font-size: 2.25rem;
+            }
+
+            .llm-breakdown {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .tabs-header {
+                flex-wrap: wrap;
+            }
+
+            .tab-btn {
+                padding: 0.5rem 1rem;
+                font-size: 0.8rem;
+            }
+
+            .breakdown-table th,
+            .breakdown-table td {
+                padding: 0.5rem;
+                font-size: 0.8rem;
+            }
+
+            .question-cell {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .modal-content {
+                max-height: 90vh;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <a href="https://adva-solutions.com/AIVisibility" class="logo">adva</a>
+        <div class="header-right">
+            <!-- PDF button hidden for now - backend still available at /report/3a44798e/pdf
+            <a href="/report/3a44798e/pdf" class="pdf-button" title="Download as PDF">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                Download PDF
+            </a>
+            -->
+            <button class="copy-link-button" onclick="navigator.clipboard.writeText('https://adva-solutions.github.io/ai-visibility-report/report_bahamii_3a44798e.html'); showToast('Link copied!');" title="Copy shareable link">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                </svg>
+                Copy Link
+            </button>
+            <span class="header-date">February 25, 2026</span>
+        </div>
+    </header>
+    <div class="toast" id="toast">Link copied to clipboard!</div>
+
+    <div class="container">
+        <div class="page-title">
+            <div class="label">AI Visibility Report</div>
+            <h1>Your Brand's <em>AI Presence</em></h1>
+            <p class="brand">Analysis for Bahamii</p>
+        </div>
+
+        <!-- Section 1: AI Visibility Score -->
+        <div class="section score-section">
+            <div class="score-circle">
+                <span class="score-value">0%</span>
+                <span class="score-label">0/14 mentions</span>
+            </div>
+            <p class="score-description">
+                Your brand appeared in <strong>0</strong> out of <strong>14</strong> AI recommendations
+            </p>
+            <div class="llm-breakdown">
+                
+            <div class="llm-stat">
+                <span class="llm-name">GPT</span>
+                <span class="llm-score warning">0/5</span>
+            </div>
+        
+            <div class="llm-stat">
+                <span class="llm-name">Claude</span>
+                <span class="llm-score warning">0/5</span>
+            </div>
+        
+            <div class="llm-stat">
+                <span class="llm-name">Gemini</span>
+                <span class="llm-score warning">0/4</span>
+            </div>
+        
+            </div>
+        </div>
+
+        <!-- Section 2: AI Response Breakdown -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                    </svg>
+                </div>
+                <h2 class="section-title">Question-by-Question Breakdown</h2>
+            </div>
+            <p style="color: #6b7280; margin-bottom: 1rem;">We asked these 5 questions to each AI model. Click any cell to see the full response:</p>
+            
+        <div class="question-breakdown">
+            <table class="breakdown-table">
+                <thead>
+                    <tr>
+                        <th>Question Asked</th>
+                        <th>GPT</th>
+                        <th>Claude</th>
+                        <th>Gemini</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q1</span>
+                    <span class="question-text">healthy date bars no sugar</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top recommendations for healthy, no-sugar date bars:<br><br>1. **LÄRABAR (Apple Pie)**<br>   - **Why:** LÄRABARs are made primarily from whole ingredients such as dates, nuts, and fruits. The Apple Pie flavor combines dates with apples and spices, delivering a delicious taste without added sugars. They are gluten-free and have a simple ingredient list, making them a great option for a healthy snack.<br><br>2. **KIND Bars (Nut Butter Dark Chocolate)**<br>   - **Why:** While KIND Bars typically contain honey, their Nut Butter Dark Chocolate flavor can be enjoyed as a low-sugar option. It features whole nuts, dates, and dark chocolate, providing a satisfying taste and texture without excessive sweeteners. They are also packed with healthy fats and protein.<br><br>3. **RXBAR (Chocolate Sea Salt)**<br>   - **Why:** RXBARs are known for their transparency in ingredients, featuring egg whites, nuts, and dates as the primary components. The Chocolate Sea Salt flavor offers a rich taste with no added sugars, while providing a good source of protein and fiber to keep you full.<br><br>4. **Bhu Fit Bars (Chocolate Mint)**<br>   - **Why:** Bhu Fit Bars are designed to be low in sugar and high in protein, with dates serving as a natural sweetener. The Chocolate Mint flavor offers a refreshing twist, combining chocolate with mint for a delightful treat that’s still healthy.<br><br>5. **Health Warrior Chia Bars (Coconut)**<br>   - **Why:** These bars use dates as a binding agent and are enriched with chia seeds, providing healthy omega-3 fatty acids. The Coconut flavor is subtly sweet and has a chewy texture, making it a nutritious option for on-the-go snacking without added sugars.<br><br>Each of these bars leverages the natural sweetness of dates while providing added nutritional benefits, making them excellent choices for a healthy snack."
+                    data-question="healthy date bars no sugar"
+                    data-llm="gpt4"
+                    data-brand="Bahamii"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top 5 recommendations for healthy date bars with no added sugar:<br><br>1. Larabar Fruit & Nut Bar - Cashew Cookie: These bars are made with just a few simple ingredients like dates, cashews, and almonds. They provide a natural sweetness from the dates without any added sugars.<br><br>2. RxBar Whole Food Protein Bar - Chocolate Sea Salt: RxBars use dates as the primary sweetener, along with egg whites for protein. The chocolate and sea salt flavors make for a delicious and satisfying snack.<br><br>3. Mezcla Organic Date Bars - Cocoa Almond: These date bars are made with organic dates, nuts, seeds, and cocoa powder. They have a rich, chocolatey flavor without any added sugars.<br><br>4. Bobo&#39;s Oat Bars - Peanut Butter: Bobo&#39;s uses dates, peanuts, and oats to create a chewy, peanut butter-flavored bar that&#39;s both nutritious and delicious.<br><br>5. LÄRABAR Fruit & Nut Bar - Apple Pie: The apple pie flavor of these bars comes entirely from the dates, apples, and spices used, without any added sweeteners.<br><br>The key benefits of these date bars are that they provide natural sweetness, fiber, and nutrients from whole food ingredients, making them a healthier alternative to traditional granola bars or energy bars that often contain added sugars."
+                    data-question="healthy date bars no sugar"
+                    data-llm="claude"
+                    data-brand="Bahamii"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Okay, here are 3 healthy date bar recipes with no added sugar, focusing on whole food ingredients and flavor:<br>**Important Note:**  Since you&#39;re avoiding added sugar, the natural sweetness of dates is what carries the flavor.  If you&#39;re not a big date fan, these might not be for you.  Also, be mindful of the natural sugars in dates if you&#39;re watching your sugar intake closely.<br><br>**Top Recommendations (in order of preference):**<br><br>1.  **&quot;Minimalist Baker&#39;s&quot; 5-Ingredient Peanut Butter Date Bars:**<br>    *   **Why I like it:** This recipe is simple, uses easily accessible ingredients, and the combination of dates, peanut butter (make sure it&#39;s just peanuts and salt!), and oats creates a satisfying texture and flavor. The saltiness of the peanut butter complements the sweetness of the dates perfectly. Very customizable with additions.<br>    *   **Link:**  While Minimalist Baker doesn&#39;t have the exact recipe anymore, search for &quot;5-ingredient peanut butter date bars&quot; and you&#39;ll find many variations that are basically the same.  Look for recipes using dates, peanut butter, oats, and maybe some salt and vanilla extract.<br>    *   **Key Ingredients:** Dates, peanut butter (natural, no sugar added), rolled oats, salt, vanilla extract (optional).<br><br>2.  **&quot;Detoxinista&#39;s&quot; No-Bake Chocolate Almond Date Bars:**<br>    *   **Why I like it:**  Adds a richer, more decadent flavor with cocoa powder and almonds.  Uses a similar base to the peanut butter bars, but the chocolate and nuttiness offer a different profile.<br>    *   **Link:** Search for &quot;Detoxinista No Bake Chocolate Almond Date Bars.&quot;<br>    *   **Key Ingredients:** Dates, almonds, cocoa powder, coconut oil (optional, for binding), salt, vanilla extract (optional).<br><br>3.  **&quot;Amy&#39;s Healthy Baking&#39;s&quot; No-Bake Trail Mix Energy Bites (use as bars):**<br>    *   **Why I like it:** While technically &quot;bites,&quot; you can easily press the mixture into a pan and cut it into bars. This recipe is great for incorporating a variety of nuts, seeds, and dried fruit (ensure no added sugar). It&#39;s very customizable to your favorite trail mix ingredients.<br>    *   **Link:** Search for &quot;Amy&#39;s Healthy Baking No Bake Trail Mix Energy Bites.&quot;<br>    *   **Key Ingredients:** Dates, nuts (almonds, walnuts, pecans, etc.), seeds (pumpkin, sunflower, chia, flax), dried fruit (unsweetened cranberries, raisins), rolled oats (optional), cinnamon (optional).<br><br>**Important Considerations for all recipes:**<br><br>*   **Dates:** Medjool dates are generally preferred for their soft texture and sweetness. If using other dates, you may need to soak them in warm water for a few minutes to soften them before processing.<br>*   **Peanut Butter/Nut Butters:** Ensure you&#39;re using natural nut butter with no added sugar or oils. Only ingredients should be nuts and maybe salt.<br>*   **Customization:**  Feel free to add ingredients like shredded coconut, chia seeds, flax seeds, chopped nuts, or spices (cinnamon, nutmeg) to any of these recipes to personalize them.<br>*   **Storage:** Store leftover bars in an airtight container in the refrigerator for up to a week or in the freezer for longer storage.<br><br>Enjoy baking (or rather, no-baking!) your healthy date bars!<br>"
+                    data-question="healthy date bars no sugar"
+                    data-llm="gemini"
+                    data-brand="Bahamii"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q2</span>
+                    <span class="question-text">organic superfood snack bars</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top recommendations for organic superfood snack bars, listed in order of preference:<br><br>1. **RXBAR**  <br>   RXBARs are known for their simple, whole food ingredient list, which typically includes egg whites, nuts, and dates. They are high in protein and contain no added sugars or artificial ingredients. The variety of flavors, such as Chocolate Sea Salt and Peanut Butter Chocolate, offers delicious options while still being a nutritious choice.<br><br>2. **Larabar**  <br>   Larabars are made with minimal ingredients, often just fruit and nuts, making them a great option for a clean snack. They are gluten-free, dairy-free, and soy-free, with no added sugars. Flavors like Cashew Cookie and Apple Pie provide a satisfying taste and are perfect for a quick energy boost.<br><br>3. **GoMacro MacroBar**  <br>   GoMacro bars are vegan, gluten-free, and made with organic ingredients. They are packed with plant-based protein and healthy fats, making them a filling snack. The Peanut Butter Chocolate Chip and Almond Butter flavors are popular choices, offering a delicious balance of taste and nutrition.<br><br>4. **KIND Bars**  <br>   KIND Bars are made from whole nuts, fruits, and grains, providing a good source of fiber and healthy fats. They offer a range of flavors, including Dark Chocolate Nuts & Sea Salt, which combines sweet and savory elements. While not all varieties are certified organic, many are made with organic ingredients, and they are known for their transparency in sourcing.<br><br>5. **Health Warrior Chia Bars**  <br>   These bars are small but mighty, packed with chia seeds for omega-3 fatty acids and fiber. They are low in calories and come in various flavors like Coconut and Chocolate Peanut Butter. Health Warrior Chia Bars are an excellent option for a quick, nutrient-dense snack on the go.<br><br>These bars not only provide energy and nutrition but also cater to various dietary preferences, making them excellent choices for healthy snacking."
+                    data-question="organic superfood snack bars"
+                    data-llm="gpt4"
+                    data-brand="Bahamii"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top 5 recommendations for organic superfood snack bars, listed in order of preference:<br><br>1. Larabar Organic Superfood Bars:<br>These bars are made with a short list of simple, whole food ingredients like dates, nuts, seeds, and superfood powders like spirulina and maca. They are non-GMO, vegan, and gluten-free, making them a great option for a nutritious snack.<br><br>2. RXBar Organic Superfood Bars:<br>RXBars use a blend of egg whites, dates, and nuts as the main ingredients, along with added superfoods like cacao, coffee, and greens. They are protein-packed, paleo-friendly, and have a satisfying, chewy texture.<br><br>3. Purely Elizabeth Organic Superfood Bars:<br>These bars feature a base of gluten-free oats, nuts, and seeds, combined with various superfoods like quinoa, chia, and ancient grains. They are non-GMO, vegan, and offer a range of delicious flavors.<br><br>4. Vega Organic Protein Bars:<br>Vega&#39;s organic protein bars are made with a plant-based protein blend, as well as organic superfoods like pumpkin seeds, maca, and greens. They provide a good source of protein, fiber, and essential nutrients.<br><br>5. Evo Hemp Organic Superfood Bars:<br>These bars are made with a combination of organic hemp seeds, dates, nuts, and other superfoods like cacao and maca. They are vegan, gluten-free, and offer a unique, nutty flavor profile."
+                    data-question="organic superfood snack bars"
+                    data-llm="claude"
+                    data-brand="Bahamii"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Okay, here are my top 3 organic superfood snack bar recommendations, taking into consideration taste, ingredient quality, nutritional value, and availability:<br><br>**1.  GoMacro MacroBars (Various Flavors - Especially Peanut Butter Protein Replenishment):**<br><br>*   **Why I love them:** GoMacro bars strike a great balance between taste, texture, and nutritional value. They&#39;re often a bit chewier and denser than other bars, which some people prefer. They&#39;re made with organic, plant-based ingredients and are often gluten-free, vegan, and non-GMO. The Peanut Butter Protein Replenishment flavor is a classic, but they have a good variety of options to suit different tastes.  They also have a decent amount of protein and fiber to keep you feeling full. The ingredients lists are usually pretty clean and straightforward.<br>*   **Key Ingredients:** Organic brown rice syrup, organic peanut butter, organic protein blend (sprouted brown rice protein, pea protein), organic puffed brown rice, organic peanuts.<br>*   **Considerations:** They can be a little higher in sugar than some other options, so check the label if you are watching your sugar intake.<br><br>**2.  Aloha Organic Protein Bars (Peanut Butter Chocolate Chip or Coconut Cashew):**<br><br>*   **Why I love them:** Aloha bars are known for their smooth texture and delicious flavors. They are a great option if you want a lighter bar as they are not as dense as some other options. They also tend to be lower in sugar and higher in protein than some other bars, which is a plus. They are also organic, vegan, gluten-free and non-GMO.<br>*   **Key Ingredients:** Organic Pumpkin Seed Protein, Organic Brown Rice Protein, Organic Tapioca Fiber, Organic Sunflower Seed Butter, Organic Coconut Sugar<br>*   **Considerations:** The texture is not as chewy as GoMacro, which some people might prefer.<br><br>**3.  RXBAR Whole Food Protein Bar (Chocolate Sea Salt):**<br><br>*   **Why I love them:** RXBARs have a very simple and transparent ingredient list, which is a big selling point for many people. They&#39;re primarily made with egg whites, dates, and nuts, providing a good source of protein and fiber. The Chocolate Sea Salt flavor is a popular choice.<br>*   **Key Ingredients:** Dates, Egg Whites, Almonds, Cashews, Cocoa, Natural Flavors, Sea Salt.<br>*   **Considerations:** While organic, they are not *exclusively* organic and rely heavily on dates, which can be high in natural sugars. The texture can be a bit dense and sometimes a little sticky. Taste is subjective, and some people find them a bit too &quot;eggy&quot; in flavor.<br><br>**Important Considerations When Choosing:**<br><br>*   **Dietary Needs:** Make sure the bar aligns with any dietary restrictions or allergies you have (gluten-free, vegan, nut allergies, etc.).<br>*   **Sugar Content:** Pay attention to the sugar content per serving. Look for bars with lower added sugars when possible.<br>*   **Ingredient List:**  Focus on simple, recognizable ingredients. The shorter the list, the better.<br>*   **Protein and Fiber:**  These are key for satiety and sustained energy. Aim for bars with a decent amount of both.<br>*   **Taste Preference:** This is the most important factor! Try a few different brands and flavors to find what you enjoy.  Most of these brands offer variety packs, which are a great way to sample different flavors before committing to a whole box.<br>*   **Read Reviews:** Always read reviews from other consumers to get a sense of the taste, texture, and overall quality of the bar.<br><br>I hope this helps you find some delicious and nutritious organic superfood snack bars! Happy snacking!<br>"
+                    data-question="organic superfood snack bars"
+                    data-llm="gemini"
+                    data-brand="Bahamii"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q3</span>
+                    <span class="question-text">convenient healthy snacks for families</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top recommendations for convenient healthy snacks for families, listed in order of preference:<br><br>1. **Greek Yogurt Parfaits**  <br>   **Why?** Greek yogurt is rich in protein and probiotics, making it a nutritious option for all ages. Layer it with fresh fruits like berries or bananas and a sprinkle of granola for added fiber. This snack is quick to assemble and can be customized according to individual tastes.<br><br>2. **Veggie Sticks with Hummus**  <br>   **Why?** Pre-cut veggie sticks (like carrots, cucumbers, and bell peppers) paired with hummus provide a crunchy, satisfying snack that&#39;s low in calories and high in vitamins. Hummus adds healthy fats and protein, making this a filling option that kids and adults alike can enjoy.<br><br>3. **Nut Butter Rice Cakes**  <br>   **Why?** Rice cakes are a convenient base for various toppings. Spread almond or peanut butter on them and top with banana slices or a sprinkle of cinnamon for a delicious, energy-boosting snack. This option is gluten-free and offers a good mix of carbohydrates and healthy fats.<br><br>4. **Trail Mix**  <br>   **Why?** A homemade trail mix containing nuts, seeds, dried fruit, and a few dark chocolate chips can be a highly nutritious snack. It’s portable, easy to customize, and provides a good balance of protein, healthy fats, and carbohydrates, making it perfect for on-the-go families.<br><br>5. **Frozen Fruit Bars**  <br>   **Why?** Look for brands that use 100% fruit with no added sugars. These frozen fruit bars offer a refreshing treat that’s low in calories and high in vitamins. They’re a great alternative to traditional ice cream and can satisfy sweet cravings in a healthier way.<br><br>These snacks are not only healthy but also easy to prepare, making them perfect for busy families looking to maintain a nutritious diet."
+                    data-question="convenient healthy snacks for families"
+                    data-llm="gpt4"
+                    data-brand="Bahamii"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top 5 recommendations for convenient healthy snacks for families, listed in order of preference:<br><br>1. Fresh Fruit Skewers: Cutting up a variety of fresh fruits like grapes, berries, melon, and pineapple and arranging them on skewers makes for a colorful, nutrient-dense, and portable snack. Fruits are packed with vitamins, minerals, and fiber to keep everyone energized.<br><br>2. Veggie Cups with Hummus: Prepare small cups or containers filled with sliced vegetables like carrots, cucumbers, bell peppers, and cherry tomatoes. Pair them with a serving of creamy, protein-rich hummus for a satisfying and crunchy snack.<br><br>3. Greek Yogurt Parfaits: Layer plain Greek yogurt with fresh or frozen berries and a sprinkle of granola or chopped nuts for a balanced snack that provides protein, fiber, and healthy fats.<br><br>4. Trail Mix Packs: Combine a variety of nuts, seeds, dried fruit, and whole-grain cereal or pretzels in individual serving-sized bags or containers. This provides a nutrient-dense, portable, and satisfying snack.<br><br>5. Edamame: Boiled and lightly salted edamame pods make a fun, protein-packed snack that&#39;s easy to grab and go. They&#39;re a great source of fiber, vitamins, and minerals.<br><br>These snacks are all convenient, nutritious, and kid-friendly, making them great options for busy families looking to maintain a healthy lifestyle."
+                    data-question="convenient healthy snacks for families"
+                    data-llm="claude"
+                    data-brand="Bahamii"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Okay, here are my top 5 recommendations for convenient and healthy snacks for families, in order of preference:<br><br>1.  **Apple slices with almond butter:** This is a classic for a reason! Apples provide fiber and natural sweetness, while almond butter offers healthy fats and protein to keep everyone feeling full and satisfied. It&#39;s easily portable, quick to prepare, and appeals to a wide range of ages. Choose natural almond butter with no added sugar or salt for the healthiest option.<br><br>2.  **Greek yogurt parfaits with berries and granola:** Layering Greek yogurt (packed with protein and calcium), fresh or frozen berries (bursting with antioxidants and vitamins), and a sprinkle of whole-grain granola (for fiber and crunch) creates a visually appealing and nutritionally balanced snack. It&#39;s great for a slightly more substantial option. Look for granola with low added sugar.<br><br>3.  **Hard-boiled eggs:** A true protein powerhouse! Hard-boiled eggs are incredibly convenient (make a batch ahead of time), portable, and require no prep when you&#39;re ready to eat them. They&#39;re a great source of essential nutrients and will keep hunger at bay for longer.<br><br>4.  **Edamame (steamed or roasted):** These little soybeans are packed with protein and fiber. You can buy them steamed and frozen for easy heating, or roast them for a crunchy snack. Edamame is a good source of iron which is super important for kids and adults.<br><br>5.  **Veggie sticks with hummus:** Pre-cut carrots, celery, cucumber, bell peppers, and cherry tomatoes paired with hummus (made from chickpeas, tahini, and olive oil) is a colorful and nutritious snack. Hummus provides protein, fiber, and healthy fats, while the veggies offer vitamins and minerals. It&#39;s a great way to sneak in extra veggies, especially for picky eaters.<br>"
+                    data-question="convenient healthy snacks for families"
+                    data-llm="gemini"
+                    data-brand="Bahamii"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q4</span>
+                    <span class="question-text">best tasting healthy snack bars</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top recommendations for tasty and healthy snack bars:<br><br>1. **RXBAR**  <br>   **Why:** RXBARs are made with simple, whole food ingredients, including egg whites, nuts, and dates. They contain no added sugars or artificial ingredients, making them a clean source of protein (12g per bar) and energy. The flavors, such as Chocolate Sea Salt and Peanut Butter Chocolate, are rich and satisfying without being overly sweet.<br><br>2. **Larabar**  <br>   **Why:** Larabars are made from just a few minimal ingredients, primarily dates and nuts, which provide natural sweetness and healthy fats. They are gluten-free, dairy-free, and come in a variety of flavors like Apple Pie and Cherry Pie that taste indulgent while still being wholesome. Each bar typically has around 200 calories, making them filling yet light.<br><br>3. **Kind Bars**  <br>   **Why:** Kind Bars are known for their crunchy, chewy texture and variety of flavors. They incorporate whole nuts, fruits, and grains, with many bars offering a good balance of protein and fiber. For example, the Dark Chocolate Nuts & Sea Salt flavor provides a satisfying sweet and salty combination, with 6g of protein and 4g of fiber per bar.<br><br>4. **Clif Kid ZBAR**  <br>   **Why:** While designed for kids, these bars are a great option for adults looking for a nutritious snack. They are made with organic ingredients and come in fun flavors like Chocolate Chip and Iced Oatmeal Cookie. With 3g of protein and 3g of fiber, they provide a good energy boost while tasting like a treat.<br><br>5. **No Cow Protein Bar**  <br>   **Why:** For those seeking a plant-based protein option, No Cow bars are dairy-free and packed with 20g of protein per bar. They use pea protein and brown rice protein, making them a good choice for vegans. Flavors like Peanut Butter Chocolate Chip and Chocolate Mint Cookie are delicious without containing any added sugars.<br><br>These snack bars offer a great combination of taste and nutrition, making them ideal for on-the-go snacking!"
+                    data-question="best tasting healthy snack bars"
+                    data-llm="gpt4"
+                    data-brand="Bahamii"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top 5 recommendations for the best-tasting healthy snack bars:<br><br>1. RxBar - These bars are made with just a few simple, whole food ingredients like egg whites, dates, and nuts. They have a great chewy texture and come in a variety of delicious flavors like Chocolate Sea Salt, Peanut Butter, and Blueberry. They&#39;re high in protein and low in added sugars.<br><br>2. Larabar - Larabars are made with just a handful of minimally processed ingredients like dates, nuts, and fruit. They have a soft, fudgy texture and flavors like Peanut Butter Chocolate Chip, Apple Pie, and Cashew Cookie that taste like a decadent treat.<br><br>3. KIND Bar - KIND bars feature whole nuts, fruits, and grains. They have a nice crunchy texture and flavors like Dark Chocolate Nuts & Sea Salt, Caramel Almond & Sea Salt, and Maple Glazed Pecan & Sea Salt that are satisfying and not too sweet.<br><br>4. Perfect Bar - Perfect Bars are made with organic nut butters, honey, and a blend of 20 superfoods. They have a soft, dense texture that&#39;s almost like a cookie. The Peanut Butter and Chocolate Chip flavors are especially delicious.<br><br>5. Oatmega Bar - These bars are made with grass-fed whey protein, organic oats, and omega-3-rich chia and flax seeds. They have a nice chewy oat-y base with flavors like Chocolate Coconut Almond and Chocolate Peanut Butter that taste indulgent but are actually quite healthy."
+                    data-question="best tasting healthy snack bars"
+                    data-llm="claude"
+                    data-brand="Bahamii"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Okay, here are my top 3 healthy and tasty snack bar recommendations, based on a balance of nutrition (ingredients, sugar content, protein & fiber), taste, and overall satisfaction. Keep in mind that taste is subjective, so I&#39;ve tried to pick widely appealing options:<br><br>1.  **RXBAR:**  RXBARs are known for their simple ingredient lists. The core ingredients are usually dates, egg whites, and nuts. This keeps the added sugar low and provides a good source of protein and fiber.  They come in a variety of flavors. My favorite is **Chocolate Sea Salt** - it has a nice balance of sweet and salty, and the chocolate flavor is satisfying without being overly intense. RXBARs are dense and chewy, so they are quite filling.<br>    *   **Why it&#39;s great:** High protein, relatively low sugar, simple ingredients, good flavor variety.<br>    *   **Downside:** Can be a bit chewy/dense for some.<br><br>2.  **GoMacro MacroBar:** These bars are vegan, organic, and gluten-free, making them a good choice for those with dietary restrictions. They are made with a blend of nuts, seeds, and sweeteners like brown rice syrup. **Peanut Butter Chocolate Chip** is a popular choice. It&#39;s a good source of plant-based protein and fiber.<br>    *   **Why it&#39;s great:** Vegan, organic, gluten-free, good source of plant-based protein.<br>    *   **Downside:** Can be higher in sugar than some other options due to the brown rice syrup.<br><br>3.  **Larabar:** Larabars are known for their minimal ingredient lists, typically consisting of just dates, nuts, and fruit. **Peanut Butter Cookie** is a classic and delicious flavor. They are a good source of healthy fats and fiber, and the dates provide natural sweetness.<br>    *   **Why it&#39;s great:** Very simple ingredients, naturally sweetened, good source of healthy fats.<br>    *   **Downside:** Lower in protein than the other options.<br><br>**Important Considerations:**<br><br>*   **Read the labels:** Always check the nutrition information and ingredient list to ensure the bar aligns with your specific dietary needs and preferences.<br>*   **Sugar content:** Be mindful of added sugars. Look for bars with lower amounts of added sugars and natural sweeteners like dates.<br>*   **Individual needs:** Consider your own dietary requirements (e.g., allergies, intolerances, vegan, etc.) when making your choice.<br>*   **Variety:** Don&#39;t be afraid to try different brands and flavors to find what you enjoy most!<br><br>Enjoy your snack bar exploration!<br>"
+                    data-question="best tasting healthy snack bars"
+                    data-llm="gemini"
+                    data-brand="Bahamii"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q5</span>
+                    <span class="question-text">date bars with no artificial ingredients</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top recommendations for date bars with no artificial ingredients:<br><br>1. **Larabar** - **Cashew Cookie**<br>   - Made with just two simple ingredients: dates and cashews, this bar is a classic choice. It&#39;s naturally sweet and has a rich, creamy texture, making it a satisfying snack without any added sugars or artificial preservatives.<br><br>2. **RXBAR** - **Chocolate Sea Salt**<br>   - RXBARs are known for their high protein content and minimal ingredient lists. The Chocolate Sea Salt flavor includes dates, egg whites, nuts, and chocolate, providing a delicious balance of sweet and savory, all while being free from artificial flavors or preservatives.<br><br>3. **Bara** - **Cacao Nib**<br>   - Bara&#39;s Cacao Nib bar combines dates with cacao nibs, nuts, and seeds. It&#39;s a great option for chocolate lovers looking for a healthier treat. The combination of natural ingredients offers a satisfying crunch along with a rich chocolate flavor without any artificial additives.<br><br>4. **GoMacro** - **Peanut Butter Chocolate Chip**<br>   - This bar is made with organic ingredients, including dates, peanut butter, and chocolate chips. It&#39;s not only delicious but also provides a good source of protein and healthy fats, making it a well-rounded snack option.<br><br>5. **Health Warrior** - **Chia Bar - Chocolate Peanut Butter**<br>   - While primarily made with chia seeds, this bar also contains dates for sweetness. It&#39;s a great source of omega-3 fatty acids and fiber, with a delicious chocolate and peanut butter flavor, all crafted from natural ingredients without artificial additives.<br><br>These bars are all great choices for a nutritious snack that doesn’t compromise on taste or health."
+                    data-question="date bars with no artificial ingredients"
+                    data-llm="gpt4"
+                    data-brand="Bahamii"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top 5 recommendations for date bars with no artificial ingredients, listed in order of preference:<br><br>1. Larabar Date Bars:<br>   - These bars are made with just a few simple, whole-food ingredients - dates, nuts, and sometimes dried fruit or spices.<br>   - They are minimally processed and have no added sugars, preservatives, or artificial additives.<br>   - Larabar offers a variety of flavors, such as Cashew Cookie, Peanut Butter Chocolate Chip, and Apple Pie.<br><br>2. Medjool Date Bars by Joolies:<br>   - Joolies uses only organic, sustainably sourced Medjool dates as the base for their date bars.<br>   - The bars are made with just a handful of clean, whole-food ingredients, such as nuts, seeds, and spices.<br>   - They are a great source of natural sweetness and fiber, with no added sugars or preservatives.<br><br>3. Organic Date Rolls by Mavuno Harvest:<br>   - These date rolls are made with organic, sun-dried dates and nothing else.<br>   - They provide a simple, nutrient-dense snack that satisfies the sweet tooth without any artificial additives.<br>   - Mavuno Harvest sources their dates directly from small-scale farmers in Africa, supporting sustainable agriculture.<br><br>4. Organic Date Bars by Bhu Foods:<br>   - Bhu Foods creates date bars that are made with organic dates, nuts, and seeds.<br>   - They offer a variety of flavors, such as Almond Cacao and Coconut Cashew, all without any added sugars or preservatives.<br>   - The bars are also gluten-free, non-GMO, and vegan.<br><br>5. Date Squares by Attune Foods:<br>   - These date squares feature a base of organic, unsweetened dates and are topped with a variety of nuts and seeds.<br>   - Attune Foods uses only whole, unprocessed ingredients, ensuring a clean and natural snack.<br>   - The date squares provide a satisfying texture and flavor without any artificial additives."
+                    data-question="date bars with no artificial ingredients"
+                    data-llm="claude"
+                    data-brand="Bahamii"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="No response"
+                    data-question="date bars with no artificial ingredients"
+                    data-llm="gemini"
+                    data-brand="Bahamii"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+                </tbody>
+            </table>
+            <p class="breakdown-hint">Click any cell to see the full AI response</p>
+        </div>
+
+        <!-- Response modal -->
+        <div class="response-modal" id="responseModal">
+            <div class="modal-content" onclick="event.stopPropagation()">
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+                <div class="modal-header">
+                    <span class="modal-llm" id="modalLlm"></span>
+                    <span class="modal-status" id="modalStatus"></span>
+                </div>
+                <div class="modal-question" id="modalQuestion"></div>
+                <div class="modal-response" id="modalResponse"></div>
+            </div>
+        </div>
+    
+        </div>
+
+        <!-- Section 3: Reddit Opportunities -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <h2 class="section-title">Reddit Opportunities</h2>
+            </div>
+
+            <div class="subsection-title">Buy Intent Conversations</div>
+            <p class="subsection-desc">People actively looking for recommendations in your category</p>
+            <div class="reddit-posts">
+                
+            <a href="https://www.reddit.com/r/Volumeeating/comments/1rdjjvb/cheap_healthy_snacks_for_sweet_tooth_that_arent/" target="_blank" class="reddit-post">
+                <div class="post-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">Cheap healthy snacks for sweet tooth that aren't just fruit?</div>
+                    <div class="post-meta">
+                        r/Volumeeating &bull; 711K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            <a href="https://www.reddit.com/r/veganrecipes/comments/1r90pab/highprotein_date_oat_coffee_cake_46g_protein_per/" target="_blank" class="reddit-post">
+                <div class="post-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">High-Protein Date & Oat Coffee Cake - 46g protein per serving ...</div>
+                    <div class="post-meta">
+                        r/veganrecipes &bull; 610K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            <a href="https://www.reddit.com/r/SnacksIndia/comments/1ra17w8/desperate_need_of_stackable_healthy_snackdessert/" target="_blank" class="reddit-post">
+                <div class="post-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">Desperate need of stackable healthy snack/dessert.</div>
+                    <div class="post-meta">
+                        r/SnacksIndia &bull; 56K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            <a href="https://www.reddit.com/r/triathlon/comments/1rd81n6/natural_fueling_intake_on_the_market/" target="_blank" class="reddit-post">
+                <div class="post-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">Natural fueling intake on the market : r/triathlon</div>
+                    <div class="post-meta">
+                        r/triathlon &bull; 265K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            </div>
+
+            <div class="subsection-title">Pain Point Conversations</div>
+            <p class="subsection-desc">People discussing problems your product solves</p>
+            <div class="reddit-posts">
+                
+            <a href="https://www.reddit.com/r/snacking/comments/1rcfmx7/what_snack_is_best_for_something_low_calorie_no/" target="_blank" class="reddit-post">
+                <div class="post-icon pain">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">What snack is best for something low calorie, no sugar, and ...</div>
+                    <div class="post-meta">
+                        r/snacking &bull; 113K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            <a href="https://www.reddit.com/r/Volumeeating/comments/1rdjjvb/cheap_healthy_snacks_for_sweet_tooth_that_arent/" target="_blank" class="reddit-post">
+                <div class="post-icon pain">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">Cheap healthy snacks for sweet tooth that aren't just fruit?</div>
+                    <div class="post-meta">
+                        r/Volumeeating &bull; 711K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            </div>
+        </div>
+
+        <!-- CTA Section -->
+        <div class="section cta-section">
+            <h2>Ready to improve your <em>AI visibility?</em></h2>
+            <p>We help brands get mentioned more in AI answers through strategic content placement.</p>
+            <a href="https://adva-solutions.com/AIVisibility" class="cta-button">Learn More</a>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p>Generated by <a href="https://adva-solutions.com">Adva</a> &bull; AI Visibility Health Check</p>
+    </footer>
+
+    <script>
+        // Tab switching functionality
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const tabId = btn.dataset.tab;
+
+                // Update buttons
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                // Update panels
+                document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+                document.getElementById('panel-' + tabId).classList.add('active');
+            });
+        });
+
+        // Show toast notification
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2500);
+        }
+
+        // Show response modal
+        function showResponse(cell) {
+            try {
+                let response = cell.dataset.response || 'No response available';
+                const question = cell.dataset.question || '';
+                const llm = cell.dataset.llm || '';
+                const brand = cell.dataset.brand || '';
+                const isMentioned = cell.classList.contains('mentioned');
+                const brandPosition = cell.dataset.position ? parseInt(cell.dataset.position) : null;
+
+                const llmNames = {'gpt4': 'GPT', 'claude': 'Claude', 'gemini': 'Gemini'};
+
+                // If brand is mentioned beyond position 5, add a banner at the top
+                let positionBanner = '';
+                if (isMentioned && brandPosition && brandPosition > 5) {
+                    positionBanner = '<div style="background: #fef3c7; padding: 0.75rem 1rem; border-radius: 6px; margin-bottom: 1rem; border-left: 4px solid #f59e0b;">' +
+                        '<strong>📍 Your brand appeared at position #' + brandPosition + '</strong> - scroll down to see the highlighted mention' +
+                        '</div>';
+                }
+
+                // Highlight brand name in response (case insensitive)
+                if (brand && isMentioned) {
+                    try {
+                        const brandRegex = new RegExp('(' + brand.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&') + ')', 'gi');
+                        response = response.replace(brandRegex, '<span class="brand-highlight">$1</span>');
+                    } catch(e) { /* ignore highlighting errors */ }
+                }
+
+                document.getElementById('modalLlm').textContent = llmNames[llm] || llm;
+                document.getElementById('modalQuestion').textContent = '"' + question + '"';
+                document.getElementById('modalResponse').innerHTML = positionBanner + response;
+
+                const statusEl = document.getElementById('modalStatus');
+                if (isMentioned) {
+                    statusEl.textContent = 'Mentioned';
+                    statusEl.className = 'modal-status mentioned';
+                } else {
+                    statusEl.textContent = 'Not mentioned';
+                    statusEl.className = 'modal-status not-mentioned';
+                }
+
+                document.getElementById('responseModal').classList.add('active');
+                document.body.style.overflow = 'hidden';
+
+                // Scroll to first highlight if mentioned
+                if (isMentioned) {
+                    setTimeout(function() {
+                        const highlight = document.querySelector('.modal-response .brand-highlight');
+                        if (highlight) {
+                            highlight.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        }
+                    }, 100);
+                }
+            } catch (e) {
+                console.error('Error showing response:', e);
+                alert('Error loading response. Please try again.');
+            }
+        }
+
+        // Close modal
+        function closeModal() {
+            document.getElementById('responseModal').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // Close when clicking backdrop (outside modal content)
+        document.getElementById('responseModal').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+
+        // Close modal on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeModal();
+        });
+    </script>
+</body>
+</html>
