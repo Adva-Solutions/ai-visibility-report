@@ -508,6 +508,34 @@
     color: #374151;
   }
 
+  /* SEO Wins pills in report */
+  .seo-wins-report {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 1.5rem;
+  }
+  .win-pill {
+    background: linear-gradient(135deg, var(--purple-deep), var(--purple-mid));
+    color: #ffffff;
+    padding: 0.5rem 1rem;
+    border-radius: 50px;
+    font-size: 0.8rem;
+    font-weight: 500;
+  }
+
+  /* Metric growth indicator */
+  .metric-growth {
+    font-size: 0.75rem;
+    font-weight: 600;
+    margin-top: 4px;
+  }
+  .metric-delta {
+    font-size: 0.7rem;
+    color: #6b7280;
+    margin-top: 4px;
+  }
+
   /* Divider */
   .divider {
     height: 1px;
@@ -559,7 +587,7 @@
       </svg>
       Copy Link
     </button>
-    <span class="header-date">February 18, 2026 at 2:13 PM</span>
+    <span class="header-date">March 3, 2026 at 3:48 PM</span>
   </div>
 </header>
 <div class="toast" id="toast">Link copied to clipboard!</div>
@@ -603,12 +631,13 @@
       <h2 class="section-title">Executive Summary</h2>
     </div>
     <ul class="exec-list">
-      <li>Published 43 Reddit comments across 10 subreddits.</li>
-      <li>Top content tag: Buy Intent (41 mentions).</li>
-      <li>Reddit posts received 880 estimated impressions and 22 upvotes.</li>
-      <li>SEO generated 872 clicks from organic search.</li>
-      <li>AI Visibility Score: 23%.</li>
-      <li>Mentioned in 169 AI responses across ChatGPT, Perplexity &amp; Gemini.</li>
+      <li>Published 47 Reddit comments across 12 subreddits.</li>
+      <li>Top content tag: Buy Intent (44 mentions).</li>
+      <li>5 keywords now ranking #1 in Google</li>
+      <li>1.1K total clicks from search</li>
+      <li>Site Health improved +12 points (80% → 92%)</li>
+      <li>AI Health improved +10 points (83% → 93%)</li>
+      <li>Mentioned in 439 AI responses across ChatGPT, Perplexity &amp; Gemini.</li>
       <li>Overall AI sentiment: Positive.</li>
     </ul>
   </div>
@@ -626,42 +655,15 @@
 
     <div class="metrics">
       <div class="metric-card">
-        <div class="value">43</div>
+        <div class="value">47</div>
         <div class="label">Comments Posted</div>
       </div>
       <div class="metric-card">
-        <div class="value">10</div>
+        <div class="value">12</div>
         <div class="label">Subreddits</div>
       </div>
     </div>
 
-    <div class="sub-heading">Engagement & Reach</div>
-    <div class="metrics">
-      <div class="metric-card">
-        <div class="value">880</div>
-        <div class="label">Est. Impressions</div>
-      </div>
-      <div class="metric-card">
-        <div class="value">22</div>
-        <div class="label">Total Upvotes</div>
-      </div>
-      <div class="metric-card">
-        <div class="value">24</div>
-        <div class="label">Comments Verified</div>
-      </div>
-    </div>
-
-    <div class="sub-heading">Intent Breakdown</div>
-    <div class="metrics">
-      <div class="metric-card">
-        <div class="value">22</div>
-        <div class="label">Buy Intent</div>
-      </div>
-      <div class="metric-card">
-        <div class="value">2</div>
-        <div class="label">Pain Point</div>
-      </div>
-    </div>
 
     <div class="charts-row">
       <div class="chart-box">
@@ -936,10 +938,34 @@
           <td><a href="https://www.reddit.com/r/VirginVoyages/comments/1r7fzk6/first_timers_southern_caribbean_cruise_21_feb/" target="_blank">First timers - Southern Caribbean Cruise 21 Feb</a></td>
           <td>Buy Intent</td>
         </tr>
+        <tr class="reddit-hidden-row" style="display:none;">
+          <td>2026-02-22</td>
+          <td>AskTheCaribbean</td>
+          <td><a href="https://www.reddit.com/r/AskTheCaribbean/comments/1raoi57/which_caribbean_island_should_i_visit_from_miami/" target="_blank">Which Caribbean island should I visit from miami</a></td>
+          <td>Buy Intent</td>
+        </tr>
+        <tr class="reddit-hidden-row" style="display:none;">
+          <td>2026-02-22</td>
+          <td>Caribbean</td>
+          <td><a href="https://www.reddit.com/r/Caribbean/comments/1razx5q/choosing_between_guatemala_belize_puerto_rico/" target="_blank">Choosing between Guatemala, Belize, Puerto Rico</a></td>
+          <td>Buy Intent, Pain Point</td>
+        </tr>
+        <tr class="reddit-hidden-row" style="display:none;">
+          <td>2026-02-25</td>
+          <td>hyatt</td>
+          <td><a href="https://www.reddit.com/r/hyatt/comments/1rdmmju/hyatt_isla_verde_puerto_rico/" target="_blank">Hyatt Isla Verde - Puerto Rico</a></td>
+          <td>Pain Point</td>
+        </tr>
+        <tr class="reddit-hidden-row" style="display:none;">
+          <td>2026-02-25</td>
+          <td>SanJuan</td>
+          <td><a href="https://www.reddit.com/r/SanJuan/comments/1rdl7qd/last_minute_trip_switch/" target="_blank">Last Minute Trip Switch!</a></td>
+          <td>Buy Intent</td>
+        </tr>
       </tbody>
     </table>
     <button class="show-more-btn" id="showMoreReddit" onclick="document.querySelectorAll('.reddit-hidden-row').forEach(r=>r.style.display='');this.style.display='none';">
-      Show all 43 comments
+      Show all 47 comments
     </button>
   </div>
 
@@ -954,38 +980,62 @@
       <h2 class="section-title">SEO Performance</h2>
     </div>
 
+    <div class="seo-wins-report">
+      <span class="win-pill">5 keywords now ranking #1 in Google</span>
+      <span class="win-pill">1.1K total clicks from search</span>
+      <span class="win-pill">Site Health improved +12 points (80% → 92%)</span>
+      <span class="win-pill">AI Health improved +10 points (83% → 93%)</span>
+      <span class="win-pill">696 new organic visitors this month</span>
+      <span class="win-pill">3 blog posts published, 4 external articles driving traffic</span>
+    </div>
+
     <div class="metrics">
       <div class="metric-card">
-        <div class="value">872</div>
+        <div class="value">1.1K</div>
         <div class="label">Clicks</div>
       </div>
       <div class="metric-card">
-        <div class="value">86.6K</div>
+        <div class="value">7.65K</div>
         <div class="label">Impressions</div>
       </div>
       <div class="metric-card">
-        <div class="value">81%</div>
-        <div class="label">Site Health</div>
-      </div>
-      <div class="metric-card">
-        <div class="value">3</div>
-        <div class="label">Backlinks</div>
+        <div class="value">5</div>
+        <div class="label">Keywords at #1</div>
       </div>
     </div>
+
+    <div class="sub-heading">Health Scores</div>
+    <div class="metrics">
+      <div class="metric-card">
+        <div class="value">92%</div>
+        <div class="label">Site Health</div>
+        <div class="metric-delta">80% &rarr; 92% <span class="change-positive">(+12)</span></div>
+      </div>
+      <div class="metric-card">
+        <div class="value">93%</div>
+        <div class="label">AI Search Health</div>
+        <div class="metric-delta">83% &rarr; 93% <span class="change-positive">(+10)</span></div>
+      </div>
+    </div>
+
 
 
     <div class="sub-heading" style="margin-top:1.5rem;">Content Published</div>
     <div class="blog-posts-grid">
       <div class="blog-post-card">
-        <div class="blog-post-title">Rejuvenate Your Senses At Puerto Ricos Premier Bathhouse</div>
-        <a href="https://www.lasruinas.com/rejuvenate-your-senses-at-puerto-ricos-premier-bathhouse" target="_blank" class="blog-post-link">View Article &rarr;</a>
-      </div>
-      <div class="blog-post-card">
         <div class="blog-post-title">Luxury Wellness At Las Ruinas Your New Sanctuary In Puerto Rico</div>
         <a href="https://www.lasruinas.com/luxury-wellness-at-las-ruinas-your-new-sanctuary-in-puerto-rico" target="_blank" class="blog-post-link">View Article &rarr;</a>
       </div>
+      <div class="blog-post-card">
+        <div class="blog-post-title">Rejuvenate Your Senses At Puerto Ricos Premier Bathhouse</div>
+        <a href="https://www.lasruinas.com/rejuvenate-your-senses-at-puerto-ricos-premier-bathhouse" target="_blank" class="blog-post-link">View Article &rarr;</a>
+      </div>
     </div>
 
+    <div class="sub-heading" style="margin-top:1.5rem;">On-Site SEO Work</div>
+    <ul class="item-list">
+      <li>Resolved site map errors, improved page speed and indexing.</li>
+    </ul>
   </div>
 
   <!-- GEO / AI Visibility -->
@@ -1001,23 +1051,19 @@
 
     <div class="metrics">
       <div class="metric-card">
-        <div class="value">169</div>
+        <div class="value">439</div>
         <div class="label">Total AI Mentions</div>
       </div>
       <div class="metric-card">
-        <div class="value">30</div>
+        <div class="value">50</div>
         <div class="label">Prompts Tracked</div>
       </div>
       <div class="metric-card">
-        <div class="value">17</div>
+        <div class="value">23</div>
         <div class="label">AI-Driven Sessions</div>
       </div>
       <div class="metric-card">
-        <div class="value">23%</div>
-        <div class="label">Visibility Score</div>
-      </div>
-      <div class="metric-card">
-        <div class="value">2</div>
+        <div class="value">3</div>
         <div class="label">Reports Generated</div>
       </div>
     </div>
@@ -1028,24 +1074,24 @@
         <div class="mention-card">
           <div class="platform">ChatGPT</div>
           <div class="count">
-            86
-            <span class="change change-positive">+25%</span>
+            218
+            <span class="change change-positive">150%</span>
           </div>
           <div class="subtitle">mentions</div>
         </div>
         <div class="mention-card">
           <div class="platform">Perplexity</div>
           <div class="count">
-            51
-            <span class="change change-positive">+50%</span>
+            133
+            <span class="change change-positive">25%</span>
           </div>
           <div class="subtitle">mentions</div>
         </div>
         <div class="mention-card">
           <div class="platform">Gemini</div>
           <div class="count">
-            32
-            <span class="change change-positive">+14%</span>
+            88
+            <span class="change change-positive">10%</span>
           </div>
           <div class="subtitle">mentions</div>
         </div>
@@ -1059,11 +1105,16 @@
     <div class="sub-heading">Sentiment Analysis</div>
     <div class="sentiment-row">
       <span class="sentiment-badge sentiment-positive">Positive</span>
-      <span class="sentiment-detail">Based on 30 tracked prompts</span>
+      <span class="sentiment-detail">Based on 50 tracked prompts</span>
     </div>
+    <p class="sentiment-notes">Brand is consistently recommended as top choice and referenced as the first bath house and gym in Las Renas. </p>
 
     <div class="sub-heading" style="margin-top:1.5rem;">Content Published</div>
     <div class="blog-posts-grid">
+      <div class="blog-post-card">
+        <div class="blog-post-title">Discover The Best Spas In Puerto Rico Your Ultimate Guide</div>
+        <a href="https://www.lasruinas.com/blog/discover-the-best-spas-in-puerto-rico-your-ultimate-guide" target="_blank" class="blog-post-link">View article &rarr;</a>
+      </div>
       <div class="blog-post-card">
         <div class="blog-post-title">Rejuvenate In Paradise Choosing Your Ideal San Juan Spa Getaway</div>
         <a href="https://www.lasruinas.com/blog/rejuvenate-in-paradise-choosing-your-ideal-san-juan-spa-getaway" target="_blank" class="blog-post-link">View article &rarr;</a>
@@ -1074,14 +1125,28 @@
       </div>
     </div>
 
+    <div class="sub-heading" style="margin-top:1.5rem;">Key AI Queries</div>
+    <div class="query-chips">
+      <span class="query-chip">"Gym and wellness guide in San Juan"</span>
+      <span class="query-chip">"Looking for ice bath in Puerto Rico"</span>
+      <span class="query-chip">"Guide to finding wellness sanctuaries in Old San Juan?"</span>
+      <span class="query-chip">"Health benefits of bathhouse traditions in Puerto Rico?"</span>
+      <span class="query-chip">"Where to find cold plunge pools in Puerto Rico?"</span>
+      <span class="query-chip">"Gym and wellness guide in San Juan"</span>
+      <span class="query-chip">"Where to get massage in San Juan?"</span>
+    </div>
 
+    <div class="sub-heading" style="margin-top:1.5rem;">Highlights & Observations</div>
+    <ul class="notes-list">
+      <li>Big wins for the month are that Las Ruinas is definitely being indexed by AI. This usually takes several weeks, if not months. All of the AI citations and mentions are positive. There is room for improvement in AI traffic.</li>
+    </ul>
   </div>
 
 </div>
 
 <!-- Footer -->
 <div class="footer">
-  Prepared by <a href="https://advasolutions.com">adva</a> &middot; February 18, 2026 at 2:13 PM
+  Prepared by <a href="https://advasolutions.com">adva</a> &middot; March 3, 2026 at 3:48 PM
 </div>
 
 <!-- Toast Script -->
@@ -1096,7 +1161,7 @@ function showToast() {
 <!-- Charts -->
 <script>
   const geoLabels = ["ChatGPT","Perplexity","Gemini"];
-  const geoValues = [86,51,32];
+  const geoValues = [218,133,88];
   const geoColors = ['#2d1b69', '#5b3fa0', '#a78bfa'];
 
   if (geoLabels.length > 0) {
@@ -1124,8 +1189,8 @@ function showToast() {
 </script>
 
 <script>
-  const tagData = {"Buy Intent":41,"Pain Point":14};
-  const subredditData = {"PuertoRicoTravel":26,"Caribbean":2,"vegan":2,"Cruise":2,"blacktravel":2,"SanJuan":3,"gaytravel":1,"chubbytravel":3,"Spanish":1,"VirginVoyages":1};
+  const tagData = {"Buy Intent":44,"Pain Point":16};
+  const subredditData = {"PuertoRicoTravel":26,"Caribbean":3,"vegan":2,"Cruise":2,"blacktravel":2,"SanJuan":4,"gaytravel":1,"chubbytravel":3,"Spanish":1,"VirginVoyages":1,"AskTheCaribbean":1,"hyatt":1};
   const chartColors = ['#2d1b69','#5b3fa0','#7c5cbf','#a78bfa','#c4b5fd','#ddd6fe','#4c1d95','#6d28d9'];
 
   if (Object.keys(tagData).length > 0) {
