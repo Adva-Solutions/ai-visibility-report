@@ -1,0 +1,1370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Visibility Report - Interactive College of Technology (ICT) | Adva</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #ffffff;
+            min-height: 100vh;
+            color: #374151;
+            line-height: 1.6;
+        }
+
+        /* Header */
+        .header {
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            font-size: 1.25rem;
+            color: #1f2937;
+            text-decoration: none;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .header-date {
+            color: #9ca3af;
+            font-size: 0.875rem;
+        }
+
+        /* Copy link button */
+        .copy-link-button {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: #f3f4f6;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            color: #374151;
+            font-size: 0.75rem;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .copy-link-button:hover {
+            background: #e5e7eb;
+        }
+
+        .copy-link-button svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        .pdf-button {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: #1f2937;
+            border: none;
+            border-radius: 6px;
+            color: #ffffff;
+            font-size: 0.75rem;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .pdf-button:hover {
+            background: #374151;
+        }
+
+        .pdf-button svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        /* Toast notification */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: #1f2937;
+            color: #ffffff;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            opacity: 0;
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        /* Container */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Page title */
+        .page-title {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .page-title .label {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: #9ca3af;
+            font-size: 0.75rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+        }
+
+        .page-title .label::before,
+        .page-title .label::after {
+            content: '';
+            width: 30px;
+            height: 1px;
+            background: #d1d5db;
+        }
+
+        .page-title h1 {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 2.5rem;
+            font-weight: 400;
+            color: #1f2937;
+            margin-bottom: 0.5rem;
+        }
+
+        .page-title .brand {
+            color: #6b7280;
+            font-size: 1.125rem;
+        }
+
+        /* Sections */
+        .section {
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #f3f4f6;
+        }
+
+        .section-icon {
+            width: 40px;
+            height: 40px;
+            background: #1f2937;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .section-icon svg {
+            width: 20px;
+            height: 20px;
+            color: #ffffff;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 1.375rem;
+            color: #1f2937;
+        }
+
+        /* Score Section */
+        .score-section {
+            text-align: center;
+            padding: 3rem 2rem;
+        }
+
+        .score-circle {
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            background: #fafafa;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            border: 4px solid #ef4444;
+        }
+
+        .score-value {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 3rem;
+            font-weight: 500;
+            color: #ef4444;
+        }
+
+        .score-label {
+            font-size: 0.8rem;
+            color: #9ca3af;
+        }
+
+        .score-description {
+            color: #6b7280;
+            margin-bottom: 2rem;
+            font-size: 1rem;
+        }
+
+        .score-description strong {
+            color: #1f2937;
+        }
+
+        .llm-breakdown {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .llm-stat {
+            text-align: center;
+            padding: 1rem 1.5rem;
+            background: #fafafa;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+            min-width: 100px;
+        }
+
+        .llm-name {
+            display: block;
+            color: #9ca3af;
+            font-size: 0.8rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .llm-score {
+            font-size: 1.125rem;
+            font-weight: 600;
+        }
+
+        .llm-score.success {
+            color: #22c55e;
+        }
+
+        .llm-score.warning {
+            color: #ef4444;
+        }
+
+        /* Competitor Table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 0.875rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid #f3f4f6;
+        }
+
+        th {
+            color: #9ca3af;
+            font-weight: 500;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        td {
+            color: #374151;
+        }
+
+        .mention-count {
+            background: #fef3c7;
+            color: #92400e;
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        /* Tabs for LLM responses */
+        .example-tabs {
+            margin-top: 1.5rem;
+        }
+
+        .tabs-header {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+            padding-bottom: 0;
+        }
+
+        .tab-btn {
+            padding: 0.75rem 1.25rem;
+            background: transparent;
+            border: none;
+            color: #6b7280;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            margin-bottom: -1px;
+            transition: all 0.2s;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .tab-btn:hover {
+            color: #1f2937;
+        }
+
+        .tab-btn.active {
+            color: #1f2937;
+            border-bottom-color: #1f2937;
+        }
+
+        .tab-panel {
+            display: none;
+            background: #fafafa;
+            border-radius: 8px;
+            padding: 1.25rem;
+        }
+
+        .tab-panel.active {
+            display: block;
+        }
+
+        .example-question {
+            color: #1f2937;
+            font-weight: 500;
+            font-size: 0.95rem;
+            margin-bottom: 0.75rem;
+        }
+
+        /* Question breakdown table */
+        .question-breakdown {
+            margin-top: 1rem;
+        }
+
+        .breakdown-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        .breakdown-table th {
+            padding: 0.75rem;
+            text-align: center;
+            background: #f9fafb;
+            border-bottom: 2px solid #e5e7eb;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .breakdown-table th:first-child {
+            text-align: left;
+            width: 50%;
+        }
+
+        .breakdown-table td {
+            padding: 0.75rem;
+            border-bottom: 1px solid #f3f4f6;
+            vertical-align: middle;
+        }
+
+        .question-cell {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+        }
+
+        .question-num {
+            background: #e5e7eb;
+            color: #374151;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        .question-text {
+            color: #374151;
+            line-height: 1.4;
+        }
+
+        .llm-cell {
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-radius: 4px;
+        }
+
+        .llm-cell:hover {
+            background: #f3f4f6;
+        }
+
+        .llm-cell.mentioned {
+            color: #16a34a;
+        }
+
+        .llm-cell.mentioned .status-icon {
+            font-size: 1.25rem;
+        }
+
+        .llm-cell.not-mentioned {
+            color: #dc2626;
+        }
+
+        .llm-cell.not-mentioned .status-icon {
+            font-size: 1.25rem;
+        }
+
+        .breakdown-hint {
+            color: #9ca3af;
+            font-size: 0.8rem;
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+        /* Response modal */
+        .response-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+        }
+
+        .response-modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: #ffffff;
+            border-radius: 12px;
+            max-width: 800px;
+            width: 100%;
+            max-height: 90vh;
+            overflow: auto;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #9ca3af;
+            cursor: pointer;
+            padding: 0.25rem 0.5rem;
+        }
+
+        .modal-close:hover {
+            color: #374151;
+        }
+
+        .modal-header {
+            padding: 1.5rem 1.5rem 0;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            position: relative;
+        }
+
+        .modal-llm {
+            font-weight: 600;
+            color: #1f2937;
+            font-size: 1.1rem;
+        }
+
+        .modal-status {
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .modal-status.mentioned {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .modal-status.not-mentioned {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .modal-question {
+            padding: 1rem 1.5rem;
+            color: #6b7280;
+            font-size: 0.9rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .modal-response {
+            padding: 1.5rem;
+            overflow-y: auto;
+            flex: 1;
+            color: #374151;
+            font-size: 0.9rem;
+            line-height: 1.8;
+            min-height: 300px;
+            max-height: 60vh;
+            background: #fafafa;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .modal-response::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .modal-response::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        .modal-response::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 4px;
+        }
+
+        .modal-response::-webkit-scrollbar-thumb:hover {
+            background: #a1a1a1;
+        }
+
+        /* Brand highlight */
+        .brand-highlight {
+            background: linear-gradient(120deg, #fef08a 0%, #fde047 100%);
+            padding: 0.1rem 0.3rem;
+            border-radius: 3px;
+            font-weight: 600;
+        }
+
+        .example-content {
+            color: #6b7280;
+            font-size: 0.875rem;
+            line-height: 1.7;
+            max-height: 400px;
+            overflow-y: auto;
+            margin-bottom: 0.75rem;
+            padding: 1rem;
+            background: #f9fafb;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .example-status {
+            padding: 0.5rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            display: inline-block;
+        }
+
+        .example-status.mentioned {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .example-status.not-mentioned {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        /* Reddit Posts */
+        .reddit-posts {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .reddit-post {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: #fafafa;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: all 0.2s;
+            border: 1px solid transparent;
+        }
+
+        .reddit-post:hover {
+            background: #f3f4f6;
+            border-color: #e5e7eb;
+        }
+
+        .post-icon {
+            width: 40px;
+            height: 40px;
+            background: #1f2937;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .post-icon.pain {
+            background: #fef3c7;
+        }
+
+        .post-icon.pain svg {
+            color: #92400e;
+        }
+
+        .post-icon svg {
+            width: 20px;
+            height: 20px;
+            color: #ffffff;
+        }
+
+        .post-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .post-title {
+            color: #1f2937;
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .post-meta {
+            color: #9ca3af;
+            font-size: 0.8rem;
+        }
+
+        .post-arrow {
+            color: #9ca3af;
+            flex-shrink: 0;
+        }
+
+        .post-arrow svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .subsection-title {
+            color: #1f2937;
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin: 1.5rem 0 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .subsection-title:first-of-type {
+            margin-top: 0;
+        }
+
+        .subsection-desc {
+            color: #9ca3af;
+            font-size: 0.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .no-data {
+            color: #9ca3af;
+            font-style: italic;
+            text-align: center;
+            padding: 1rem;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            color: #9ca3af;
+            font-size: 0.8rem;
+            padding: 2rem;
+            border-top: 1px solid #e5e7eb;
+            margin-top: 2rem;
+        }
+
+        .footer a {
+            color: #1f2937;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* CTA */
+        .cta-section {
+            text-align: center;
+            padding: 3rem 2rem;
+            background: #fafafa;
+        }
+
+        .cta-section h2 {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 1.75rem;
+            color: #1f2937;
+            margin-bottom: 0.75rem;
+        }
+
+        .cta-section p {
+            color: #6b7280;
+            margin-bottom: 1.5rem;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background: #1f2937;
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .cta-button:hover {
+            background: #111827;
+            transform: translateY(-1px);
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .page-title h1 {
+                font-size: 1.75rem;
+            }
+
+            .section {
+                padding: 1.5rem;
+            }
+
+            .score-circle {
+                width: 130px;
+                height: 130px;
+            }
+
+            .score-value {
+                font-size: 2.25rem;
+            }
+
+            .llm-breakdown {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .tabs-header {
+                flex-wrap: wrap;
+            }
+
+            .tab-btn {
+                padding: 0.5rem 1rem;
+                font-size: 0.8rem;
+            }
+
+            .breakdown-table th,
+            .breakdown-table td {
+                padding: 0.5rem;
+                font-size: 0.8rem;
+            }
+
+            .question-cell {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .modal-content {
+                max-height: 90vh;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <a href="https://adva-solutions.com/AIVisibility" class="logo">adva</a>
+        <div class="header-right">
+            <!-- PDF button hidden for now - backend still available at /report/293a9c90/pdf
+            <a href="/report/293a9c90/pdf" class="pdf-button" title="Download as PDF">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                Download PDF
+            </a>
+            -->
+            <button class="copy-link-button" onclick="navigator.clipboard.writeText('https://adva-solutions.github.io/ai-visibility-report/report_interactive-college-of-technol_293a9c90.html'); showToast('Link copied!');" title="Copy shareable link">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                </svg>
+                Copy Link
+            </button>
+            <span class="header-date">March 09, 2026</span>
+        </div>
+    </header>
+    <div class="toast" id="toast">Link copied to clipboard!</div>
+
+    <div class="container">
+        <div class="page-title">
+            <div class="label">AI Visibility Report</div>
+            <h1>Your Brand's <em>AI Presence</em></h1>
+            <p class="brand">Analysis for Interactive College of Technology (ICT)</p>
+        </div>
+
+        <!-- Section 1: AI Visibility Score -->
+        <div class="section score-section">
+            <div class="score-circle">
+                <span class="score-value">0%</span>
+                <span class="score-label">0/15 mentions</span>
+            </div>
+            <p class="score-description">
+                Your brand appeared in <strong>0</strong> out of <strong>15</strong> AI recommendations
+            </p>
+            <div class="llm-breakdown">
+                
+            <div class="llm-stat">
+                <span class="llm-name">GPT</span>
+                <span class="llm-score warning">0/5</span>
+            </div>
+        
+            <div class="llm-stat">
+                <span class="llm-name">Claude</span>
+                <span class="llm-score warning">0/5</span>
+            </div>
+        
+            <div class="llm-stat">
+                <span class="llm-name">Gemini</span>
+                <span class="llm-score warning">0/5</span>
+            </div>
+        
+            </div>
+        </div>
+
+        <!-- Section 2: AI Response Breakdown -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                    </svg>
+                </div>
+                <h2 class="section-title">Question-by-Question Breakdown</h2>
+            </div>
+            <p style="color: #6b7280; margin-bottom: 1rem;">We asked these 5 questions to each AI model. Click any cell to see the full response:</p>
+            
+        <div class="question-breakdown">
+            <table class="breakdown-table">
+                <thead>
+                    <tr>
+                        <th>Question Asked</th>
+                        <th>GPT</th>
+                        <th>Claude</th>
+                        <th>Gemini</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q1</span>
+                    <span class="question-text">technical and vocational schools near me</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="To provide you with the best recommendations for technical and vocational schools, I would need to know your specific location or region. However, I can give you a general list of well-regarded technical and vocational schools across the United States. Here are some recommendations:<br><br>1. **Universal Technical Institute (UTI)**<br>   - **Location**: Various campuses across the U.S.<br>   - **Overview**: UTI specializes in automotive, diesel, collision repair, and motorcycle training. They offer hands-on training and have partnerships with leading manufacturers, which can enhance job placement opportunities for graduates.<br><br>2. **Lincoln Tech**<br>   - **Location**: Multiple campuses nationwide.<br>   - **Overview**: Lincoln Tech offers programs in automotive technology, healthcare, HVAC, and welding. Their programs are designed to provide both theoretical knowledge and practical experience, preparing students for immediate employment in their chosen fields.<br><br>3. **Southern Careers Institute (SCI)**<br>   - **Location**: Several campuses in Texas.<br>   - **Overview**: SCI provides various programs, including medical assisting, welding, and information technology. The school emphasizes a hands-on approach, with small class sizes that allow for personalized instruction.<br><br>4. **The Art Institutes**<br>   - **Location**: Various campuses across the U.S.<br>   - **Overview**: The Art Institutes focus on creative fields such as culinary arts, fashion, and graphic design. They offer a blend of practical skills and creativity, preparing students for careers in the creative industries.<br><br>5. **Purdue University Global**<br>   - **Location**: Online and various campuses.<br>   - **Overview**: While not a traditional vocational school, Purdue Global offers a range of online programs that cater to working adults seeking to enhance their skills or transition to new careers. They provide flexible learning options across various fields, including business, IT, and health sciences.<br><br>If you provide your specific location, I can tailor the recommendations to schools near you."
+                    data-question="technical and vocational schools near me"
+                    data-llm="gpt4"
+                    data-brand="Interactive College of Technology (ICT)"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top 5 recommendations for technical and vocational schools near you, listed in order of preference:<br><br>1. ABC Technical College: This college offers a wide range of hands-on, industry-focused programs in fields such as automotive technology, HVAC, electrical engineering, and computer networking. Their strong partnerships with local employers ensure that their curriculum is up-to-date and their graduates are highly sought after.<br><br>2. XYZ Vocational Institute: Known for its exceptional training in skilled trades, XYZ Vocational Institute provides programs in plumbing, welding, carpentry, and manufacturing. The school&#39;s state-of-the-art facilities and experienced instructors ensure that students gain the practical skills needed to succeed in their chosen careers.<br><br>3. Community College of Anytown: While not solely a technical school, the Community College of Anytown offers several high-quality vocational and career-focused programs, including nursing, culinary arts, and information technology. The small class sizes and affordable tuition make it an attractive option for many students.<br><br>4. Midwest Technical Academy: Specializing in the transportation industry, Midwest Technical Academy offers training in automotive technology, diesel mechanics, and heavy equipment operation. The school&#39;s close ties with local employers and hands-on approach to learning make it a great choice for those interested in the automotive and transportation fields.<br><br>5. City Technical Institute: This institute focuses on programs in construction trades, such as electrical work, HVAC, and building maintenance. The school&#39;s practical, industry-aligned curriculum and emphasis on job placement make it a solid choice for those seeking a career in the construction industry.<br><br>When evaluating these schools, consider factors such as program offerings, accreditation, hands-on learning opportunities, job placement rates, and overall reputation within the local community. Visiting the campuses and speaking with current students can also provide valuable insights into the school&#39;s culture and resources."
+                    data-question="technical and vocational schools near me"
+                    data-llm="claude"
+                    data-brand="Interactive College of Technology (ICT)"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Okay, to give you the best recommendations, I need a bit more information!  **Please tell me your location (city and state, or even just a zip code).**<br><br>However, I can give you a GENERAL idea of what I&#39;d be looking for in a good recommendation, and the TYPE of schools I&#39;d prioritize.  Then, once you provide your location, I can give you a much more specific and helpful list.<br><br>**General Criteria for Recommending Tech/Vocational Schools:**<br><br>*   **Accreditation:**  This is a MUST.  Accreditation ensures the school meets certain quality standards, and it&#39;s often required for financial aid and transferability of credits. Look for accreditation from recognized bodies like ACCSC, COE, or regional accreditation organizations.<br>*   **Strong Industry Connections:**  Does the school have partnerships with local employers?  Do they offer internships or apprenticeships?  A school with good industry ties will help you find a job after graduation.<br>*   **Job Placement Rates:**  Ask about the school&#39;s job placement rates for graduates in your desired field.  This is a good indicator of how successful their programs are.<br>*   **Hands-On Training:**  Vocational schools should prioritize hands-on learning and practical skills.  Look for programs with labs, workshops, and real-world projects.<br>*   **Reputation:**  Check online reviews and talk to current students or alumni if possible.  What&#39;s the overall reputation of the school in the community?<br>*   **Program Offerings:**  Does the school offer the specific program you&#39;re interested in? What are the details of the program curriculum?<br><br>**Type of Schools I&#39;d Prioritize (General):**<br><br>1.  **Community Colleges:**  Often offer a wide range of vocational programs at a lower cost than private schools.  They also may have articulation agreements with four-year universities if you decide to pursue a bachelor&#39;s degree later.<br>2.  **Dedicated Vocational/Technical Schools:**  These schools specialize in vocational training and often have strong industry connections.<br>3.  **Trade Schools/Apprenticeship Programs:**  These programs focus on specific trades like plumbing, electrical work, or welding.<br><br>**Example of How I&#39;d Rank Recommendations (BEFORE knowing your location):**<br><br>Let&#39;s say you&#39;re interested in automotive technology.  Here&#39;s how I MIGHT rank hypothetical schools (again, this is just an EXAMPLE):<br><br>1.  **[Hypothetical School Name] Community College:**  Offers an accredited automotive technology program with a strong partnership with local dealerships for internships. Good job placement rates. Relatively affordable tuition.<br>2.  **[Hypothetical School Name] Technical Institute:**  A dedicated technical school specializing in automotive and diesel technology.  Known for its hands-on training and experienced instructors, but tuition is higher than the community college.<br>3.  **[Hypothetical School Name] Automotive Trade School:**  Offers a shorter, more focused program on a specific area of automotive repair (e.g., engine repair or collision repair).  Good for getting into the workforce quickly, but may not provide as broad of a foundation as the other options.<br><br>**Once you provide your location, I can do the research and give you a much more specific and helpful list of recommendations!**<br>"
+                    data-question="technical and vocational schools near me"
+                    data-llm="gemini"
+                    data-brand="Interactive College of Technology (ICT)"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q2</span>
+                    <span class="question-text">vocational training programs in Georgia</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are some recommended vocational training programs in Georgia, listed in order of preference:<br><br>1. **Georgia Quick Start Program**<br>   - **Overview**: This program is designed to train employees for specific industries in Georgia, particularly manufacturing and technology. It offers customized training for companies looking to expand or relocate in the state.<br>   - **Why Choose It**: Quick Start is one of the most recognized workforce training programs in the nation, providing tailored training solutions that are free of charge to businesses. This ensures that the skills taught align closely with the needs of employers in the region.<br><br>2. **Technical College System of Georgia (TCSG)**<br>   - **Overview**: TCSG offers a variety of vocational programs across numerous technical colleges throughout Georgia. Programs include fields such as healthcare, welding, automotive technology, and information technology.<br>   - **Why Choose It**: With over 20 colleges, TCSG provides flexible options for students, including online and evening classes. Graduates gain practical skills that are in high demand, making them competitive in the job market.<br><br>3. **Georgia Piedmont Technical College (GPTC)**<br>   - **Overview**: GPTC offers a wide range of technical programs, including industrial maintenance, electrical systems technology, and healthcare programs like nursing and medical assisting.<br>   - **Why Choose It**: GPTC focuses on hands-on training and has partnerships with local industries, which can provide students with internship opportunities and direct pathways to employment after graduation.<br><br>4. **North Georgia Technical College (NGTC)**<br>   - **Overview**: NGTC offers specialized vocational programs in areas such as culinary arts, automotive technology, and computer information systems. The college emphasizes experiential learning and skill development.<br>   - **Why Choose It**: The college’s strong ties to local businesses help facilitate job placement for graduates, and their programs are designed to meet the current demands of the job market.<br><br>5. **South Georgia Technical College (SGTC)**<br>   - **Overview**: SGTC offers a diverse array of vocational training programs, including aviation maintenance, cosmetology, and agribusiness. The college is known for its strong support services and student-focused environment.<br>   - **Why Choose It**: SGTC has a reputation for helping students succeed through personalized advising and career services, making it a great choice for those looking to gain practical skills and find employment quickly.<br><br>These programs provide excellent training opportunities and have strong connections to local industries, increasing the chances of successful employment after completion."
+                    data-question="vocational training programs in Georgia"
+                    data-llm="gpt4"
+                    data-brand="Interactive College of Technology (ICT)"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top 5 recommendations for vocational training programs in Georgia, listed in order of preference:<br><br>1. Georgia Quick Start Program:<br>   - This program is a nationally recognized, customized workforce training solution offered by the state of Georgia.<br>   - It provides free, customized training for new or expanding businesses in the state, covering a wide range of industries such as manufacturing, logistics, and information technology.<br>   - The training is designed to meet the specific needs of the employer, ensuring that the workforce is equipped with the necessary skills.<br><br>2. Georgia Piedmont Technical College:<br>   - Georgia Piedmont Technical College offers a variety of vocational and technical programs, including programs in fields such as automotive technology, HVAC, and welding.<br>   - The college has multiple campuses throughout the Atlanta metropolitan area, making it accessible for students across the region.<br>   - The programs are designed to provide hands-on training and industry-recognized certifications, preparing students for immediate employment.<br><br>3. Savannah Technical College:<br>   - Savannah Technical College is a renowned institution for vocational training in the coastal region of Georgia.<br>   - The college offers programs in fields such as maritime logistics, industrial systems technology, and culinary arts.<br>   - The college&#39;s partnerships with local industries ensure that the training is aligned with the needs of the regional job market.<br><br>4. Albany Technical College:<br>   - Albany Technical College is a comprehensive technical college serving the southwestern region of Georgia.<br>   - The college offers vocational programs in areas such as automotive technology, construction management, and healthcare administration.<br>   - The college&#39;s programs are designed to provide practical, hands-on training and industry-recognized certifications.<br><br>5. Gwinnett Technical College:<br>   - Gwinnett Technical College is a leading provider of vocational training in the metropolitan Atlanta area.<br>   - The college offers programs in fields such as cybersecurity, healthcare, and manufacturing technology.<br>   - The college&#39;s partnerships with local employers ensure that the training is tailored to the needs of the regional job market.<br><br>These vocational training programs in Georgia offer diverse options for individuals seeking to develop practical skills and obtain industry-recognized credentials, preparing them for successful careers in various sectors."
+                    data-question="vocational training programs in Georgia"
+                    data-llm="claude"
+                    data-brand="Interactive College of Technology (ICT)"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Okay, here are my top 3 vocational training program recommendations in Georgia, based on factors like job market demand, program quality, and potential for career advancement:<br><br>**1.  Georgia Piedmont Technical College - Healthcare Programs (Specifically Nursing Assistant, Medical Coding, and Pharmacy Technician)**<br><br>*   **Why it&#39;s Highly Recommended:**  Healthcare is a consistently growing industry, and Georgia Piedmont Tech has a strong reputation for its allied health programs.  These programs tend to be shorter and more affordable than a full nursing degree, providing a quicker entry into the field.  Nursing Assistants are always in demand, Medical Coders are crucial for billing and insurance, and Pharmacy Technicians support pharmacists.  Georgia Piedmont Tech also has established relationships with local healthcare providers for internships and job placement.  The programs are also typically offered in a flexible format to accommodate working adults.<br>*   **What to Look For:**  Research specific program requirements, costs, and schedules.  Check their job placement rates for graduates.  Consider your personal interests and aptitude when choosing between the different healthcare specializations.<br><br>**2.  Atlanta Technical College - Construction Trades (Specifically Electrical Technology, Plumbing Technology, and HVAC Technology)**<br><br>*   **Why it&#39;s Recommended:**  Skilled trades are experiencing a shortage, and Atlanta Technical College is well-regarded for its hands-on training in construction-related fields.  Electrical, plumbing, and HVAC technicians are essential for new construction, renovations, and maintenance of buildings.  These trades offer solid earning potential and opportunities for self-employment.  Atlanta Tech is located in a major metropolitan area with a high demand for these services.<br>*   **What to Look For:**  Investigate apprenticeship opportunities or partnerships with local construction companies.  Understand the licensing requirements for each trade in Georgia.  Consider your physical capabilities and comfort level working in various environments.<br><br>**3.  Gwinnett Technical College - Information Technology (Specifically Cybersecurity, Networking, and Software Development)**<br><br>*   **Why it&#39;s Recommended:**  The IT sector is booming, and Gwinnett Tech is known for its IT programs that are aligned with industry standards. Cybersecurity is crucial for protecting data and systems, networking professionals manage and maintain IT infrastructure, and software developers create the applications we use every day. Gwinnett County is a hub for technology businesses, providing ample job opportunities.<br>*   **What to Look For:**  Check the curriculum to see if it includes industry-recognized certifications (e.g., CompTIA, Cisco, Microsoft).  Explore internship opportunities with local tech companies.  Assess your aptitude for problem-solving, logical thinking, and continuous learning.<br><br>**Important Considerations for ALL Programs:**<br><br>*   **Accreditation:**  Ensure the program is accredited by a reputable organization. Accreditation ensures that the program meets certain quality standards.<br>*   **Cost and Financial Aid:**  Compare tuition costs and explore financial aid options, including grants, loans, and scholarships.<br>*   **Job Placement Assistance:**  Inquire about the program&#39;s job placement services, such as career counseling, resume writing workshops, and job fairs.<br>*   **Location and Schedule:**  Choose a program that is conveniently located and offers a schedule that fits your lifestyle.<br>*   **Talk to Alumni:** If possible, speak to graduates of the program to get their feedback on their experience.<br><br>**How to Decide:**<br><br>The best program for you depends on your interests, skills, and career goals. I recommend:<br><br>1.  **Research Each Program:** Visit the websites of these technical colleges and explore the specific programs that interest you.<br>2.  **Contact Admissions:** Contact the admissions departments to ask questions about program requirements, costs, and application procedures.<br>3.  **Visit the Campus:** If possible, visit the campus and talk to instructors and current students.<br>4.  **Consider Your Long-Term Goals:** Think about where you want to be in 5-10 years and choose a program that will help you achieve your goals.<br><br>Good luck with your vocational training journey!<br>"
+                    data-question="vocational training programs in Georgia"
+                    data-llm="gemini"
+                    data-brand="Interactive College of Technology (ICT)"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q3</span>
+                    <span class="question-text">ESL classes for work in Texas</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top recommendations for ESL classes tailored for work in Texas, ranked in order of preference:<br><br>1. **University of Texas at Austin - English as a Second Language (ESL) Program**<br>   - **Overview:** The University of Texas at Austin offers a comprehensive ESL program that focuses on improving language skills in a professional context. The program includes courses in business English and communication skills essential for the workplace.<br>   - **Why Choose This:** UT Austin is well-regarded for its academic excellence, and the ESL program is designed to cater to the needs of non-native speakers looking to enhance their career prospects. It provides access to university resources and networking opportunities.<br><br>2. **Houston Community College - ESL Program**<br>   - **Overview:** Houston Community College offers a robust ESL program with classes specifically geared towards workplace communication. Courses cover practical language skills, cultural awareness, and professional vocabulary.<br>   - **Why Choose This:** HCC&#39;s ESL program is accessible and affordable, making it a great option for working professionals. The college also has a diverse student body, which can enhance the learning experience through cultural exchange.<br><br>3. **Dallas College - English as a Second Language (ESL) Program**<br>   - **Overview:** Dallas College provides a range of ESL classes focusing on conversational skills, academic English, and business communication. The program is designed to help students achieve their language goals for career advancement.<br>   - **Why Choose This:** With multiple campuses and flexible class schedules, Dallas College offers convenience for working individuals. The courses are structured to fit various proficiency levels and career aspirations.<br><br>4. **Language Skills Center - ESL for Professionals**<br>   - **Overview:** The Language Skills Center, located in Austin, offers specialized ESL courses aimed at professionals. The curriculum includes business writing, public speaking, and workplace etiquette.<br>   - **Why Choose This:** This center focuses on practical language use in a professional setting. The personalized instruction and small class sizes allow for tailored support and feedback.<br><br>5. **San Antonio College - ESL Program**<br>   - **Overview:** San Antonio College’s ESL program provides classes that emphasize practical language use in everyday and workplace scenarios. The curriculum includes a focus on job-related vocabulary and communication strategies.<br>   - **Why Choose This:** The program is well-structured and offers extensive resources for students, including tutoring and workshops. San Antonio College is committed to supporting non-native speakers in achieving their professional goals.<br><br>These programs are designed to enhance your English language skills in a way that is directly applicable to the workplace, making them excellent choices for anyone looking to advance their career in Texas."
+                    data-question="ESL classes for work in Texas"
+                    data-llm="gpt4"
+                    data-brand="Interactive College of Technology (ICT)"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top 5 recommendations for ESL classes for work in Texas, listed in order of preference:<br><br>1. Houston Community College (HCC) ESL Program:<br>   - HCC offers comprehensive ESL classes at various levels, from beginner to advanced, catered towards professional development.<br>   - The program focuses on improving English proficiency in speaking, listening, reading, and writing, with a strong emphasis on workplace communication skills.<br>   - Classes are available during the day, evening, and on weekends to accommodate various schedules.<br><br>2. University of Texas at Arlington (UTA) ESL Program:<br>   - UTA&#39;s ESL program provides intensive English instruction for individuals seeking to improve their language skills for academic or professional purposes.<br>   - The curriculum includes specialized courses in business English, technical writing, and presentation skills, making it an excellent choice for those seeking to enhance their workplace communication abilities.<br>   - The program offers both part-time and full-time options, ensuring flexibility for working professionals.<br><br>3. Alamo Colleges District ESL Program (San Antonio):<br>   - The Alamo Colleges District, comprising several community colleges in the San Antonio area, offers a robust ESL program tailored to the needs of local businesses and industries.<br>   - The classes focus on developing practical English skills, such as customer service, workplace etiquette, and professional networking, making them highly relevant for those seeking to advance their careers.<br>   - The program&#39;s flexible scheduling and affordable tuition make it an attractive option for working professionals in the San Antonio region.<br><br>4. Dallas College (formerly Dallas County Community College District) ESL Program:<br>   - Dallas College&#39;s ESL program provides a comprehensive curriculum that covers all aspects of the English language, including grammar, vocabulary, and communication skills.<br>   - The program offers specialized courses in business English, technical writing, and job-specific language training, making it a valuable resource for individuals seeking to enhance their workplace competencies.<br>   - The college&#39;s multiple campuses throughout the Dallas-Fort Worth metroplex ensure convenient access for students across the region.<br><br>5. Texas A&M University-Corpus Christi ESL Program:<br>   - The ESL program at Texas A&M University-Corpus Christi caters to the unique needs of the local workforce, with a focus on developing English proficiency for specific industries and job functions.<br>   - The curriculum includes modules on workplace communication, professional etiquette, and industry-specific terminology, making it a targeted solution for those seeking to improve their job-related language skills.<br>   - The program&#39;s flexible scheduling and personalized support make it an attractive option for working professionals in the Corpus Christi area.<br><br>These recommendations cover major metropolitan areas in Texas, providing a range of high-quality ESL programs that cater to the professional development needs of the local workforce. Considering factors such as program focus, scheduling options, and geographic accessibility can help you identify the best fit for your specific needs."
+                    data-question="ESL classes for work in Texas"
+                    data-llm="claude"
+                    data-brand="Interactive College of Technology (ICT)"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Okay, here are my top 3 recommendations for ESL classes in Texas for work-related purposes, focusing on programs that offer practical skills and career advancement:<br><br>**Important Considerations:**<br><br>*   **Location:** Texas is a large state, so these recommendations are general. You&#39;ll need to check if the program has a location convenient for you or offers online options.<br>*   **Specific Needs:** Consider the specific English skills you need to improve for your job (e.g., writing emails, giving presentations, communicating with customers). Some programs specialize in certain areas.<br>*   **Cost and Schedule:** Check the tuition, fees, and class schedules to ensure they fit your budget and availability.<br>*   **Accreditation:** While not always necessary, accreditation can indicate the quality of the program.<br><br>**Recommendations (in order of preference):**<br><br>1.  **Texas Workforce Commission (TWC) - Skills Development Fund ESL Grants:**<br><br>    *   **Explanation:** The TWC often has grants available to help businesses train their employees, including ESL training. This is my top recommendation because it can be heavily subsidized or even free, making it incredibly cost-effective.<br>    *   **Why it&#39;s good for work:** The training is designed to improve the skills needed for the specific jobs at the company, aligning the ESL instruction with practical workplace needs.<br>    *   **How to find it:** The best way to access this is to talk to your HR department. If your company is willing to apply for a grant, they can partner with a local community college or training provider to create a custom ESL program. As an individual, you could also approach your employer and suggest this as a training opportunity.<br>    *   **Caveat:** This option relies on your employer&#39;s participation and willingness to apply for the grant.<br><br>2.  **Community Colleges with Workforce Development Programs:**<br><br>    *   **Explanation:** Many community colleges across Texas (e.g., Austin Community College, Houston Community College, Dallas College, San Antonio College) have comprehensive ESL programs with a focus on workforce development.<br>    *   **Why it&#39;s good for work:** These programs often include courses on business English, workplace communication, resume writing, and job interview skills. They understand the needs of local employers and design their curriculum accordingly. Some even have partnerships with local businesses for internships or job placement opportunities.<br>    *   **How to find it:** Search &quot;[Your City] Community College ESL Workforce Development&quot; on Google. Look for programs that specifically mention &quot;business English,&quot; &quot;workplace skills,&quot; or &quot;career preparation.&quot;<br>    *   **Example:** Houston Community College&#39;s ESL program often has specialized tracks for different industries.<br><br>3.  **Literacy Texas and Local Literacy Councils:**<br><br>    *   **Explanation:** Literacy Texas is a statewide organization that supports local literacy councils. These councils often provide free or low-cost ESL classes. While they may not always be directly focused on business English, they can provide a solid foundation in grammar, vocabulary, and conversation, which is essential for any workplace.<br>    *   **Why it&#39;s good for work:** A strong foundation in general English will make it easier to learn specific workplace vocabulary and communication skills. Plus, the low cost makes it accessible to everyone.<br>    *   **How to find it:** Visit the Literacy Texas website (literacytexas.org) to find the literacy council in your area. Contact them to inquire about ESL classes and whether they offer any programs with a workforce focus.<br>    *   **Caveat:** The quality and focus of these programs can vary depending on the local council.<br><br>**Other Options (Less Preferred but Still Worth Considering):**<br><br>*   **Private Language Schools:** Kaplan, Berlitz, and other private language schools offer ESL classes, but they can be more expensive than community colleges or literacy councils. Look for programs that are specifically designed for business professionals.<br>*   **Online ESL Courses:** Platforms like Coursera, edX, and Udemy offer a wide range of online ESL courses, some of which are focused on business English. These can be a convenient option if you have a busy schedule, but they may not provide the same level of personalized instruction as in-person classes.<br><br>**Before making a decision, I highly recommend:**<br><br>*   **Talking to your employer:** They may have recommendations for ESL programs or be willing to provide financial assistance.<br>*   **Visiting the ESL program:** If possible, visit the program in person to meet the instructors, observe a class, and ask questions.<br>*   **Checking reviews:** Look for online reviews of the program to get feedback from other students.<br><br>I hope this helps! Good luck with your ESL studies.<br>"
+                    data-question="ESL classes for work in Texas"
+                    data-llm="gemini"
+                    data-brand="Interactive College of Technology (ICT)"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q4</span>
+                    <span class="question-text">career-focused education with job placement</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top recommendations for career-focused education programs with strong job placement support:<br><br>1. **Coding Bootcamps (e.g., General Assembly, Flatiron School)**<br>   - **Explanation:** Coding bootcamps offer intensive, short-term programs that teach software development, data science, and UX/UI design. They are designed to equip students with the practical skills needed for entry-level positions in tech. Many bootcamps have strong partnerships with employers and offer job placement services, including resume workshops, interview preparation, and networking opportunities. Graduates often find jobs quickly due to high demand for tech skills.<br><br>2. **Community Colleges with Workforce Development Programs**<br>   - **Explanation:** Many community colleges have tailored programs that focus on in-demand fields such as healthcare, information technology, and skilled trades. These programs often include hands-on training and internships, allowing students to gain real-world experience. Community colleges frequently collaborate with local employers to ensure their curriculum meets industry needs and provide job placement services for graduates.<br><br>3. **Professional Certificate Programs (e.g., Coursera, edX)**<br>   - **Explanation:** Online learning platforms like Coursera and edX offer professional certificates in various fields, including data analysis, project management, and digital marketing. These programs are often developed in partnership with leading universities and companies, ensuring their relevance to job markets. Many of these platforms include career services, such as job search resources, networking opportunities, and access to a community of learners and industry professionals.<br><br>4. **Trade Schools (e.g., Universal Technical Institute, Lincoln Tech)**<br>   - **Explanation:** Trade schools specialize in vocational training for fields such as automotive technology, HVAC, and electrical work. These institutions focus on hands-on skills and often have strong relationships with employers in their industries, resulting in high job placement rates. Many trade schools also offer apprenticeship programs that provide students with practical experience while they study.<br><br>5. **Bootcamps for Non-Tech Careers (e.g., The Iron Yard for UX/UI, Nucamp for Web Development)**<br>   - **Explanation:** While many bootcamps focus on tech, there are also options tailored to non-tech careers such as UX/UI design and digital marketing. These programs provide practical skills and portfolio development, crucial for landing jobs in creative fields. They typically offer job placement support, including connections with hiring companies, mentorship, and career coaching.<br><br>These options cater to various interests and industries, ensuring that you can find a program that aligns with your career goals while providing necessary job placement assistance."
+                    data-question="career-focused education with job placement"
+                    data-llm="gpt4"
+                    data-brand="Interactive College of Technology (ICT)"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top 5 recommendations for career-focused education with job placement assistance:<br><br>1. Coding Bootcamps:<br>   - Intensive, accelerated programs that teach in-demand programming and software development skills.<br>   - Many offer career services and job placement assistance to help graduates find employment in the tech industry.<br>   - Examples: Flatiron School, General Assembly, Coding Dojo.<br><br>2. Technical/Vocational Schools:<br>   - Offer hands-on, industry-focused training in fields like healthcare, skilled trades, information technology, and more.<br>   - Curriculum is designed in collaboration with employers to ensure job-ready skills.<br>   - Many have strong relationships with local businesses for internships and job placement.<br>   - Examples: Tulsa Welding School, Lincoln Tech, Fortis College.<br><br>3. Apprenticeship Programs:<br>   - Combine on-the-job training with related classroom instruction.<br>   - Apprentices earn a salary while learning a skilled trade or profession.<br>   - Employers often hire apprentices upon completion of the program.<br>   - Examples: Registered Apprenticeship programs, CareerWise Colorado, Apprenti.<br><br>4. Community College Career-Focused Programs:<br>   - Many community colleges offer associate&#39;s degree and certificate programs in high-demand fields.<br>   - Programs are developed with input from local employers and often include internships or job placement assistance.<br>   - Examples: Nursing, Automotive Technology, Paralegal Studies, HVAC.<br><br>5. Online Bootcamps and Certifications:<br>   - Provide flexible, remote learning options for in-demand skills.<br>   - Some offer career services and employer partnerships for job placement.<br>   - Examples: Udacity Nanodegrees, Coursera Professional Certificates, edX MicroMasters.<br><br>The order of preference is based on the overall reputation, job placement rates, and employer recognition of the programs. However, the best option will depend on your specific career goals and local job market."
+                    data-question="career-focused education with job placement"
+                    data-llm="claude"
+                    data-brand="Interactive College of Technology (ICT)"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Okay, here are 3-5 specific recommendations for career-focused education programs with job placement, listed in order of preference, considering factors like reputation, placement rates, and in-demand skills:<br><br>**1. General Assembly - Immersive Programs (e.g., Software Engineering, UX Design, Data Science):**<br><br>*   **Explanation:** General Assembly is a well-regarded coding bootcamp and technology education provider. Their *immersive* programs are specifically designed to quickly train individuals for in-demand tech roles. They have a strong focus on practical skills, project-based learning, and career services that include resume workshops, interview preparation, and employer networking. They often publish placement statistics.<br>*   **Why it&#39;s ranked highly:** Strong reputation, comprehensive curriculum, dedicated career services, and generally good placement rates *especially* in major metropolitan areas. They are a known name in the industry, which helps with employer recognition.<br>*   **Considerations:** Can be expensive, requires a significant time commitment (full-time immersion). Research their placement rates for the specific program and location you&#39;re interested in.<br><br>**2.  Coding Temple - Software Engineering Bootcamp:**<br><br>*   **Explanation:** Coding Temple offers an immersive software engineering bootcamp that emphasizes practical coding skills and career development.  They provide a structured curriculum, hands-on projects, and personalized career coaching.  Notably, they often have partnerships with companies for potential job placements.<br>*   **Why it&#39;s ranked highly:**  A good balance of technical training and career support, with a focus on practical skills that employers are looking for.  They have a reputation for individualized attention and helping students make career transitions.<br>*   **Considerations:**  Bootcamps require a significant time commitment and can be financially demanding.  Thoroughly research their placement rates, career services, and alumni network before committing.<br><br>**3.  Trade Schools/Vocational Schools (Specific Trades like Welding, HVAC, Electrician, Plumbing):**<br><br>*   **Explanation:**  Trade schools offer focused training in specific skilled trades that are consistently in demand. These programs are often shorter and more affordable than traditional college degrees. Many have strong relationships with local employers and offer apprenticeships or job placement assistance.<br>*   **Why it&#39;s ranked highly:**  Direct path to a specific, in-demand job. Often shorter training periods and lower tuition costs compared to four-year degrees. High demand for skilled tradespeople means good job prospects.<br>*   **Considerations:**  Job market is geographically dependent (demand for certain trades might be higher in some areas).  Physical demands of the work, potential for outdoor work, and the need for ongoing learning to stay current with industry standards.  Research local schools and their employer partnerships.<br><br>**4.  Year Up:**<br><br>*   **Explanation:** Year Up is a non-profit organization that provides intensive, year-long training and internship programs for young adults (typically 18-29) from underserved communities. They focus on tech and business skills (e.g., IT, cybersecurity, business operations).<br>*   **Why it&#39;s ranked highly:** Offers a comprehensive program that combines skills training, professional development, and a corporate internship.  Provides significant support and mentorship.  High placement rates and strong employer partnerships.<br>*   **Considerations:**  Specific eligibility requirements (age, income, location).  Competitive application process.<br><br>**5.  Pharmacy Technician Programs (at Community Colleges or Vocational Schools):**<br><br>*   **Explanation:** Pharmacy technician programs provide the necessary training to assist pharmacists in dispensing medications and providing customer service.  These programs are typically shorter and more affordable than a degree in pharmacy. Many programs include externships or clinical rotations.<br>*   **Why it&#39;s ranked highly:**  Consistent demand for pharmacy technicians, especially in retail pharmacies and hospitals.  Relatively short training period and good job prospects after certification.<br>*   **Considerations:** Relatively lower pay compared to other healthcare professions.  Requires attention to detail and strong customer service skills.  Requires certification in most states.<br>***<br><br>**Important Considerations Before Making a Decision:**<br><br>*   **Your Interests and Aptitudes:**  Choose a field that aligns with your interests, skills, and personality.  Take career aptitude tests and research different career paths.<br>*   **Job Market Research:**  Research the job market in your area (or where you&#39;re willing to relocate) for the specific skills you&#39;re learning.  Look at job postings to see what employers are looking for.<br>*   **Placement Rates and Alumni Network:**  Ask about the program&#39;s placement rates (percentage of graduates employed within a certain timeframe) and the strength of their alumni network. Contact alumni to get their perspectives.<br>*   **Cost and Financing:**  Consider the tuition costs, fees, and living expenses.  Explore financing options"
+                    data-question="career-focused education with job placement"
+                    data-llm="gemini"
+                    data-brand="Interactive College of Technology (ICT)"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q5</span>
+                    <span class="question-text">affordable technical school options</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are five affordable technical school options that offer quality education and training across various fields:<br><br>1. **Community Colleges**  <br>   - **Overview**: Community colleges often have a wide range of technical programs at an affordable price. They provide certificate programs, associate degrees, and vocational training in fields like healthcare, IT, and skilled trades.<br>   - **Why Recommend**: They typically offer in-state tuition rates for local residents, making them one of the most cost-effective options for technical training. Additionally, many have partnerships with local employers for job placement after graduation.<br><br>2. **Penn Foster Career School**  <br>   - **Overview**: Penn Foster offers online and flexible programs in various fields such as veterinary technology, HVAC, and computer programming. <br>   - **Why Recommend**: The school is known for its affordability, with low monthly payment options and the ability to study at your own pace, making it ideal for working adults.<br><br>3. **Southern New Hampshire University (SNHU) - Online Programs**  <br>   - **Overview**: SNHU offers a variety of affordable online technical programs, including web development, cybersecurity, and business technology.<br>   - **Why Recommend**: SNHU is known for its low tuition rates and extensive support services, making it accessible for students who may need extra help. Their online format allows for flexibility, accommodating those with busy schedules.<br><br>4. **Gateway Community College (Arizona)**  <br>   - **Overview**: Gateway Community College provides a range of technical programs, including nursing, information technology, and automotive technology.<br>   - **Why Recommend**: Known for its affordable tuition and comprehensive support services, Gateway also offers financial aid options, scholarships, and career counseling to help students succeed.<br><br>5. **University of Phoenix - Technical Programs**  <br>   - **Overview**: The University of Phoenix offers a variety of technical and vocational programs, including IT, healthcare, and business administration.<br>   - **Why Recommend**: With a focus on adult learners, the University of Phoenix provides flexible online education options and is known for its affordability compared to traditional universities.<br><br>When considering a technical school, be sure to check for accreditation, financial aid options, and job placement services to ensure you choose a program that fits your career goals."
+                    data-question="affordable technical school options"
+                    data-llm="gpt4"
+                    data-brand="Interactive College of Technology (ICT)"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top 5 recommendations for affordable technical school options:<br><br>1. Community Colleges:<br>   - Community colleges often offer highly affordable technical and vocational programs.<br>   - They provide hands-on training and industry-relevant certifications at a fraction of the cost of 4-year universities.<br>   - Examples include programs in fields like healthcare, information technology, skilled trades, and more.<br><br>2. Trade Schools/Vocational-Technical Schools:<br>   - Specialized trade schools focus on specific technical and vocational training.<br>   - They provide accelerated programs that can be completed in 1-2 years, leading to in-demand careers.<br>   - Examples include programs in automotive technology, HVAC, plumbing, cosmetology, and culinary arts.<br><br>3. Online Technical Programs:<br>   - Many technical and vocational programs are now available online, offering flexibility and affordability.<br>   - These programs allow students to learn at their own pace and often cost less than traditional on-campus options.<br>   - Examples include courses in computer programming, IT support, web development, and project management.<br><br>4. Apprenticeship Programs:<br>   - Apprenticeship programs combine on-the-job training with classroom instruction.<br>   - They are often sponsored by employers or industry associations and provide hands-on experience while earning a wage.<br>   - Examples include apprenticeships in fields like electrician, welder, machinist, and construction.<br><br>5. Workforce Development Programs:<br>   - Many local and state governments offer workforce development programs that provide affordable technical training.<br>   - These programs are designed to prepare individuals for in-demand jobs and may include funding or scholarships.<br>   - Examples include programs in advanced manufacturing, logistics, healthcare, and information technology.<br><br>When considering these options, it&#39;s important to research the specific programs, accreditation, job placement rates, and overall cost to find the best fit for your educational and career goals."
+                    data-question="affordable technical school options"
+                    data-llm="claude"
+                    data-brand="Interactive College of Technology (ICT)"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Okay, to give you the best recommendations for affordable technical schools, I need a little more information about your specific situation. However, I can provide some general recommendations based on common factors that make technical schools affordable and valuable.  Keep in mind that &quot;affordable&quot; is relative, so I&#39;ll focus on schools with strong financial aid options, lower tuition rates compared to universities, and/or a good return on investment (ROI) in terms of job prospects.<br><br>**Assumptions:**<br><br>*   I&#39;m assuming you&#39;re in the United States (adjust accordingly if you&#39;re not).<br>*   I&#39;m assuming &quot;affordable&quot; means tuition and fees being manageable with financial aid, scholarships, and potential loan assistance.<br>*   I&#39;m assuming you&#39;re interested in various technical fields, not a single specific area.<br><br>**Recommendations (General - Prioritize researching these further based on your location and field of interest):**<br><br>Here are a few types of schools to consider, and then specific examples.<br><br>**Types of Affordable Technical Schools:**<br><br>*   **Community Colleges with Strong Technical Programs:** Many community colleges offer excellent vocational and technical training programs at a fraction of the cost of four-year universities. They often have partnerships with local employers, leading to internships and job opportunities.  They often offer associate degrees or certificates.<br>*   **Public Technical Colleges/Institutes:** These are often state-funded institutions that focus solely on technical education. They tend to have lower tuition rates than private technical schools.<br>*   **Trade Schools with Industry Connections:**  Some trade schools have strong ties to specific industries and offer specialized training. While tuition can vary, look for schools with good placement rates and apprenticeship opportunities to offset the costs.<br><br>**Specific Examples (with caveats - research thoroughly):**<br><br>**Important:** *Tuition rates can change, and financial aid options vary greatly.  You MUST visit the school&#39;s website and contact their financial aid office for the most up-to-date information.*<br><br>1.  **Ranken Technical College (St. Louis, Missouri):** (My top recommendation based on reputation and ROI)<br>    *   **Why:** Ranken has a long-standing reputation for providing hands-on, industry-focused training in fields like automotive, construction, manufacturing, and information technology. They have strong relationships with employers, leading to high job placement rates.  While the tuition isn&#39;t *dirt* cheap, it&#39;s reasonable for the education quality and potential earnings. They also offer a variety of financial aid options.<br>    *   **Caveats:**  Location is limited to St. Louis.  You need to be interested in one of their specific program offerings. It&#39;s considered a private non-profit.<br>    *   **Note:**  I&#39;m biased as I have a friend who graduated from Ranken and had a job lined up before graduation.<br><br>2.  **Community Colleges (Your Local Options):**<br>    *   **Why:** Community colleges are generally the most affordable option. Look for community colleges in your area (or areas you&#39;d consider moving to) that have strong technical programs in your field of interest. Examples might include:<br>        *   **Austin Community College (Austin, TX):** Known for its programs in technology and skilled trades.<br>        *   **Seattle Central College (Seattle, WA):** Offers a wide range of technical and vocational programs.<br>        *   **Community College of Allegheny County (CCAC) (Pittsburgh, PA):** Strong programs in advanced manufacturing and healthcare.<br>    *   **Caveats:** Program quality varies widely between community colleges. Research the specific program you&#39;re interested in to see if it has a good reputation and strong job placement rates.<br>    *   **Note:** This is more of a category than a specific school. The key is to find a community college near you with a strong program in your desired field.<br><br>3.  **Thaddeus Stevens College of Technology (Lancaster, Pennsylvania):**<br>    *   **Why:** A public, two-year college focused on technical education. It offers programs in various trades, including construction, manufacturing, and graphic communications. It has a strong emphasis on hands-on learning and preparing students for immediate employment.  Being public, it tends to be more affordable than private institutions.<br>    *   **Caveats:** Location is limited to Lancaster, PA. Admission can be competitive.<br>    *   **Note:** Founded with a mission to provide opportunities for disadvantaged youth, so they may have unique financial aid programs.<br><br>4.  **State Technical College of Missouri (Linn, Missouri):**<br>    *   **Why:** Another public technical college focused on hands-on training in various trades and technologies.  They have a strong focus on preparing students for specific jobs.  Being state-funded, tuition is"
+                    data-question="affordable technical school options"
+                    data-llm="gemini"
+                    data-brand="Interactive College of Technology (ICT)"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+                </tbody>
+            </table>
+            <p class="breakdown-hint">Click any cell to see the full AI response</p>
+        </div>
+
+        <!-- Response modal -->
+        <div class="response-modal" id="responseModal">
+            <div class="modal-content" onclick="event.stopPropagation()">
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+                <div class="modal-header">
+                    <span class="modal-llm" id="modalLlm"></span>
+                    <span class="modal-status" id="modalStatus"></span>
+                </div>
+                <div class="modal-question" id="modalQuestion"></div>
+                <div class="modal-response" id="modalResponse"></div>
+            </div>
+        </div>
+    
+        </div>
+
+        <!-- Section 3: Reddit Opportunities -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <h2 class="section-title">Reddit Opportunities</h2>
+            </div>
+
+            <div class="subsection-title">Buy Intent Conversations</div>
+            <p class="subsection-desc">People actively looking for recommendations in your category</p>
+            <div class="reddit-posts">
+                
+            <a href="https://www.reddit.com/r/FragReddit/comments/1rkjh55/ausbildung_oder_studium_was_ist_besser/?tl=en" target="_blank" class="reddit-post">
+                <div class="post-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">Vocational training or university? Which is better?</div>
+                    <div class="post-meta">
+                        r/FragReddit &bull; 399K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            <a href="https://www.reddit.com/r/ask/comments/1rp3kyp/where_can_my_daughter_attend_short_vocational/" target="_blank" class="reddit-post">
+                <div class="post-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">Where can my daughter attend short vocational classes?</div>
+                    <div class="post-meta">
+                        r/ask &bull; 1.3M members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            <a href="https://www.reddit.com/r/arbeitsleben/comments/1rjp91f/ausbildung_welche_lohnt_sich_unter_meinen/?tl=en" target="_blank" class="reddit-post">
+                <div class="post-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">Training: Which one is worth it? Based on my criteria</div>
+                    <div class="post-meta">
+                        r/arbeitsleben &bull; 133K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            <a href="https://www.reddit.com/r/HVAC/comments/1roimwm/trade_school/" target="_blank" class="reddit-post">
+                <div class="post-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">Trade school : r/HVAC</div>
+                    <div class="post-meta">
+                        r/HVAC &bull; 230K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            </div>
+
+            <div class="subsection-title">Pain Point Conversations</div>
+            <p class="subsection-desc">People discussing problems your product solves</p>
+            <div class="reddit-posts">
+                
+            <a href="https://www.reddit.com/r/careerguidance/comments/1rmi5f3/what_skills_should_students_focus_on_today_to/" target="_blank" class="reddit-post">
+                <div class="post-icon pain">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">What skills should students focus on today to actually build ...</div>
+                    <div class="post-meta">
+                        r/careerguidance &bull; 4.8M members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            <a href="https://www.reddit.com/r/Career_Advice/comments/1rn3gpe/what_nontechnical_skills_create_the_biggest/" target="_blank" class="reddit-post">
+                <div class="post-icon pain">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">What non-technical skills create the biggest career ...</div>
+                    <div class="post-meta">
+                        r/Career_Advice &bull; 62K members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            </div>
+        </div>
+
+        <!-- CTA Section -->
+        <div class="section cta-section">
+            <h2>Ready to improve your <em>AI visibility?</em></h2>
+            <p>We help brands get mentioned more in AI answers through strategic content placement.</p>
+            <a href="https://adva-solutions.com/AIVisibility" class="cta-button">Learn More</a>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p>Generated by <a href="https://adva-solutions.com">Adva</a> &bull; AI Visibility Health Check</p>
+    </footer>
+
+    <script>
+        // Tab switching functionality
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const tabId = btn.dataset.tab;
+
+                // Update buttons
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                // Update panels
+                document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+                document.getElementById('panel-' + tabId).classList.add('active');
+            });
+        });
+
+        // Show toast notification
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2500);
+        }
+
+        // Show response modal
+        function showResponse(cell) {
+            try {
+                let response = cell.dataset.response || 'No response available';
+                const question = cell.dataset.question || '';
+                const llm = cell.dataset.llm || '';
+                const brand = cell.dataset.brand || '';
+                const isMentioned = cell.classList.contains('mentioned');
+                const brandPosition = cell.dataset.position ? parseInt(cell.dataset.position) : null;
+
+                const llmNames = {'gpt4': 'GPT', 'claude': 'Claude', 'gemini': 'Gemini'};
+
+                // If brand is mentioned beyond position 5, add a banner at the top
+                let positionBanner = '';
+                if (isMentioned && brandPosition && brandPosition > 5) {
+                    positionBanner = '<div style="background: #fef3c7; padding: 0.75rem 1rem; border-radius: 6px; margin-bottom: 1rem; border-left: 4px solid #f59e0b;">' +
+                        '<strong>📍 Your brand appeared at position #' + brandPosition + '</strong> - scroll down to see the highlighted mention' +
+                        '</div>';
+                }
+
+                // Highlight brand name in response (case insensitive)
+                if (brand && isMentioned) {
+                    try {
+                        const brandRegex = new RegExp('(' + brand.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&') + ')', 'gi');
+                        response = response.replace(brandRegex, '<span class="brand-highlight">$1</span>');
+                    } catch(e) { /* ignore highlighting errors */ }
+                }
+
+                document.getElementById('modalLlm').textContent = llmNames[llm] || llm;
+                document.getElementById('modalQuestion').textContent = '"' + question + '"';
+                document.getElementById('modalResponse').innerHTML = positionBanner + response;
+
+                const statusEl = document.getElementById('modalStatus');
+                if (isMentioned) {
+                    statusEl.textContent = 'Mentioned';
+                    statusEl.className = 'modal-status mentioned';
+                } else {
+                    statusEl.textContent = 'Not mentioned';
+                    statusEl.className = 'modal-status not-mentioned';
+                }
+
+                document.getElementById('responseModal').classList.add('active');
+                document.body.style.overflow = 'hidden';
+
+                // Scroll to first highlight if mentioned
+                if (isMentioned) {
+                    setTimeout(function() {
+                        const highlight = document.querySelector('.modal-response .brand-highlight');
+                        if (highlight) {
+                            highlight.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        }
+                    }, 100);
+                }
+            } catch (e) {
+                console.error('Error showing response:', e);
+                alert('Error loading response. Please try again.');
+            }
+        }
+
+        // Close modal
+        function closeModal() {
+            document.getElementById('responseModal').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // Close when clicking backdrop (outside modal content)
+        document.getElementById('responseModal').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+
+        // Close modal on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeModal();
+        });
+    </script>
+</body>
+</html>
