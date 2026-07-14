@@ -1,0 +1,1337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Visibility Report - Transit Moving Systems | Adva</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #ffffff;
+            min-height: 100vh;
+            color: #374151;
+            line-height: 1.6;
+        }
+
+        /* Header */
+        .header {
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            font-size: 1.25rem;
+            color: #1f2937;
+            text-decoration: none;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .header-date {
+            color: #9ca3af;
+            font-size: 0.875rem;
+        }
+
+        /* Copy link button */
+        .copy-link-button {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: #f3f4f6;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            color: #374151;
+            font-size: 0.75rem;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .copy-link-button:hover {
+            background: #e5e7eb;
+        }
+
+        .copy-link-button svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        /* Toast notification */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: #1f2937;
+            color: #ffffff;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            opacity: 0;
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        /* Container */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Page title */
+        .page-title {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .page-title .label {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: #9ca3af;
+            font-size: 0.75rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+        }
+
+        .page-title .label::before,
+        .page-title .label::after {
+            content: '';
+            width: 30px;
+            height: 1px;
+            background: #d1d5db;
+        }
+
+        .page-title h1 {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 2.5rem;
+            font-weight: 400;
+            color: #1f2937;
+            margin-bottom: 0.5rem;
+        }
+
+        .page-title .brand {
+            color: #6b7280;
+            font-size: 1.125rem;
+        }
+
+        /* Sections */
+        .section {
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #f3f4f6;
+        }
+
+        .section-icon {
+            width: 40px;
+            height: 40px;
+            background: #1f2937;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .section-icon svg {
+            width: 20px;
+            height: 20px;
+            color: #ffffff;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 1.375rem;
+            color: #1f2937;
+        }
+
+        /* Score Section */
+        .score-section {
+            text-align: center;
+            padding: 3rem 2rem;
+        }
+
+        .score-circle {
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            background: #fafafa;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            border: 4px solid #f59e0b;
+        }
+
+        .score-value {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 3rem;
+            font-weight: 500;
+            color: #f59e0b;
+        }
+
+        .score-label {
+            font-size: 0.8rem;
+            color: #9ca3af;
+        }
+
+        .score-description {
+            color: #6b7280;
+            margin-bottom: 2rem;
+            font-size: 1rem;
+        }
+
+        .score-description strong {
+            color: #1f2937;
+        }
+
+        .llm-breakdown {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .llm-stat {
+            text-align: center;
+            padding: 1rem 1.5rem;
+            background: #fafafa;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+            min-width: 100px;
+        }
+
+        .llm-name {
+            display: block;
+            color: #9ca3af;
+            font-size: 0.8rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .llm-score {
+            font-size: 1.125rem;
+            font-weight: 600;
+        }
+
+        .llm-score.success {
+            color: #22c55e;
+        }
+
+        .llm-score.warning {
+            color: #ef4444;
+        }
+
+        /* Competitor Table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 0.875rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid #f3f4f6;
+        }
+
+        th {
+            color: #9ca3af;
+            font-weight: 500;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        td {
+            color: #374151;
+        }
+
+        .mention-count {
+            background: #fef3c7;
+            color: #92400e;
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        /* Tabs for LLM responses */
+        .example-tabs {
+            margin-top: 1.5rem;
+        }
+
+        .tabs-header {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+            padding-bottom: 0;
+        }
+
+        .tab-btn {
+            padding: 0.75rem 1.25rem;
+            background: transparent;
+            border: none;
+            color: #6b7280;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            margin-bottom: -1px;
+            transition: all 0.2s;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .tab-btn:hover {
+            color: #1f2937;
+        }
+
+        .tab-btn.active {
+            color: #1f2937;
+            border-bottom-color: #1f2937;
+        }
+
+        .tab-panel {
+            display: none;
+            background: #fafafa;
+            border-radius: 8px;
+            padding: 1.25rem;
+        }
+
+        .tab-panel.active {
+            display: block;
+        }
+
+        .example-question {
+            color: #1f2937;
+            font-weight: 500;
+            font-size: 0.95rem;
+            margin-bottom: 0.75rem;
+        }
+
+        /* Question breakdown table */
+        .question-breakdown {
+            margin-top: 1rem;
+        }
+
+        .breakdown-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        .breakdown-table th {
+            padding: 0.75rem;
+            text-align: center;
+            background: #f9fafb;
+            border-bottom: 2px solid #e5e7eb;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .breakdown-table th:first-child {
+            text-align: left;
+            width: 50%;
+        }
+
+        .breakdown-table td {
+            padding: 0.75rem;
+            border-bottom: 1px solid #f3f4f6;
+            vertical-align: middle;
+        }
+
+        .question-cell {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+        }
+
+        .question-num {
+            background: #e5e7eb;
+            color: #374151;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        .question-text {
+            color: #374151;
+            line-height: 1.4;
+        }
+
+        .llm-cell {
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-radius: 4px;
+        }
+
+        .llm-cell:hover {
+            background: #f3f4f6;
+        }
+
+        .llm-cell.mentioned {
+            color: #16a34a;
+        }
+
+        .llm-cell.mentioned .status-icon {
+            font-size: 1.25rem;
+        }
+
+        .llm-cell.not-mentioned {
+            color: #dc2626;
+        }
+
+        .llm-cell.not-mentioned .status-icon {
+            font-size: 1.25rem;
+        }
+
+        .breakdown-hint {
+            color: #9ca3af;
+            font-size: 0.8rem;
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+        /* Response modal */
+        .response-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+        }
+
+        .response-modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: #ffffff;
+            border-radius: 12px;
+            max-width: 800px;
+            width: 100%;
+            max-height: 90vh;
+            overflow: auto;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #9ca3af;
+            cursor: pointer;
+            padding: 0.25rem 0.5rem;
+        }
+
+        .modal-close:hover {
+            color: #374151;
+        }
+
+        .modal-header {
+            padding: 1.5rem 1.5rem 0;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            position: relative;
+        }
+
+        .modal-llm {
+            font-weight: 600;
+            color: #1f2937;
+            font-size: 1.1rem;
+        }
+
+        .modal-status {
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .modal-status.mentioned {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .modal-status.not-mentioned {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .modal-question {
+            padding: 1rem 1.5rem;
+            color: #6b7280;
+            font-size: 0.9rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .modal-response {
+            padding: 1.5rem;
+            overflow-y: auto;
+            flex: 1;
+            color: #374151;
+            font-size: 0.9rem;
+            line-height: 1.8;
+            min-height: 300px;
+            max-height: 60vh;
+            background: #fafafa;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .modal-response::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .modal-response::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        .modal-response::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 4px;
+        }
+
+        .modal-response::-webkit-scrollbar-thumb:hover {
+            background: #a1a1a1;
+        }
+
+        /* Brand highlight */
+        .brand-highlight {
+            background: linear-gradient(120deg, #fef08a 0%, #fde047 100%);
+            padding: 0.1rem 0.3rem;
+            border-radius: 3px;
+            font-weight: 600;
+        }
+
+        .example-content {
+            color: #6b7280;
+            font-size: 0.875rem;
+            line-height: 1.7;
+            max-height: 400px;
+            overflow-y: auto;
+            margin-bottom: 0.75rem;
+            padding: 1rem;
+            background: #f9fafb;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .example-status {
+            padding: 0.5rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            display: inline-block;
+        }
+
+        .example-status.mentioned {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .example-status.not-mentioned {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        /* Reddit Posts */
+        .reddit-posts {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .reddit-post {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: #fafafa;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: all 0.2s;
+            border: 1px solid transparent;
+        }
+
+        .reddit-post:hover {
+            background: #f3f4f6;
+            border-color: #e5e7eb;
+        }
+
+        .post-icon {
+            width: 40px;
+            height: 40px;
+            background: #1f2937;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .post-icon.pain {
+            background: #fef3c7;
+        }
+
+        .post-icon.pain svg {
+            color: #92400e;
+        }
+
+        .post-icon svg {
+            width: 20px;
+            height: 20px;
+            color: #ffffff;
+        }
+
+        .post-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .post-title {
+            color: #1f2937;
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .post-meta {
+            color: #9ca3af;
+            font-size: 0.8rem;
+        }
+
+        .post-arrow {
+            color: #9ca3af;
+            flex-shrink: 0;
+        }
+
+        .post-arrow svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .subsection-title {
+            color: #1f2937;
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin: 1.5rem 0 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .subsection-title:first-of-type {
+            margin-top: 0;
+        }
+
+        .subsection-desc {
+            color: #9ca3af;
+            font-size: 0.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .no-data {
+            color: #9ca3af;
+            font-style: italic;
+            text-align: center;
+            padding: 1rem;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            color: #9ca3af;
+            font-size: 0.8rem;
+            padding: 2rem;
+            border-top: 1px solid #e5e7eb;
+            margin-top: 2rem;
+        }
+
+        .footer a {
+            color: #1f2937;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* CTA */
+        .cta-section {
+            text-align: center;
+            padding: 3rem 2rem;
+            background: #fafafa;
+        }
+
+        .cta-section h2 {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 1.75rem;
+            color: #1f2937;
+            margin-bottom: 0.75rem;
+        }
+
+        .cta-section p {
+            color: #6b7280;
+            margin-bottom: 1.5rem;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background: #1f2937;
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .cta-button:hover {
+            background: #111827;
+            transform: translateY(-1px);
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .page-title h1 {
+                font-size: 1.75rem;
+            }
+
+            .section {
+                padding: 1.5rem;
+            }
+
+            .score-circle {
+                width: 130px;
+                height: 130px;
+            }
+
+            .score-value {
+                font-size: 2.25rem;
+            }
+
+            .llm-breakdown {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .tabs-header {
+                flex-wrap: wrap;
+            }
+
+            .tab-btn {
+                padding: 0.5rem 1rem;
+                font-size: 0.8rem;
+            }
+
+            .breakdown-table th,
+            .breakdown-table td {
+                padding: 0.5rem;
+                font-size: 0.8rem;
+            }
+
+            .question-cell {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .modal-content {
+                max-height: 90vh;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <a href="https://adva-solutions.com/AIVisibility" class="logo">adva</a>
+        <div class="header-right">
+            <button class="copy-link-button" onclick="navigator.clipboard.writeText('https://adva-solutions.github.io/ai-visibility-report/report_transit-moving-systems_9d4a1c56.html'); showToast('Link copied!');" title="Copy shareable link">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                </svg>
+                Copy Link
+            </button>
+            <span class="header-date">July 14, 2026</span>
+        </div>
+    </header>
+    <div class="toast" id="toast">Link copied to clipboard!</div>
+
+    <div class="container">
+        <div class="page-title">
+            <div class="label">AI Visibility Report</div>
+            <h1>Your Brand's <em>AI Presence</em></h1>
+            <p class="brand">Analysis for Transit Moving Systems</p>
+        </div>
+
+        <!-- Section 1: AI Visibility Score -->
+        <div class="section score-section">
+            <div class="score-circle">
+                <span class="score-value">20%</span>
+                <span class="score-label">2/10 mentions</span>
+            </div>
+            <p class="score-description">
+                Your brand appeared in <strong>2</strong> out of <strong>10</strong> AI recommendations
+            </p>
+            <div class="llm-breakdown">
+                
+            <div class="llm-stat">
+                <span class="llm-name">GPT</span>
+                <span class="llm-score success">1/5</span>
+            </div>
+        
+            <div class="llm-stat">
+                <span class="llm-name">Claude</span>
+                <span class="llm-score success">1/5</span>
+            </div>
+        
+            <div class="llm-stat">
+                <span class="llm-name">Gemini</span>
+                <span class="llm-score warning">0/0</span>
+            </div>
+        
+            </div>
+        </div>
+
+        <!-- Section 2: AI Response Breakdown -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                    </svg>
+                </div>
+                <h2 class="section-title">Question-by-Question Breakdown</h2>
+            </div>
+            <p style="color: #6b7280; margin-bottom: 1rem;">We asked these 5 questions to each AI model. Click any cell to see the full response:</p>
+            
+        <div class="question-breakdown">
+            <table class="breakdown-table">
+                <thead>
+                    <tr>
+                        <th>Question Asked</th>
+                        <th>GPT</th>
+                        <th>Claude</th>
+                        <th>Gemini</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q1</span>
+                    <span class="question-text">commercial office moving services in Tacoma</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top recommendations for commercial office moving services in Tacoma, listed in order of preference:<br><br>1. **Two Men and a Truck Tacoma**<br>   - **Overview**: Known for its reliable and efficient service, Two Men and a Truck specializes in both residential and commercial moves. They offer a full range of moving services, including packing, loading, and transportation.<br>   - **Why Choose Them**: They have a strong reputation for excellent customer service and can handle moves of all sizes. Their experienced staff is trained to ensure minimal disruption to your business operations.<br><br>2. **Allied Van Lines - Tacoma**<br>   - **Overview**: Allied Van Lines is a well-established name in the moving industry, providing comprehensive moving services for commercial clients. They offer specialized services for office relocations, including project management.<br>   - **Why Choose Them**: Their vast network and resources allow for efficient planning and execution of larger moves. They also provide additional services such as storage solutions and packing materials tailored for office needs.<br><br>3. **JK Moving Services**<br>   - **Overview**: JK Moving specializes in commercial relocations and has a dedicated team for office moves. They offer customized moving plans and have experience with various industries, ensuring your specific needs are met.<br>   - **Why Choose Them**: They focus on minimizing downtime and disruption, which is crucial for businesses. Their commitment to sustainability and using eco-friendly materials is an added bonus for environmentally conscious companies.<br><br>4. **Gentle Giant Moving Company**<br>   - **Overview**: Gentle Giant is known for its careful handling of items and exceptional customer service. They provide a range of services, including packing, moving, and unpacking for commercial clients.<br>   - **Why Choose Them**: Their team is trained to handle delicate equipment and furniture, making them a great choice for tech companies or those with valuable assets. They also offer flexible scheduling to accommodate your business needs.<br><br>5. **Olympic Moving & Storage**<br>   - **Overview**: A local option with a strong presence in Tacoma, Olympic Moving & Storage offers commercial moving services along with secure storage solutions. They cater to businesses looking for both short-term and long-term storage.<br>   - **Why Choose Them**: Their familiarity with the local area and commitment to customer satisfaction make them a reliable choice for businesses looking for personalized service.<br><br>When selecting a moving service, it&#39;s essential to consider your specific needs, such as the size of your office, the complexity of the move, and your budget. Be sure to request quotes and discuss your requirements with these companies to find the best fit for your office relocation."
+                    data-question="commercial office moving services in Tacoma"
+                    data-llm="gpt4"
+                    data-brand="Transit Moving Systems"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top 5 recommendations for commercial office moving services in Tacoma, listed in order of preference:<br><br>1. Puget Sound Movers:<br>   - Highly experienced and professional commercial movers with a focus on office relocations<br>   - Offer comprehensive services including packing, loading, transportation, and unpacking<br>   - Utilize modern equipment and techniques to ensure a smooth and efficient move<br>   - Consistently receive excellent customer reviews for their attention to detail and customer service<br><br>2. Tacoma Moving & Storage:<br>   - Family-owned business with over 30 years of experience in commercial office moves<br>   - Specializes in coordinating complex moves, including IT equipment and furniture<br>   - Provides storage solutions for temporary or long-term needs<br>   - Known for their reliable and timely service, as well as their competitive pricing<br><br>3. Northwest Relocation Services:<br>   - Specializes in commercial and corporate moves within the Tacoma area<br>   - Offers a comprehensive range of services, including project management and employee assistance<br>   - Utilizes eco-friendly practices and sustainable moving techniques<br>   - Highly adaptable to the unique needs of each client<br><br>4. Tacoma Office Movers:<br>   - Focuses exclusively on commercial and office relocations in the Tacoma region<br>   - Provides customized moving plans to ensure a seamless transition for businesses<br>   - Experienced in handling sensitive or specialized equipment, such as medical or IT hardware<br>   - Known for their attention to detail and commitment to minimizing downtime<br><br>5. Pacific Northwest Movers:<br>   - A well-established moving company with a dedicated commercial division<br>   - Offers a wide range of services, including furniture installation and asset management<br>   - Utilizes state-of-the-art equipment and technology to optimize the moving process<br>   - Maintains a strong focus on safety and customer satisfaction<br><br>These companies have a proven track record of successful commercial office moves in the Tacoma area and are known for their professionalism, reliability, and attention to detail. It&#39;s recommended to request quotes from a few of these providers to compare services and pricing before making a decision."
+                    data-question="commercial office moving services in Tacoma"
+                    data-llm="claude"
+                    data-brand="Transit Moving Systems"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="No response"
+                    data-question="commercial office moving services in Tacoma"
+                    data-llm="gemini"
+                    data-brand="Transit Moving Systems"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q2</span>
+                    <span class="question-text">long distance movers from Denver to Tacoma</span>
+                </td>
+                
+                <td class="llm-cell mentioned"
+                    data-response="Here are my top recommendations for long-distance moving companies that can assist with your move from Denver to Tacoma:<br><br>1. **United Van Lines**<br>   - **Overview**: United Van Lines is one of the largest moving companies in the U.S. with a strong reputation for reliability and quality service.<br>   - **Why Choose Them**: They offer a comprehensive range of services, including packing, storage, and vehicle transport. Their extensive network ensures that your belongings will be handled by experienced professionals throughout the move, and they have a strong tracking system so you can monitor your shipment.<br><br>2. **Mayflower Transit**<br>   - **Overview**: Mayflower is known for its extensive history in the moving industry and has a solid reputation for customer service.<br>   - **Why Choose Them**: They provide personalized moving plans and can accommodate various needs, from standard moving services to specialized options for fragile items. They also offer competitive pricing and have a good claims process in case of any damages.<br><br>3. **Allied Van Lines**<br>   - **Overview**: Allied Van Lines is another major player in the moving industry, known for its comprehensive service offerings and customer satisfaction.<br>   - **Why Choose Them**: They offer a variety of services, including packing, loading, and storage, along with a user-friendly online quote system. Their professional moving teams are well-trained, and they provide a virtual survey option to help streamline the moving process.<br><br>4. **Two Men and a Truck**<br>   - **Overview**: While primarily known for local moves, Two Men and a Truck also offers long-distance moving services in select locations.<br>   - **Why Choose Them**: They emphasize customer service and have a user-friendly approach to moving. If you prefer a smaller, more personal company experience, they can be a good choice, particularly if you’re looking for flexibility and individualized service.<br><br>5. **Pods (Portable On Demand Storage)**<br>   - **Overview**: Pods offers a unique approach by providing portable storage containers that you can load at your convenience.<br>   - **Why Choose Them**: This option allows for more flexibility in terms of timing, as you can pack your belongings at your own pace. Pods handles the transportation of the container to your new location. This can be particularly helpful if you need storage before moving into your new home.<br><br>When selecting a moving company, be sure to read reviews, check their licensing and insurance, and get multiple quotes to find the best fit for your needs and budget."
+                    data-question="long distance movers from Denver to Tacoma"
+                    data-llm="gpt4"
+                    data-brand="Transit Moving Systems"
+                    data-position="2"
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✓</span> (#2)
+                </td>
+            
+                <td class="llm-cell mentioned"
+                    data-response="Here are my top 5 recommendations for long distance movers from Denver to Tacoma:<br><br>1. United Van Lines: United Van Lines is a well-established and reputable long-distance moving company with a strong presence in both Denver and Tacoma. They offer a wide range of services, including full-service packing, loading, and unloading, as well as options for storage and specialty item handling. Their customer service is known to be excellent, and they have a track record of reliable and efficient moves.<br><br>2. Mayflower Transit: Mayflower Transit is another highly respected long-distance moving company that operates in both Denver and Tacoma. They are known for their attention to detail, comprehensive moving services, and commitment to customer satisfaction. Mayflower has a large fleet of well-maintained vehicles and a team of experienced and trained movers.<br><br>3. Allied Van Lines: Allied Van Lines is a trusted name in the long-distance moving industry, with a strong presence in both the Denver and Tacoma markets. They offer a wide range of services, including full-service packing, loading, and unloading, as well as storage solutions and specialty item handling. Allied Van Lines is known for its reliability, competitive pricing, and excellent customer service.<br><br>4. North American Van Lines: North American Van Lines is a well-established long-distance moving company that serves both Denver and Tacoma. They offer a comprehensive suite of moving services, including packing, loading, unloading, and storage. North American Van Lines is known for its attention to detail, experienced staff, and commitment to customer satisfaction.<br><br>5. Atlas Van Lines: Atlas Van Lines is a reputable long-distance moving company that operates in both Denver and Tacoma. They offer a full range of moving services, including packing, loading, unloading, and storage. Atlas Van Lines is known for its commitment to sustainability, its well-trained and professional staff, and its competitive pricing.<br><br>When choosing a long-distance mover, it&#39;s important to compare quotes, read reviews, and ensure that the company is licensed and insured. Additionally, consider factors such as the company&#39;s experience, the quality of their equipment, and their overall reputation in the industry."
+                    data-question="long distance movers from Denver to Tacoma"
+                    data-llm="claude"
+                    data-brand="Transit Moving Systems"
+                    data-position="2"
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✓</span> (#2)
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="No response"
+                    data-question="long distance movers from Denver to Tacoma"
+                    data-llm="gemini"
+                    data-brand="Transit Moving Systems"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q3</span>
+                    <span class="question-text">best moving company in Houston</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are some highly recommended moving companies in Houston, based on reputation, customer reviews, and services offered:<br><br>1. **Two Men and a Truck**<br>   - **Overview**: This national franchise has a strong presence in Houston and is known for its reliable service and professionalism. They offer local and long-distance moving, packing services, and storage solutions.<br>   - **Why Recommend**: Their well-trained staff and positive customer feedback make them a trusted choice. They have a transparent pricing model and flexible scheduling options.<br><br>2. **All My Sons Moving & Storage**<br>   - **Overview**: With over 30 years of experience, All My Sons offers a full range of moving services, including residential, commercial, and long-distance moves. They also provide packing and storage options.<br>   - **Why Recommend**: Customers appreciate their attentive service and the care taken with belongings. Their experience in the industry often translates to fewer issues during the moving process.<br><br>3. **A-1 Freeman Moving Group**<br>   - **Overview**: A-1 Freeman is a full-service moving company that has been serving the Houston area for decades. They offer customized moving plans, packing services, and specialized moving options for sensitive items.<br>   - **Why Recommend**: They have a strong reputation for customer service and reliability, with many positive reviews highlighting their attention to detail and commitment to making the moving process as smooth as possible.<br><br>4. **Moving APT**<br>   - **Overview**: Moving APT is a moving broker that connects customers with reputable moving companies. They provide a range of services, from local to long-distance moves, and can handle both residential and commercial relocations.<br>   - **Why Recommend**: They offer competitive pricing and a wide network of movers, allowing for flexibility in choosing a service that fits individual needs. Their customer service is noted for being responsive and helpful.<br><br>5. **U-Haul**<br>   - **Overview**: While primarily known for truck rentals, U-Haul also offers moving labor services and storage facilities. They provide a do-it-yourself option that can be cost-effective for those willing to handle their own packing and loading.<br>   - **Why Recommend**: U-Haul&#39;s extensive network and variety of services make them a convenient option for many. Their affordability and flexibility can be appealing for budget-conscious movers.<br><br>When selecting a moving company, it&#39;s advisable to read recent customer reviews, get quotes from multiple providers, and check for any hidden fees to ensure a smooth moving experience."
+                    data-question="best moving company in Houston"
+                    data-llm="gpt4"
+                    data-brand="Transit Moving Systems"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top 5 recommendations for the best moving companies in Houston, ranked in order of preference:<br><br>1. Two Men and a Truck:<br>   - Highly reputable and experienced moving company with locations across the Houston area.<br>   - Offers a wide range of services, including local, long-distance, and corporate moves.<br>   - Known for their professional and courteous movers, as well as their attention to detail.<br>   - Consistently receives positive reviews from customers for their efficient and stress-free moving services.<br><br>2. Ameritex Movers:<br>   - A locally-owned and operated moving company with a strong presence in the Houston market.<br>   - Offers a variety of moving services, including residential, commercial, and specialty moves.<br>   - Focuses on providing personalized customer service and customized moving solutions.<br>   - Received numerous awards and accolades for their outstanding service and customer satisfaction.<br><br>3. College Hunks Hauling Junk and Moving:<br>   - A national moving company with a strong presence in the Houston area.<br>   - Known for their friendly, uniformed, and well-trained movers.<br>   - Offers a wide range of services, including local, long-distance, and junk removal.<br>   - Emphasizes environmentally-friendly practices and sustainable disposal methods.<br><br>4. Prodigy Moving & Storage:<br>   - A reputable moving company with a focus on providing high-quality, stress-free moving experiences.<br>   - Offers a comprehensive suite of services, including packing, loading, and unloading.<br>   - Utilizes modern equipment and techniques to ensure the safe transport of your belongings.<br>   - Receives consistent positive feedback from customers for their professionalism and attention to detail.<br><br>5. All My Sons Moving & Storage:<br>   - A family-owned moving company with over 40 years of experience in the industry.<br>   - Provides a wide range of moving services, including local, long-distance, and international moves.<br>   - Emphasizes the use of high-quality materials and equipment to ensure the safe transport of your belongings.<br>   - Known for their responsive customer service and commitment to customer satisfaction.<br><br>It&#39;s important to note that moving companies can vary in terms of pricing, availability, and specific services offered, so it&#39;s always a good idea to obtain multiple quotes and compare options before making a decision. Additionally, be sure to read reviews and check the company&#39;s credentials and licensing to ensure a reliable and trustworthy moving experience."
+                    data-question="best moving company in Houston"
+                    data-llm="claude"
+                    data-brand="Transit Moving Systems"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="No response"
+                    data-question="best moving company in Houston"
+                    data-llm="gemini"
+                    data-brand="Transit Moving Systems"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q4</span>
+                    <span class="question-text">storage solutions near me in Houston</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top recommendations for storage solutions in Houston:<br><br>1. **Life Storage - Houston, TX (Various Locations)**<br>   - Life Storage offers a range of unit sizes, climate-controlled options, and 24/7 access. Their facilities are clean, secure, and well-maintained. They also have great customer service, making it easy to rent a unit and manage your storage needs online.<br><br>2. **CubeSmart Self Storage - Houston, TX (Multiple Locations)**<br>   - CubeSmart provides flexible rental options and various unit sizes, including climate-controlled spaces. They often have promotions for new customers, and their facilities are known for their cleanliness and security features, such as gated access and video surveillance.<br><br>3. **Public Storage - Houston, TX (Various Locations)**<br>   - Public Storage is a well-known national brand with many locations in Houston. They offer a wide range of unit sizes and competitive pricing. Their online reservation system is user-friendly, and they frequently have discounts for first-time renters.<br><br>4. **Extra Space Storage - Houston, TX (Several Locations)**<br>   - Extra Space Storage is recognized for its modern facilities and exceptional customer service. They offer a variety of storage unit sizes and climate-controlled units. Many locations have 24-hour access, and their online account management makes it easy to pay bills and manage your storage.<br><br>5. **StorQuest Self Storage - Houston, TX (Locations Available)**<br>   - StorQuest provides a variety of storage solutions, including RV and boat storage. Their facilities are designed for convenience, with 24-hour access and security features like gated entry and surveillance cameras. They also focus on customer satisfaction, making the rental process straightforward.<br><br>Make sure to check the specific location details, availability, and pricing, as these can vary widely across the city."
+                    data-question="storage solutions near me in Houston"
+                    data-llm="gpt4"
+                    data-brand="Transit Moving Systems"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top 5 recommendations for storage solutions near you in Houston, TX:<br><br>1. Public Storage (Multiple Locations): Public Storage is a well-known and reputable self-storage provider with several conveniently located facilities throughout the Houston area. They offer a wide range of unit sizes, climate-controlled options, and 24/7 access, making them a great choice for both residential and business storage needs.<br><br>2. Lockaway Storage (Multiple Locations): Lockaway Storage is another reliable self-storage company with multiple locations in the Houston region. They provide a variety of unit sizes, security features like gated access and video surveillance, and flexible month-to-month leasing options.<br><br>3. Storage West (Multiple Locations): Storage West is a regional storage provider with several facilities in the Houston metropolitan area. They are known for their clean, well-maintained properties and excellent customer service. They offer climate-controlled units, drive-up access, and online bill pay for added convenience.<br><br>4. Extra Space Storage (Multiple Locations): Extra Space Storage is a national self-storage brand with a strong presence in Houston. Their facilities feature modern amenities, including 24/7 video surveillance, electronic gate access, and online rental and payment options.<br><br>5. Cubesmart Self Storage (Multiple Locations): Cubesmart is a reputable self-storage company with numerous locations throughout the Houston area. They offer a wide selection of unit sizes, climate-controlled options, and various security features like individual unit alarms and on-site managers.<br><br>When selecting a storage solution, it&#39;s important to consider factors such as location, unit size, security features, and pricing to find the best fit for your specific needs. I&#39;d recommend visiting a few of these facilities in person to compare and determine which one is the most suitable for your storage requirements."
+                    data-question="storage solutions near me in Houston"
+                    data-llm="claude"
+                    data-brand="Transit Moving Systems"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="No response"
+                    data-question="storage solutions near me in Houston"
+                    data-llm="gemini"
+                    data-brand="Transit Moving Systems"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q5</span>
+                    <span class="question-text">how to find a reputable moving company</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="Finding a reputable moving company is essential for a smooth relocation experience. Here are my top recommendations for ensuring you choose a reliable mover:<br><br>1. **Check Reviews and Ratings on Trusted Platforms**<br>   - **Explanation**: Websites like Yelp, Google Reviews, and the Better Business Bureau (BBB) provide customer reviews and ratings for moving companies. Look for companies with a high number of positive reviews, and pay attention to how they handle negative feedback. This can give you insight into their reliability and customer service.<br><br>2. **Get Recommendations from Friends and Family**<br>   - **Explanation**: Personal recommendations from people you trust can be invaluable. Ask friends, family, or coworkers if they have had good experiences with any local moving companies. First-hand accounts can provide insights into the company&#39;s professionalism, pricing, and overall service quality.<br><br>3. **Verify Licensing and Insurance**<br>   - **Explanation**: Ensure that the moving company is licensed and insured. In the U.S., interstate movers must be registered with the Federal Motor Carrier Safety Administration (FMCSA) and have a USDOT number. For local moves, check if they comply with state regulations. This ensures that the company meets safety standards and offers protection for your belongings.<br><br>4. **Get Multiple Estimates**<br>   - **Explanation**: Contact several moving companies to obtain written estimates. This helps you compare prices and services. Be wary of significantly low estimates, as they may indicate subpar service or hidden fees. A reputable company will provide a transparent quote based on a thorough assessment of your move.<br><br>5. **Ask About Experience and Specializations**<br>   - **Explanation**: Inquire about the company’s experience, especially with the type of move you’re planning (local, long-distance, or international). Companies that specialize in certain types of moves or have been in business for several years are often more reliable due to their established processes and expertise.<br><br>By following these recommendations, you can better navigate the process of finding a reputable moving company that meets your needs."
+                    data-question="how to find a reputable moving company"
+                    data-llm="gpt4"
+                    data-brand="Transit Moving Systems"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top 5 recommendations for finding a reputable moving company, in order of preference:<br><br>1. Ask for referrals from friends, family, or coworkers who have recently moved. Personal recommendations from people you trust are often the best way to find a reliable moving company.<br><br>2. Check online reviews on sites like Yelp, Google, or the Better Business Bureau. Look for companies with consistently high ratings and positive reviews from past customers.<br><br>3. Get quotes from multiple moving companies and compare their services, pricing, and policies. Reputable companies will provide detailed, written estimates and be transparent about their pricing structure.<br><br>4. Look for moving companies that are licensed, insured, and belong to professional associations like the American Moving & Storage Association (AMSA) or the International Association of Movers (IAM). This ensures they meet industry standards and have the proper credentials.<br><br>5. Consider using a moving broker, who can help you find a pre-screened and vetted moving company that fits your needs and budget. However, be sure to research the broker&#39;s reputation as well.<br><br>When evaluating moving companies, pay attention to factors like their experience, customer service, handling of your belongings, and overall professionalism. Taking the time to thoroughly research and compare options can help you find a reliable and trustworthy moving partner."
+                    data-question="how to find a reputable moving company"
+                    data-llm="claude"
+                    data-brand="Transit Moving Systems"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="No response"
+                    data-question="how to find a reputable moving company"
+                    data-llm="gemini"
+                    data-brand="Transit Moving Systems"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+                </tbody>
+            </table>
+            <p class="breakdown-hint">Click any cell to see the full AI response</p>
+        </div>
+
+        <!-- Response modal -->
+        <div class="response-modal" id="responseModal">
+            <div class="modal-content" onclick="event.stopPropagation()">
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+                <div class="modal-header">
+                    <span class="modal-llm" id="modalLlm"></span>
+                    <span class="modal-status" id="modalStatus"></span>
+                </div>
+                <div class="modal-question" id="modalQuestion"></div>
+                <div class="modal-response" id="modalResponse"></div>
+            </div>
+        </div>
+    
+        </div>
+
+        <!-- Section 3: Reddit Opportunities -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <h2 class="section-title">Reddit Opportunities</h2>
+            </div>
+
+            <div class="subsection-title">Buy Intent Conversations</div>
+            <p class="subsection-desc">People actively looking for recommendations in your category</p>
+            <div class="reddit-posts">
+                
+            <a href="https://www.reddit.com/r/askaustin/comments/1uu3qlp/moving_company_for_a_couple_of_fragile_pieces_to/" target="_blank" class="reddit-post">
+                <div class="post-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">Moving company for a couple of fragile pieces to Houston?</div>
+                    <div class="post-meta">
+                        r/askaustin &bull; N/A members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            <a href="https://www.reddit.com/r/askaustin/comments/1ur7ncf/moving_to_austin/" target="_blank" class="reddit-post">
+                <div class="post-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">moving to austin : r/askaustin</div>
+                    <div class="post-meta">
+                        r/askaustin &bull; N/A members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            <a href="https://www.reddit.com/r/StLouis/comments/1usnj9a/may_be_moving_out_west_does_anyone_have_a_car/" target="_blank" class="reddit-post">
+                <div class="post-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">May be moving out west. Does anyone have a car shipping ...</div>
+                    <div class="post-meta">
+                        r/StLouis &bull; N/A members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            <a href="https://www.reddit.com/r/SaltLakeCity/comments/1ur4gxl/moving_services_for_an_interstate_move/" target="_blank" class="reddit-post">
+                <div class="post-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">Moving Services for an Interstate Move : r/SaltLakeCity</div>
+                    <div class="post-meta">
+                        r/SaltLakeCity &bull; N/A members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            </div>
+
+            <div class="subsection-title">Pain Point Conversations</div>
+            <p class="subsection-desc">People discussing problems your product solves</p>
+            <div class="reddit-posts">
+                
+            <a href="https://www.reddit.com/r/organizing/comments/1usuuk1/mouse_proof_storage/" target="_blank" class="reddit-post">
+                <div class="post-icon pain">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">Mouse proof storage : r/organizing</div>
+                    <div class="post-meta">
+                        r/organizing &bull; N/A members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            <a href="https://www.reddit.com/r/longisland/comments/1usm087/im_planning_on_checking_out_the_beaches_in_the/" target="_blank" class="reddit-post">
+                <div class="post-icon pain">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">I'm planning on checking out the beaches in the upcoming ...</div>
+                    <div class="post-meta">
+                        r/longisland &bull; N/A members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            </div>
+        </div>
+
+        <!-- CTA Section -->
+        <div class="section cta-section">
+            <h2>Ready to improve your <em>AI visibility?</em></h2>
+            <p>We help brands get mentioned more in AI answers through strategic content placement.</p>
+            <a href="https://adva-solutions.com/AIVisibility" class="cta-button">Learn More</a>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p>Generated by <a href="https://adva-solutions.com">Adva</a> &bull; AI Visibility Health Check</p>
+    </footer>
+
+    <script>
+        // Tab switching functionality
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const tabId = btn.dataset.tab;
+
+                // Update buttons
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                // Update panels
+                document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+                document.getElementById('panel-' + tabId).classList.add('active');
+            });
+        });
+
+        // Show toast notification
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2500);
+        }
+
+        // Show response modal
+        function showResponse(cell) {
+            try {
+                let response = cell.dataset.response || 'No response available';
+                const question = cell.dataset.question || '';
+                const llm = cell.dataset.llm || '';
+                const brand = cell.dataset.brand || '';
+                const isMentioned = cell.classList.contains('mentioned');
+                const brandPosition = cell.dataset.position ? parseInt(cell.dataset.position) : null;
+
+                const llmNames = {'gpt4': 'GPT', 'claude': 'Claude', 'gemini': 'Gemini'};
+
+                // If brand is mentioned beyond position 5, add a banner at the top
+                let positionBanner = '';
+                if (isMentioned && brandPosition && brandPosition > 5) {
+                    positionBanner = '<div style="background: #fef3c7; padding: 0.75rem 1rem; border-radius: 6px; margin-bottom: 1rem; border-left: 4px solid #f59e0b;">' +
+                        '<strong>📍 Your brand appeared at position #' + brandPosition + '</strong> - scroll down to see the highlighted mention' +
+                        '</div>';
+                }
+
+                // Highlight brand name in response (case insensitive)
+                if (brand && isMentioned) {
+                    try {
+                        const brandRegex = new RegExp('(' + brand.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&') + ')', 'gi');
+                        response = response.replace(brandRegex, '<span class="brand-highlight">$1</span>');
+                    } catch(e) { /* ignore highlighting errors */ }
+                }
+
+                document.getElementById('modalLlm').textContent = llmNames[llm] || llm;
+                document.getElementById('modalQuestion').textContent = '"' + question + '"';
+                document.getElementById('modalResponse').innerHTML = positionBanner + response;
+
+                const statusEl = document.getElementById('modalStatus');
+                if (isMentioned) {
+                    statusEl.textContent = 'Mentioned';
+                    statusEl.className = 'modal-status mentioned';
+                } else {
+                    statusEl.textContent = 'Not mentioned';
+                    statusEl.className = 'modal-status not-mentioned';
+                }
+
+                document.getElementById('responseModal').classList.add('active');
+                document.body.style.overflow = 'hidden';
+
+                // Scroll to first highlight if mentioned
+                if (isMentioned) {
+                    setTimeout(function() {
+                        const highlight = document.querySelector('.modal-response .brand-highlight');
+                        if (highlight) {
+                            highlight.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        }
+                    }, 100);
+                }
+            } catch (e) {
+                console.error('Error showing response:', e);
+                alert('Error loading response. Please try again.');
+            }
+        }
+
+        // Close modal
+        function closeModal() {
+            document.getElementById('responseModal').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // Close when clicking backdrop (outside modal content)
+        document.getElementById('responseModal').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+
+        // Close modal on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeModal();
+        });
+    </script>
+</body>
+</html>
