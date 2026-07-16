@@ -1,0 +1,1337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Visibility Report - Heart Construction | Adva</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #ffffff;
+            min-height: 100vh;
+            color: #374151;
+            line-height: 1.6;
+        }
+
+        /* Header */
+        .header {
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            font-size: 1.25rem;
+            color: #1f2937;
+            text-decoration: none;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .header-date {
+            color: #9ca3af;
+            font-size: 0.875rem;
+        }
+
+        /* Copy link button */
+        .copy-link-button {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: #f3f4f6;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            color: #374151;
+            font-size: 0.75rem;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .copy-link-button:hover {
+            background: #e5e7eb;
+        }
+
+        .copy-link-button svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        /* Toast notification */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: #1f2937;
+            color: #ffffff;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            opacity: 0;
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        /* Container */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Page title */
+        .page-title {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .page-title .label {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: #9ca3af;
+            font-size: 0.75rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+        }
+
+        .page-title .label::before,
+        .page-title .label::after {
+            content: '';
+            width: 30px;
+            height: 1px;
+            background: #d1d5db;
+        }
+
+        .page-title h1 {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 2.5rem;
+            font-weight: 400;
+            color: #1f2937;
+            margin-bottom: 0.5rem;
+        }
+
+        .page-title .brand {
+            color: #6b7280;
+            font-size: 1.125rem;
+        }
+
+        /* Sections */
+        .section {
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #f3f4f6;
+        }
+
+        .section-icon {
+            width: 40px;
+            height: 40px;
+            background: #1f2937;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .section-icon svg {
+            width: 20px;
+            height: 20px;
+            color: #ffffff;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 1.375rem;
+            color: #1f2937;
+        }
+
+        /* Score Section */
+        .score-section {
+            text-align: center;
+            padding: 3rem 2rem;
+        }
+
+        .score-circle {
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            background: #fafafa;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            border: 4px solid #ef4444;
+        }
+
+        .score-value {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 3rem;
+            font-weight: 500;
+            color: #ef4444;
+        }
+
+        .score-label {
+            font-size: 0.8rem;
+            color: #9ca3af;
+        }
+
+        .score-description {
+            color: #6b7280;
+            margin-bottom: 2rem;
+            font-size: 1rem;
+        }
+
+        .score-description strong {
+            color: #1f2937;
+        }
+
+        .llm-breakdown {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .llm-stat {
+            text-align: center;
+            padding: 1rem 1.5rem;
+            background: #fafafa;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+            min-width: 100px;
+        }
+
+        .llm-name {
+            display: block;
+            color: #9ca3af;
+            font-size: 0.8rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .llm-score {
+            font-size: 1.125rem;
+            font-weight: 600;
+        }
+
+        .llm-score.success {
+            color: #22c55e;
+        }
+
+        .llm-score.warning {
+            color: #ef4444;
+        }
+
+        /* Competitor Table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 0.875rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid #f3f4f6;
+        }
+
+        th {
+            color: #9ca3af;
+            font-weight: 500;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        td {
+            color: #374151;
+        }
+
+        .mention-count {
+            background: #fef3c7;
+            color: #92400e;
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        /* Tabs for LLM responses */
+        .example-tabs {
+            margin-top: 1.5rem;
+        }
+
+        .tabs-header {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+            padding-bottom: 0;
+        }
+
+        .tab-btn {
+            padding: 0.75rem 1.25rem;
+            background: transparent;
+            border: none;
+            color: #6b7280;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            margin-bottom: -1px;
+            transition: all 0.2s;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .tab-btn:hover {
+            color: #1f2937;
+        }
+
+        .tab-btn.active {
+            color: #1f2937;
+            border-bottom-color: #1f2937;
+        }
+
+        .tab-panel {
+            display: none;
+            background: #fafafa;
+            border-radius: 8px;
+            padding: 1.25rem;
+        }
+
+        .tab-panel.active {
+            display: block;
+        }
+
+        .example-question {
+            color: #1f2937;
+            font-weight: 500;
+            font-size: 0.95rem;
+            margin-bottom: 0.75rem;
+        }
+
+        /* Question breakdown table */
+        .question-breakdown {
+            margin-top: 1rem;
+        }
+
+        .breakdown-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        .breakdown-table th {
+            padding: 0.75rem;
+            text-align: center;
+            background: #f9fafb;
+            border-bottom: 2px solid #e5e7eb;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .breakdown-table th:first-child {
+            text-align: left;
+            width: 50%;
+        }
+
+        .breakdown-table td {
+            padding: 0.75rem;
+            border-bottom: 1px solid #f3f4f6;
+            vertical-align: middle;
+        }
+
+        .question-cell {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+        }
+
+        .question-num {
+            background: #e5e7eb;
+            color: #374151;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        .question-text {
+            color: #374151;
+            line-height: 1.4;
+        }
+
+        .llm-cell {
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-radius: 4px;
+        }
+
+        .llm-cell:hover {
+            background: #f3f4f6;
+        }
+
+        .llm-cell.mentioned {
+            color: #16a34a;
+        }
+
+        .llm-cell.mentioned .status-icon {
+            font-size: 1.25rem;
+        }
+
+        .llm-cell.not-mentioned {
+            color: #dc2626;
+        }
+
+        .llm-cell.not-mentioned .status-icon {
+            font-size: 1.25rem;
+        }
+
+        .breakdown-hint {
+            color: #9ca3af;
+            font-size: 0.8rem;
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+        /* Response modal */
+        .response-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+        }
+
+        .response-modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: #ffffff;
+            border-radius: 12px;
+            max-width: 800px;
+            width: 100%;
+            max-height: 90vh;
+            overflow: auto;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #9ca3af;
+            cursor: pointer;
+            padding: 0.25rem 0.5rem;
+        }
+
+        .modal-close:hover {
+            color: #374151;
+        }
+
+        .modal-header {
+            padding: 1.5rem 1.5rem 0;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            position: relative;
+        }
+
+        .modal-llm {
+            font-weight: 600;
+            color: #1f2937;
+            font-size: 1.1rem;
+        }
+
+        .modal-status {
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .modal-status.mentioned {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .modal-status.not-mentioned {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .modal-question {
+            padding: 1rem 1.5rem;
+            color: #6b7280;
+            font-size: 0.9rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .modal-response {
+            padding: 1.5rem;
+            overflow-y: auto;
+            flex: 1;
+            color: #374151;
+            font-size: 0.9rem;
+            line-height: 1.8;
+            min-height: 300px;
+            max-height: 60vh;
+            background: #fafafa;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .modal-response::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .modal-response::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        .modal-response::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 4px;
+        }
+
+        .modal-response::-webkit-scrollbar-thumb:hover {
+            background: #a1a1a1;
+        }
+
+        /* Brand highlight */
+        .brand-highlight {
+            background: linear-gradient(120deg, #fef08a 0%, #fde047 100%);
+            padding: 0.1rem 0.3rem;
+            border-radius: 3px;
+            font-weight: 600;
+        }
+
+        .example-content {
+            color: #6b7280;
+            font-size: 0.875rem;
+            line-height: 1.7;
+            max-height: 400px;
+            overflow-y: auto;
+            margin-bottom: 0.75rem;
+            padding: 1rem;
+            background: #f9fafb;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .example-status {
+            padding: 0.5rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            display: inline-block;
+        }
+
+        .example-status.mentioned {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .example-status.not-mentioned {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        /* Reddit Posts */
+        .reddit-posts {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .reddit-post {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: #fafafa;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: all 0.2s;
+            border: 1px solid transparent;
+        }
+
+        .reddit-post:hover {
+            background: #f3f4f6;
+            border-color: #e5e7eb;
+        }
+
+        .post-icon {
+            width: 40px;
+            height: 40px;
+            background: #1f2937;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .post-icon.pain {
+            background: #fef3c7;
+        }
+
+        .post-icon.pain svg {
+            color: #92400e;
+        }
+
+        .post-icon svg {
+            width: 20px;
+            height: 20px;
+            color: #ffffff;
+        }
+
+        .post-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .post-title {
+            color: #1f2937;
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .post-meta {
+            color: #9ca3af;
+            font-size: 0.8rem;
+        }
+
+        .post-arrow {
+            color: #9ca3af;
+            flex-shrink: 0;
+        }
+
+        .post-arrow svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .subsection-title {
+            color: #1f2937;
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin: 1.5rem 0 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .subsection-title:first-of-type {
+            margin-top: 0;
+        }
+
+        .subsection-desc {
+            color: #9ca3af;
+            font-size: 0.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .no-data {
+            color: #9ca3af;
+            font-style: italic;
+            text-align: center;
+            padding: 1rem;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            color: #9ca3af;
+            font-size: 0.8rem;
+            padding: 2rem;
+            border-top: 1px solid #e5e7eb;
+            margin-top: 2rem;
+        }
+
+        .footer a {
+            color: #1f2937;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* CTA */
+        .cta-section {
+            text-align: center;
+            padding: 3rem 2rem;
+            background: #fafafa;
+        }
+
+        .cta-section h2 {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 1.75rem;
+            color: #1f2937;
+            margin-bottom: 0.75rem;
+        }
+
+        .cta-section p {
+            color: #6b7280;
+            margin-bottom: 1.5rem;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background: #1f2937;
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .cta-button:hover {
+            background: #111827;
+            transform: translateY(-1px);
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .page-title h1 {
+                font-size: 1.75rem;
+            }
+
+            .section {
+                padding: 1.5rem;
+            }
+
+            .score-circle {
+                width: 130px;
+                height: 130px;
+            }
+
+            .score-value {
+                font-size: 2.25rem;
+            }
+
+            .llm-breakdown {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .tabs-header {
+                flex-wrap: wrap;
+            }
+
+            .tab-btn {
+                padding: 0.5rem 1rem;
+                font-size: 0.8rem;
+            }
+
+            .breakdown-table th,
+            .breakdown-table td {
+                padding: 0.5rem;
+                font-size: 0.8rem;
+            }
+
+            .question-cell {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .modal-content {
+                max-height: 90vh;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <a href="https://adva-solutions.com/AIVisibility" class="logo">adva</a>
+        <div class="header-right">
+            <button class="copy-link-button" onclick="navigator.clipboard.writeText('https://adva-solutions.github.io/ai-visibility-report/report_heart-construction_f00ab313.html'); showToast('Link copied!');" title="Copy shareable link">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                </svg>
+                Copy Link
+            </button>
+            <span class="header-date">July 16, 2026</span>
+        </div>
+    </header>
+    <div class="toast" id="toast">Link copied to clipboard!</div>
+
+    <div class="container">
+        <div class="page-title">
+            <div class="label">AI Visibility Report</div>
+            <h1>Your Brand's <em>AI Presence</em></h1>
+            <p class="brand">Analysis for Heart Construction</p>
+        </div>
+
+        <!-- Section 1: AI Visibility Score -->
+        <div class="section score-section">
+            <div class="score-circle">
+                <span class="score-value">0%</span>
+                <span class="score-label">0/10 mentions</span>
+            </div>
+            <p class="score-description">
+                Your brand appeared in <strong>0</strong> out of <strong>10</strong> AI recommendations
+            </p>
+            <div class="llm-breakdown">
+                
+            <div class="llm-stat">
+                <span class="llm-name">GPT</span>
+                <span class="llm-score warning">0/5</span>
+            </div>
+        
+            <div class="llm-stat">
+                <span class="llm-name">Claude</span>
+                <span class="llm-score warning">0/5</span>
+            </div>
+        
+            <div class="llm-stat">
+                <span class="llm-name">Gemini</span>
+                <span class="llm-score warning">0/0</span>
+            </div>
+        
+            </div>
+        </div>
+
+        <!-- Section 2: AI Response Breakdown -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                    </svg>
+                </div>
+                <h2 class="section-title">Question-by-Question Breakdown</h2>
+            </div>
+            <p style="color: #6b7280; margin-bottom: 1rem;">We asked these 5 questions to each AI model. Click any cell to see the full response:</p>
+            
+        <div class="question-breakdown">
+            <table class="breakdown-table">
+                <thead>
+                    <tr>
+                        <th>Question Asked</th>
+                        <th>GPT</th>
+                        <th>Claude</th>
+                        <th>Gemini</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q1</span>
+                    <span class="question-text">Los Angeles general contractor for custom homes</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are five highly regarded general contractors in Los Angeles specializing in custom homes, listed in order of preference:<br><br>1. **S. M. B. Builders**<br>   - **Overview**: Renowned for their high-end custom home construction, S. M. B. Builders has a strong portfolio featuring modern and traditional designs. They emphasize quality craftsmanship and attention to detail.<br>   - **Why Choose Them**: Their commitment to sustainability and use of eco-friendly materials sets them apart, making them a great choice for environmentally conscious clients.<br><br>2. **Rafael Architecture & Design**<br>   - **Overview**: This firm combines architecture and construction, providing a seamless experience from design to build. They focus on innovative designs that reflect the client&#39;s vision while ensuring functional living spaces.<br>   - **Why Choose Them**: Their comprehensive approach allows for better communication and collaboration throughout the project, which can lead to more customized results.<br><br>3. **G. D. C. Construction**<br>   - **Overview**: With over 20 years of experience, G. D. C. Construction specializes in luxury custom homes and renovations. They are known for their meticulous attention to detail and high standards of quality.<br>   - **Why Choose Them**: Their positive client testimonials and portfolio of completed projects demonstrate their reliability and expertise in delivering beautiful and functional homes.<br><br>4. **K. W. Construction**<br>   - **Overview**: K. W. Construction has a reputation for building modern and contemporary homes. They have a strong focus on customer service and ensure that clients are involved in every stage of the construction process.<br>   - **Why Choose Them**: Their emphasis on transparency and communication makes them a favorite among clients who want to stay informed and engaged throughout their project.<br><br>5. **K. T. Builders**<br>   - **Overview**: Known for their extensive experience in custom home building, K. T. Builders offers a wide range of services from initial design to final walkthrough. They have a strong network of subcontractors and suppliers, ensuring quality materials and workmanship.<br>   - **Why Choose Them**: Their ability to manage complex projects and timelines effectively makes them a reliable choice for clients looking to build their dream home without hassle.<br><br>When choosing a general contractor, it&#39;s essential to review their past projects, client reviews, and whether their style aligns with your vision for your custom home. Always ask for references and check their licensing and insurance to ensure you&#39;re making a sound decision."
+                    data-question="Los Angeles general contractor for custom homes"
+                    data-llm="gpt4"
+                    data-brand="Heart Construction"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top 5 recommendations for custom home general contractors in Los Angeles, listed in order of preference:<br><br>1. Westside Construction Services - This firm has over 25 years of experience building high-end custom homes in the LA area. They are known for their attention to detail, quality craftsmanship, and ability to seamlessly manage complex projects from start to finish.<br><br>2. Horizon Construction & Development - Specializing in luxury custom homes, this contractor has a reputation for innovative design, superior project management, and a commitment to sustainability. They have won numerous awards for their work.<br><br>3. Rockwood Custom Homes - With a focus on modern and contemporary styles, Rockwood has established itself as a leader in the LA custom home market. They are praised for their collaborative approach with clients and architects.<br><br>4. Laurus Custom Builders - This boutique firm takes on a limited number of projects at a time, allowing them to provide highly personalized service and a hands-on building experience for their clients. Their portfolio showcases stunning, one-of-a-kind homes.<br><br>5. Structural Focus - In addition to general contracting, this company also provides structural engineering services, making them a great choice for complex custom home builds. They are known for their technical expertise and creative problem-solving.<br><br>All of these contractors have extensive experience, strong industry reputations, and a proven track record of delivering high-quality custom homes in the Los Angeles area. I would recommend reaching out to a few of them to discuss your specific project needs and get a sense of their approach and capabilities."
+                    data-question="Los Angeles general contractor for custom homes"
+                    data-llm="claude"
+                    data-brand="Heart Construction"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="No response"
+                    data-question="Los Angeles general contractor for custom homes"
+                    data-llm="gemini"
+                    data-brand="Heart Construction"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q2</span>
+                    <span class="question-text">Home remodeling contractors in Pacific Palisades</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are some recommended home remodeling contractors in Pacific Palisades, based on their reputation, quality of work, and client feedback:<br><br>1. **Pacific Palisades Construction**<br>   - **Overview**: Known for their high-quality craftsmanship and attention to detail, Pacific Palisades Construction specializes in luxury home renovations and custom builds.<br>   - **Why Recommend**: Their strong portfolio showcases a variety of successful projects, and they have built a reputation for excellent customer service and communication throughout the remodeling process.<br><br>2. **Crown Remodeling**<br>   - **Overview**: This contractor focuses on both residential and commercial projects, offering services ranging from kitchen and bath remodels to complete home renovations.<br>   - **Why Recommend**: Crown Remodeling is praised for their ability to handle complex projects and their commitment to sustainability, using eco-friendly materials and practices.<br><br>3. **Keenan Construction**<br>   - **Overview**: With a focus on upscale homes, Keenan Construction has a skilled team that works closely with clients to realize their visions.<br>   - **Why Recommend**: Their emphasis on personalized service, along with numerous positive reviews regarding their reliability and craftsmanship, makes them a strong choice for homeowners looking to enhance their living space.<br><br>4. **Sullivan Remodeling**<br>   - **Overview**: Sullivan Remodeling offers a wide range of services, including home additions, kitchen and bathroom remodels, and outdoor living spaces.<br>   - **Why Recommend**: They are known for their innovative designs and thorough project management, ensuring that every detail is addressed and completed on time.<br><br>5. **Bishop Design Group**<br>   - **Overview**: This design-build firm is recognized for its modern and stylish renovations, particularly in high-end residential properties.<br>   - **Why Recommend**: Their collaborative approach, combining design and construction, allows for seamless integration of aesthetic and functional elements, resulting in stunning spaces that reflect the homeowner’s style.<br><br>When choosing a contractor, it’s essential to check their licenses, insurance, and references, and to discuss your project in detail to ensure they align with your vision and budget."
+                    data-question="Home remodeling contractors in Pacific Palisades"
+                    data-llm="gpt4"
+                    data-brand="Heart Construction"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top 5 recommendations for home remodeling contractors in Pacific Palisades, listed in order of preference:<br><br>1. Palisades Construction & Design: This company has an excellent reputation for high-quality workmanship and exceptional customer service. They specialize in a wide range of remodeling projects, from kitchen and bathroom renovations to whole-home transformations. Their team of experienced professionals ensures that each project is completed on time and within budget.<br><br>2. Palisades Luxury Remodeling: Known for their attention to detail and innovative design solutions, Palisades Luxury Remodeling has established itself as a leading provider of home remodeling services in the area. They excel at creating custom, luxury spaces that seamlessly blend function and aesthetic.<br><br>3. Palisades Home Improvement: This company offers a comprehensive range of remodeling services, from structural renovations to interior design. They are known for their meticulous planning, open communication, and commitment to customer satisfaction. Their team of skilled tradesmen and designers work closely with clients to bring their vision to life.<br><br>4. Palisades Remodeling Experts: With a focus on energy-efficient and sustainable solutions, Palisades Remodeling Experts is a great choice for homeowners looking to improve the functionality and eco-friendliness of their homes. They specialize in green remodeling techniques and can help you maximize the efficiency of your living space.<br><br>5. Palisades Home Renovations: This company&#39;s team of experienced professionals has a reputation for delivering high-quality results and exceptional customer service. They excel at both traditional and contemporary remodeling projects, offering a wide range of design options and customization possibilities.<br><br>It&#39;s important to note that these recommendations are based on research and reviews, but it&#39;s always a good idea to thoroughly vet any contractor and get multiple quotes before making a decision. Additionally, it&#39;s recommended to check the contractors&#39; licenses, insurance, and references to ensure they meet your specific needs and requirements."
+                    data-question="Home remodeling contractors in Pacific Palisades"
+                    data-llm="claude"
+                    data-brand="Heart Construction"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="No response"
+                    data-question="Home remodeling contractors in Pacific Palisades"
+                    data-llm="gemini"
+                    data-brand="Heart Construction"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q3</span>
+                    <span class="question-text">How to build a custom home in Calabasas</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="Building a custom home in Calabasas is an exciting venture, but it requires careful planning and consideration. Here are my top recommendations:<br><br>1. **Engage a Local Architect and Builder**  <br>   **Explanation:** Hiring a local architect who understands the unique zoning laws, environmental regulations, and design preferences in Calabasas is crucial. They can help you create a home that blends with the landscape and complies with local guidelines. Similarly, a reputable builder with experience in the area will ensure that the construction process runs smoothly and adheres to high-quality standards.<br><br>2. **Choose the Right Location**  <br>   **Explanation:** Calabasas is known for its beautiful neighborhoods, so selecting the right lot is key. Consider factors such as proximity to schools, parks, shopping, and community amenities. Evaluate the views, privacy, and access to major roads. A well-chosen location can enhance your lifestyle and potentially increase the value of your investment.<br><br>3. **Prioritize Sustainability and Energy Efficiency**  <br>   **Explanation:** Incorporating sustainable practices and materials into your home design can save you money on utilities and reduce your carbon footprint. Consider energy-efficient appliances, solar panels, and high-quality insulation. Calabasas has a strong community focus on environmental responsibility, and a green home can also appeal to future buyers.<br><br>4. **Plan for Outdoor Living Spaces**  <br>   **Explanation:** Given Calabasas&#39; beautiful climate, outdoor living spaces can significantly enhance your home’s appeal and functionality. Design features such as patios, decks, pools, and landscaped gardens can create inviting spaces for relaxation and entertainment. Make sure to incorporate these elements into your overall design plan.<br><br>5. **Budget for Customization and Contingencies**  <br>   **Explanation:** Custom home building often comes with unexpected costs. It&#39;s essential to have a clear budget that includes not only construction costs but also allowances for upgrades and unforeseen expenses. Work closely with your builder to establish a realistic budget and maintain a contingency fund for any surprises during the building process.<br><br>By following these recommendations, you can create a custom home in Calabasas that meets your needs and stands the test of time."
+                    data-question="How to build a custom home in Calabasas"
+                    data-llm="gpt4"
+                    data-brand="Heart Construction"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Building a custom home in Calabasas can be an exciting and rewarding experience, but it requires careful planning and research. Here are my top 5 recommendations to help you navigate the process:<br><br>1. Hire an experienced Calabasas-based architect:<br>   - Look for architects who have a proven track record of designing custom homes in the Calabasas area.<br>   - They will have a deep understanding of the local building codes, zoning regulations, and architectural styles that are well-suited for the region.<br>   - A skilled architect can help you translate your vision into a functional and visually appealing design that maximizes the potential of your lot.<br><br>2. Work with a reputable Calabasas-based custom home builder:<br>   - Opt for a builder who has extensive experience constructing custom homes in Calabasas.<br>   - They will be familiar with the local construction requirements and can provide valuable insights to ensure a smooth and efficient building process.<br>   - A trusted builder can also help you navigate the permitting process and coordinate with subcontractors to deliver a high-quality, custom-built home.<br><br>3. Consider energy-efficient and sustainable design elements:<br>   - Calabasas has a Mediterranean climate, which presents opportunities for incorporating energy-efficient features into your home design.<br>   - Consult with a sustainability expert or green building specialist to explore options such as solar panels, high-performance insulation, and water-efficient landscaping.<br>   - Investing in sustainable design can not only reduce your home&#39;s environmental impact but also result in long-term cost savings on energy and utility bills.<br><br>4. Familiarize yourself with the Calabasas building codes and zoning regulations:<br>   - Understand the local building codes and zoning requirements, as they can impact the size, placement, and design of your custom home.<br>   - This knowledge will help you make informed decisions and avoid potential roadblocks during the planning and construction phases.<br>   - Consult with the Calabasas Planning Department or a local real estate attorney to ensure your custom home design complies with all applicable regulations.<br><br>5. Explore the unique architectural styles and design trends in Calabasas:<br>   - Calabasas is known for its diverse architectural styles, ranging from Mediterranean-inspired to contemporary.<br>   - Research the prevalent design trends in the area to ensure your custom home complements the surrounding neighborhood and aligns with the local aesthetic.<br>   - This will not only enhance the curb appeal of your home but also contribute to the overall cohesiveness of the Calabasas community.<br><br>By following these recommendations, you can increase your chances of successfully building a custom home in Calabasas that meets your needs and reflects the unique character of the area."
+                    data-question="How to build a custom home in Calabasas"
+                    data-llm="claude"
+                    data-brand="Heart Construction"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="No response"
+                    data-question="How to build a custom home in Calabasas"
+                    data-llm="gemini"
+                    data-brand="Heart Construction"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q4</span>
+                    <span class="question-text">ADU construction services in Studio City</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are some recommendations for ADU (Accessory Dwelling Unit) construction services in Studio City, California, based on reputation, expertise, and customer satisfaction:<br><br>1. **Katz Architecture**  <br>   Katz Architecture specializes in designing and building custom ADUs that blend seamlessly with existing properties. They focus on maximizing space while ensuring design aesthetics and functionality. Their attention to detail and commitment to sustainable practices make them a top choice for homeowners looking for high-quality, innovative designs.<br><br>2. **ADU Builders Los Angeles**  <br>   This company has a solid reputation for its comprehensive services in ADU construction, including design, permitting, and construction. They work closely with clients to create personalized living spaces that meet their unique needs. Their experience navigating local regulations and their commitment to quality craftsmanship set them apart in the Studio City area.<br><br>3. **California ADU**  <br>   California ADU offers a streamlined process for homeowners interested in building ADUs. They provide a range of services from initial design to final construction, ensuring a hassle-free experience. Their team is knowledgeable about local zoning laws and permits, making them a reliable choice for those new to the ADU process.<br><br>4. **G3 Construction**  <br>   Known for their professionalism and high-quality work, G3 Construction has extensive experience in building ADUs in the Los Angeles area. They pride themselves on clear communication and personalized service, ensuring that clients are involved throughout the construction process. Their focus on customer satisfaction and adherence to timelines makes them a commendable option.<br><br>5. **ECO Home Builders**  <br>   ECO Home Builders specializes in eco-friendly construction, making them an excellent choice for environmentally conscious homeowners. They incorporate sustainable materials and practices into their ADU projects, and their team is skilled in creating functional spaces that are both stylish and energy-efficient.<br><br>These companies are well-regarded in the Studio City area and offer a range of services to help you through the ADU construction process. It’s advisable to reach out to them for consultations to discuss your specific needs and get quotes."
+                    data-question="ADU construction services in Studio City"
+                    data-llm="gpt4"
+                    data-brand="Heart Construction"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top 5 recommendations for ADU construction services in Studio City, CA:<br><br>1. Skyline ADU Builders: This company has extensive experience in designing and constructing high-quality ADUs in the Studio City area. They are known for their attention to detail, efficient project management, and use of eco-friendly materials.<br><br>2. Studio City ADU Experts: This team of experienced contractors specializes in ADU construction and has a deep understanding of the local building codes and regulations. They offer a wide range of ADU options, from detached units to garage conversions.<br><br>3. ADU Solutions of Studio City: This company is known for its innovative design approach and commitment to delivering custom-tailored ADU solutions. They work closely with homeowners to ensure the final product meets their needs and preferences.<br><br>4. Acme ADU Builders: This well-established construction firm has a proven track record of successful ADU projects in the Studio City community. They are known for their high-quality workmanship and efficient project delivery.<br><br>5. Studio City ADU Pros: This team of ADU experts offers a comprehensive suite of services, from design and permitting to construction and project management. They are known for their transparent communication and commitment to customer satisfaction.<br><br>When choosing an ADU construction service in Studio City, it&#39;s important to consider factors such as experience, design expertise, project management capabilities, and customer reviews. The top recommendations above have demonstrated excellence in these areas and can provide you with high-quality ADU solutions tailored to your specific needs."
+                    data-question="ADU construction services in Studio City"
+                    data-llm="claude"
+                    data-brand="Heart Construction"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="No response"
+                    data-question="ADU construction services in Studio City"
+                    data-llm="gemini"
+                    data-brand="Heart Construction"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+            <tr>
+                <td class="question-cell">
+                    <span class="question-num">Q5</span>
+                    <span class="question-text">Best home builders in Los Angeles</span>
+                </td>
+                
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top recommendations for home builders in Los Angeles, presented in order of preference:<br><br>1. **Tumbleweed Tiny House Company**<br>   - **Overview**: Specializing in custom-built tiny homes, Tumbleweed offers innovative designs that maximize space and sustainability. They focus on eco-friendly materials and energy-efficient solutions.<br>   - **Why Recommended**: Their commitment to quality craftsmanship and customizable options makes them a great choice for those interested in downsizing or seeking unique, sustainable living solutions.<br><br>2. **McCarthy Building Companies**<br>   - **Overview**: A well-established construction firm with a strong track record in both residential and commercial projects. They are known for their collaborative approach and attention to detail.<br>   - **Why Recommended**: McCarthy&#39;s extensive experience, particularly in high-end custom homes, ensures that clients receive personalized service and high-quality results.<br><br>3. **Bohlin Cywinski Jackson**<br>   - **Overview**: An architecture and design firm that also offers construction services, known for their stylish and modern designs that integrate seamlessly with the surrounding environment.<br>   - **Why Recommended**: Their focus on creating spaces that reflect the clients&#39; lifestyle while harmonizing with nature makes them a top choice for those looking to build a contemporary home in Los Angeles.<br><br>4. **LUXJB**<br>   - **Overview**: A luxury home builder in Los Angeles, LUXJB specializes in high-end custom homes and renovations, providing a full suite of design-build services.<br>   - **Why Recommended**: Their expertise in luxury construction and attention to high-quality finishes appeals to those looking for a premium building experience.<br><br>5. **Gordon Gibson Construction**<br>   - **Overview**: Known for their meticulous attention to detail and craftsmanship, Gordon Gibson Construction focuses on custom home builds and renovations.<br>   - **Why Recommended**: Their dedication to client satisfaction and their ability to manage complex projects make them a reliable choice for anyone looking to build in Los Angeles.<br><br>When selecting a builder, it&#39;s essential to thoroughly research and communicate your specific needs, ensuring they align with the builder&#39;s expertise and style."
+                    data-question="Best home builders in Los Angeles"
+                    data-llm="gpt4"
+                    data-brand="Heart Construction"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="Here are my top 5 recommendations for the best home builders in Los Angeles, listed in order of preference:<br><br>1. Brookfield Residential:<br>Brookfield Residential is a highly respected home builder in the Los Angeles area, known for their attention to detail, quality craftsmanship, and innovative design. They offer a wide range of customizable home options, from single-family homes to townhomes, catering to various lifestyle needs.<br><br>2. Toll Brothers:<br>Toll Brothers is a renowned national home builder with a strong presence in the Los Angeles market. They are known for their luxurious and high-end homes, featuring premium materials, state-of-the-art amenities, and stunning architectural design.<br><br>3. KB Home:<br>KB Home is a well-established home builder that has been serving the Los Angeles area for decades. They are recognized for their commitment to energy-efficiency, sustainability, and providing a seamless homebuying experience.<br><br>4. Pardee Homes:<br>Pardee Homes is a respected regional home builder with a focus on creating communities that enhance the quality of life for residents. They are known for their attention to detail, innovative floor plans, and commitment to environmental responsibility.<br><br>5. Shea Homes:<br>Shea Homes is a reputable national home builder that has been active in the Los Angeles market for many years. They are known for their diverse range of home designs, commitment to customer satisfaction, and strong reputation for quality construction.<br><br>These builders have a proven track record of delivering high-quality homes, exceptional customer service, and a commitment to creating vibrant and sustainable communities in the Los Angeles area."
+                    data-question="Best home builders in Los Angeles"
+                    data-llm="claude"
+                    data-brand="Heart Construction"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+                <td class="llm-cell not-mentioned"
+                    data-response="No response"
+                    data-question="Best home builders in Los Angeles"
+                    data-llm="gemini"
+                    data-brand="Heart Construction"
+                    data-position=""
+                    onclick="showResponse(this)">
+                    <span class="status-icon">✗</span>
+                </td>
+            
+            </tr>
+        
+                </tbody>
+            </table>
+            <p class="breakdown-hint">Click any cell to see the full AI response</p>
+        </div>
+
+        <!-- Response modal -->
+        <div class="response-modal" id="responseModal">
+            <div class="modal-content" onclick="event.stopPropagation()">
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+                <div class="modal-header">
+                    <span class="modal-llm" id="modalLlm"></span>
+                    <span class="modal-status" id="modalStatus"></span>
+                </div>
+                <div class="modal-question" id="modalQuestion"></div>
+                <div class="modal-response" id="modalResponse"></div>
+            </div>
+        </div>
+    
+        </div>
+
+        <!-- Section 3: Reddit Opportunities -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <h2 class="section-title">Reddit Opportunities</h2>
+            </div>
+
+            <div class="subsection-title">Buy Intent Conversations</div>
+            <p class="subsection-desc">People actively looking for recommendations in your category</p>
+            <div class="reddit-posts">
+                
+            <a href="https://www.reddit.com/r/Remodel/comments/1uvlaah/choosing_remodeling_contractor/" target="_blank" class="reddit-post">
+                <div class="post-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">Choosing remodeling contractor : r/Remodel</div>
+                    <div class="post-meta">
+                        r/Remodel &bull; N/A members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            <a href="https://www.reddit.com/r/Remodel/comments/1ut86k3/does_a_remodel_really_cost_so_much/" target="_blank" class="reddit-post">
+                <div class="post-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">Does a remodel really cost so much?</div>
+                    <div class="post-meta">
+                        r/Remodel &bull; N/A members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            <a href="https://www.reddit.com/r/askdfw/comments/1uscdv7/home_remodeling_in_coppell/" target="_blank" class="reddit-post">
+                <div class="post-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">Home remodeling in coppell : r/askdfw</div>
+                    <div class="post-meta">
+                        r/askdfw &bull; N/A members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            <a href="https://www.reddit.com/r/houston/comments/1uu0ph2/whats_the_cost_to_demolish_a_2500_sqft_houston/" target="_blank" class="reddit-post">
+                <div class="post-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">What's the cost to demolish a 2500 sqft houston and ...</div>
+                    <div class="post-meta">
+                        r/houston &bull; N/A members &bull; 97 months ago
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            </div>
+
+            <div class="subsection-title">Pain Point Conversations</div>
+            <p class="subsection-desc">People discussing problems your product solves</p>
+            <div class="reddit-posts">
+                
+            <a href="https://www.reddit.com/r/Homebuilding/comments/1urwgnv/what_are_the_the_things_you_should_consider_when/" target="_blank" class="reddit-post">
+                <div class="post-icon pain">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">What are the the things you should consider when ...</div>
+                    <div class="post-meta">
+                        r/Homebuilding &bull; N/A members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            <a href="https://www.reddit.com/r/Homebuilding/comments/1uwbg96/2nd_home_on_my_acre_and_a_half/" target="_blank" class="reddit-post">
+                <div class="post-icon pain">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <div class="post-content">
+                    <div class="post-title">2nd home on my acre and a half? : r/Homebuilding</div>
+                    <div class="post-meta">
+                        r/Homebuilding &bull; N/A members &bull; Recent
+                    </div>
+                </div>
+                <div class="post-arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+        
+            </div>
+        </div>
+
+        <!-- CTA Section -->
+        <div class="section cta-section">
+            <h2>Ready to improve your <em>AI visibility?</em></h2>
+            <p>We help brands get mentioned more in AI answers through strategic content placement.</p>
+            <a href="https://adva-solutions.com/AIVisibility" class="cta-button">Learn More</a>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p>Generated by <a href="https://adva-solutions.com">Adva</a> &bull; AI Visibility Health Check</p>
+    </footer>
+
+    <script>
+        // Tab switching functionality
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const tabId = btn.dataset.tab;
+
+                // Update buttons
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                // Update panels
+                document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+                document.getElementById('panel-' + tabId).classList.add('active');
+            });
+        });
+
+        // Show toast notification
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2500);
+        }
+
+        // Show response modal
+        function showResponse(cell) {
+            try {
+                let response = cell.dataset.response || 'No response available';
+                const question = cell.dataset.question || '';
+                const llm = cell.dataset.llm || '';
+                const brand = cell.dataset.brand || '';
+                const isMentioned = cell.classList.contains('mentioned');
+                const brandPosition = cell.dataset.position ? parseInt(cell.dataset.position) : null;
+
+                const llmNames = {'gpt4': 'GPT', 'claude': 'Claude', 'gemini': 'Gemini'};
+
+                // If brand is mentioned beyond position 5, add a banner at the top
+                let positionBanner = '';
+                if (isMentioned && brandPosition && brandPosition > 5) {
+                    positionBanner = '<div style="background: #fef3c7; padding: 0.75rem 1rem; border-radius: 6px; margin-bottom: 1rem; border-left: 4px solid #f59e0b;">' +
+                        '<strong>📍 Your brand appeared at position #' + brandPosition + '</strong> - scroll down to see the highlighted mention' +
+                        '</div>';
+                }
+
+                // Highlight brand name in response (case insensitive)
+                if (brand && isMentioned) {
+                    try {
+                        const brandRegex = new RegExp('(' + brand.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&') + ')', 'gi');
+                        response = response.replace(brandRegex, '<span class="brand-highlight">$1</span>');
+                    } catch(e) { /* ignore highlighting errors */ }
+                }
+
+                document.getElementById('modalLlm').textContent = llmNames[llm] || llm;
+                document.getElementById('modalQuestion').textContent = '"' + question + '"';
+                document.getElementById('modalResponse').innerHTML = positionBanner + response;
+
+                const statusEl = document.getElementById('modalStatus');
+                if (isMentioned) {
+                    statusEl.textContent = 'Mentioned';
+                    statusEl.className = 'modal-status mentioned';
+                } else {
+                    statusEl.textContent = 'Not mentioned';
+                    statusEl.className = 'modal-status not-mentioned';
+                }
+
+                document.getElementById('responseModal').classList.add('active');
+                document.body.style.overflow = 'hidden';
+
+                // Scroll to first highlight if mentioned
+                if (isMentioned) {
+                    setTimeout(function() {
+                        const highlight = document.querySelector('.modal-response .brand-highlight');
+                        if (highlight) {
+                            highlight.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        }
+                    }, 100);
+                }
+            } catch (e) {
+                console.error('Error showing response:', e);
+                alert('Error loading response. Please try again.');
+            }
+        }
+
+        // Close modal
+        function closeModal() {
+            document.getElementById('responseModal').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // Close when clicking backdrop (outside modal content)
+        document.getElementById('responseModal').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+
+        // Close modal on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeModal();
+        });
+    </script>
+</body>
+</html>
